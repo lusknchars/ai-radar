@@ -1723,7 +1723,7 @@ git commit -m "feat: estado SQLite append-only com delta e trilha de entrega"
 
 **Interfaces:**
 - Consome: `Paper`, `Judgment` da Tarefa 1; `load_model` da Tarefa 1.
-- Produz: `JudgmentSchema` (pydantic), `build_prompt(paper) -> str`, `Judge(client, model).judge_one(paper) -> Judgment`, `Judge.judge_batch(papers) -> dict[str, Judgment]`.
+- Produz: `JudgmentSchema` (pydantic), `build_prompt(paper) -> str`, `Judge(client, model).judge_one(paper) -> Judgment`, `build_batch_requests(papers, model) -> list[dict]`, `collect_batch_results(results) -> dict[str, Judgment]` e `submit_batch(client, papers, model)`. O caminho de lote é composto por essas três funções, não por um método em `Judge`.
 
 **Assinaturas do SDK, confirmadas na referência:**
 - Chamada única: `client.messages.parse(model=..., max_tokens=..., messages=[...], output_format=<PydanticModel>)` → `response.parsed_output`
