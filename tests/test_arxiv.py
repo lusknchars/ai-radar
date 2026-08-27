@@ -1,15 +1,14 @@
 from pathlib import Path
 
-import pytest
-
 from radar.arxiv import ARXIV_ENDPOINT, ArxivClient, build_query, parse_feed
-from radar.config import DEFAULT_SCOPE, ScopeConfig
+from radar.config import ScopeConfig
 
 FIXTURE = (Path(__file__).parent / "fixtures" / "arxiv_response.xml").read_text()
 
 
 def test_endpoint_is_https():
-    """Em HTTP a API devolve corpo vazio com status 200 -- falha silenciosa."""
+    """Em HTTP a API devolve 301 com corpo vazio; raise_for_status() nao
+    levanta em 3xx e httpx nao segue redirect por padrao -- falha silenciosa."""
     assert ARXIV_ENDPOINT.startswith("https://")
 
 
@@ -55,7 +54,7 @@ def test_empty_feed_returns_empty_list():
     assert parse_feed(empty) == []
 
 
-def test_client_filters_by_primary_category():
+def test_client_excludes_papers_with_no_category_in_scope():
     seen = []
 
     def fake_fetch(url):
@@ -64,8 +63,35 @@ def test_client_filters_by_primary_category():
 
     scope = ScopeConfig(categories=("cs.LG", "cs.AR"), terms=("quantization",))
     papers = ArxivClient(fetch=fake_fetch, sleep=lambda s: None).recent(scope)
-    assert [p.arxiv_id for p in papers] == ["2608.11111"]
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]   # a entrada eess.AS cai fora
     assert len(seen) == 1
+
+
+CROSS_LISTED = """<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <id>http://arxiv.org/abs/2608.33333v1</id>
+    <published>2026-08-18T00:00:00Z</published>
+    <title>Cross-listed Efficiency Work</title>
+    <summary>Categoria primaria fora do escopo, secundaria dentro.</summary>
+    <author><name>A B</name></author>
+    <arxiv:primary_category term="cs.AI"/>
+    <category term="cs.AI"/>
+    <category term="cs.LG"/>
+  </entry>
+</feed>"""
+
+
+def test_client_admits_a_paper_whose_only_in_scope_category_is_secondary():
+    """Cross-listing e comum: trabalho de eficiencia costuma ter primaria
+    cs.AI e secundaria cs.LG. A descoberta favorece recall de proposito --
+    cinco filtros a jusante (termo, sinal do GitHub, portao, piso, teto de 3)
+    cuidam da precisao. Este teste distingue interseccao de primary-only;
+    o teste acima nao distinguia, porque a entrada descartada da fixture nao
+    tem NENHUMA categoria no escopo."""
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization",))
+    papers = ArxivClient(fetch=lambda url: CROSS_LISTED, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.33333"]
 
 
 def test_client_unions_terms_and_deduplicates_by_id():
@@ -80,6 +106,27 @@ def test_client_sleeps_between_calls_for_arxiv_etiquette():
     ArxivClient(fetch=lambda url: FIXTURE, sleep=naps.append).recent(scope)
     assert len(naps) == 2          # dorme entre chamadas, nao depois da ultima
     assert all(n >= 3 for n in naps)
+
+
+def test_client_survives_a_term_whose_response_is_empty():
+    """Corpo vazio e exatamente o que a API devolve em HTTP simples, e
+    ET.fromstring("") levanta ParseError. Sem o parse dentro do try, um unico
+    termo ruim derruba a coleta de todos os outros."""
+    def fetch(url):
+        return "" if "sparsity" in url else FIXTURE
+
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    papers = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]
+
+
+def test_client_survives_a_term_whose_response_is_malformed():
+    def fetch(url):
+        return "<feed><entry>truncad" if "sparsity" in url else FIXTURE
+
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    papers = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]
 
 
 def test_client_survives_one_failing_term():

@@ -23,7 +23,6 @@ USER_AGENT = "ai-radar/0.1 (personal research digest)"
 ETIQUETTE_SLEEP_SECONDS = 3
 
 _ATOM = {"a": "http://www.w3.org/2005/Atom"}
-_ARXIV_NS = "{http://arxiv.org/schemas/atom}"
 
 
 def build_query(term: str, scope: ScopeConfig) -> str:
@@ -80,12 +79,20 @@ class ArxivClient:
         for index, term in enumerate(scope.terms):
             if index:
                 self._sleep(ETIQUETTE_SLEEP_SECONDS)
+            # build_url fica FORA do try: se a construcao da query tiver bug
+            # nosso, queremos que exploda, nao que seja engolida como falha
+            # do arXiv.
+            url = build_url(term, scope, max_results)
             try:
-                xml_text = self._fetch(build_url(term, scope, max_results))
+                parsed = parse_feed(self._fetch(url))
             except Exception:
-                # Um termo que falha nao derruba a coleta inteira.
+                # Um termo que falha nao derruba a coleta inteira. O parse
+                # precisa estar DENTRO do try: corpo vazio -- que e o que a API
+                # devolve em HTTP simples -- faz ET.fromstring levantar
+                # ParseError, e sem essa cobertura um unico termo ruim mata a
+                # coleta de todos os outros.
                 continue
-            for paper in parse_feed(xml_text):
+            for paper in parsed:
                 if paper.arxiv_id in seen:
                     continue
                 if allowed.intersection(paper.categories):
