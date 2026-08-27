@@ -1,6 +1,6 @@
 import pytest
 
-from radar.config import DEFAULT_SCOPE, load_thresholds
+from radar.config import DEFAULT_SCOPE, PUSH_CAP, Thresholds, load_thresholds
 from radar.models import Judgment, Paper, Signal
 
 
@@ -78,13 +78,18 @@ def test_thresholds_come_from_env_with_documented_defaults(monkeypatch):
     assert t.broke_out_stars == 1000
     assert t.broke_out_citations == 200
     assert t.score_floor == 0.0        # nao calibrado; ver spec secao 10
-    assert t.push_cap == 3
 
 
-def test_push_cap_cannot_be_raised_by_env(monkeypatch):
-    """O teto de 3 e rigido por decisao de produto, nao configuracao."""
-    monkeypatch.setenv("RADAR_PUSH_CAP", "10")
-    assert load_thresholds().push_cap == 3
+def test_push_cap_is_three_and_lives_outside_thresholds():
+    """O teto de 3 e rigido por decisao de produto, nao configuracao. Antes ele
+    era campo de Thresholds E constante do render, e o pipeline fatiava pelo
+    campo: um Thresholds com teto maior produzia mais de tres itens e so
+    estourava no render, depois de as entregas ja terem sido gravadas. Nao
+    existir como campo e o que torna esse caminho inexprimivel."""
+    assert PUSH_CAP == 3
+    with pytest.raises(TypeError):
+        Thresholds(broke_out_stars=1000, broke_out_citations=200,
+                   score_floor=0.0, push_cap=5)
 
 
 def test_model_defaults_to_opus_5(monkeypatch):

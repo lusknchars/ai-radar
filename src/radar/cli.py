@@ -18,7 +18,17 @@ from .pipeline import run_day
 from .store import Store
 from .telegram import send
 
-GITHUB_SLEEP_SECONDS = 2.5   # 10 req/min sem token; com token da folga
+# A busca do GitHub permite 10 req/min sem autenticacao e 30/min com token, e o
+# README trata GH_TOKEN como opcional -- entao o intervalo tem que sair da
+# presenca do segredo, e nao de um numero fixo. Um valor unico de 2,5 s (24/min)
+# so serve para o caso COM token: sem ele, a maioria dos papers toma 403 e cai
+# em `sinal_indisponivel`.
+GITHUB_SLEEP_WITHOUT_TOKEN = 6.0   # 10 req/min
+GITHUB_SLEEP_WITH_TOKEN = 2.5      # 24/min, dentro dos 30/min autenticados
+
+
+def github_sleep_seconds() -> float:
+    return GITHUB_SLEEP_WITH_TOKEN if os.environ.get("GH_TOKEN") else GITHUB_SLEEP_WITHOUT_TOKEN
 
 
 def _arxiv_fetch(url: str) -> str:
@@ -59,8 +69,10 @@ def main(argv: list[str] | None = None) -> int:
     client = anthropic.Anthropic()
     model = load_model()
 
+    intervalo = github_sleep_seconds()
+
     def fetch_signal(paper, day):
-        time.sleep(GITHUB_SLEEP_SECONDS)
+        time.sleep(intervalo)
         return github.signal_with_repos(paper, today=day)
 
     def judge_all(papers):
@@ -80,18 +92,32 @@ def main(argv: list[str] | None = None) -> int:
         store=store, scope=DEFAULT_SCOPE, thresholds=load_thresholds(), today=today,
         model=model,
         fetch_papers=arxiv.recent, fetch_signal=fetch_signal, judge_all=judge_all,
+        dry_run=args.dry_run,
     )
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{today.isoformat()}.md").write_text(result.markdown, encoding="utf-8")
     print(f"radar: {len(result.radar)} · feed: {len(result.feed)} · cortes: {result.cuts}")
 
-    if not args.dry_run:
+    if args.dry_run:
+        print("dry-run: push nao enviado, entrega de telegram nao gravada")
+        return 0
+
+    try:
         sent = send(result.push,
                     token=os.environ.get("TELEGRAM_BOT_TOKEN", ""),
                     chat_id=os.environ.get("TELEGRAM_CHAT_ID", ""),
                     post=_telegram_post)
-        print(f"push enviado: {sent}")
+    except ValueError as exc:
+        # Segredo faltando nao pode custar o dia inteiro. Quando isto acontece o
+        # markdown ja esta escrito e o lote ja foi pago; deixar a excecao subir
+        # matava o processo antes do passo de commit e os dois iam embora com o
+        # runner efemero. Reporta e sai nao-zero -- o workflow fica vermelho,
+        # que e o sinal correto -- enquanto o commit (if: always()) preserva o
+        # que ja foi produzido.
+        print(f"push nao enviado: {exc}", flush=True)
+        return 1
+    print(f"push enviado: {sent}")
     return 0
 
 

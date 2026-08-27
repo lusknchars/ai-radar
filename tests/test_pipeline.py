@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 
 from radar.config import ScopeConfig, Thresholds
-from radar.models import Judgment, Paper
+from radar.models import Discovery, Judgment, Paper
 from radar.pipeline import run_day
 from radar.store import Store
 
@@ -42,7 +42,7 @@ def run(store, papers, signals, judgments=None, **kw):
 
     return run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: papers,
+        fetch_papers=lambda scope: Discovery(papers=papers),
         fetch_signal=lambda p, today: (signals[p.arxiv_id], []),
         judge_all=judge_all,
         **kw,
@@ -71,11 +71,78 @@ def test_gated_papers_are_counted_as_cuts_not_delivered(store):
     assert result.cuts["ja_estourou"] == 1
 
 
-def test_every_in_scope_paper_reaches_the_feed_even_when_gated(store):
+def test_every_in_scope_paper_reaches_the_markdown_even_when_gated(store):
+    """Nenhum paper novo do escopo desaparece: o cortado do radar continua no
+    feed. Radar e feed sao secoes distintas do mesmo markdown, e a uniao delas
+    e que precisa cobrir o dia."""
     papers = [paper("2508.00001"), paper("2508.00002")]
     signals = {"2508.00001": fake_signal(50, 9000), "2508.00002": fake_signal(3, 20)}
     result = run(store, papers, signals)
-    assert {i.paper.arxiv_id for i in result.feed} == {"2508.00001", "2508.00002"}
+    assert [i.paper.arxiv_id for i in result.feed] == ["2508.00001"]
+    assert [i.paper.arxiv_id for i in result.radar] == ["2508.00002"]
+
+
+def test_radar_items_are_not_repeated_in_the_feed(store):
+    """Spec secao 7: o markdown e (1) os tres do radar e (2) todos os DEMAIS
+    candidatos. Os mesmos itens nas duas secoes fazem o dia parecer maior do
+    que foi e obrigam a ler duas vezes."""
+    papers = [paper(f"2508.0000{i}") for i in range(5)]
+    signals = {p.arxiv_id: fake_signal(5 - i, 10) for i, p in enumerate(papers)}
+    result = run(store, papers, signals)
+    no_radar = [i.paper.arxiv_id for i in result.radar]
+    no_feed = [i.paper.arxiv_id for i in result.feed]
+    assert no_radar == ["2508.00000", "2508.00001", "2508.00002"]
+    assert no_feed == ["2508.00003", "2508.00004"]
+    assert set(no_radar).isdisjoint(no_feed)
+
+
+def test_radar_items_are_not_repeated_in_the_rendered_markdown(store):
+    """A mesma garantia onde ela e visivel: a linha de feed de um item do radar
+    nao pode aparecer no arquivo do dia."""
+    papers = [paper(f"2508.0000{i}") for i in range(4)]
+    signals = {p.arxiv_id: fake_signal(4 - i, 10) for i, p in enumerate(papers)}
+    result = run(store, papers, signals)
+    corpo = result.markdown[result.markdown.index("## Feed"):]
+    for no_radar in ("2508.00000", "2508.00001", "2508.00002"):
+        assert no_radar not in corpo
+    assert "2508.00003" in corpo
+
+
+def test_dry_run_does_not_burn_the_days_best_items(store):
+    """dry_run existe para ensaiar o dia. Gravar entrega de telegram nele
+    queima os tres melhores papers para sempre: a primeira execucao de verdade
+    os corta como ja_entregue, em silencio."""
+    papers = [paper("2508.00001"), paper("2508.00002")]
+    signals = {p.arxiv_id: fake_signal(4, 20) for p in papers}
+    result = run(store, papers, signals, dry_run=True)
+    assert len(result.radar) == 2                       # a selecao acontece
+    assert result.push != ""                            # o push e montado
+    for pid in ("2508.00001", "2508.00002"):
+        assert store.was_delivered(pid, channel="telegram") is False
+
+
+def test_a_real_run_after_a_dry_run_still_delivers(store):
+    """A consequencia que importa: o ensaio nao pode roubar o dia seguinte."""
+    p = paper("2508.00001")
+    run(store, [p], {"2508.00001": fake_signal(4, 20)}, dry_run=True)
+    assert store.was_delivered("2508.00001", channel="telegram") is False
+
+
+def test_discovery_cuts_are_carried_into_the_days_accounting(store):
+    """O que o cliente do arXiv descarta tem de chegar a secao de cortes:
+    contagem dentro do adaptador que ninguem le e truncamento silencioso."""
+    p = paper("2508.00001")
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: Discovery(
+            papers=[p], cuts={"fora_de_escopo": 7, "termo_falhou": 2}),
+        fetch_signal=lambda pp, today: (fake_signal(4, 30), []),
+        judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
+    )
+    assert result.cuts["fora_de_escopo"] == 7
+    assert result.cuts["termo_falhou"] == 2
+    assert "- fora_de_escopo: 7" in result.markdown
+    assert "- termo_falhou: 2" in result.markdown
 
 
 def test_already_delivered_paper_is_not_pushed_twice(store):
@@ -115,7 +182,7 @@ def test_a_known_paper_is_never_sent_to_the_judge(store):
 
     run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: [velho, novo],
+        fetch_papers=lambda scope: Discovery(papers=[velho, novo]),
         fetch_signal=lambda p, today: (fake_signal(3, 20), []),
         judge_all=judge_all,
     )
@@ -133,7 +200,7 @@ def test_a_day_whose_papers_are_all_known_judges_nothing(store):
 
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: [velho],
+        fetch_papers=lambda scope: Discovery(papers=[velho]),
         fetch_signal=lambda p, today: (fake_signal(3, 20), []),
         judge_all=judge_all,
     )
@@ -153,7 +220,7 @@ def test_score_below_the_floor_is_cut(store):
     p = paper("2508.00001")
     result = run_day(
         store=store, scope=SCOPE, thresholds=strict, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: [p],
+        fetch_papers=lambda scope: Discovery(papers=[p]),
         fetch_signal=lambda pp, today: (fake_signal(1, 500), []),
         judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
     )
@@ -190,7 +257,7 @@ def test_rediscovering_a_paper_does_not_add_a_second_observation(store):
     run(store, [p], {"2508.00001": fake_signal(2, 300)})
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=date(2026, 9, 17), model="modelo-de-teste",
-        fetch_papers=lambda scope: [p],
+        fetch_papers=lambda scope: Discovery(papers=[p]),
         fetch_signal=lambda pp, today: (fake_signal(9, 340, vel=7), []),
         judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
     )
@@ -279,7 +346,7 @@ def test_paper_whose_signal_fails_is_cut_not_fatal(store):
 
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: papers,
+        fetch_papers=lambda scope: Discovery(papers=papers),
         fetch_signal=fetch_signal,
         judge_all=lambda ps: {p.arxiv_id: judgment() for p in ps},
     )
@@ -296,7 +363,7 @@ def test_a_failing_signal_does_not_reach_the_feed_either(store):
 
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: papers,
+        fetch_papers=lambda scope: Discovery(papers=papers),
         fetch_signal=fetch_signal,
         judge_all=lambda ps: {p.arxiv_id: judgment() for p in ps},
     )
@@ -325,7 +392,7 @@ def test_markdown_carries_the_authorship_audit_trail_from_the_store(store):
     ]
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
-        fetch_papers=lambda scope: [p],
+        fetch_papers=lambda scope: Discovery(papers=[p]),
         fetch_signal=lambda pp, today: (fake_signal(4, 30), classificacoes),
         judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
     )

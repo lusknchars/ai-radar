@@ -45,6 +45,11 @@ jobs:
           python -m radar.cli ${{ inputs.dry_run && '--dry-run' || '' }}
 
       - name: Commitar estado e digest
+        # `always()` de proposito: quando o passo anterior falha, o markdown do
+        # dia ja esta escrito e o lote do LLM ja foi pago. Sem isto os dois vao
+        # embora com o runner efemero, e o dia inteiro se perde por causa de uma
+        # falha de entrega no ultimo metro.
+        if: always()
         run: |
           git config user.name  "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"

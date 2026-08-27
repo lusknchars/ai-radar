@@ -9,12 +9,15 @@ posicao.
 from __future__ import annotations
 
 import json
+import logging
 import time
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from .models import Judgment, Paper
+
+_log = logging.getLogger(__name__)
 
 BATCH_POLL_SECONDS = 30
 BATCH_TIMEOUT_SECONDS = 45 * 60   # um cron diario que espera mais que isso ja falhou
@@ -25,7 +28,19 @@ HARDWARE_BRIEF = (
     "que dependem de FP8, de multiplas GPUs, ou de mais de 24 GB nao rodam nela."
 )
 
-MAX_TOKENS = 1024
+# Spec secao 5: thinking adaptativo com esforco baixo -- a tarefa e curta e bem
+# definida. Os dois precisam ser explicitos: no Opus 5 o thinking vem ligado por
+# padrao e o esforco default e `high`, entao um julgamento de uma frase raciocina
+# muito acima do orcado.
+THINKING = {"type": "adaptive"}
+EFFORT = "low"
+
+# Tokens de thinking contam como saida e contra o max_tokens. Com 1024 um
+# julgamento podia ser cortado no meio do JSON, e o resultado truncado sumia
+# calado no except de collect_batch_results. O teto e limite de seguranca, nao
+# orcamento: so o que for realmente gerado e cobrado, e a saida util aqui e de
+# umas 200 palavras.
+MAX_TOKENS = 8192
 
 
 class JudgmentSchema(BaseModel):
@@ -37,7 +52,13 @@ class JudgmentSchema(BaseModel):
 
     technique: str = Field(description="Rotulo curto da tecnica, ate 8 palavras")
     summary: str = Field(description="UMA frase dizendo o que a tecnica faz")
-    runs_on_3090: Literal["sim", "sim_com_ressalva", "nao"]
+    runs_on_3090: Literal["sim", "sim_com_ressalva", "nao"] = Field(
+        description="'sim' se a tecnica roda na 3090 como descrita; "
+                    "'sim_com_ressalva' se roda com perda, adaptacao ou modelo "
+                    "menor; 'nao' se depende de FP8, de multiplas GPUs ou de "
+                    "mais de 24 GB. O Literal restringe o token, e esta "
+                    "descricao diz ao modelo qual criterio usar -- este campo e "
+                    "o veredito que o usuario le.")
     rationale: str = Field(description="Uma linha justificando o veredito de hardware")
 
 
@@ -67,6 +88,8 @@ class Judge:
             model=self._model,
             max_tokens=MAX_TOKENS,
             messages=[{"role": "user", "content": build_prompt(paper)}],
+            thinking=THINKING,
+            output_config={"effort": EFFORT},
             output_format=JudgmentSchema,
         )
         return _to_domain(response.parsed_output)
@@ -85,11 +108,13 @@ def build_batch_requests(papers: list[Paper], model: str) -> list[dict]:
                 "model": model,
                 "max_tokens": MAX_TOKENS,
                 "messages": [{"role": "user", "content": build_prompt(paper)}],
+                "thinking": THINKING,
                 "output_config": {
+                    "effort": EFFORT,
                     "format": {
                         "type": "json_schema",
                         "schema": JudgmentSchema.model_json_schema(),
-                    }
+                    },
                 },
             },
         }
@@ -106,11 +131,17 @@ def collect_batch_results(results) -> dict[str, Judgment]:
         message = result.result.message
         text = next((b.text for b in message.content if b.type == "text"), None)
         if not text:
+            _log.warning("julgamento de %s veio sem bloco de texto", result.custom_id)
             continue
         try:
             out[result.custom_id] = _to_domain(JudgmentSchema(**json.loads(text)))
-        except Exception:
-            continue          # julgamento malformado nao derruba o lote
+        except Exception as exc:
+            # Um julgamento malformado nao derruba o lote, mas tambem nao pode
+            # sumir calado: sem o custom_id no log, o paper aparece como
+            # `sem_julgamento` no markdown e nao ha como saber qual quebrou.
+            _log.warning("julgamento de %s descartado como malformado: %s",
+                         result.custom_id, exc)
+            continue
     return out
 
 

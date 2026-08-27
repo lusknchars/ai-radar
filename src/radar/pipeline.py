@@ -10,8 +10,8 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Callable
 
-from .config import ScopeConfig, Thresholds
-from .models import Judgment, Paper, RepoClassification, Signal
+from .config import PUSH_CAP, ScopeConfig, Thresholds
+from .models import Discovery, Judgment, Paper, RepoClassification, Signal
 from .render import RadarItem, render_markdown, render_telegram
 from .scoring import evaluate
 from .store import Store
@@ -32,14 +32,18 @@ def run_day(
     thresholds: Thresholds,
     today: date,
     model: str,
-    fetch_papers: Callable[[ScopeConfig], list[Paper]],
+    fetch_papers: Callable[[ScopeConfig], Discovery],
     fetch_signal: Callable[[Paper, date], tuple[Signal, list[RepoClassification]]],
     judge_all: Callable[[list[Paper]], dict[str, Judgment]],
+    dry_run: bool = False,
 ) -> DayResult:
     day = today.isoformat()
-    discovered = fetch_papers(scope)
+    discovery = fetch_papers(scope)
+    discovered = discovery.papers
 
-    cuts: Counter[str] = Counter()
+    # Os cortes da descoberta (fora de escopo, termo que falhou) ja vem
+    # contados e entram na mesma conta que os cortes deste modulo.
+    cuts: Counter[str] = Counter(discovery.cuts)
 
     # Spec secao 3: "Papers ja presentes no banco nao reentram como novidade."
     # O Feed responde "o que saiu hoje" -- um paper que ja esta no banco nao
@@ -87,7 +91,8 @@ def run_day(
                          score=result.value or 0.0,
                          delta=store.signal_delta(paper.arxiv_id))
 
-        # Todo paper no escopo vai para o feed, inclusive o cortado do radar.
+        # Todo paper novo no escopo chega ao markdown, inclusive o cortado do
+        # radar: ou entre os tres, ou entre os demais.
         if result.gated_by is not None:
             cuts["ja_estourou"] += 1
             candidates.append((item, False))
@@ -106,22 +111,32 @@ def run_day(
         else:
             candidates.append((item, True))
 
-    feed = [item for item, _ in candidates]
-
     # Ordem: executavel na 3090 primeiro, score depois. Sem isso, um paper que
     # depende de FP8 -- inexecutavel em Ampere por definicao -- consome uma das
     # tres vagas competindo de igual para igual com o que voce pode testar hoje.
     # Rebaixar preserva a visao periferica sem deixar o inexecutavel disputar
-    # espaco com o acionavel. Afeta o push apenas; o feed leva tudo.
+    # espaco com o acionavel. Afeta o push apenas; o markdown leva todos.
     eligible = sorted(
         (i for i, ok in candidates if ok),
         key=lambda i: (i.judgment.runs_on_3090 != "nao", i.score),
         reverse=True,
     )
-    radar = eligible[:thresholds.push_cap]
+    # Fatiado por PUSH_CAP, a mesma constante que o render usa como guarda.
+    # Expressar o teto duas vezes deixava um Thresholds diferente produzir
+    # quatro itens e quebrar no render, DEPOIS de mark_delivered ter rodado.
+    radar = eligible[:PUSH_CAP]
 
-    for rank, item in enumerate(radar, start=1):
-        store.mark_delivered(item.paper.arxiv_id, channel="telegram", at=day, rank=rank)
+    # Spec secao 7: o markdown e (1) os tres do radar e (2) todos os DEMAIS
+    # candidatos. Calculado depois do corte para nao repetir os tres itens nas
+    # duas secoes.
+    feed = [item for item, _ in candidates if item not in radar]
+
+    if not dry_run:
+        # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de
+        # telegram aqui queimaria os tres melhores itens do dia para sempre: a
+        # primeira execucao de verdade os cortaria como ja_entregue.
+        for rank, item in enumerate(radar, start=1):
+            store.mark_delivered(item.paper.arxiv_id, channel="telegram", at=day, rank=rank)
     for item in feed:
         store.mark_delivered(item.paper.arxiv_id, channel="markdown", at=day, rank=None)
 

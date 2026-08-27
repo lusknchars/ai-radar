@@ -8,7 +8,11 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
-PUSH_CAP = 3   # rigido por decisao de produto; nao configuravel
+# Rigido por decisao de produto, e por isso mora AQUI e em lugar nenhum mais:
+# nao e campo de Thresholds, nao sai do ambiente, nao entra por argumento. O
+# pipeline fatia por ele e o render guarda por ele -- a mesma constante nos dois
+# lados, para que nao exista jeito de expressar um teto diferente.
+PUSH_CAP = 3
 
 
 @dataclass(frozen=True)
@@ -41,7 +45,6 @@ class Thresholds:
     broke_out_stars: int
     broke_out_citations: int
     score_floor: float
-    push_cap: int = PUSH_CAP
 
 
 def _env_int(name: str, default: int) -> int:
@@ -55,14 +58,13 @@ def _env_float(name: str, default: float) -> float:
 
 
 def load_thresholds() -> Thresholds:
-    # push_cap passado explicitamente a partir da constante, NUNCA do ambiente
-    # (spec secao 9). Explicito aqui para que a invariante fique visivel no
-    # ponto de chamada, e nao escondida num default de dataclass.
+    # Os tres limiares abaixo sao calibraveis por ambiente; o teto do push nao
+    # e um deles. Ele nao aparece aqui porque nao existe como campo: ver
+    # PUSH_CAP acima.
     return Thresholds(
         broke_out_stars=_env_int("RADAR_BROKE_OUT_STARS", 1000),
         broke_out_citations=_env_int("RADAR_BROKE_OUT_CITATIONS", 200),
         score_floor=_env_float("RADAR_SCORE_FLOOR", 0.0),
-        push_cap=PUSH_CAP,
     )
 
 

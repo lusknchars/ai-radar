@@ -91,6 +91,42 @@ def test_judge_one_uses_structured_output_not_free_text():
     assert client.messages.calls[0]["output_format"] is JudgmentSchema
 
 
+def test_judge_one_asks_for_adaptive_thinking_at_low_effort():
+    """Spec secao 5. No Opus 5 o thinking vem ligado e o esforco default e
+    `high`: sem os dois explicitos, cada julgamento de uma frase raciocina muito
+    acima do orcado, e tokens de thinking contam como saida."""
+    client = FakeClient(valid_schema())
+    Judge(client=client, model="claude-opus-5").judge_one(PAPER)
+    chamada = client.messages.calls[0]
+    assert chamada["thinking"] == {"type": "adaptive"}
+    assert chamada["output_config"]["effort"] == "low"
+
+
+def test_the_verdict_field_tells_the_model_the_criterion():
+    """runs_on_3090 e o veredito que o usuario le. O Literal restringe o token
+    mas nao diz nada sobre o criterio."""
+    campo = JudgmentSchema.model_json_schema()["properties"]["runs_on_3090"]
+    assert "FP8" in campo["description"]
+
+
+def test_max_tokens_leaves_room_for_thinking():
+    """Tokens de thinking contam contra o max_tokens. Um teto apertado corta o
+    julgamento no meio do JSON, e o truncado e descartado como malformado."""
+    from radar.judge import MAX_TOKENS
+    assert MAX_TOKENS >= 4096
+
+
+def test_batch_requests_ask_for_adaptive_thinking_at_low_effort():
+    """O caminho de lote e o unico com chamador em producao: e ele que precisa
+    carregar a configuracao da spec."""
+    from radar.judge import build_batch_requests
+    params = build_batch_requests([PAPER], model="claude-opus-5")[0]["params"]
+    assert params["thinking"] == {"type": "adaptive"}
+    assert params["output_config"]["effort"] == "low"
+    assert params["output_config"]["format"]["type"] == "json_schema"
+    assert params["max_tokens"] >= 4096
+
+
 def test_batch_requests_are_keyed_by_arxiv_id():
     from radar.judge import build_batch_requests
     papers = [PAPER, Paper(arxiv_id="2508.22222", title="T2", abstract="A2",
@@ -193,3 +229,32 @@ def test_batch_skips_failed_results_without_crashing():
         result = type("Res", (), {"type": "errored"})()
 
     assert collect_batch_results([Errored()]) == {}
+
+
+def _sucesso_com_texto(cid, texto):
+    return type("R", (), {
+        "custom_id": cid,
+        "result": type("Res", (), {
+            "type": "succeeded",
+            "message": type("M", (), {"content": [
+                type("B", (), {"type": "text", "text": texto})()]})()})()})()
+
+
+def test_a_malformed_judgment_is_logged_with_its_custom_id(caplog):
+    """Descartar calado compoe com o resto: o paper aparece como
+    `sem_julgamento` no markdown e nao ha como saber qual quebrou nem por que."""
+    from radar.judge import collect_batch_results
+    with caplog.at_level("WARNING", logger="radar.judge"):
+        out = collect_batch_results([_sucesso_com_texto("2508.44444", '{"technique":')])
+    assert out == {}
+    assert "2508.44444" in caplog.text
+
+
+def test_a_judgment_with_an_invalid_verdict_is_logged_not_swallowed(caplog):
+    from radar.judge import collect_batch_results
+    payload = ('{"technique":"T","summary":"S","runs_on_3090":"talvez",'
+               '"rationale":"R"}')
+    with caplog.at_level("WARNING", logger="radar.judge"):
+        out = collect_batch_results([_sucesso_com_texto("2508.55555", payload)])
+    assert out == {}
+    assert "2508.55555" in caplog.text

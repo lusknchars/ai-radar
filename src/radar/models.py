@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 VALID_VERDICTS = frozenset({"sim", "sim_com_ressalva", "nao"})
 _VERSIONED = re.compile(r"v\d+$")
@@ -31,6 +31,19 @@ class Paper:
         # simples sem abrir mao da imutabilidade.
         object.__setattr__(self, "authors", tuple(self.authors))
         object.__setattr__(self, "categories", tuple(self.categories))
+
+
+@dataclass(frozen=True)
+class Discovery:
+    """O resultado da descoberta do dia: o que entrou e o que foi descartado.
+
+    A contagem viaja junto com os papers de proposito. Papers jogados fora
+    dentro do cliente do arXiv -- por categoria fora do escopo, ou por um termo
+    cuja consulta falhou -- desapareciam sem deixar rastro, e a restricao global
+    do projeto e que TODO corte seja contado e chegue ao markdown do dia.
+    """
+    papers: list[Paper]
+    cuts: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
