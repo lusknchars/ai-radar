@@ -88,8 +88,10 @@ class ArxivClient:
         """
         allowed = set(scope.categories)
         seen: dict[str, Paper] = {}
-        fora_de_escopo: set[str] = set()      # por id: um paper repetido em dois
-        termos_falhos = 0                     # termos nao conta duas vezes
+        # Guardado por id, e nao contado na hora: um paper que aparece fora de
+        # escopo em dois termos diferentes e um corte so.
+        fora_de_escopo: set[str] = set()
+        termos_falhos = 0
         for index, term in enumerate(scope.terms):
             if index:
                 self._sleep(ETIQUETTE_SLEEP_SECONDS)

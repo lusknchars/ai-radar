@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -57,11 +59,28 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--db", type=Path, default=Path("data/radar.db"))
     parser.add_argument("--out", type=Path, default=Path("radar"))
     parser.add_argument("--dry-run", action="store_true",
-                        help="nao envia o push nem grava entregas de telegram")
+                        help="escreve o markdown do dia, mas nao envia o push "
+                             "e nao deixa nada gravado no banco de verdade")
     args = parser.parse_args(argv)
 
     today = datetime.now(timezone.utc).date()
-    store = Store(args.db)
+
+    # No ensaio o banco e uma copia descartavel. Pular so a entrega de telegram
+    # nao basta: `run_day` tambem grava o paper em `papers`, e desde que papers
+    # ja conhecidos deixaram de reentrar como novidade, um paper gravado no
+    # ensaio e cortado como `ja_conhecido` na primeira execucao de verdade --
+    # a mesma queima de antes, por outra porta. O passo de commit do workflow
+    # nao distingue dry-run, entao a garantia tem de ser que o ensaio nao
+    # produza estado duravel nenhum.
+    db_path = args.db
+    ensaio = None
+    if args.dry_run:
+        ensaio = tempfile.mkdtemp(prefix="radar-dry-run-")
+        db_path = Path(ensaio) / "radar.db"
+        if args.db.exists():
+            shutil.copy2(args.db, db_path)   # le o estado real, escreve na copia
+
+    store = Store(db_path)
     store.init_schema()
 
     arxiv = ArxivClient(fetch=_arxiv_fetch)
@@ -100,7 +119,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"radar: {len(result.radar)} · feed: {len(result.feed)} · cortes: {result.cuts}")
 
     if args.dry_run:
-        print("dry-run: push nao enviado, entrega de telegram nao gravada")
+        shutil.rmtree(ensaio, ignore_errors=True)
+        print("dry-run: push nao enviado, nada gravado no banco de verdade")
         return 0
 
     try:

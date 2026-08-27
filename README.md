@@ -6,8 +6,9 @@ Roda diariamente às 09:00 UTC via GitHub Actions. Para rodar à mão sem enviar
 
     python -m radar.cli --dry-run
 
-O dry-run escreve o markdown do dia e grava o estado, mas não envia o push **nem
-registra entrega de Telegram** — o ensaio não consome os itens do dia seguinte.
+O dry-run escreve o markdown do dia, mas não envia o push e **não deixa nada
+gravado no banco de verdade** — ele lê o estado real e escreve numa cópia
+descartável. O ensaio não consome os papers da primeira execução real.
 
 ### Segredos necessários
 

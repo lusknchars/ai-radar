@@ -89,7 +89,40 @@ def test_dry_run_neither_sends_nor_records_a_telegram_delivery(ambiente, monkeyp
 
     from radar.store import Store
     store = Store(ambiente / "radar.db")
+    store.init_schema()
     assert store.was_delivered(PAPER.arxiv_id, channel="telegram") is False
+
+
+def test_dry_run_leaves_no_durable_state_at_all(ambiente, monkeypatch):
+    """Pular so a entrega de telegram nao basta desde que papers ja conhecidos
+    deixaram de reentrar como novidade: um paper gravado no ensaio seria
+    cortado como `ja_conhecido` na primeira execucao de verdade -- a mesma
+    queima, por outra porta. E o passo de commit do workflow nao distingue
+    dry-run de execucao real."""
+    monkeypatch.setattr(cli, "send", lambda *a, **k: True)
+    assert cli.main(argv(ambiente, "--dry-run")) == 0
+
+    from radar.store import Store
+    store = Store(ambiente / "radar.db")
+    store.init_schema()
+    assert store.all_papers() == []
+    assert store.signal_history(PAPER.arxiv_id) == []
+    assert store.latest_judgment(PAPER.arxiv_id) is None
+
+
+def test_dry_run_still_reads_the_real_state(ambiente, monkeypatch):
+    """A copia e para escrita, nao para leitura: o ensaio precisa enxergar o
+    que ja esta no banco, senao mostra como novidade o que nao e."""
+    from radar.store import Store
+    real = Store(ambiente / "radar.db")
+    real.init_schema()
+    real.upsert_paper(PAPER, seen_at="2026-08-26")
+
+    monkeypatch.setattr(cli, "send", lambda *a, **k: True)
+    assert cli.main(argv(ambiente, "--dry-run")) == 0
+
+    digest = next((ambiente / "radar").glob("*.md")).read_text(encoding="utf-8")
+    assert "- ja_conhecido: 1" in digest
 
 
 def test_a_real_run_sends_and_records(ambiente, monkeypatch):
