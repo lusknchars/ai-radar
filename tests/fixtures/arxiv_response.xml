@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+      xmlns:arxiv="http://arxiv.org/schemas/atom"
+      xmlns="http://www.w3.org/2005/Atom">
+  <opensearch:totalResults>2</opensearch:totalResults>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11111v2</id>
+    <published>2026-08-20T10:00:00Z</published>
+    <title>Fused INT4 Kernels for Ampere Inference</title>
+    <summary>  We present a fused INT4 by FP16 kernel that saturates
+  memory bandwidth at batch size one.  </summary>
+    <author><name>Elias Frantar</name></author>
+    <author><name>Ji Lin</name></author>
+    <arxiv:primary_category term="cs.LG"/>
+    <category term="cs.LG"/>
+    <category term="cs.AR"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.22222v1</id>
+    <published>2026-08-19T08:30:00Z</published>
+    <title>A Survey of Speech Recognition Models</title>
+    <summary>Unrelated to the scope.</summary>
+    <author><name>Someone Else</name></author>
+    <arxiv:primary_category term="eess.AS"/>
+    <category term="eess.AS"/>
+  </entry>
+</feed>
