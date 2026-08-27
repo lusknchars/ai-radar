@@ -12,7 +12,7 @@ import json
 import time
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from .models import Judgment, Paper
 
@@ -29,6 +29,12 @@ MAX_TOKENS = 1024
 
 
 class JudgmentSchema(BaseModel):
+    # extra="forbid" e o que faz o Pydantic emitir `additionalProperties: false`
+    # no schema. O contrato de saida estruturada exige esse campo em todo objeto
+    # (spec secao 5); sem ele a API rejeita o lote inteiro, `collect_batch_results`
+    # devolve {} e todo paper do dia vira `sem_julgamento`.
+    model_config = ConfigDict(extra="forbid")
+
     technique: str = Field(description="Rotulo curto da tecnica, ate 8 palavras")
     summary: str = Field(description="UMA frase dizendo o que a tecnica faz")
     runs_on_3090: Literal["sim", "sim_com_ressalva", "nao"]

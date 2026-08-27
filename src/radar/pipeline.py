@@ -37,10 +37,23 @@ def run_day(
     judge_all: Callable[[list[Paper]], dict[str, Judgment]],
 ) -> DayResult:
     day = today.isoformat()
-    papers = fetch_papers(scope)
-    judgments = judge_all(papers) if papers else {}
+    discovered = fetch_papers(scope)
 
     cuts: Counter[str] = Counter()
+
+    # Spec secao 3: "Papers ja presentes no banco nao reentram como novidade."
+    # O Feed responde "o que saiu hoje" -- um paper que ja esta no banco nao
+    # saiu hoje, entao nao entra nem no radar nem no feed do dia; vira corte
+    # contado. Sem este filtro o dia 2 re-descobre e RE-JULGA quase tudo do dia
+    # 1: custo do lote multiplicado e o mesmo feed republicado todo dia.
+    # (A re-consulta de sinal desses papers e outra funcionalidade, ainda nao
+    # construida -- ver spec secao 6.)
+    conhecidos = {row["arxiv_id"] for row in store.all_papers()}
+    papers = [p for p in discovered if p.arxiv_id not in conhecidos]
+    if len(discovered) != len(papers):
+        cuts["ja_conhecido"] += len(discovered) - len(papers)
+
+    judgments = judge_all(papers) if papers else {}
     candidates: list[tuple[RadarItem, bool]] = []   # (item, elegivel_para_push)
     repos_by_paper: dict[str, list[dict]] = {}
 
@@ -81,6 +94,12 @@ def run_day(
         elif result.value < thresholds.score_floor:
             cuts["abaixo_do_piso"] += 1
             candidates.append((item, False))
+        # Guarda de cinto e suspensorio (spec secao 6: "Nenhum paper e entregue
+        # duas vezes no Telegram"). Hoje o filtro de `ja_conhecido` acima ja
+        # barra qualquer paper que tenha sido entregue -- entregar exige estar
+        # no banco. A guarda fica porque a re-consulta (spec secao 6, ainda nao
+        # construida) reintroduz papers antigos neste laco, e ai ela volta a ser
+        # o unico obstaculo entre um paper antigo e uma segunda entrega.
         elif store.was_delivered(paper.arxiv_id, channel="telegram"):
             cuts["ja_entregue"] += 1
             candidates.append((item, False))

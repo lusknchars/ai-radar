@@ -47,6 +47,25 @@ def test_prompt_includes_the_paper_and_the_hardware_brief():
     assert HARDWARE_BRIEF in prompt
 
 
+def test_schema_forbids_additional_properties():
+    """O contrato de saida estruturada exige `additionalProperties: false` em
+    todo objeto (spec secao 5). O Pydantic so emite esse campo sob
+    extra="forbid"; sem ele a API rejeita o lote inteiro e todo paper do dia
+    cai como `sem_julgamento`. A chamada nao da para exercitar offline, entao o
+    teste trava a FORMA do schema, que e o que vai no corpo da requisicao."""
+    schema = JudgmentSchema.model_json_schema()
+    assert schema["additionalProperties"] is False
+
+
+def test_batch_request_carries_the_schema_with_additional_properties_forbidden():
+    """O caminho de lote e o unico que roda em producao: ele monta o schema a
+    mao, entao a garantia acima precisa chegar ate o corpo da requisicao."""
+    from radar.judge import build_batch_requests
+    schema = build_batch_requests([PAPER], model="claude-opus-5")[0]["params"][
+        "output_config"]["format"]["schema"]
+    assert schema["additionalProperties"] is False
+
+
 def test_schema_rejects_a_verdict_outside_the_enum():
     with pytest.raises(Exception):
         JudgmentSchema(technique="T", summary="S", runs_on_3090="talvez", rationale="R")

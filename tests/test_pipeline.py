@@ -79,12 +79,67 @@ def test_every_in_scope_paper_reaches_the_feed_even_when_gated(store):
 
 
 def test_already_delivered_paper_is_not_pushed_twice(store):
+    """A garantia de produto e "nenhum paper vai duas vezes para o Telegram".
+    Quem a entrega hoje e o filtro de ja-conhecido: entregar exige estar no
+    banco, e quem esta no banco nao reentra como novidade."""
     p = paper("2508.00001")
     store.upsert_paper(p, seen_at="2026-08-26")
     store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-26", rank=1)
     result = run(store, [p], {"2508.00001": fake_signal(4, 30)})
     assert result.radar == []
-    assert result.cuts["ja_entregue"] == 1
+
+
+def test_paper_already_in_the_database_is_not_rediscovered_as_news(store):
+    """Spec secao 3: papers ja no banco nao reentram como novidade. O Feed
+    responde "o que saiu hoje" -- um paper de ontem nao saiu hoje, entao fica
+    fora do radar E do feed, contado na secao de cortes."""
+    velho, novo = paper("2508.00001"), paper("2508.00002")
+    store.upsert_paper(velho, seen_at="2026-08-26")
+    result = run(store, [velho, novo],
+                 {"2508.00001": fake_signal(4, 30), "2508.00002": fake_signal(3, 20)})
+    assert [i.paper.arxiv_id for i in result.radar] == ["2508.00002"]
+    assert "2508.00001" not in [i.paper.arxiv_id for i in result.feed]
+    assert result.cuts["ja_conhecido"] == 1
+
+
+def test_a_known_paper_is_never_sent_to_the_judge(store):
+    """O corte precisa acontecer ANTES do julgamento: e o custo do lote que
+    estoura quando o dia 2 re-julga tudo que o dia 1 ja julgou."""
+    velho, novo = paper("2508.00001"), paper("2508.00002")
+    store.upsert_paper(velho, seen_at="2026-08-26")
+    julgados: list[list[str]] = []
+
+    def judge_all(ps):
+        julgados.append([p.arxiv_id for p in ps])
+        return {p.arxiv_id: judgment(p.arxiv_id) for p in ps}
+
+    run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: [velho, novo],
+        fetch_signal=lambda p, today: (fake_signal(3, 20), []),
+        judge_all=judge_all,
+    )
+    assert julgados == [["2508.00002"]]
+
+
+def test_a_day_whose_papers_are_all_known_judges_nothing(store):
+    velho = paper("2508.00001")
+    store.upsert_paper(velho, seen_at="2026-08-26")
+    chamadas = []
+
+    def judge_all(ps):
+        chamadas.append(ps)
+        return {}
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: [velho],
+        fetch_signal=lambda p, today: (fake_signal(3, 20), []),
+        judge_all=judge_all,
+    )
+    assert chamadas == []                      # nem uma chamada ao LLM
+    assert result.cuts["ja_conhecido"] == 1
+    assert result.push == ""
 
 
 def test_pushed_papers_are_marked_delivered(store):
@@ -121,17 +176,27 @@ def test_signal_is_persisted_for_every_paper(store):
     assert len(store.signal_history("2508.00001")) == 1
 
 
-def test_second_run_produces_a_delta(store):
+def test_rediscovering_a_paper_does_not_add_a_second_observation(store):
+    """Consequencia deliberada do filtro de ja-conhecido, registrada aqui para
+    nao virar surpresa: quem ja esta no banco nao passa mais pelo laco, entao a
+    redescoberta pelo arXiv NAO grava um segundo sinal e nao produz delta.
+
+    O delta (spec secao 4, ressurreicao) volta a ter fonte quando a re-consulta
+    da spec secao 6 for construida -- ela e que vai reobservar o sinal dos
+    papers antigos. Ate la o `signals` de um paper tem uma linha so, e este
+    teste falha no dia em que isso mudar, que e exatamente quando ele deve ser
+    reescrito."""
     p = paper("2508.00001")
     run(store, [p], {"2508.00001": fake_signal(2, 300)})
-    run_day(
+    result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=date(2026, 9, 17), model="modelo-de-teste",
         fetch_papers=lambda scope: [p],
         fetch_signal=lambda pp, today: (fake_signal(9, 340, vel=7), []),
         judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
     )
-    delta = store.signal_delta("2508.00001")
-    assert delta["independent_from"] == 2 and delta["independent_to"] == 9
+    assert len(store.signal_history("2508.00001")) == 1
+    assert store.signal_delta("2508.00001") is None
+    assert result.cuts["ja_conhecido"] == 1
 
 
 def test_markdown_and_push_are_both_produced(store):
