@@ -96,7 +96,15 @@ def run_day(
         if result.gated_by is not None:
             cuts["ja_estourou"] += 1
             candidates.append((item, False))
-        elif result.value < thresholds.score_floor:
+        # `<=`, nao `<`, e a escolha e deliberada. O piso e o ultimo valor
+        # REJEITADO, nao o primeiro aceito. Com o piso documentado em 0.0 e a
+        # formula da spec, score == 0.0 acontece exatamente quando
+        # independent_impls == 0 (log1p(0) = 0): um paper que ninguem de fora
+        # implementou. Com `<` esse paper passa e pode tomar uma das tres vagas
+        # num dia magro -- constrangedor para um produto cuja tese e que
+        # implementacao independente E o sinal. Silencio e resultado valido; a
+        # vaga vazia diz a verdade, o paper sem implementacao nao.
+        elif result.value <= thresholds.score_floor:
             cuts["abaixo_do_piso"] += 1
             candidates.append((item, False))
         # Guarda de cinto e suspensorio (spec secao 6: "Nenhum paper e entregue

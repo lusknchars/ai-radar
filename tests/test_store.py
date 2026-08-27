@@ -63,6 +63,42 @@ def test_repos_persist_the_authorship_reason(store):
     assert rows["c/d"]["is_author_reason"] is None
 
 
+def test_recording_repos_replaces_the_previous_classification(store):
+    """Uma classificacao posterior manda: repo que saiu da busca nao cita mais
+    o paper. Acumular linhas antigas deixa o markdown do dia contando repos que
+    o sinal ja nao conta."""
+    store.upsert_paper(P, seen_at="2026-08-27")
+    store.record_repos(P.arxiv_id, [
+        RepoClassification(Repo("a/b", "a", 10, "2024-01-01T00:00:00Z"),
+                           is_author=True, reason="sobrenome"),
+        RepoClassification(Repo("sumiu/depois", "sumiu", 3, "2024-02-01T00:00:00Z"),
+                           is_author=False, reason=None),
+    ])
+    store.record_repos(P.arxiv_id, [
+        RepoClassification(Repo("a/b", "a", 12, "2024-01-01T00:00:00Z"),
+                           is_author=True, reason="sobrenome"),
+    ])
+    rows = store.repos_for(P.arxiv_id)
+    assert [r["full_name"] for r in rows] == ["a/b"]
+    assert rows[0]["stars"] == 12
+
+
+def test_repos_of_one_paper_are_not_erased_by_another(store):
+    """O DELETE e por arxiv_id: gravar o vizinho nao pode apagar este."""
+    outro = Paper(arxiv_id="2508.22222", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-20")
+    store.upsert_paper(P, seen_at="2026-08-27")
+    store.upsert_paper(outro, seen_at="2026-08-27")
+    store.record_repos(P.arxiv_id, [
+        RepoClassification(Repo("a/b", "a", 10, "2024-01-01T00:00:00Z"),
+                           is_author=False, reason=None)])
+    store.record_repos(outro.arxiv_id, [
+        RepoClassification(Repo("c/d", "c", 5, "2024-01-01T00:00:00Z"),
+                           is_author=False, reason=None)])
+    assert [r["full_name"] for r in store.repos_for(P.arxiv_id)] == ["a/b"]
+    assert [r["full_name"] for r in store.repos_for(outro.arxiv_id)] == ["c/d"]
+
+
 def test_delivered_paper_is_not_delivered_again(store):
     store.upsert_paper(P, seen_at="2026-08-27")
     assert store.was_delivered(P.arxiv_id, channel="telegram") is False
@@ -77,10 +113,16 @@ def test_delivery_channels_are_independent(store):
 
 
 def test_judgment_round_trips(store):
+    """Os quatro campos, com valores distintos de proposito: `record_judgment`
+    liga quatro strings posicionalmente, entao uma troca entre `summary` e
+    `rationale` passaria batido num teste que so confere `technique`."""
     store.upsert_paper(P, seen_at="2026-08-27")
-    j = Judgment(technique="Kernel INT4", summary="S", runs_on_3090="sim", rationale="R")
+    j = Judgment(technique="Kernel INT4 fundido",
+                 summary="Satura banda de memoria em batch unitario.",
+                 runs_on_3090="sim_com_ressalva",
+                 rationale="Roda em Ampere, mas so ate 13B em 24 GB.")
     store.record_judgment(P.arxiv_id, j, model="claude-opus-5", judged_at="2026-08-27")
-    assert store.latest_judgment(P.arxiv_id).technique == "Kernel INT4"
+    assert store.latest_judgment(P.arxiv_id) == j
 
 
 def test_stalest_papers_come_first(store):

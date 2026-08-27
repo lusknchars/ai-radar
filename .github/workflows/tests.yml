@@ -1,0 +1,25 @@
+name: testes
+
+# A suite roda offline e em menos de um segundo: nao ha motivo para ela nao ser
+# a guarda de todo push. Sem este job, as invariantes do projeto (teto de 3,
+# cortes contados, modelo nao rebaixado) so seriam verificadas na maquina de
+# quem lembrasse de rodar pytest.
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar
+        run: pip install -e ".[dev]"
+
+      - name: Rodar a suite
+        run: pytest -q

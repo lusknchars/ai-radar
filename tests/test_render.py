@@ -79,8 +79,21 @@ def test_markdown_never_omits_the_cuts_section():
 
 
 def test_markdown_includes_the_full_feed_with_verdicts():
+    """A linha inteira, nao um pedaco dela: `"sim" in md` casa com quase
+    qualquer saida, inclusive com o veredito faltando e o resumo no lugar
+    errado."""
     feed_item = item(paper=Paper(arxiv_id="2508.99999", title="Outro", abstract="A",
                                  authors=[], categories=["cs.LG"], published="2026-08-21"))
     md = render_markdown("2026-08-27", radar=[], feed=[feed_item], cuts={})
-    assert "2508.99999" in md
-    assert "sim" in md
+    assert ("- **Kernel INT4 fundido** — Satura banda de memoria em batch unitario. "
+            "(3090: sim) arxiv.org/abs/2508.99999") in md
+
+
+def test_markdown_feed_carries_the_verdict_of_each_item():
+    """Contraprova: o veredito renderizado e o do item, nao um literal fixo."""
+    nao_roda = Judgment(technique="Kernel FP8", summary="Depende de FP8.",
+                        runs_on_3090="nao", rationale="Ampere nao tem FP8.")
+    md = render_markdown("2026-08-27", radar=[], cuts={},
+                         feed=[item(judgment=nao_roda)])
+    assert "(3090: nao)" in md
+    assert "(3090: sim)" not in md

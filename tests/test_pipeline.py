@@ -228,6 +228,27 @@ def test_score_below_the_floor_is_cut(store):
     assert result.cuts["abaixo_do_piso"] == 1
 
 
+def test_a_paper_with_no_independent_implementation_never_takes_a_push_slot(store):
+    """O piso e o ultimo valor rejeitado, nao o primeiro aceito. Com o piso em
+    0.0, score exatamente 0.0 e o paper que NINGUEM de fora implementou -- e a
+    tese do produto e que implementacao independente E o sinal. Num dia magro
+    ele tomaria uma das tres vagas so por nao ter concorrente."""
+    p = paper("2508.00001")
+    result = run(store, [p], {"2508.00001": fake_signal(0, 800)})
+    assert result.radar == []
+    assert result.push == ""                   # silencio e resultado valido
+    assert result.cuts["abaixo_do_piso"] == 1
+    assert [i.paper.arxiv_id for i in result.feed] == ["2508.00001"]
+
+
+def test_a_paper_just_above_the_floor_still_passes(store):
+    """Contraprova: `<=` nao pode virar um corte generico. Uma unica
+    implementacao independente ja poe o score acima de zero."""
+    p = paper("2508.00001")
+    result = run(store, [p], {"2508.00001": fake_signal(1, 800)})
+    assert [i.paper.arxiv_id for i in result.radar] == ["2508.00001"]
+
+
 def test_judgment_records_which_model_produced_it(store):
     """A coluna `model` existe para auditoria. Gravar vazio a torna inutil."""
     p = paper("2508.00001")
@@ -400,8 +421,51 @@ def test_markdown_carries_the_authorship_audit_trail_from_the_store(store):
     assert "terceiro/impl — 12 estrelas — independente" in result.markdown
 
 
-def test_cuts_total_plus_radar_never_exceeds_candidates(store):
-    papers = [paper(f"2508.0000{i}") for i in range(5)]
-    signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
-    result = run(store, papers, signals)
-    assert len(result.radar) + sum(result.cuts.values()) <= len(papers)
+# Motivos que REMOVEM o paper do dia. Os demais (ja_estourou, abaixo_do_piso,
+# ja_entregue) tiram do push mas mantem o paper no feed, entao entrariam duas
+# vezes na conta abaixo.
+REMOCOES = ("ja_conhecido", "sem_julgamento", "sinal_indisponivel")
+
+
+def test_every_discovered_paper_is_either_rendered_or_counted_as_a_cut(store):
+    """A particao exata, nao uma desigualdade. `radar + cortes <= descobertos`
+    e verdade ate quando um paper some sem deixar rastro -- que e exatamente o
+    truncamento silencioso que a restricao global proibe. Aqui todo paper
+    descoberto tem de aparecer no radar, no feed ou numa contagem de remocao,
+    uma vez so."""
+    conhecido = paper("2508.00000")
+    store.upsert_paper(conhecido, seen_at="2026-08-26")
+    papers = [conhecido] + [paper(f"2508.0000{i}") for i in range(1, 7)]
+    signals = {
+        "2508.00001": fake_signal(6, 20),      # radar
+        "2508.00002": fake_signal(5, 20),      # radar
+        "2508.00003": fake_signal(4, 20),      # radar
+        "2508.00004": fake_signal(3, 20),      # sobra do teto -> feed
+        "2508.00005": fake_signal(50, 9000),   # portao -> feed
+        # 2508.00006 falha no sinal; 2508.00000 ja e conhecido
+    }
+
+    def fetch_signal(p, today):
+        if p.arxiv_id == "2508.00006":
+            raise RuntimeError("busca incompleta")
+        return signals[p.arxiv_id], []
+
+    def judge_all(ps):
+        # o 2508.00002 volta sem julgamento do lote
+        return {p.arxiv_id: judgment(p.arxiv_id)
+                for p in ps if p.arxiv_id != "2508.00002"}
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: Discovery(papers=papers),
+        fetch_signal=fetch_signal, judge_all=judge_all,
+    )
+
+    removidos = sum(result.cuts.get(motivo, 0) for motivo in REMOCOES)
+    assert result.cuts["ja_conhecido"] == 1
+    assert result.cuts["sem_julgamento"] == 1
+    assert result.cuts["sinal_indisponivel"] == 1
+    assert len(result.radar) + len(result.feed) + removidos == len(papers)
+    # E cada paper aparece uma vez so entre as duas secoes.
+    rendidos = [i.paper.arxiv_id for i in result.radar + result.feed]
+    assert len(rendidos) == len(set(rendidos))

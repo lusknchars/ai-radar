@@ -140,6 +140,11 @@ class Store:
     # ---------- repos ----------
 
     def record_repos(self, arxiv_id: str, classifications: list[RepoClassification]) -> None:
+        # Substituicao, nao acumulo. Esta tabela E a mitigacao da heuristica de
+        # autoria: um repo que sumiu da classificacao de hoje nao cita mais o
+        # paper, e deixa-lo aqui coloca contagem contraditoria no markdown do
+        # dia -- a linha continua listada enquanto o sinal ja nao a conta.
+        self._conn.execute("DELETE FROM repos WHERE arxiv_id=?", (arxiv_id,))
         self._conn.executemany(
             """INSERT OR REPLACE INTO repos
                  (arxiv_id, full_name, owner, stars, created_at, is_author, is_author_reason)

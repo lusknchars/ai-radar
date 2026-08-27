@@ -74,8 +74,12 @@ def test_oldest_but_not_most_starred_is_not_presumed_official():
 
 
 def test_single_repo_is_presumed_official():
+    """Com um repo so, ele e simultaneamente o mais antigo e o mais estrelado.
+    Conferir a RAZAO importa: e a regra 3, a que mais erra, e sem ela o teste
+    nao distingue este caso de um acidente da regra 1 (sobrenome)."""
     out = classify_repos([repo("solo/only", 5, "2024-01-01T00:00:00Z")], [], "")
     assert out[0].is_author is True
+    assert out[0].reason == "mais_antigo_e_mais_estrelado"
 
 
 def test_every_classification_carries_an_auditable_reason():
