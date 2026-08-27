@@ -1,0 +1,13 @@
+{
+  "total_count": 4,
+  "items": [
+    {"full_name": "IST-DASLab/gptq",      "owner": {"login": "IST-DASLab"},
+     "stargazers_count": 2360, "created_at": "2022-10-19T00:00:00Z"},
+    {"full_name": "fpgaminer/GPTQ-triton", "owner": {"login": "fpgaminer"},
+     "stargazers_count": 322,  "created_at": "2023-03-28T00:00:00Z"},
+    {"full_name": "davisyoshida/jax-gptq", "owner": {"login": "davisyoshida"},
+     "stargazers_count": 10,   "created_at": "2023-05-05T00:00:00Z"},
+    {"full_name": "recente/fresh-impl",    "owner": {"login": "recente"},
+     "stargazers_count": 4,    "created_at": "2026-08-20T00:00:00Z"}
+  ]
+}
