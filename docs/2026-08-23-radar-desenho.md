@@ -99,8 +99,9 @@ queremos, que e baixa atencao. O GitHub nao discrimina escopo; ele so confirma
 implementacao de um paper que voce ja identificou.
 
 **CONFIRMADO — arXiv API serve para descoberta, com uma pegadinha.**
-Funciona apenas em HTTPS e com User-Agent explicito; em HTTP retorna corpo vazio com
-falha silenciosa. `cat:cs.LG AND abs:quantization` da 4565 resultados, com os mais
+Funciona apenas em HTTPS e com User-Agent explicito; em HTTP devolve 301 com corpo
+vazio, e como raise_for_status() nao levanta em 3xx e o httpx nao segue redirect por
+padrao, o chamador recebe zero byte e nenhum erro. `cat:cs.LG AND abs:quantization` da 4565 resultados, com os mais
 recentes do dia anterior. Filtragem por categoria mais termo no abstract e precisa o
 suficiente para o escopo estreito.
 

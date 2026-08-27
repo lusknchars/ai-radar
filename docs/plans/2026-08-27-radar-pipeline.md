@@ -32,7 +32,7 @@
 
 **Testes rodam sem rede.** Toda tarefa tem testes que passam offline. Adaptadores recebem o cliente HTTP por injeção; testes passam duplos.
 
-**arXiv exige HTTPS e User-Agent.** Em HTTP a API retorna corpo vazio com status 200. Está codificado no adaptador e travado por teste.
+**arXiv exige HTTPS e User-Agent.** Em HTTP a API devolve 301 com corpo vazio — e como `raise_for_status()` não levanta em 3xx e o httpx não segue redirect por padrão, o chamador recebe zero byte sem erro. Está codificado no adaptador e travado por teste.
 
 ---
 
@@ -110,8 +110,8 @@ Criar `src/radar/__init__.py` e `tests/__init__.py` vazios.
 ```python
 import pytest
 
-from radar.config import DEFAULT_SCOPE, Thresholds, load_thresholds
-from radar.models import Judgment, Paper, Repo, Signal
+from radar.config import DEFAULT_SCOPE, load_thresholds
+from radar.models import Judgment, Paper, Signal
 
 
 def test_scope_covers_the_five_arxiv_categories():
@@ -144,6 +144,24 @@ def test_paper_rejects_versioned_arxiv_id():
     with pytest.raises(ValueError, match="versao"):
         Paper(arxiv_id="2508.12345v2", title="T", abstract="A",
               authors=[], categories=["cs.LG"], published="2026-08-01")
+
+
+def test_paper_is_hashable_so_it_can_serve_as_a_dedup_key():
+    """arxiv_id canonico existe para deduplicar. Um Paper nao-hashavel
+    explodiria no primeiro `set(papers)` do pipeline."""
+    p = Paper(arxiv_id="2508.12345", title="T", abstract="A",
+              authors=["Elias Frantar"], categories=["cs.LG"], published="2026-08-01")
+    assert len({p, p}) == 1
+
+
+def test_paper_coerces_sequences_so_contents_cannot_be_mutated():
+    """frozen=True sozinho protege a reatribuicao, nao o conteudo da lista."""
+    p = Paper(arxiv_id="2508.12345", title="T", abstract="A",
+              authors=["Elias Frantar"], categories=["cs.LG"], published="2026-08-01")
+    assert p.authors == ("Elias Frantar",)
+    assert p.categories == ("cs.LG",)
+    with pytest.raises(AttributeError):
+        p.authors.append("intruso")
 
 
 def test_signal_defaults_citations_to_zero():
@@ -199,7 +217,7 @@ Esperado: FAIL com `ModuleNotFoundError: No module named 'radar.config'`
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 VALID_VERDICTS = frozenset({"sim", "sim_com_ressalva", "nao"})
 _VERSIONED = re.compile(r"v\d+$")
@@ -207,12 +225,12 @@ _VERSIONED = re.compile(r"v\d+$")
 
 @dataclass(frozen=True)
 class Paper:
-    arxiv_id: str          # chave canonica, SEM sufixo de versao
+    arxiv_id: str                 # chave canonica, SEM sufixo de versao
     title: str
     abstract: str
-    authors: list[str]
-    categories: list[str]
-    published: str         # ISO date
+    authors: tuple[str, ...]
+    categories: tuple[str, ...]
+    published: str                # ISO date
 
     def __post_init__(self) -> None:
         if _VERSIONED.search(self.arxiv_id):
@@ -220,6 +238,14 @@ class Paper:
                 f"arxiv_id {self.arxiv_id!r} carrega versao; use a chave canonica "
                 f"sem sufixo para que v1 e v2 nao virem entradas distintas"
             )
+        # frozen=True protege reatribuicao de atributo, nao o conteudo de uma
+        # lista. Sem coagir para tupla, Paper aceita mutacao interna E explode
+        # em TypeError ao ser hasheado -- justamente o oposto do que arxiv_id
+        # existe para fazer, que e servir de chave de deduplicacao.
+        # Aceitar lista na construcao e devolver tupla mantem os chamadores
+        # simples sem abrir mao da imutabilidade.
+        object.__setattr__(self, "authors", tuple(self.authors))
+        object.__setattr__(self, "categories", tuple(self.categories))
 
 
 @dataclass(frozen=True)
@@ -284,7 +310,7 @@ facil de matar o projeto -- ver spec secao 1, nao-objetivos.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 PUSH_CAP = 3   # rigido por decisao de produto; nao configuravel
 
@@ -333,11 +359,14 @@ def _env_float(name: str, default: float) -> float:
 
 
 def load_thresholds() -> Thresholds:
-    # push_cap deliberadamente NAO lido do ambiente: ver spec secao 9.
+    # push_cap passado explicitamente a partir da constante, NUNCA do ambiente
+    # (spec secao 9). Explicito aqui para que a invariante fique visivel no
+    # ponto de chamada, e nao escondida num default de dataclass.
     return Thresholds(
         broke_out_stars=_env_int("RADAR_BROKE_OUT_STARS", 1000),
         broke_out_citations=_env_int("RADAR_BROKE_OUT_CITATIONS", 200),
         score_floor=_env_float("RADAR_SCORE_FLOOR", 0.0),
+        push_cap=PUSH_CAP,
     )
 
 
@@ -348,7 +377,7 @@ def load_model() -> str:
 - [ ] **Passo 6: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_config.py -v`
-Esperado: 11 passed
+Esperado: 16 passed
 
 - [ ] **Passo 7: Propor commit (aguardar aprovação)**
 
@@ -513,7 +542,7 @@ def evaluate(signal: Signal, thresholds: Thresholds) -> ScoreResult:
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_scoring.py -v`
-Esperado: 11 passed
+Esperado: 16 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -658,6 +687,7 @@ que toda decisao seja auditavel no markdown do dia.
 from __future__ import annotations
 
 import unicodedata
+from typing import Sequence
 
 from .models import Repo, RepoClassification
 
@@ -670,7 +700,7 @@ def normalize(text: str) -> str:
     return "".join(c for c in stripped.lower() if c.isalnum())
 
 
-def _surnames(authors: list[str]) -> list[str]:
+def _surnames(authors: Sequence[str]) -> list[str]:
     out = []
     for author in authors:
         parts = author.split()
@@ -691,7 +721,7 @@ def _matches_surname(owner: str, surnames: list[str]) -> bool:
 
 
 def classify_repos(
-    repos: list[Repo], authors: list[str], abstract: str
+    repos: list[Repo], authors: Sequence[str], abstract: str
 ) -> list[RepoClassification]:
     if not repos:
         return []
@@ -781,16 +811,15 @@ git commit -m "feat: heuristica de autoria com guarda para sobrenome curto"
 ```python
 from pathlib import Path
 
-import pytest
-
 from radar.arxiv import ARXIV_ENDPOINT, ArxivClient, build_query, parse_feed
-from radar.config import DEFAULT_SCOPE, ScopeConfig
+from radar.config import ScopeConfig
 
 FIXTURE = (Path(__file__).parent / "fixtures" / "arxiv_response.xml").read_text()
 
 
 def test_endpoint_is_https():
-    """Em HTTP a API devolve corpo vazio com status 200 -- falha silenciosa."""
+    """Em HTTP a API devolve 301 com corpo vazio; raise_for_status() nao
+    levanta em 3xx e httpx nao segue redirect por padrao -- falha silenciosa."""
     assert ARXIV_ENDPOINT.startswith("https://")
 
 
@@ -814,11 +843,11 @@ def test_parse_collapses_whitespace_in_title_and_abstract():
 
 
 def test_parse_extracts_authors_in_order():
-    assert parse_feed(FIXTURE)[0].authors == ["Elias Frantar", "Ji Lin"]
+    assert parse_feed(FIXTURE)[0].authors == ("Elias Frantar", "Ji Lin")
 
 
 def test_parse_extracts_all_categories():
-    assert parse_feed(FIXTURE)[0].categories == ["cs.LG", "cs.AR"]
+    assert parse_feed(FIXTURE)[0].categories == ("cs.LG", "cs.AR")
 
 
 def test_parse_keeps_published_as_iso_date():
@@ -836,7 +865,7 @@ def test_empty_feed_returns_empty_list():
     assert parse_feed(empty) == []
 
 
-def test_client_filters_by_primary_category():
+def test_client_excludes_papers_with_no_category_in_scope():
     seen = []
 
     def fake_fetch(url):
@@ -845,8 +874,35 @@ def test_client_filters_by_primary_category():
 
     scope = ScopeConfig(categories=("cs.LG", "cs.AR"), terms=("quantization",))
     papers = ArxivClient(fetch=fake_fetch, sleep=lambda s: None).recent(scope)
-    assert [p.arxiv_id for p in papers] == ["2608.11111"]
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]   # a entrada eess.AS cai fora
     assert len(seen) == 1
+
+
+CROSS_LISTED = """<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <id>http://arxiv.org/abs/2608.33333v1</id>
+    <published>2026-08-18T00:00:00Z</published>
+    <title>Cross-listed Efficiency Work</title>
+    <summary>Categoria primaria fora do escopo, secundaria dentro.</summary>
+    <author><name>A B</name></author>
+    <arxiv:primary_category term="cs.AI"/>
+    <category term="cs.AI"/>
+    <category term="cs.LG"/>
+  </entry>
+</feed>"""
+
+
+def test_client_admits_a_paper_whose_only_in_scope_category_is_secondary():
+    """Cross-listing e comum: trabalho de eficiencia costuma ter primaria
+    cs.AI e secundaria cs.LG. A descoberta favorece recall de proposito --
+    cinco filtros a jusante (termo, sinal do GitHub, portao, piso, teto de 3)
+    cuidam da precisao. Este teste distingue interseccao de primary-only;
+    o teste acima nao distinguia, porque a entrada descartada da fixture nao
+    tem NENHUMA categoria no escopo."""
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization",))
+    papers = ArxivClient(fetch=lambda url: CROSS_LISTED, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.33333"]
 
 
 def test_client_unions_terms_and_deduplicates_by_id():
@@ -861,6 +917,27 @@ def test_client_sleeps_between_calls_for_arxiv_etiquette():
     ArxivClient(fetch=lambda url: FIXTURE, sleep=naps.append).recent(scope)
     assert len(naps) == 2          # dorme entre chamadas, nao depois da ultima
     assert all(n >= 3 for n in naps)
+
+
+def test_client_survives_a_term_whose_response_is_empty():
+    """Corpo vazio e exatamente o que a API devolve em HTTP simples, e
+    ET.fromstring("") levanta ParseError. Sem o parse dentro do try, um unico
+    termo ruim derruba a coleta de todos os outros."""
+    def fetch(url):
+        return "" if "sparsity" in url else FIXTURE
+
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    papers = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]
+
+
+def test_client_survives_a_term_whose_response_is_malformed():
+    def fetch(url):
+        return "<feed><entry>truncad" if "sparsity" in url else FIXTURE
+
+    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    papers = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
+    assert [p.arxiv_id for p in papers] == ["2608.11111"]
 
 
 def test_client_survives_one_failing_term():
@@ -887,8 +964,9 @@ Esperado: FAIL com `ModuleNotFoundError: No module named 'radar.arxiv'`
 """Adaptador do arXiv.
 
 PEGADINHA VERIFICADA: a API so responde em HTTPS e com User-Agent explicito.
-Em HTTP ela retorna corpo vazio com status 200 -- falha silenciosa, o pior tipo.
-O endpoint abaixo esta travado por teste.
+Em HTTP ela devolve 301 com corpo vazio. A falha e silenciosa porque
+raise_for_status() nao levanta em 3xx e o httpx nao segue redirect por padrao:
+o chamador recebe zero byte e nenhum erro. Endpoint travado por teste.
 
 Uma query por termo, unidas em codigo, em vez de uma query booleana gigante:
 a API trata mal query longa com aspas aninhadas, e a uniao em codigo e trivial
@@ -909,7 +987,6 @@ USER_AGENT = "ai-radar/0.1 (personal research digest)"
 ETIQUETTE_SLEEP_SECONDS = 3
 
 _ATOM = {"a": "http://www.w3.org/2005/Atom"}
-_ARXIV_NS = "{http://arxiv.org/schemas/atom}"
 
 
 def build_query(term: str, scope: ScopeConfig) -> str:
@@ -966,12 +1043,20 @@ class ArxivClient:
         for index, term in enumerate(scope.terms):
             if index:
                 self._sleep(ETIQUETTE_SLEEP_SECONDS)
+            # build_url fica FORA do try: se a construcao da query tiver bug
+            # nosso, queremos que exploda, nao que seja engolida como falha
+            # do arXiv.
+            url = build_url(term, scope, max_results)
             try:
-                xml_text = self._fetch(build_url(term, scope, max_results))
+                parsed = parse_feed(self._fetch(url))
             except Exception:
-                # Um termo que falha nao derruba a coleta inteira.
+                # Um termo que falha nao derruba a coleta inteira. O parse
+                # precisa estar DENTRO do try: corpo vazio -- que e o que a API
+                # devolve em HTTP simples -- faz ET.fromstring levantar
+                # ParseError, e sem essa cobertura um unico termo ruim mata a
+                # coleta de todos os outros.
                 continue
-            for paper in parse_feed(xml_text):
+            for paper in parsed:
                 if paper.arxiv_id in seen:
                     continue
                 if allowed.intersection(paper.categories):
@@ -993,7 +1078,7 @@ def http_fetch(url: str) -> str:
 - [ ] **Passo 5: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_arxiv.py -v`
-Esperado: 13 passed
+Esperado: 16 passed
 
 - [ ] **Passo 6: Propor commit (aguardar aprovação)**
 
@@ -1021,6 +1106,7 @@ git commit -m "feat: adaptador arXiv com HTTPS travado e uniao por termo"
 ```json
 {
   "total_count": 4,
+  "incomplete_results": false,
   "items": [
     {"full_name": "IST-DASLab/gptq",      "owner": {"login": "IST-DASLab"},
      "stargazers_count": 2360, "created_at": "2022-10-19T00:00:00Z"},
@@ -1070,7 +1156,33 @@ def test_parse_extracts_the_fields_the_signal_needs():
 
 
 def test_parse_of_empty_result_returns_empty():
-    assert parse_search({"total_count": 0, "items": []}) == []
+    assert parse_search({"total_count": 0, "incomplete_results": False, "items": []}) == []
+
+
+def test_error_payload_raises_instead_of_parsing_to_zero():
+    """Rate limit parseado como zero repos vira "ninguem implementou este
+    paper" -- despenca o score e descarta um paper bom, sem erro nenhum."""
+    from radar.github import SearchUnusable
+    with pytest.raises(SearchUnusable, match="items"):
+        parse_search({"message": "API rate limit exceeded", "documentation_url": "x"})
+
+
+def test_incomplete_search_raises_rather_than_undercounting():
+    """O GitHub avisa quando a busca deu timeout. Contar em cima do parcial e
+    truncamento silencioso."""
+    from radar.github import SearchUnusable
+    with pytest.raises(SearchUnusable, match="incompleta"):
+        parse_search({"total_count": 104, "incomplete_results": True,
+                      "items": [{"full_name": "a/b", "owner": {"login": "a"},
+                                 "stargazers_count": 5,
+                                 "created_at": "2024-01-01T00:00:00Z"}]})
+
+
+def test_complete_search_flag_false_is_accepted():
+    payload = {"total_count": 1, "incomplete_results": False,
+               "items": [{"full_name": "a/b", "owner": {"login": "a"},
+                          "stargazers_count": 5, "created_at": "2024-01-01T00:00:00Z"}]}
+    assert len(parse_search(payload)) == 1
 
 
 def test_signal_counts_total_and_independent_separately():
@@ -1091,7 +1203,7 @@ def test_velocity_counts_only_repos_created_in_the_last_14_days():
 
 
 def test_velocity_window_boundary_is_inclusive():
-    payload = {"total_count": 1, "items": [
+    payload = {"total_count": 1, "incomplete_results": False, "items": [
         {"full_name": "a/b", "owner": {"login": "a"},
          "stargazers_count": 1, "created_at": "2026-08-13T00:00:00Z"}]}
     s = GitHubClient(fetch=lambda url: payload).signal_for(PAPER, today=TODAY)
@@ -1099,7 +1211,7 @@ def test_velocity_window_boundary_is_inclusive():
 
 
 def test_repo_older_than_the_window_is_not_counted_as_velocity():
-    payload = {"total_count": 1, "items": [
+    payload = {"total_count": 1, "incomplete_results": False, "items": [
         {"full_name": "a/b", "owner": {"login": "a"},
          "stargazers_count": 1, "created_at": "2026-08-12T00:00:00Z"}]}
     s = GitHubClient(fetch=lambda url: payload).signal_for(PAPER, today=TODAY)
@@ -1107,7 +1219,7 @@ def test_repo_older_than_the_window_is_not_counted_as_velocity():
 
 
 def test_no_results_yields_a_zeroed_signal():
-    s = GitHubClient(fetch=lambda url: {"total_count": 0, "items": []}).signal_for(
+    s = GitHubClient(fetch=lambda url: {"total_count": 0, "incomplete_results": False, "items": []}).signal_for(
         PAPER, today=TODAY)
     assert s == type(s)(total_impls=0, independent_impls=0, velocity_14d=0,
                         stars_total=0, citations=0)
@@ -1162,7 +1274,38 @@ def build_search_url(arxiv_id: str, per_page: int = 100) -> str:
     return f"{SEARCH_ENDPOINT}?{urlencode({'q': f'\"{arxiv_id}\" in:readme', 'per_page': per_page})}"
 
 
+class SearchUnusable(RuntimeError):
+    """A resposta nao sustenta um sinal. Melhor nenhum dado que dado errado."""
+
+
 def parse_search(payload: dict) -> list[Repo]:
+    """Converte a resposta de busca em repositorios, recusando o que nao presta.
+
+    Duas recusas, ambas porque um sinal errado e pior que sinal nenhum num
+    pipeline de pontuacao:
+
+    - Payload SEM a chave `items` e resposta de erro (rate limit, por exemplo).
+      Sem esta guarda ele parseia para zero repositorios em silencio, e zero
+      significa "ninguem implementou este paper" -- despenca o score e descarta
+      um paper que podia ser bom. Busca legitimamente vazia traz `items: []`,
+      entao a chave discrimina os dois casos sem ambiguidade.
+
+    - `incomplete_results: True` e o GitHub avisando que a busca deu timeout e
+      o resultado veio parcial. Contar em cima disso e truncamento silencioso,
+      proibido pelas restricoes do projeto. O paper e pulado hoje e volta na
+      re-consulta de amanha.
+    """
+    if "items" not in payload:
+        raise SearchUnusable(
+            f"resposta sem a chave 'items' (provavel erro da API): "
+            f"{sorted(payload)[:4]}"
+        )
+    if payload.get("incomplete_results"):
+        raise SearchUnusable(
+            f"busca incompleta segundo o proprio GitHub "
+            f"(total_count={payload.get('total_count')}, "
+            f"itens recebidos={len(payload['items'])})"
+        )
     return [
         Repo(
             full_name=item["full_name"],
@@ -1170,7 +1313,7 @@ def parse_search(payload: dict) -> list[Repo]:
             stars=item["stargazers_count"],
             created_at=item["created_at"],
         )
-        for item in payload.get("items", [])
+        for item in payload["items"]
     ]
 
 
@@ -1221,7 +1364,7 @@ def http_fetch_json(url: str) -> dict:
 - [ ] **Passo 5: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_github.py -v`
-Esperado: 11 passed
+Esperado: 16 passed
 
 - [ ] **Passo 6: Propor commit (aguardar aprovação)**
 
@@ -1561,7 +1704,7 @@ class Store:
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_store.py -v`
-Esperado: 18 passed
+Esperado: 20 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -2067,7 +2210,7 @@ def render_markdown(
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_render.py -v`
-Esperado: 11 passed
+Esperado: 16 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -2425,6 +2568,43 @@ def test_non_executable_always_reaches_the_feed(store):
     assert "2508.00003" in [i.paper.arxiv_id for i in result.feed]
 
 
+def test_paper_whose_signal_fails_is_cut_not_fatal(store):
+    """Uma busca do GitHub que falha num paper nao pode derrubar o digest do
+    dia. O paper vira corte contado e volta na re-consulta de amanha."""
+    papers = [paper("2508.00001"), paper("2508.00002")]
+
+    def fetch_signal(p, today):
+        if p.arxiv_id == "2508.00001":
+            raise RuntimeError("busca incompleta segundo o proprio GitHub")
+        return fake_signal(3, 20), []
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: papers,
+        fetch_signal=fetch_signal,
+        judge_all=lambda ps: {p.arxiv_id: judgment() for p in ps},
+    )
+    assert [i.paper.arxiv_id for i in result.radar] == ["2508.00002"]
+    assert result.cuts["sinal_indisponivel"] == 1
+
+
+def test_a_failing_signal_does_not_reach_the_feed_either(store):
+    """Sem sinal nao ha o que reportar: o paper e corte, nao item de feed."""
+    papers = [paper("2508.00001")]
+
+    def fetch_signal(p, today):
+        raise RuntimeError("rate limit")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: papers,
+        fetch_signal=fetch_signal,
+        judge_all=lambda ps: {p.arxiv_id: judgment() for p in ps},
+    )
+    assert result.feed == []
+    assert result.cuts["sinal_indisponivel"] == 1
+
+
 def test_cuts_total_plus_radar_never_exceeds_candidates(store):
     papers = [paper(f"2508.0000{i}") for i in range(5)]
     signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
@@ -2494,7 +2674,17 @@ def run_day(
             cuts["sem_julgamento"] += 1
             continue
 
-        signal, classifications = fetch_signal(paper, today)
+        try:
+            signal, classifications = fetch_signal(paper, today)
+        except Exception:
+            # Falha de sinal num paper nao derruba o digest do dia inteiro.
+            # `parse_search` levanta de proposito quando a resposta do GitHub e
+            # de erro ou vem marcada como incompleta -- melhor pular o paper e
+            # pega-lo na re-consulta de amanha do que gravar um zero falso que
+            # significaria "ninguem implementou isto". Mesma licao da Tarefa 4.
+            cuts["sinal_indisponivel"] += 1
+            continue
+
         result = evaluate(signal, thresholds)
 
         store.upsert_paper(paper, seen_at=day)
@@ -2553,7 +2743,7 @@ def run_day(
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_pipeline.py -v`
-Esperado: 18 passed
+Esperado: 20 passed
 
 - [ ] **Passo 5: Implementar o CLI**
 

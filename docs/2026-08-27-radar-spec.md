@@ -39,7 +39,7 @@ O feed nunca entra no Telegram. Se entrar, afoga os três itens do radar e a coi
 
 ### Descoberta: arXiv API
 
-**Pegadinha registrada:** a API só responde em **HTTPS com User-Agent explícito**. Em HTTP retorna corpo vazio com status 200 — falha silenciosa.
+**Pegadinha registrada e medida:** a API só responde em **HTTPS com User-Agent explícito**. Em HTTP ela devolve **301 com corpo vazio**. A falha é silenciosa porque `raise_for_status()` não levanta em 3xx e o httpx não segue redirect por padrão — o chamador recebe zero byte e nenhum erro.
 
 ```
 https://export.arxiv.org/api/query
@@ -65,7 +65,7 @@ Consultas separadas em vez de uma query booleana gigante porque a API do arXiv t
 
 ### Filtro de escopo
 
-Um paper entra se o termo aparece em `title` ou `abstract` e a categoria primária está na lista. Papers já presentes no banco não reentram como novidade — viram atualização de sinal.
+Um paper entra se o termo aparece em `title` ou `abstract` e **pelo menos uma** de suas categorias está na lista — não apenas a primária. Cross-listing é comum em trabalho de eficiência (primária `cs.AI`, secundária `cs.LG`), e a descoberta favorece recall de propósito: cinco filtros a jusante (termo, sinal do GitHub, portão de atenção, piso de score, teto de 3) cuidam da precisão. Papers já presentes no banco não reentram como novidade — viram atualização de sinal.
 
 ---
 
