@@ -266,7 +266,13 @@ CREATE TABLE deliveries (
 );
 ```
 
-`signals` ser append-only é o que compra a detecção de ressurreição: um paper antigo voltando a ser implementado aparece como **delta entre duas linhas** da mesma entrada. Nenhum paper é entregue duas vezes no Telegram — `deliveries` é consultado antes de montar o push.
+`signals` ser append-only é o que compra a detecção de ressurreição: um paper antigo voltando a ser implementado aparece como **delta entre duas linhas** da mesma entrada.
+
+**Nenhum paper é entregue duas vezes no Telegram** — `deliveries` é consultado antes de montar o push. Esta regra não tem exceção, nem para ressurreição.
+
+Isso parece contradizer a redação de delta da seção 7, e não contradiz. "Ressurreição" aqui significa a **primeira** entrega de um paper que já era conhecido: ele foi descoberto, teve o sinal gravado, e não foi entregue — ficou abaixo do piso, ou perdeu as três vagas. Semanas depois a re-consulta encontra o sinal maior, ele passa a caber no top 3, e entra pela primeira vez. O delta descreve o histórico do **sinal**, não uma repetição da **entrega**.
+
+A leitura alternativa — devolver ao push um paper que você já viu, porque o sinal explodiu depois — foi considerada e recusada: exigiria um limiar de crescimento e um período de carência, ambos sem como calibrar, num projeto que já trata limiar não calibrado como dívida declarada.
 
 ### Re-consulta
 
