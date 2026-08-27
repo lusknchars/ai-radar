@@ -96,9 +96,11 @@ Seção nova, `## Re-consulta`, com duas informações: quantos papers foram re-
 
 30 papers re-consultados. 2 com movimento:
 
-- 2210.17323 — 2 → 9 impls independentes em 21 dias — score 0.11 → 0.40
-- 2305.14314 — 1 → 4 impls independentes em 60 dias — score 0.08 → 0.22
+- 2210.17323 — 2 → 9 impls independentes em 21 dias — score 0.40
+- 2305.14314 — 1 → 4 impls independentes em 60 dias — score 0.22
 ```
+
+Score atual, não a variação dele: `signal_delta` devolve implementações, estrelas e dias, não score, e estender essa função por causa de uma seta não se paga — implementações independentes são o sinal, o score é derivado delas.
 
 Silêncio para os 28 que não mudaram. Listar papers cujo sinal está igual é ruído, e o teto de legibilidade do digest é a restrição de produto mais forte deste projeto.
 
