@@ -52,7 +52,7 @@ def run_day(
     # 1: custo do lote multiplicado e o mesmo feed republicado todo dia.
     # (A re-consulta de sinal desses papers e outra funcionalidade, ainda nao
     # construida -- ver spec secao 6.)
-    conhecidos = {row["arxiv_id"] for row in store.all_papers()}
+    conhecidos = store.known_ids()
     papers = [p for p in discovered if p.arxiv_id not in conhecidos]
     if len(discovered) != len(papers):
         cuts["ja_conhecido"] += len(discovered) - len(papers)

@@ -121,11 +121,30 @@ def test_dry_run_does_not_burn_the_days_best_items(store):
         assert store.was_delivered(pid, channel="telegram") is False
 
 
-def test_a_real_run_after_a_dry_run_still_delivers(store):
-    """A consequencia que importa: o ensaio nao pode roubar o dia seguinte."""
+def test_dry_run_still_writes_the_paper_so_the_cli_must_isolate_the_database(store):
+    """Documenta por que a CLI aponta o ensaio para uma copia do banco.
+
+    `dry_run` pula a entrega de telegram, mas NAO impede `run_day` de gravar o
+    paper em `papers`. Como papers ja conhecidos deixaram de reentrar como
+    novidade, um paper gravado durante o ensaio e cortado como `ja_conhecido`
+    na execucao seguinte -- que entao nao entrega nada.
+
+    Ou seja: a garantia "o ensaio nao rouba o dia seguinte" NAO existe nesta
+    camada. Quem a fornece e a CLI, apontando o ensaio para uma copia
+    descartavel (ver tests/test_cli.py). Este teste existe para falhar se
+    alguem passar a acreditar que `run_day` sozinho ja protege, e remover a
+    copia por acha-la redundante.
+    """
     p = paper("2508.00001")
-    run(store, [p], {"2508.00001": fake_signal(4, 20)}, dry_run=True)
+    ensaio = run(store, [p], {"2508.00001": fake_signal(4, 20)}, dry_run=True)
+    assert [i.paper.arxiv_id for i in ensaio.radar] == ["2508.00001"]
     assert store.was_delivered("2508.00001", channel="telegram") is False
+    assert len(store.all_papers()) == 1          # o ensaio GRAVOU
+
+    real = run(store, [p], {"2508.00001": fake_signal(4, 20)})
+    assert real.radar == []                      # e por isso o dia seguinte
+    assert real.cuts["ja_conhecido"] == 1        # perde o paper
+    assert real.push == ""
 
 
 def test_discovery_cuts_are_carried_into_the_days_accounting(store):

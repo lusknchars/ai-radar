@@ -26,6 +26,18 @@ def test_first_seen_is_preserved_across_upserts(store):
     assert store.all_papers()[0]["first_seen"] == "2026-08-27"
 
 
+def test_known_ids_returns_only_the_keys(store):
+    """O filtro de "ja conhecido" roda todo dia sobre a tabela inteira; carregar
+    titulo e abstract de cada paper ja visto para montar um conjunto de chaves
+    e desperdicio que cresce com o banco."""
+    store.upsert_paper(P, seen_at="2026-08-27")
+    assert store.known_ids() == {P.arxiv_id}
+
+
+def test_known_ids_is_empty_on_a_fresh_database(store):
+    assert store.known_ids() == set()
+
+
 def test_signals_are_append_only(store):
     store.upsert_paper(P, seen_at="2026-08-27")
     store.record_signal(P.arxiv_id, Signal(2, 2, 1, 40), score=0.4, checked_at="2026-08-27")

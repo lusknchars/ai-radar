@@ -54,32 +54,9 @@ def _telegram_post(url: str, json: dict) -> dict:
     return r.json()
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="radar")
-    parser.add_argument("--db", type=Path, default=Path("data/radar.db"))
-    parser.add_argument("--out", type=Path, default=Path("radar"))
-    parser.add_argument("--dry-run", action="store_true",
-                        help="escreve o markdown do dia, mas nao envia o push "
-                             "e nao deixa nada gravado no banco de verdade")
-    args = parser.parse_args(argv)
-
-    today = datetime.now(timezone.utc).date()
-
-    # No ensaio o banco e uma copia descartavel. Pular so a entrega de telegram
-    # nao basta: `run_day` tambem grava o paper em `papers`, e desde que papers
-    # ja conhecidos deixaram de reentrar como novidade, um paper gravado no
-    # ensaio e cortado como `ja_conhecido` na primeira execucao de verdade --
-    # a mesma queima de antes, por outra porta. O passo de commit do workflow
-    # nao distingue dry-run, entao a garantia tem de ser que o ensaio nao
-    # produza estado duravel nenhum.
-    db_path = args.db
-    ensaio = None
-    if args.dry_run:
-        ensaio = tempfile.mkdtemp(prefix="radar-dry-run-")
-        db_path = Path(ensaio) / "radar.db"
-        if args.db.exists():
-            shutil.copy2(args.db, db_path)   # le o estado real, escreve na copia
-
+def _executar(args, db_path: Path, today) -> int:
+    """O trabalho do dia. Separado de `main` para que a limpeza do diretorio de
+    ensaio caiba num `finally` sem reindentar o corpo inteiro."""
     store = Store(db_path)
     store.init_schema()
 
@@ -119,7 +96,6 @@ def main(argv: list[str] | None = None) -> int:
     print(f"radar: {len(result.radar)} · feed: {len(result.feed)} · cortes: {result.cuts}")
 
     if args.dry_run:
-        shutil.rmtree(ensaio, ignore_errors=True)
         print("dry-run: push nao enviado, nada gravado no banco de verdade")
         return 0
 
@@ -133,12 +109,49 @@ def main(argv: list[str] | None = None) -> int:
         # markdown ja esta escrito e o lote ja foi pago; deixar a excecao subir
         # matava o processo antes do passo de commit e os dois iam embora com o
         # runner efemero. Reporta e sai nao-zero -- o workflow fica vermelho,
-        # que e o sinal correto -- enquanto o commit (if: always()) preserva o
-        # que ja foi produzido.
+        # que e o sinal correto -- enquanto o commit (if: !cancelled()) preserva
+        # o que ja foi produzido.
         print(f"push nao enviado: {exc}", flush=True)
         return 1
     print(f"push enviado: {sent}")
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="radar")
+    parser.add_argument("--db", type=Path, default=Path("data/radar.db"))
+    parser.add_argument("--out", type=Path, default=Path("radar"))
+    parser.add_argument("--dry-run", action="store_true",
+                        help="escreve o markdown do dia, mas nao envia o push "
+                             "e nao deixa nada gravado no banco de verdade")
+    args = parser.parse_args(argv)
+
+    today = datetime.now(timezone.utc).date()
+
+    # No ensaio o banco e uma copia descartavel. Pular so a entrega de telegram
+    # nao basta: `run_day` tambem grava o paper em `papers`, e desde que papers
+    # ja conhecidos deixaram de reentrar como novidade, um paper gravado no
+    # ensaio e cortado como `ja_conhecido` na primeira execucao de verdade --
+    # a mesma queima de antes, por outra porta. O passo de commit do workflow
+    # nao distingue dry-run, entao a garantia tem de ser que o ensaio nao
+    # produza estado duravel nenhum.
+    db_path = args.db
+    ensaio = None
+    if args.dry_run:
+        ensaio = tempfile.mkdtemp(prefix="radar-dry-run-")
+        db_path = Path(ensaio) / "radar.db"
+        if args.db.exists():
+            shutil.copy2(args.db, db_path)   # le o estado real, escreve na copia
+
+    try:
+        return _executar(args, db_path, today)
+    finally:
+        # `finally`, nao o caminho feliz: qualquer excecao entre o mkdtemp e o
+        # fim -- arXiv fora do ar, submit do lote falhando, disco cheio ao
+        # escrever o markdown -- vazava um radar-dry-run-* com uma copia do
+        # banco dentro, e a conexao sqlite nunca era fechada.
+        if ensaio is not None:
+            shutil.rmtree(ensaio, ignore_errors=True)
 
 
 if __name__ == "__main__":

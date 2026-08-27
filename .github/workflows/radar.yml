@@ -49,7 +49,10 @@ jobs:
         # dia ja esta escrito e o lote do LLM ja foi pago. Sem isto os dois vao
         # embora com o runner efemero, e o dia inteiro se perde por causa de uma
         # falha de entrega no ultimo metro.
-        if: always()
+        # !cancelled() e nao always(): always() commita ate num run
+        # cancelado. Queremos preservar o digest quando o passo
+        # anterior falha, nao quando alguem aborta de proposito.
+        if: ${{ !cancelled() }}
         run: |
           git config user.name  "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"

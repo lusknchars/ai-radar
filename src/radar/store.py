@@ -91,6 +91,13 @@ class Store:
         )
         self._conn.commit()
 
+    def known_ids(self) -> set[str]:
+        """So os ids. O filtro de "ja conhecido" roda todo dia sobre a tabela
+        inteira; `all_papers()` traria titulo e abstract de cada paper ja visto
+        para montar um conjunto de chaves."""
+        return {row["arxiv_id"] for row in
+                self._conn.execute("SELECT arxiv_id FROM papers")}
+
     def all_papers(self) -> list[dict]:
         return [dict(r) for r in self._conn.execute("SELECT * FROM papers")]
 
