@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import os
 import time
-from datetime import date, timezone, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import anthropic
@@ -13,7 +13,7 @@ import httpx
 from .arxiv import USER_AGENT, ArxivClient
 from .config import DEFAULT_SCOPE, load_model, load_thresholds
 from .github import GitHubClient
-from .judge import Judge, collect_batch_results, submit_batch
+from .judge import collect_batch_results, submit_batch, wait_for_batch
 from .pipeline import run_day
 from .store import Store
 from .telegram import send
@@ -67,11 +67,13 @@ def main(argv: list[str] | None = None) -> int:
         if not papers:
             return {}
         batch = submit_batch(client, papers, model)
-        while True:
-            status = client.messages.batches.retrieve(batch.id).processing_status
-            if status == "ended":
-                break
-            time.sleep(30)
+        if not wait_for_batch(client, batch.id):
+            # Degradacao visivel: o dia segue, e todos os papers entram na
+            # secao de cortes como `sem_julgamento` em vez de o workflow
+            # ficar preso ate o timeout do runner.
+            print(f"lote {batch.id} nao concluiu no prazo; o dia segue sem julgamentos",
+                  flush=True)
+            return {}
         return collect_batch_results(client.messages.batches.results(batch.id))
 
     result = run_day(

@@ -9,11 +9,15 @@ posicao.
 from __future__ import annotations
 
 import json
+import time
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from .models import Judgment, Paper
+
+BATCH_POLL_SECONDS = 30
+BATCH_TIMEOUT_SECONDS = 45 * 60   # um cron diario que espera mais que isso ja falhou
 
 HARDWARE_BRIEF = (
     "A maquina alvo tem uma NVIDIA RTX 3090: arquitetura Ampere GA102, 24 GB de "
@@ -102,6 +106,40 @@ def collect_batch_results(results) -> dict[str, Judgment]:
         except Exception:
             continue          # julgamento malformado nao derruba o lote
     return out
+
+
+def wait_for_batch(
+    client,
+    batch_id: str,
+    *,
+    sleep=time.sleep,
+    now=time.monotonic,
+    timeout_seconds: float = BATCH_TIMEOUT_SECONDS,
+    poll_seconds: float = BATCH_POLL_SECONDS,
+) -> bool:
+    """Espera o lote terminar. True se terminou; False se estourou o prazo ou
+    a consulta de status falhou.
+
+    O laco e LIMITADO de proposito. Sem prazo, um lote que nunca termina prende
+    o workflow ate o timeout do runner -- horas queimadas sem produzir digest
+    nenhum. Desistir em 45 minutos e devolver False deixa o pipeline seguir e
+    contar todos os papers como `sem_julgamento`, motivo que aparece na secao
+    de cortes do dia. Degradacao visivel vale mais que espera muda.
+
+    `sleep` e `now` entram por injecao para que o comportamento de prazo seja
+    testavel sem esperar de verdade.
+    """
+    deadline = now() + timeout_seconds
+    while True:
+        try:
+            status = client.messages.batches.retrieve(batch_id).processing_status
+        except Exception:
+            return False
+        if status == "ended":
+            return True
+        if now() >= deadline:
+            return False
+        sleep(poll_seconds)
 
 
 def submit_batch(client, papers: list[Paper], model: str):

@@ -80,6 +80,73 @@ def test_batch_requests_are_keyed_by_arxiv_id():
     assert [r["custom_id"] for r in requests] == ["2508.11111", "2508.22222"]
 
 
+class FakeBatches:
+    def __init__(self, statuses, raise_on=None):
+        self._statuses = list(statuses)
+        self._raise_on = raise_on
+        self.consultas = 0
+
+    def retrieve(self, batch_id):
+        self.consultas += 1
+        if self._raise_on is not None and self.consultas >= self._raise_on:
+            raise RuntimeError("API fora do ar")
+        status = self._statuses[min(self.consultas - 1, len(self._statuses) - 1)]
+        return type("B", (), {"processing_status": status})()
+
+
+def fake_client_with(statuses, raise_on=None):
+    batches = FakeBatches(statuses, raise_on)
+    client = type("C", (), {"messages": type("M", (), {"batches": batches})()})()
+    return client, batches
+
+
+def test_wait_returns_true_when_the_batch_has_already_ended():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["ended"])
+    naps = []
+    assert wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0) is True
+    assert naps == []          # nao dorme se ja terminou
+
+
+def test_wait_polls_until_the_batch_ends():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["in_progress", "in_progress", "ended"])
+    naps = []
+    assert wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0) is True
+    assert batches.consultas == 3
+    assert len(naps) == 2      # dorme ENTRE consultas, nao depois da ultima
+
+
+def test_wait_gives_up_at_the_deadline_instead_of_hanging():
+    """Sem prazo, um lote travado prende o workflow ate o timeout do runner."""
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress"])
+    relogio = iter([0.0, 0.0, 10_000.0])
+    assert wait_for_batch(client, "b1", sleep=lambda s: None,
+                          now=lambda: next(relogio), timeout_seconds=60) is False
+
+
+def test_wait_returns_false_when_status_lookup_raises():
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress"], raise_on=1)
+    assert wait_for_batch(client, "b1", sleep=lambda s: None, now=lambda: 0.0) is False
+
+
+def test_wait_survives_a_lookup_that_starts_failing_midway():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["in_progress", "in_progress"], raise_on=2)
+    assert wait_for_batch(client, "b1", sleep=lambda s: None, now=lambda: 0.0) is False
+    assert batches.consultas == 2
+
+
+def test_wait_uses_the_configured_poll_interval():
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress", "ended"])
+    naps = []
+    wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0, poll_seconds=7)
+    assert naps == [7]
+
+
 def test_batch_results_are_keyed_not_positional():
     """Resultados do Batch API chegam fora de ordem. Indexar por posicao e bug."""
     from radar.judge import collect_batch_results
