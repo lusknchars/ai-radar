@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 VALID_VERDICTS = frozenset({"sim", "sim_com_ressalva", "nao"})
 _VERSIONED = re.compile(r"v\d+$")
@@ -10,12 +10,12 @@ _VERSIONED = re.compile(r"v\d+$")
 
 @dataclass(frozen=True)
 class Paper:
-    arxiv_id: str          # chave canonica, SEM sufixo de versao
+    arxiv_id: str                 # chave canonica, SEM sufixo de versao
     title: str
     abstract: str
-    authors: list[str]
-    categories: list[str]
-    published: str         # ISO date
+    authors: tuple[str, ...]
+    categories: tuple[str, ...]
+    published: str                # ISO date
 
     def __post_init__(self) -> None:
         if _VERSIONED.search(self.arxiv_id):
@@ -23,6 +23,14 @@ class Paper:
                 f"arxiv_id {self.arxiv_id!r} carrega versao; use a chave canonica "
                 f"sem sufixo para que v1 e v2 nao virem entradas distintas"
             )
+        # frozen=True protege reatribuicao de atributo, nao o conteudo de uma
+        # lista. Sem coagir para tupla, Paper aceita mutacao interna E explode
+        # em TypeError ao ser hasheado -- justamente o oposto do que arxiv_id
+        # existe para fazer, que e servir de chave de deduplicacao.
+        # Aceitar lista na construcao e devolver tupla mantem os chamadores
+        # simples sem abrir mao da imutabilidade.
+        object.__setattr__(self, "authors", tuple(self.authors))
+        object.__setattr__(self, "categories", tuple(self.categories))
 
 
 @dataclass(frozen=True)

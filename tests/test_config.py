@@ -1,7 +1,7 @@
 import pytest
 
-from radar.config import DEFAULT_SCOPE, Thresholds, load_thresholds
-from radar.models import Judgment, Paper, Repo, Signal
+from radar.config import DEFAULT_SCOPE, load_thresholds
+from radar.models import Judgment, Paper, Signal
 
 
 def test_scope_covers_the_five_arxiv_categories():
@@ -34,6 +34,24 @@ def test_paper_rejects_versioned_arxiv_id():
     with pytest.raises(ValueError, match="versao"):
         Paper(arxiv_id="2508.12345v2", title="T", abstract="A",
               authors=[], categories=["cs.LG"], published="2026-08-01")
+
+
+def test_paper_is_hashable_so_it_can_serve_as_a_dedup_key():
+    """arxiv_id canonico existe para deduplicar. Um Paper nao-hashavel
+    explodiria no primeiro `set(papers)` do pipeline."""
+    p = Paper(arxiv_id="2508.12345", title="T", abstract="A",
+              authors=["Elias Frantar"], categories=["cs.LG"], published="2026-08-01")
+    assert len({p, p}) == 1
+
+
+def test_paper_coerces_sequences_so_contents_cannot_be_mutated():
+    """frozen=True sozinho protege a reatribuicao, nao o conteudo da lista."""
+    p = Paper(arxiv_id="2508.12345", title="T", abstract="A",
+              authors=["Elias Frantar"], categories=["cs.LG"], published="2026-08-01")
+    assert p.authors == ("Elias Frantar",)
+    assert p.categories == ("cs.LG",)
+    with pytest.raises(AttributeError):
+        p.authors.append("intruso")
 
 
 def test_signal_defaults_citations_to_zero():

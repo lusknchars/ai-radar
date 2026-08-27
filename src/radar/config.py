@@ -6,7 +6,7 @@ facil de matar o projeto -- ver spec secao 1, nao-objetivos.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 PUSH_CAP = 3   # rigido por decisao de produto; nao configuravel
 
@@ -55,11 +55,14 @@ def _env_float(name: str, default: float) -> float:
 
 
 def load_thresholds() -> Thresholds:
-    # push_cap deliberadamente NAO lido do ambiente: ver spec secao 9.
+    # push_cap passado explicitamente a partir da constante, NUNCA do ambiente
+    # (spec secao 9). Explicito aqui para que a invariante fique visivel no
+    # ponto de chamada, e nao escondida num default de dataclass.
     return Thresholds(
         broke_out_stars=_env_int("RADAR_BROKE_OUT_STARS", 1000),
         broke_out_citations=_env_int("RADAR_BROKE_OUT_CITATIONS", 200),
         score_floor=_env_float("RADAR_SCORE_FLOOR", 0.0),
+        push_cap=PUSH_CAP,
     )
 
 
