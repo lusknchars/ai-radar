@@ -1817,6 +1817,73 @@ def test_batch_requests_are_keyed_by_arxiv_id():
     assert [r["custom_id"] for r in requests] == ["2508.11111", "2508.22222"]
 
 
+class FakeBatches:
+    def __init__(self, statuses, raise_on=None):
+        self._statuses = list(statuses)
+        self._raise_on = raise_on
+        self.consultas = 0
+
+    def retrieve(self, batch_id):
+        self.consultas += 1
+        if self._raise_on is not None and self.consultas >= self._raise_on:
+            raise RuntimeError("API fora do ar")
+        status = self._statuses[min(self.consultas - 1, len(self._statuses) - 1)]
+        return type("B", (), {"processing_status": status})()
+
+
+def fake_client_with(statuses, raise_on=None):
+    batches = FakeBatches(statuses, raise_on)
+    client = type("C", (), {"messages": type("M", (), {"batches": batches})()})()
+    return client, batches
+
+
+def test_wait_returns_true_when_the_batch_has_already_ended():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["ended"])
+    naps = []
+    assert wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0) is True
+    assert naps == []          # nao dorme se ja terminou
+
+
+def test_wait_polls_until_the_batch_ends():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["in_progress", "in_progress", "ended"])
+    naps = []
+    assert wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0) is True
+    assert batches.consultas == 3
+    assert len(naps) == 2      # dorme ENTRE consultas, nao depois da ultima
+
+
+def test_wait_gives_up_at_the_deadline_instead_of_hanging():
+    """Sem prazo, um lote travado prende o workflow ate o timeout do runner."""
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress"])
+    relogio = iter([0.0, 0.0, 10_000.0])
+    assert wait_for_batch(client, "b1", sleep=lambda s: None,
+                          now=lambda: next(relogio), timeout_seconds=60) is False
+
+
+def test_wait_returns_false_when_status_lookup_raises():
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress"], raise_on=1)
+    assert wait_for_batch(client, "b1", sleep=lambda s: None, now=lambda: 0.0) is False
+
+
+def test_wait_survives_a_lookup_that_starts_failing_midway():
+    from radar.judge import wait_for_batch
+    client, batches = fake_client_with(["in_progress", "in_progress"], raise_on=2)
+    assert wait_for_batch(client, "b1", sleep=lambda s: None, now=lambda: 0.0) is False
+    assert batches.consultas == 2
+
+
+def test_wait_uses_the_configured_poll_interval():
+    from radar.judge import wait_for_batch
+    client, _ = fake_client_with(["in_progress", "ended"])
+    naps = []
+    wait_for_batch(client, "b1", sleep=naps.append, now=lambda: 0.0, poll_seconds=7)
+    assert naps == [7]
+
+
 def test_batch_results_are_keyed_not_positional():
     """Resultados do Batch API chegam fora de ordem. Indexar por posicao e bug."""
     from radar.judge import collect_batch_results
@@ -1867,11 +1934,15 @@ posicao.
 from __future__ import annotations
 
 import json
+import time
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from .models import Judgment, Paper
+
+BATCH_POLL_SECONDS = 30
+BATCH_TIMEOUT_SECONDS = 45 * 60   # um cron diario que espera mais que isso ja falhou
 
 HARDWARE_BRIEF = (
     "A maquina alvo tem uma NVIDIA RTX 3090: arquitetura Ampere GA102, 24 GB de "
@@ -1962,6 +2033,40 @@ def collect_batch_results(results) -> dict[str, Judgment]:
     return out
 
 
+def wait_for_batch(
+    client,
+    batch_id: str,
+    *,
+    sleep=time.sleep,
+    now=time.monotonic,
+    timeout_seconds: float = BATCH_TIMEOUT_SECONDS,
+    poll_seconds: float = BATCH_POLL_SECONDS,
+) -> bool:
+    """Espera o lote terminar. True se terminou; False se estourou o prazo ou
+    a consulta de status falhou.
+
+    O laco e LIMITADO de proposito. Sem prazo, um lote que nunca termina prende
+    o workflow ate o timeout do runner -- horas queimadas sem produzir digest
+    nenhum. Desistir em 45 minutos e devolver False deixa o pipeline seguir e
+    contar todos os papers como `sem_julgamento`, motivo que aparece na secao
+    de cortes do dia. Degradacao visivel vale mais que espera muda.
+
+    `sleep` e `now` entram por injecao para que o comportamento de prazo seja
+    testavel sem esperar de verdade.
+    """
+    deadline = now() + timeout_seconds
+    while True:
+        try:
+            status = client.messages.batches.retrieve(batch_id).processing_status
+        except Exception:
+            return False
+        if status == "ended":
+            return True
+        if now() >= deadline:
+            return False
+        sleep(poll_seconds)
+
+
 def submit_batch(client, papers: list[Paper], model: str):
     """Fio fino ate o SDK. Isolado aqui para o resto do modulo ficar testavel."""
     from anthropic.types.message_create_params import MessageCreateParamsNonStreaming
@@ -1979,7 +2084,7 @@ def submit_batch(client, papers: list[Paper], model: str):
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_judge.py -v`
-Esperado: 9 passed
+Esperado: 15 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -2675,7 +2780,7 @@ judge_all), o que torna o fluxo inteiro testavel offline.
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from typing import Callable
 
@@ -2801,7 +2906,7 @@ from __future__ import annotations
 import argparse
 import os
 import time
-from datetime import date, timezone, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import anthropic
@@ -2810,7 +2915,7 @@ import httpx
 from .arxiv import USER_AGENT, ArxivClient
 from .config import DEFAULT_SCOPE, load_model, load_thresholds
 from .github import GitHubClient
-from .judge import Judge, collect_batch_results, submit_batch
+from .judge import collect_batch_results, submit_batch, wait_for_batch
 from .pipeline import run_day
 from .store import Store
 from .telegram import send
@@ -2864,11 +2969,13 @@ def main(argv: list[str] | None = None) -> int:
         if not papers:
             return {}
         batch = submit_batch(client, papers, model)
-        while True:
-            status = client.messages.batches.retrieve(batch.id).processing_status
-            if status == "ended":
-                break
-            time.sleep(30)
+        if not wait_for_batch(client, batch.id):
+            # Degradacao visivel: o dia segue, e todos os papers entram na
+            # secao de cortes como `sem_julgamento` em vez de o workflow
+            # ficar preso ate o timeout do runner.
+            print(f"lote {batch.id} nao concluiu no prazo; o dia segue sem julgamentos",
+                  flush=True)
+            return {}
         return collect_batch_results(client.messages.batches.results(batch.id))
 
     result = run_day(
