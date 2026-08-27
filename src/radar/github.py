@@ -24,7 +24,38 @@ def build_search_url(arxiv_id: str, per_page: int = 100) -> str:
     return f"{SEARCH_ENDPOINT}?{urlencode({'q': f'\"{arxiv_id}\" in:readme', 'per_page': per_page})}"
 
 
+class SearchUnusable(RuntimeError):
+    """A resposta nao sustenta um sinal. Melhor nenhum dado que dado errado."""
+
+
 def parse_search(payload: dict) -> list[Repo]:
+    """Converte a resposta de busca em repositorios, recusando o que nao presta.
+
+    Duas recusas, ambas porque um sinal errado e pior que sinal nenhum num
+    pipeline de pontuacao:
+
+    - Payload SEM a chave `items` e resposta de erro (rate limit, por exemplo).
+      Sem esta guarda ele parseia para zero repositorios em silencio, e zero
+      significa "ninguem implementou este paper" -- despenca o score e descarta
+      um paper que podia ser bom. Busca legitimamente vazia traz `items: []`,
+      entao a chave discrimina os dois casos sem ambiguidade.
+
+    - `incomplete_results: True` e o GitHub avisando que a busca deu timeout e
+      o resultado veio parcial. Contar em cima disso e truncamento silencioso,
+      proibido pelas restricoes do projeto. O paper e pulado hoje e volta na
+      re-consulta de amanha.
+    """
+    if "items" not in payload:
+        raise SearchUnusable(
+            f"resposta sem a chave 'items' (provavel erro da API): "
+            f"{sorted(payload)[:4]}"
+        )
+    if payload.get("incomplete_results"):
+        raise SearchUnusable(
+            f"busca incompleta segundo o proprio GitHub "
+            f"(total_count={payload.get('total_count')}, "
+            f"itens recebidos={len(payload['items'])})"
+        )
     return [
         Repo(
             full_name=item["full_name"],
@@ -32,7 +63,7 @@ def parse_search(payload: dict) -> list[Repo]:
             stars=item["stargazers_count"],
             created_at=item["created_at"],
         )
-        for item in payload.get("items", [])
+        for item in payload["items"]
     ]
 
 

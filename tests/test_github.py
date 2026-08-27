@@ -29,7 +29,33 @@ def test_parse_extracts_the_fields_the_signal_needs():
 
 
 def test_parse_of_empty_result_returns_empty():
-    assert parse_search({"total_count": 0, "items": []}) == []
+    assert parse_search({"total_count": 0, "incomplete_results": False, "items": []}) == []
+
+
+def test_error_payload_raises_instead_of_parsing_to_zero():
+    """Rate limit parseado como zero repos vira "ninguem implementou este
+    paper" -- despenca o score e descarta um paper bom, sem erro nenhum."""
+    from radar.github import SearchUnusable
+    with pytest.raises(SearchUnusable, match="items"):
+        parse_search({"message": "API rate limit exceeded", "documentation_url": "x"})
+
+
+def test_incomplete_search_raises_rather_than_undercounting():
+    """O GitHub avisa quando a busca deu timeout. Contar em cima do parcial e
+    truncamento silencioso."""
+    from radar.github import SearchUnusable
+    with pytest.raises(SearchUnusable, match="incompleta"):
+        parse_search({"total_count": 104, "incomplete_results": True,
+                      "items": [{"full_name": "a/b", "owner": {"login": "a"},
+                                 "stargazers_count": 5,
+                                 "created_at": "2024-01-01T00:00:00Z"}]})
+
+
+def test_complete_search_flag_false_is_accepted():
+    payload = {"total_count": 1, "incomplete_results": False,
+               "items": [{"full_name": "a/b", "owner": {"login": "a"},
+                          "stargazers_count": 5, "created_at": "2024-01-01T00:00:00Z"}]}
+    assert len(parse_search(payload)) == 1
 
 
 def test_signal_counts_total_and_independent_separately():
@@ -50,7 +76,7 @@ def test_velocity_counts_only_repos_created_in_the_last_14_days():
 
 
 def test_velocity_window_boundary_is_inclusive():
-    payload = {"total_count": 1, "items": [
+    payload = {"total_count": 1, "incomplete_results": False, "items": [
         {"full_name": "a/b", "owner": {"login": "a"},
          "stargazers_count": 1, "created_at": "2026-08-13T00:00:00Z"}]}
     s = GitHubClient(fetch=lambda url: payload).signal_for(PAPER, today=TODAY)
@@ -58,7 +84,7 @@ def test_velocity_window_boundary_is_inclusive():
 
 
 def test_repo_older_than_the_window_is_not_counted_as_velocity():
-    payload = {"total_count": 1, "items": [
+    payload = {"total_count": 1, "incomplete_results": False, "items": [
         {"full_name": "a/b", "owner": {"login": "a"},
          "stargazers_count": 1, "created_at": "2026-08-12T00:00:00Z"}]}
     s = GitHubClient(fetch=lambda url: payload).signal_for(PAPER, today=TODAY)
@@ -66,7 +92,7 @@ def test_repo_older_than_the_window_is_not_counted_as_velocity():
 
 
 def test_no_results_yields_a_zeroed_signal():
-    s = GitHubClient(fetch=lambda url: {"total_count": 0, "items": []}).signal_for(
+    s = GitHubClient(fetch=lambda url: {"total_count": 0, "incomplete_results": False, "items": []}).signal_for(
         PAPER, today=TODAY)
     assert s == type(s)(total_impls=0, independent_impls=0, velocity_14d=0,
                         stars_total=0, citations=0)
