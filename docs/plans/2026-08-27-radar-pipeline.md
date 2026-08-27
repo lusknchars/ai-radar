@@ -1997,7 +1997,7 @@ git commit -m "feat: julgamento com saida estruturada e batch indexado por custo
 - Teste: `tests/test_render.py`
 
 **Interfaces:**
-- Consome: `Paper`, `Signal`, `ScoreResult`, `Judgment`, `RepoClassification`.
+- Consome: `Paper`, `Signal`, `ScoreResult`, `Judgment`, e — para a trilha de auditoria — **linhas do store**, não `RepoClassification`. `render_markdown` recebe `repos` como `dict[str, list[dict]]` cujas chaves são as COLUNAS da tabela `repos` (`full_name`, `stars`, `is_author`, `is_author_reason`), que é o que `store.repos_for()` devolve. Atenção ao nome: a coluna é `is_author_reason`, enquanto o campo de `RepoClassification` se chama `reason` — passar o objeto tipado direto quebraria. O contrato entre store e render é travado por teste na Tarefa 10.
 - Produz: `RadarItem` (dataclass agregadora), `render_telegram(items) -> str`, `render_markdown(day, items, feed, cuts) -> str`. Ambas puras.
 
 - [ ] **Passo 1: Escrever o teste que falha**
@@ -2605,6 +2605,35 @@ def test_a_failing_signal_does_not_reach_the_feed_either(store):
     assert result.cuts["sinal_indisponivel"] == 1
 
 
+def test_markdown_carries_the_authorship_audit_trail_from_the_store(store):
+    """Trava o contrato implicito entre store e render.
+
+    As colunas do banco (`is_author_reason`) precisam casar com as chaves que
+    `render_markdown` le. Os testes das Tarefas 6 e 8 asseguram cada metade
+    usando literais proprios, e nenhum dos dois garante que as metades
+    concordam: renomear a coluna deixaria os dois verdes enquanto a trilha de
+    auditoria sumia do markdown em silencio. Este teste passa dado real do
+    store para o render e falha se qualquer um dos lados mudar de nome.
+    """
+    from radar.models import Repo, RepoClassification
+
+    p = paper("2508.00001")
+    classificacoes = [
+        RepoClassification(Repo("lab/oficial", "lab", 900, "2024-01-01T00:00:00Z"),
+                           is_author=True, reason="mais_antigo_e_mais_estrelado"),
+        RepoClassification(Repo("terceiro/impl", "terceiro", 12, "2024-06-01T00:00:00Z"),
+                           is_author=False, reason=None),
+    ]
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda scope: [p],
+        fetch_signal=lambda pp, today: (fake_signal(4, 30), classificacoes),
+        judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
+    )
+    assert "lab/oficial — 900 estrelas — autor (mais_antigo_e_mais_estrelado)" in result.markdown
+    assert "terceiro/impl — 12 estrelas — independente" in result.markdown
+
+
 def test_cuts_total_plus_radar_never_exceeds_candidates(store):
     papers = [paper(f"2508.0000{i}") for i in range(5)]
     signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
@@ -2743,7 +2772,7 @@ def run_day(
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_pipeline.py -v`
-Esperado: 20 passed
+Esperado: 21 passed
 
 - [ ] **Passo 5: Implementar o CLI**
 
