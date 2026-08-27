@@ -2279,6 +2279,22 @@ def test_missing_credentials_raise_rather_than_fail_silently():
         send("oi", token="t", chat_id="", post=lambda u, json: None)
 
 
+def test_missing_credentials_raise_even_when_there_is_nothing_to_send():
+    """Trava a ORDEM das guardas, nao apenas a existencia delas.
+
+    A checagem de credencial vem ANTES da de texto vazio. Invertida, um deploy
+    com token expirado devolveria False em todo dia quieto e passaria meses
+    parecendo "nada relevante hoje" -- a falha exata que este modulo existe
+    para tornar barulhenta. Sem este teste, inverter a ordem nao quebra nada:
+    todos os outros testes de credencial usam texto NAO vazio, e o teste de
+    texto vazio usa credenciais validas.
+    """
+    calls = []
+    with pytest.raises(ValueError, match="token"):
+        send("", token="", chat_id="42", post=lambda u, json: calls.append(1))
+    assert calls == []
+
+
 def test_transport_failure_returns_false_without_raising():
     def failing_post(url, json):
         raise RuntimeError("timeout")
@@ -2338,7 +2354,7 @@ def http_post(url: str, json: dict) -> dict:
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_telegram.py -v`
-Esperado: 6 passed
+Esperado: 7 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
