@@ -377,7 +377,7 @@ def load_model() -> str:
 - [ ] **Passo 6: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_config.py -v`
-Esperado: 16 passed
+Esperado: 13 passed
 
 - [ ] **Passo 7: Propor commit (aguardar aprovação)**
 
@@ -542,7 +542,7 @@ def evaluate(signal: Signal, thresholds: Thresholds) -> ScoreResult:
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_scoring.py -v`
-Esperado: 16 passed
+Esperado: 11 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -1364,7 +1364,7 @@ def http_fetch_json(url: str) -> dict:
 - [ ] **Passo 5: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_github.py -v`
-Esperado: 16 passed
+Esperado: 14 passed
 
 - [ ] **Passo 6: Propor commit (aguardar aprovação)**
 
@@ -1704,7 +1704,7 @@ class Store:
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_store.py -v`
-Esperado: 20 passed
+Esperado: 12 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
@@ -2210,7 +2210,7 @@ def render_markdown(
 - [ ] **Passo 4: Rodar os testes e confirmar que passam**
 
 Rodar: `python -m pytest tests/test_render.py -v`
-Esperado: 16 passed
+Esperado: 11 passed
 
 - [ ] **Passo 5: Propor commit (aguardar aprovação)**
 
