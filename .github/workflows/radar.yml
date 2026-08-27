@@ -53,6 +53,12 @@ jobs:
         run: |
           git config user.name  "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add data/radar.db radar/
+          # `-A -- data radar` em vez de nomear data/radar.db: no primeiro
+          # ensaio com --dry-run o banco vive num diretorio temporario e o
+          # arquivo nao existe aqui, e nomear um pathspec inexistente faz o
+          # git sair 128 e o passo inteiro falhar -- levando junto o digest
+          # que ja tinha sido escrito. `mkdir -p` NAO resolve: cria o
+          # diretorio, nao o arquivo. Esta forma estagia o que existir.
+          git add -A -- data radar
           git diff --staged --quiet || git commit -m "radar: digest de $(date -u +%F)"
           git push
