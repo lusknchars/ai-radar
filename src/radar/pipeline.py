@@ -17,6 +17,21 @@ from .scoring import evaluate
 from .store import Store
 
 
+def _motivo(base: str, e_novo: bool) -> str:
+    """Motivo de corte prefixado pela trilha que o produziu.
+
+    Em producao a re-consulta traz ~30 papers por dia contra 10-40 novos, entao
+    contadores compartilhados fazem a secao de cortes -- que existe justamente
+    para provar que o radar cobriu tudo -- ser dominada pela trilha que ela nao
+    nomeia. Pior, as duas trilhas tem causas e consertos diferentes: um
+    `abaixo_do_piso` de paper novo e calibracao de limiar; o mesmo numero na
+    re-consulta e um paper guardado que ainda nao ressuscitou. Conflar os dois
+    produz um numero que nao diz o que fazer -- o mesmo argumento que a spec da
+    re-consulta ja fez para `reconsulta_sem_julgamento`.
+    """
+    return base if e_novo else f"reconsulta_{base}"
+
+
 @dataclass
 class DayResult:
     radar: list[RadarItem]
@@ -51,8 +66,8 @@ def run_day(
     # saiu hoje, entao nao entra nem no radar nem no feed do dia; vira corte
     # contado. Sem este filtro o dia 2 re-descobre e RE-JULGA quase tudo do dia
     # 1: custo do lote multiplicado e o mesmo feed republicado todo dia.
-    # (A re-consulta de sinal desses papers e outra funcionalidade, ainda nao
-    # construida -- ver spec secao 6.)
+    # (A re-consulta de sinal desses papers e outra funcionalidade, construida
+    # logo abaixo -- ver spec da re-consulta, secao 3.)
     conhecidos = store.known_ids()
     papers = [p for p in discovered if p.arxiv_id not in conhecidos]
     if len(discovered) != len(papers):
@@ -82,10 +97,20 @@ def run_day(
             # filtro de conhecidos afrouxar, ela passa a ser o unico obstaculo
             # contra buscar o sinal do mesmo paper duas vezes no mesmo dia.
             # Mesmo tratamento que a guarda `was_delivered` recebeu enquanto
-            # esteve inalcancavel.
+            # esteve inalcancavel -- aquela agora e alcancavel pela re-consulta,
+            # esta ainda nao.
             if antigo.arxiv_id in novos_ids:
                 continue
             trabalho.append((antigo, store.latest_judgment(antigo.arxiv_id), False))
+
+    # TENTATIVAS de re-consulta, nao sobreviventes, e por isso contadas aqui e
+    # nao sobre `candidates`. Um re-consultado cortado por falta de julgamento
+    # ou por falha de sinal gastou a vaga da rotacao e a chamada de rate limit
+    # exatamente como os que sobreviveram. Contar so os sobreviventes faz a
+    # secao anunciar menos trabalho do que foi feito e, num dia em que todos
+    # falham, some com a secao inteira -- o silencio ambiguo que a spec da
+    # re-consulta, secao 7, proibiu.
+    total_reconsultado = sum(1 for _, _, e_novo in trabalho if not e_novo)
 
     # (item, elegivel, e_novo, mexeu)
     candidates: list[tuple[RadarItem, bool, bool, bool]] = []
@@ -93,7 +118,7 @@ def run_day(
 
     for paper, judgment, e_novo in trabalho:
         if judgment is None:
-            cuts["sem_julgamento" if e_novo else "reconsulta_sem_julgamento"] += 1
+            cuts[_motivo("sem_julgamento", e_novo)] += 1
             if not e_novo:
                 # Espelha o ramo de falha de sinal abaixo: a rotacao avanca em
                 # TODO paper re-consultado (spec da re-consulta, secao 6). Sem
@@ -110,10 +135,15 @@ def run_day(
         except Exception:
             # Falha de sinal num paper nao derruba o digest do dia inteiro.
             # `parse_search` levanta de proposito quando a resposta do GitHub e
-            # de erro ou vem marcada como incompleta -- melhor pular o paper e
-            # pega-lo na re-consulta de amanha do que gravar um zero falso que
-            # significaria "ninguem implementou isto". Mesma licao da Tarefa 4.
-            cuts["sinal_indisponivel"] += 1
+            # de erro ou vem marcada como incompleta -- melhor perder o paper de
+            # hoje do que gravar um zero falso que significaria "ninguem
+            # implementou isto". Mesma licao da Tarefa 4.
+            # Quando o paper volta depende da trilha: o RE-CONSULTADO volta na
+            # proxima volta da rotacao, e o `touch_checked` abaixo e o que a faz
+            # avancar. O paper NOVO nao volta pela re-consulta -- ele nunca
+            # chegou a ser gravado, entao `stalest_papers` nao o conhece; ele so
+            # retorna se o arXiv o re-descobrir.
+            cuts[_motivo("sinal_indisponivel", e_novo)] += 1
             if not e_novo:
                 # A rotacao precisa avancar mesmo quando a busca falha, ou
                 # `stalest_papers` devolve os mesmos trinta para sempre.
@@ -152,7 +182,7 @@ def run_day(
         # Todo paper novo no escopo chega ao markdown, inclusive o cortado do
         # radar: ou entre os tres, ou entre os demais.
         if result.gated_by is not None:
-            cuts["ja_estourou"] += 1
+            cuts[_motivo("ja_estourou", e_novo)] += 1
             candidates.append((item, False, e_novo, mexeu))
         # `<=`, nao `<`, e a escolha e deliberada. O piso e o ultimo valor
         # REJEITADO, nao o primeiro aceito. Com o piso documentado em 0.0 e a
@@ -163,16 +193,18 @@ def run_day(
         # implementacao independente E o sinal. Silencio e resultado valido; a
         # vaga vazia diz a verdade, o paper sem implementacao nao.
         elif result.value <= thresholds.score_floor:
-            cuts["abaixo_do_piso"] += 1
+            cuts[_motivo("abaixo_do_piso", e_novo)] += 1
             candidates.append((item, False, e_novo, mexeu))
-        # Guarda de cinto e suspensorio (spec secao 6: "Nenhum paper e entregue
-        # duas vezes no Telegram"). Hoje o filtro de `ja_conhecido` acima ja
-        # barra qualquer paper que tenha sido entregue -- entregar exige estar
-        # no banco. A guarda fica porque a re-consulta (spec secao 6, ainda nao
-        # construida) reintroduz papers antigos neste laco, e ai ela volta a ser
-        # o unico obstaculo entre um paper antigo e uma segunda entrega.
+        # Guarda VIVA de entrega unica (spec secao 6: "Nenhum paper e entregue
+        # duas vezes no Telegram"). Na trilha dos NOVOS ela e redundante: o
+        # filtro de `ja_conhecido` acima ja barra qualquer paper que tenha sido
+        # entregue, porque entregar exige estar no banco. Na trilha da
+        # RE-CONSULTA ela e a regra viva -- papers antigos ja entregues reentram
+        # neste laco todos os dias, e esta e a unica coisa entre eles e uma
+        # segunda entrega. Apaga-la por parecer codigo morto quebra a garantia
+        # central do produto.
         elif store.was_delivered(paper.arxiv_id, channel="telegram"):
-            cuts["ja_entregue"] += 1
+            cuts[_motivo("ja_entregue", e_novo)] += 1
             candidates.append((item, False, e_novo, mexeu))
         else:
             candidates.append((item, True, e_novo, mexeu))
@@ -201,13 +233,23 @@ def run_day(
     # hoje. Restricao do codigo, nao consequencia acidental.
     feed = [item for item, _, e_novo, _ in candidates if e_novo and item not in radar]
 
+    # Re-consultado elegivel que nao coube no top 3 nao pode evaporar. O paper
+    # NOVO que perde a corrida cai no feed; o re-consultado e barrado do feed
+    # por desenho, entao sem este motivo ele nao entra no radar, nao entra no
+    # feed e nao vira corte -- some do dia, que e o truncamento silencioso que a
+    # restricao global proibe. Basta quatro papers guardados passarem do piso no
+    # mesmo dia, provavel nas primeiras execucoes. Com ele a trilha particiona:
+    # todo re-consultado termina no radar ou num motivo `reconsulta_*`.
+    for item, elegivel, e_novo, _ in candidates:
+        if not e_novo and elegivel and item not in radar:
+            cuts["reconsulta_fora_do_top3"] += 1
+
     # Lista so quem se moveu desde a observacao anterior; os demais contam no
     # total e ficam calados. Trinta linhas de "nada mudou" sao ruido, e o teto
     # de legibilidade e a restricao de produto mais forte deste projeto.
     reconsultados_com_movimento = [
         item for item, _, e_novo, mexeu in candidates if not e_novo and mexeu
     ]
-    total_reconsultado = sum(1 for _, _, e_novo, _ in candidates if not e_novo)
 
     if not dry_run:
         # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de

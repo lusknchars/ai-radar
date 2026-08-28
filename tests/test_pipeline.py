@@ -440,9 +440,12 @@ def test_markdown_carries_the_authorship_audit_trail_from_the_store(store):
     assert "terceiro/impl — 12 estrelas — independente" in result.markdown
 
 
-# Motivos que REMOVEM o paper do dia. Os demais (ja_estourou, abaixo_do_piso,
-# ja_entregue) tiram do push mas mantem o paper no feed, entao entrariam duas
-# vezes na conta abaixo.
+# Motivos que REMOVEM o paper NOVO do dia. Os demais (ja_estourou,
+# abaixo_do_piso, ja_entregue) tiram do push mas mantem o paper no feed, entao
+# entrariam duas vezes na conta abaixo. Os motivos da trilha de re-consulta
+# carregam o prefixo `reconsulta_` e nao entram aqui: re-consultado nunca chega
+# ao feed, entao a particao dele e outra -- ver
+# `test_every_rechecked_paper_lands_in_the_radar_or_in_a_recheck_cut`.
 REMOCOES = ("ja_conhecido", "sem_julgamento", "sinal_indisponivel")
 
 
@@ -525,7 +528,8 @@ def test_a_rechecked_paper_never_reaches_the_feed(store):
         judge_all=lambda ps: {}, recheck_limit=10,
     )
     assert result.feed == []
-    assert result.cuts["ja_entregue"] == 1
+    assert result.cuts["reconsulta_ja_entregue"] == 1
+    assert "ja_entregue" not in result.cuts        # o motivo nomeia a trilha
 
 
 def test_an_already_delivered_paper_never_comes_back(store):
@@ -637,7 +641,8 @@ def test_recheck_advances_the_rotation_even_when_the_signal_fails(store):
         fetch_signal=lambda pp, t: (_ for _ in ()).throw(RuntimeError("GitHub fora")),
         judge_all=lambda ps: {}, recheck_limit=10,
     )
-    assert result.cuts["sinal_indisponivel"] == 1
+    assert result.cuts["reconsulta_sinal_indisponivel"] == 1
+    assert "sinal_indisponivel" not in result.cuts    # o motivo nomeia a trilha
     assert store.all_papers()[0]["last_checked"] == TODAY.isoformat()
 
 
@@ -656,8 +661,14 @@ def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
         store.record_judgment(pid, judgment(f"Antigo {pid}"), model="m", judged_at="2022-11-01")
 
     novos = [paper("2608.11111"), paper("2608.22222")]
+    # O 2305.14314 leva um sinal que passa do piso e PERDE a corrida de proposito.
+    # Com os numeros antigos (4 impls, 80 estrelas) os dois re-consultados
+    # entravam no top 3, e ai a assercao de que re-consultado nao chega ao feed
+    # era inerte: nenhum deles poderia chegar la com ou sem a guarda. Confirmado
+    # por mutacao. Agora ele e candidato elegivel FORA do radar, e a guarda
+    # `e_novo` do calculo do feed e a unica coisa que o mantem fora.
     sinais = {"2608.11111": fake_signal(5, 60, vel=3), "2608.22222": fake_signal(3, 20),
-              "2210.17323": fake_signal(9, 340, vel=7), "2305.14314": fake_signal(4, 80, vel=2)}
+              "2210.17323": fake_signal(9, 340, vel=7), "2305.14314": fake_signal(1, 400)}
     julgados = []
 
     def judge(ps):
@@ -674,6 +685,10 @@ def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
     assert sorted(julgados) == ["2608.11111", "2608.22222"]
     feed_ids = {i.paper.arxiv_id for i in result.feed}
     radar_ids = {i.paper.arxiv_id for i in result.radar}
+    # O 2305.14314 e elegivel e nao coube no radar: sem a guarda `e_novo` ele
+    # cairia no feed como qualquer outro candidato que perdeu a corrida.
+    assert "2305.14314" not in radar_ids
+    assert result.cuts["reconsulta_fora_do_top3"] == 1
     assert not (feed_ids & {"2210.17323", "2305.14314"})   # re-consultado fora do feed
     assert not (radar_ids & feed_ids)                      # sem duplicata entre secoes
     assert len(result.radar) <= 3                          # teto vale sobre as duas fontes
@@ -771,6 +786,7 @@ def test_recheck_advances_the_rotation_even_when_the_judgment_is_missing(store):
     assert vistos == ["2305.14314"]           # a rotacao AVANCOU no dia seguinte
     assert [i.paper.arxiv_id for i in segundo.radar] == ["2305.14314"]
 
+
 def test_a_rechecked_paper_that_stopped_moving_is_not_reported_as_movement(store):
     """Tres observacoes -- mexeu, depois parou -- que e o caso que faltava.
 
@@ -812,3 +828,133 @@ def test_a_rechecked_paper_that_stopped_moving_is_not_reported_as_movement(store
 
     ainda_parado = dia(date(2026, 9, 1), 9, 950)     # terceira volta, mesma coisa
     assert "1 papers re-consultados, nenhum com movimento" in secao(ainda_parado.markdown)
+
+
+def test_the_recheck_total_counts_attempts_not_survivors(store):
+    """Um re-consultado que falha gastou a vaga da rotacao e a chamada de rate
+    limit: o trabalho foi feito. Contar so quem sobreviveu faz a secao anunciar
+    um numero menor do que o dia teve."""
+    for pid, tem_julgamento in [("2210.17323", True), ("2305.14314", True),
+                                ("2401.00001", False)]:
+        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.record_signal(pid, fake_signal(2, 300), score=0.1, checked_at="2026-08-01")
+        if tem_julgamento:
+            store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
+
+    def fetch_signal(pp, t):
+        if pp.arxiv_id == "2305.14314":
+            raise RuntimeError("GitHub fora")
+        return fake_signal(9, 340), []
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=fetch_signal, judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    secao = result.markdown[result.markdown.index("## Re-consulta"):]
+    secao = secao[:secao.index("## Cortes")]
+    assert "3 papers re-consultados" in secao       # tres tentativas, um sobrevivente
+    assert "1 com movimento" in secao
+    assert result.cuts["reconsulta_sinal_indisponivel"] == 1
+    assert result.cuts["reconsulta_sem_julgamento"] == 1
+
+
+def test_the_recheck_section_appears_even_when_every_recheck_failed(store):
+    """O pior caso do mesmo defeito: com todos os re-consultados cortados, a
+    secao inteira desaparecia. Silencio ambiguo faz parecer que o trabalho nao
+    foi feito -- a mesma razao pela qual a secao de Cortes e obrigatoria."""
+    for pid in ("2210.17323", "2305.14314"):
+        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.record_judgment(pid, judgment(), model="m", judged_at="2026-08-01")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (_ for _ in ()).throw(RuntimeError("GitHub fora")),
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert "## Re-consulta" in result.markdown
+    assert "2 papers re-consultados, nenhum com movimento" in result.markdown
+    assert result.cuts["reconsulta_sinal_indisponivel"] == 2
+
+
+def test_an_eligible_rechecked_paper_that_loses_the_race_becomes_a_cut(store):
+    """Re-consultado elegivel que nao coube no top 3 nao pode evaporar.
+
+    O paper NOVO que perde a corrida cai no feed. O re-consultado e barrado do
+    feed por desenho, entao sem um motivo de corte ele nao esta no radar, nao
+    esta no feed e nao esta na contagem: sumiu, que e o truncamento silencioso
+    que a restricao global proibe. Nao e exotico -- bastam quatro papers
+    guardados passando do piso no mesmo dia, provavel nas primeiras execucoes,
+    ja que papers antigos tiveram anos para acumular implementacoes.
+    """
+    impls = {"2210.17323": 9, "2305.14314": 7, "2401.00001": 5, "2402.00002": 3}
+    for pid in impls:
+        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(impls[pp.arxiv_id], 40), []),
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert len(result.radar) == 3
+    assert result.feed == []                                  # re-consultado nunca vai ao feed
+    assert result.cuts["reconsulta_fora_do_top3"] == 1        # e nao evapora
+    assert "2402.00002" not in [i.paper.arxiv_id for i in result.radar]
+    assert "- reconsulta_fora_do_top3: 1" in result.markdown
+
+
+def test_every_rechecked_paper_lands_in_the_radar_or_in_a_recheck_cut(store):
+    """A particao da trilha de re-consulta, com a re-consulta LIGADA.
+
+    O teste de invariante irmao roda com `recheck_limit=0` -- configuracao que
+    producao nunca usa -- entao nao cobre nada disto. Aqui cada um dos nove
+    papers re-consultados termina no radar ou num motivo `reconsulta_*`, uma vez
+    so, a soma bate com o total anunciado na secao, e nenhum motivo da trilha
+    dos NOVOS aparece para nao esconder a re-consulta dentro dos contadores
+    deles.
+    """
+    entregue = "2405.00005"
+    guardados = {
+        "2401.00001": None,                # sem julgamento -> reconsulta_sem_julgamento
+        "2402.00002": "explode",           # sinal falha    -> reconsulta_sinal_indisponivel
+        "2403.00003": fake_signal(50, 9000),   # portao     -> reconsulta_ja_estourou
+        "2404.00004": fake_signal(0, 80),      # piso       -> reconsulta_abaixo_do_piso
+        entregue: fake_signal(9, 40),          # ja entregue -> reconsulta_ja_entregue
+        "2406.00006": fake_signal(9, 40),      # radar
+        "2407.00007": fake_signal(8, 40),      # radar
+        "2408.00008": fake_signal(7, 40),      # radar
+        "2409.00009": fake_signal(6, 40),      # elegivel, perde -> reconsulta_fora_do_top3
+    }
+    for pid, sinal in guardados.items():
+        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        if sinal is not None:
+            store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
+    store.mark_delivered(entregue, channel="telegram", at="2026-08-01", rank=1)
+
+    def fetch_signal(pp, t):
+        sinal = guardados[pp.arxiv_id]
+        if sinal == "explode":
+            raise RuntimeError("GitHub fora")
+        return sinal, []
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=fetch_signal, judge_all=lambda ps: {}, recheck_limit=30,
+    )
+
+    for motivo in ("sem_julgamento", "sinal_indisponivel", "ja_estourou",
+                   "abaixo_do_piso", "ja_entregue", "fora_do_top3"):
+        assert result.cuts[f"reconsulta_{motivo}"] == 1, motivo
+        assert motivo not in result.cuts            # nada vaza para a trilha dos novos
+
+    cortes_da_reconsulta = sum(v for k, v in result.cuts.items()
+                               if k.startswith("reconsulta_"))
+    assert len(result.radar) == 3
+    assert result.feed == []
+    # A particao exata: radar + cortes da trilha == papers re-consultados.
+    assert len(result.radar) + cortes_da_reconsulta == len(guardados)
+    assert f"{len(guardados)} papers re-consultados" in result.markdown
