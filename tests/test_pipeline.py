@@ -641,6 +641,44 @@ def test_recheck_advances_the_rotation_even_when_the_signal_fails(store):
     assert store.all_papers()[0]["last_checked"] == TODAY.isoformat()
 
 
+def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
+    """O caso de todo dia: papers novos E re-consultados no mesmo run.
+
+    Os nove testes da Tarefa 4 usam descoberta vazia, entao nenhum exercitava
+    as duas fontes juntas -- e e a combinacao que pode errar de formas que
+    nenhuma das duas sozinha erra: julgar re-consultado por engano, misturar
+    re-consultado no feed, ou estourar o teto somando as duas listas.
+    """
+    for pid, imp in [("2210.17323", 2), ("2305.14314", 1)]:
+        antigo = paper(pid)
+        store.upsert_paper(antigo, seen_at="2022-11-01")
+        store.record_signal(pid, fake_signal(imp, 300), score=0.1, checked_at="2022-11-01")
+        store.record_judgment(pid, judgment(f"Antigo {pid}"), model="m", judged_at="2022-11-01")
+
+    novos = [paper("2608.11111"), paper("2608.22222")]
+    sinais = {"2608.11111": fake_signal(5, 60, vel=3), "2608.22222": fake_signal(3, 20),
+              "2210.17323": fake_signal(9, 340, vel=7), "2305.14314": fake_signal(4, 80, vel=2)}
+    julgados = []
+
+    def judge(ps):
+        julgados.extend(p.arxiv_id for p in ps)
+        return {p.arxiv_id: judgment(f"Novo {p.arxiv_id}") for p in ps}
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=novos, cuts={}),
+        fetch_signal=lambda pp, t: (sinais[pp.arxiv_id], []),
+        judge_all=judge, recheck_limit=30,
+    )
+    # O LLM ve os novos e SO os novos, mesmo com re-consultados na lista.
+    assert sorted(julgados) == ["2608.11111", "2608.22222"]
+    feed_ids = {i.paper.arxiv_id for i in result.feed}
+    radar_ids = {i.paper.arxiv_id for i in result.radar}
+    assert not (feed_ids & {"2210.17323", "2305.14314"})   # re-consultado fora do feed
+    assert not (radar_ids & feed_ids)                      # sem duplicata entre secoes
+    assert len(result.radar) <= 3                          # teto vale sobre as duas fontes
+
+
 def test_recheck_is_off_by_default(store):
     """recheck_limit=0 por default: os chamadores existentes nao ganham
     re-consulta sem pedir."""

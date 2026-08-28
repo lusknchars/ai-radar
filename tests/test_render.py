@@ -97,3 +97,34 @@ def test_markdown_feed_carries_the_verdict_of_each_item():
                          feed=[item(judgment=nao_roda)])
     assert "(3090: nao)" in md
     assert "(3090: sim)" not in md
+
+
+def test_recheck_section_lists_only_what_moved():
+    mexeu = item(delta={"independent_from": 2, "independent_to": 9,
+                        "stars_from": 300, "stars_to": 340, "days": 21})
+    md = render_markdown("2026-08-27", radar=[], feed=[], cuts={},
+                         rechecked=[mexeu], rechecked_total=30)
+    assert "30 papers re-consultados" in md
+    assert "1 com movimento" in md
+    assert "2 -> 9 impls independentes em 21 dias" in md
+
+
+def test_recheck_section_is_explicit_when_nothing_moved():
+    """Silencio ambiguo faz parecer que o trabalho nao foi feito."""
+    md = render_markdown("2026-08-27", radar=[], feed=[], cuts={},
+                         rechecked=[], rechecked_total=30)
+    assert "30 papers re-consultados, nenhum com movimento" in md
+
+
+def test_recheck_section_is_absent_when_no_recheck_ran():
+    md = render_markdown("2026-08-27", radar=[], feed=[], cuts={})
+    assert "## Re-consulta" not in md
+
+
+def test_recheck_section_shows_the_current_score():
+    mexeu = item(score=0.4032,
+                 delta={"independent_from": 2, "independent_to": 9,
+                        "stars_from": 300, "stars_to": 340, "days": 21})
+    md = render_markdown("2026-08-27", radar=[], feed=[], cuts={},
+                         rechecked=[mexeu], rechecked_total=5)
+    assert "score 0.4032" in md

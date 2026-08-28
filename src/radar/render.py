@@ -54,6 +54,8 @@ def render_markdown(
     feed: list[RadarItem],
     cuts: dict[str, int],
     repos: dict[str, list[dict]] | None = None,
+    rechecked: list[RadarItem] | None = None,
+    rechecked_total: int = 0,
 ) -> str:
     repos = repos or {}
     out = [f"# Radar — {day}", ""]
@@ -89,6 +91,29 @@ def render_markdown(
     else:
         out.append("Nada novo no escopo hoje.")
     out.append("")
+
+    # Seccao presente apenas quando houve re-consulta. Lista so quem se moveu:
+    # trinta linhas de "nada mudou" e ruido, e o teto de legibilidade e a
+    # restricao de produto mais forte deste projeto. Mas quando nada se moveu,
+    # diz isso -- silencio ambiguo faz parecer que o trabalho nao foi feito.
+    if rechecked_total:
+        out.append("## Re-consulta")
+        out.append("")
+        if rechecked:
+            out.append(f"{rechecked_total} papers re-consultados. "
+                       f"{len(rechecked)} com movimento:")
+            out.append("")
+            for it in rechecked:
+                d = it.delta or {}
+                out.append(
+                    f"- {it.paper.arxiv_id} — "
+                    f"{d.get('independent_from')} -> {d.get('independent_to')} "
+                    f"impls independentes em {d.get('days')} dias — "
+                    f"score {it.score:.4f}"
+                )
+        else:
+            out.append(f"{rechecked_total} papers re-consultados, nenhum com movimento.")
+        out.append("")
 
     # Secao obrigatoria: truncar em silencio faz o radar parecer que cobriu tudo.
     out.append("## Cortes")

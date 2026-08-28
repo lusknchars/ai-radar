@@ -176,6 +176,16 @@ def run_day(
     # hoje. Restricao do codigo, nao consequencia acidental.
     feed = [item for item, _, e_novo in candidates if e_novo and item not in radar]
 
+    # "Movimento" e o delta existir e as implementacoes independentes terem
+    # mudado. Delta existe para todo paper com duas observacoes; so vale
+    # reportar quem de fato mudou.
+    reconsultados_com_movimento = [
+        item for item, _, e_novo in candidates
+        if not e_novo and item.delta
+        and item.delta["independent_to"] != item.delta["independent_from"]
+    ]
+    total_reconsultado = sum(1 for _, _, e_novo in candidates if not e_novo)
+
     if not dry_run:
         # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de
         # telegram aqui queimaria os tres melhores itens do dia para sempre: a
@@ -190,6 +200,8 @@ def run_day(
         feed=feed,
         cuts=dict(cuts),
         markdown=render_markdown(day, radar=radar, feed=feed,
-                                 cuts=dict(cuts), repos=repos_by_paper),
+                                 cuts=dict(cuts), repos=repos_by_paper,
+                                 rechecked=reconsultados_com_movimento,
+                                 rechecked_total=total_reconsultado),
         push=render_telegram(radar),
     )
