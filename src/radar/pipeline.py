@@ -240,8 +240,8 @@ def run_day(
     # restricao global proibe. Basta quatro papers guardados passarem do piso no
     # mesmo dia, provavel nas primeiras execucoes. Com ele a trilha particiona:
     # todo re-consultado termina no radar ou num motivo `reconsulta_*`.
-    for item, elegivel, e_novo, _ in candidates:
-        if not e_novo and elegivel and item not in radar:
+    for candidato, elegivel, veio_de_hoje, _ in candidates:
+        if not veio_de_hoje and elegivel and candidato not in radar:
             cuts["reconsulta_fora_do_top3"] += 1
 
     # Lista so quem se moveu desde a observacao anterior; os demais contam no
