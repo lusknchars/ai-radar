@@ -13,7 +13,7 @@ import anthropic
 import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
-from .config import DEFAULT_SCOPE, load_model, load_thresholds
+from .config import DEFAULT_SCOPE, load_model, load_recheck_limit, load_thresholds
 from .github import GitHubClient
 from .judge import collect_batch_results, submit_batch, wait_for_batch
 from .pipeline import run_day
@@ -89,6 +89,7 @@ def _executar(args, db_path: Path, today) -> int:
         model=model,
         fetch_papers=arxiv.recent, fetch_signal=fetch_signal, judge_all=judge_all,
         dry_run=args.dry_run,
+        recheck_limit=load_recheck_limit(),
     )
 
     args.out.mkdir(parents=True, exist_ok=True)

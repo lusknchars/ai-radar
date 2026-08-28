@@ -151,3 +151,20 @@ def test_a_missing_telegram_secret_does_not_throw_away_the_digest(ambiente, caps
     assert len(digests) == 1                   # o digest do dia sobreviveu
     assert "## Radar" in digests[0].read_text(encoding="utf-8")
     assert PAPER.arxiv_id in digests[0].read_text(encoding="utf-8")
+
+
+def test_the_cli_passes_the_configured_recheck_limit(monkeypatch, tmp_path):
+    """Sem esta ligacao a re-consulta existe e nunca roda -- exatamente o
+    estado em que stalest_papers ficou desde que foi escrita."""
+    monkeypatch.setenv("RADAR_RECHECK_LIMIT", "7")
+    capturado = {}
+
+    def fake_run_day(**kwargs):
+        capturado.update(kwargs)
+        raise SystemExit(0)
+
+    monkeypatch.setattr("radar.cli.run_day", fake_run_day)
+    monkeypatch.setattr("radar.cli.anthropic", type("A", (), {"Anthropic": lambda: None}))
+    with pytest.raises(SystemExit):
+        cli.main(["--dry-run", "--db", str(tmp_path / "r.db"), "--out", str(tmp_path)])
+    assert capturado["recheck_limit"] == 7
