@@ -597,9 +597,21 @@ def test_recheck_respects_the_limit(store):
     assert len(vistos) == 2
 
 
-def test_a_paper_discovered_today_is_not_also_rechecked(store):
-    """Sem a de-duplicacao, um paper novo entraria duas vezes na lista de
-    trabalho e teria o sinal buscado duas vezes."""
+def test_a_paper_discovered_today_has_its_signal_fetched_exactly_once(store):
+    """A propriedade e verdadeira, mas NAO pela razao que parece.
+
+    Nao e a guarda de de-duplicacao que a garante: `known_ids()` ja removeu de
+    `papers` tudo que esta no banco, e `papers_to_recheck` le exatamente o
+    banco, entao os dois conjuntos sao disjuntos antes de a guarda ser
+    consultada. Verificado por mutacao -- este teste passa com a guarda
+    deletada.
+
+    Ele fica porque a propriedade importa por si (buscar o sinal duas vezes
+    gastaria rate limit e gravaria `record_signal` em dobro) e porque quebraria
+    se alguem invertesse a ordem entre a consulta de re-consulta e o
+    `upsert_paper`. O que ele NAO faz e exercitar a guarda; o nome antigo
+    prometia isso e mentia.
+    """
     p = paper("2508.00001")
     vistos = []
     run_day(

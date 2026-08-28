@@ -74,8 +74,17 @@ def run_day(
     if recheck_limit > 0:
         novos_ids = {p.arxiv_id for p in papers}
         for antigo in store.papers_to_recheck(limit=recheck_limit):
+            # HOJE ESTA GUARDA E INALCANCAVEL, e isso e proposital documentar.
+            # `known_ids()` acima ja removeu de `papers` tudo que esta no banco,
+            # e `papers_to_recheck` le exatamente o banco -- os dois conjuntos
+            # sao disjuntos por construcao. Ela fica como cinto e suspensorio:
+            # se um dia `upsert_paper` subir para antes desta consulta, ou o
+            # filtro de conhecidos afrouxar, ela passa a ser o unico obstaculo
+            # contra buscar o sinal do mesmo paper duas vezes no mesmo dia.
+            # Mesmo tratamento que a guarda `was_delivered` recebeu enquanto
+            # esteve inalcancavel.
             if antigo.arxiv_id in novos_ids:
-                continue     # ja esta na lista como novidade; nao buscar duas vezes
+                continue
             trabalho.append((antigo, store.latest_judgment(antigo.arxiv_id), False))
 
     candidates: list[tuple[RadarItem, bool, bool]] = []   # (item, elegivel, e_novo)
