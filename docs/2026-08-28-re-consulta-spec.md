@@ -75,7 +75,7 @@ Os dois motivos têm causas e consertos diferentes: nos novos significa que o LL
 
 A re-consulta roda depois dos novos e usa `stalest_papers(limit=RECHECK_LIMIT)` — os vistos há mais tempo primeiro, que é a ordenação que a função já implementa e testa. Cada re-consulta é uma busca no GitHub, sujeita ao mesmo intervalo entre chamadas.
 
-Uma falha de sinal num paper re-consultado não derruba o dia. Vale a mesma guarda dos novos: conta como `sinal_indisponivel` e o dia segue.
+Uma falha de sinal num paper re-consultado não derruba o dia. Vale a mesma guarda dos novos: conta como `reconsulta_sinal_indisponivel` e o dia segue. O prefixo segue o mesmo argumento da §5 — em produção são ~30 re-consultados contra 10-40 novos, e um contador compartilhado faz a seção de cortes ser dominada pela trilha que ela não nomeia. Vale para os quatro motivos que as duas trilhas compartilhavam: `reconsulta_ja_estourou`, `reconsulta_abaixo_do_piso`, `reconsulta_ja_entregue` e `reconsulta_sinal_indisponivel`.
 
 **Todo paper re-consultado tem `touch_checked` atualizado, inclusive quando o sinal falha.** Sem isso a rotação não avança: `stalest_papers` devolveria os mesmos trinta papers todo dia, para sempre, e os demais nunca seriam re-checados. Marcar mesmo na falha é deliberado — um paper cuja busca falhou hoje vai para o fim da fila e volta na próxima volta, em vez de travar a rotação tentando o mesmo paper indefinidamente.
 
@@ -102,6 +102,8 @@ Seção nova, `## Re-consulta`, com duas informações: quantos papers foram re-
 
 Score atual, não a variação dele: `signal_delta` devolve implementações, estrelas e dias, não score, e estender essa função por causa de uma seta não se paga — implementações independentes são o sinal, o score é derivado delas.
 
+O total conta **tentativas** de re-consulta, não sobreviventes: um paper cortado por falta de julgamento ou por falha de sinal gastou a vaga da rotação e a chamada de rate limit do mesmo jeito, e omiti-lo faria a seção anunciar menos trabalho do que o dia teve.
+
 Silêncio para os 28 que não mudaram. Listar papers cujo sinal está igual é ruído, e o teto de legibilidade do digest é a restrição de produto mais forte deste projeto.
 
 Quando nada se moveu, a seção diz isso explicitamente — `30 papers re-consultados, nenhum com movimento` — pela mesma razão que a seção de Cortes é obrigatória mesmo vazia: silêncio ambíguo faz parecer que o trabalho não foi feito.
@@ -118,7 +120,10 @@ Quando nada se moveu, a seção diz isso explicitamente — `30 papers re-consul
   do `sem_julgamento` dos novos.
 - `touch_checked` é atualizado em todo paper re-consultado, **inclusive** quando o sinal falha,
   para que a rotação avance em vez de repetir os mesmos trinta indefinidamente.
-- Falha de sinal num re-consultado conta como `sinal_indisponivel` e o dia segue.
+- Falha de sinal num re-consultado conta como `reconsulta_sinal_indisponivel` e o dia segue.
+- Re-consultado elegível que não coube no top 3 vira corte `reconsulta_fora_do_top3`: não entra no
+  radar, não entra no feed, e não pode sumir do dia.
+- O total anunciado na seção conta TENTATIVAS de re-consulta, não sobreviventes.
 - O teto `RECHECK_LIMIT` é respeitado, e a re-consulta roda depois dos novos.
 - A seção `## Re-consulta` aparece mesmo quando nada se moveu.
 
@@ -131,7 +136,7 @@ Quando nada se moveu, a seção diz isso explicitamente — `30 papers re-consul
 | Significado de ressurreição | primeira entrega de paper já conhecido | preserva a regra de entrega única; sem limiar novo |
 | Re-consultado no feed | **não** | feed responde "o que saiu hoje" |
 | Julgamento | reusar o gravado, nunca re-julgar | mantém o teto de 30 barato |
-| Sem julgamento gravado | corte `sem_julgamento` | o custo não escapa em silêncio |
+| Sem julgamento gravado | corte `reconsulta_sem_julgamento` | causa e conserto diferentes dos novos; ver §5 |
 | Limite | teto fixo de 30/dia, mais antigo primeiro | usa `stalest_papers` que já existe e é testado |
 | Rotação lenta com banco grande | aceita e declarada | backoff é o upgrade, com dados |
 | Pontuação | a mesma `evaluate()` | uma fórmula só, sem caminho paralelo |

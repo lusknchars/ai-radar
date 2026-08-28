@@ -26,6 +26,17 @@ ele, 2,5 s. O intervalo sai da presença do segredo, não de um valor fixo.
 renomeado ou recriado, todos precisam ser repostos — e a falha aparece em
 runtime, não no push.
 
+### Orçamento da re-consulta
+
+`RADAR_RECHECK_LIMIT` (30) é quantos papers já guardados têm o sinal
+re-consultado por dia — os vistos há mais tempo primeiro. Cada um é uma busca no
+GitHub, sujeita ao mesmo intervalo entre chamadas, então este é o número que
+dimensiona a duração da execução. Diferente dos três limiares abaixo, não é
+calibração de produto: é orçamento operacional, que muda com o tamanho do banco
+e com a presença de `GH_TOKEN`.
+
+Para desligar a re-consulta, use `0`. Valor negativo também desliga.
+
 ### Calibração pendente
 
 `RADAR_BROKE_OUT_STARS` (1000), `RADAR_BROKE_OUT_CITATIONS` (200) e

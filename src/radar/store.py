@@ -118,7 +118,14 @@ class Store:
         `authors` e `categories` viajam como JSON nesta tabela; quem codificou
         e quem decodifica. Devolver linhas cruas espalharia conhecimento do
         formato de armazenamento para o pipeline.
+
+        `limit` nao-positivo devolve nada. Sem esta guarda, `LIMIT -1` no SQLite
+        significa ILIMITADO: `RADAR_RECHECK_LIMIT=-1` -- que e como uma pessoa
+        naturalmente tenta dizer "desliga a re-consulta" -- re-consultaria o
+        banco INTEIRO num dia, uma busca no GitHub por paper guardado.
         """
+        if limit <= 0:
+            return []
         return [
             Paper(
                 arxiv_id=row["arxiv_id"],

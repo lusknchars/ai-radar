@@ -78,7 +78,4 @@ def load_model() -> str:
 
 
 def load_recheck_limit() -> int:
-    # Configuravel, ao contrario de PUSH_CAP: aquele e decisao de produto sobre
-    # legibilidade do digest; este e orcamento operacional, que muda com o
-    # tamanho do banco e com a presenca de GH_TOKEN.
     return _env_int("RADAR_RECHECK_LIMIT", RECHECK_LIMIT)

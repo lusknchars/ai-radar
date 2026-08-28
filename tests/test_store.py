@@ -202,3 +202,16 @@ def test_papers_to_recheck_respects_the_limit(store):
 
 def test_papers_to_recheck_is_empty_on_a_fresh_database(store):
     assert store.papers_to_recheck(limit=10) == []
+
+
+def test_papers_to_recheck_returns_nothing_for_a_non_positive_limit(store):
+    """`LIMIT -1` no SQLite significa ILIMITADO, nao zero. Sem a guarda,
+    `RADAR_RECHECK_LIMIT=-1` -- que e como uma pessoa naturalmente tenta dizer
+    "desliga a re-consulta" -- re-consultaria o banco INTEIRO num dia, uma busca
+    no GitHub por paper guardado."""
+    for i in range(3):
+        store.upsert_paper(
+            Paper(arxiv_id=f"2508.0000{i}", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-01"), seen_at="2026-08-01")
+    assert store.papers_to_recheck(limit=0) == []
+    assert store.papers_to_recheck(limit=-1) == []
