@@ -488,3 +488,158 @@ def test_every_discovered_paper_is_either_rendered_or_counted_as_a_cut(store):
     # E cada paper aparece uma vez so entre as duas secoes.
     rendidos = [i.paper.arxiv_id for i in result.radar + result.feed]
     assert len(rendidos) == len(set(rendidos))
+
+
+def test_a_rechecked_paper_can_reach_the_radar_with_delta_wording(store):
+    """O caso que a feature existe para pegar: paper guardado, nunca entregue
+    porque o sinal era fraco, volta quando o sinal cresce."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-08-01")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(9, 340, vel=7), []),
+        judge_all=lambda ps: {},
+        recheck_limit=10,
+    )
+    assert [i.paper.arxiv_id for i in result.radar] == ["2210.17323"]
+    assert result.radar[0].delta is not None
+    assert "2 -> 9 impls independentes" in result.push
+
+
+def test_a_rechecked_paper_never_reaches_the_feed(store):
+    """O feed responde 'o que saiu hoje'. Um paper de 2022 nao saiu hoje."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
+    store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-01", rank=1)
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(9, 340), []),
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert result.feed == []
+    assert result.cuts["ja_entregue"] == 1
+
+
+def test_an_already_delivered_paper_never_comes_back(store):
+    """Spec secao 6, sem excecao: nenhum paper e entregue duas vezes."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
+    store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-01", rank=1)
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(99, 10), []),   # sinal enorme
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert result.radar == []
+    assert result.push == ""
+
+
+def test_recheck_reuses_the_stored_judgment_and_never_calls_the_llm(store):
+    """Re-consulta nao gasta token. Re-julgar trinta papers por dia
+    multiplicaria a conta para produzir texto que ja esta no banco."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 30), score=0.11, checked_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment("Tecnica Guardada"), model="m",
+                          judged_at="2026-08-01")
+
+    julgados = []
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(9, 40), []),
+        judge_all=lambda ps: julgados.extend(ps) or {}, recheck_limit=10,
+    )
+    assert julgados == []                                   # o LLM nao foi chamado
+    assert result.radar[0].judgment.technique == "Tecnica Guardada"
+
+
+def test_a_rechecked_paper_without_a_stored_judgment_is_cut_distinctly(store):
+    """Motivo distinto do `sem_julgamento` dos novos: la o LLM falhou, aqui e
+    linha antiga sem julgamento. Causas e consertos diferentes."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")     # sem record_judgment
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (fake_signal(9, 40), []),
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert result.cuts["reconsulta_sem_julgamento"] == 1
+    assert "sem_julgamento" not in result.cuts
+
+
+def test_recheck_respects_the_limit(store):
+    for i in range(5):
+        pp = paper(f"2508.0000{i}")
+        store.upsert_paper(pp, seen_at="2026-08-01")
+        store.record_judgment(pp.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
+    vistos = []
+    run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (vistos.append(pp.arxiv_id) or (fake_signal(1, 5), [])),
+        judge_all=lambda ps: {}, recheck_limit=2,
+    )
+    assert len(vistos) == 2
+
+
+def test_a_paper_discovered_today_is_not_also_rechecked(store):
+    """Sem a de-duplicacao, um paper novo entraria duas vezes na lista de
+    trabalho e teria o sinal buscado duas vezes."""
+    p = paper("2508.00001")
+    vistos = []
+    run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[p], cuts={}),
+        fetch_signal=lambda pp, t: (vistos.append(pp.arxiv_id) or (fake_signal(4, 20), [])),
+        judge_all=lambda ps: {pp.arxiv_id: judgment() for pp in ps},
+        recheck_limit=10,
+    )
+    assert vistos == ["2508.00001"]
+
+
+def test_recheck_advances_the_rotation_even_when_the_signal_fails(store):
+    """Sem touch_checked na falha, `stalest_papers` devolveria os mesmos
+    papers para sempre e a rotacao nunca chegaria aos demais."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (_ for _ in ()).throw(RuntimeError("GitHub fora")),
+        judge_all=lambda ps: {}, recheck_limit=10,
+    )
+    assert result.cuts["sinal_indisponivel"] == 1
+    assert store.all_papers()[0]["last_checked"] == TODAY.isoformat()
+
+
+def test_recheck_is_off_by_default(store):
+    """recheck_limit=0 por default: os chamadores existentes nao ganham
+    re-consulta sem pedir."""
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-08-01")
+    store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
+    vistos = []
+    run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (vistos.append(pp.arxiv_id) or (fake_signal(1, 5), [])),
+        judge_all=lambda ps: {},
+    )
+    assert vistos == []

@@ -36,6 +36,7 @@ def run_day(
     fetch_signal: Callable[[Paper, date], tuple[Signal, list[RepoClassification]]],
     judge_all: Callable[[list[Paper]], dict[str, Judgment]],
     dry_run: bool = False,
+    recheck_limit: int = 0,
 ) -> DayResult:
     day = today.isoformat()
     discovery = fetch_papers(scope)
@@ -66,6 +67,16 @@ def run_day(
     trabalho: list[tuple[Paper, Judgment | None, bool]] = [
         (p, judgments.get(p.arxiv_id), True) for p in papers
     ]
+
+    # Re-consulta (spec da re-consulta, secao 3): entra DEPOIS dos novos, que
+    # tem prioridade de orcamento, e e a primeira coisa cortada quando o
+    # orcamento acaba. Julgamento vem do banco -- re-consulta nao gasta token.
+    if recheck_limit > 0:
+        novos_ids = {p.arxiv_id for p in papers}
+        for antigo in store.papers_to_recheck(limit=recheck_limit):
+            if antigo.arxiv_id in novos_ids:
+                continue     # ja esta na lista como novidade; nao buscar duas vezes
+            trabalho.append((antigo, store.latest_judgment(antigo.arxiv_id), False))
 
     candidates: list[tuple[RadarItem, bool, bool]] = []   # (item, elegivel, e_novo)
     repos_by_paper: dict[str, list[dict]] = {}
