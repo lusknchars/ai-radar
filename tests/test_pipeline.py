@@ -733,3 +733,82 @@ def test_recheck_is_off_by_default(store):
         judge_all=lambda ps: {},
     )
     assert vistos == []
+
+
+def test_recheck_advances_the_rotation_even_when_the_judgment_is_missing(store):
+    """Irmao do teste da falha de sinal, e o ramo que travava a rotacao INTEIRA.
+
+    Sem `touch_checked` aqui, o paper sem julgamento gravado fica com
+    `last_checked` NULL; como `stalest_papers` ordena NULL primeiro, ele volta
+    na frente da fila todo dia, para sempre, ocupando a vaga da rotacao. A
+    re-consulta entao nunca alcanca nenhum paper saudavel -- e nao se cura, o
+    unico caminho que destravaria e justamente o que estava faltando.
+    """
+    sem_julg = paper("2210.17323")
+    store.upsert_paper(sem_julg, seen_at="2026-08-01")       # sem record_judgment
+    saudavel = paper("2305.14314")
+    store.upsert_paper(saudavel, seen_at="2026-08-01")
+    store.record_judgment(saudavel.arxiv_id, judgment("Saudavel"), model="m",
+                          judged_at="2026-08-01")
+    store.touch_checked(saudavel.arxiv_id, at="2026-08-01")  # ja checado: fica atras
+
+    vistos: list[str] = []
+
+    def dia(quando):
+        return run_day(
+            store=store, scope=SCOPE, thresholds=T, today=quando, model="modelo-de-teste",
+            fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+            fetch_signal=lambda pp, t: (
+                vistos.append(pp.arxiv_id) or (fake_signal(4, 40), [])),
+            judge_all=lambda ps: {}, recheck_limit=1,     # uma vaga por dia
+        )
+
+    primeiro = dia(TODAY)
+    assert primeiro.cuts["reconsulta_sem_julgamento"] == 1
+    assert vistos == []                       # sem julgamento nao se busca sinal
+
+    segundo = dia(date(2026, 8, 28))
+    assert vistos == ["2305.14314"]           # a rotacao AVANCOU no dia seguinte
+    assert [i.paper.arxiv_id for i in segundo.radar] == ["2305.14314"]
+
+def test_a_rechecked_paper_that_stopped_moving_is_not_reported_as_movement(store):
+    """Tres observacoes -- mexeu, depois parou -- que e o caso que faltava.
+
+    Todo teste anterior tem exatamente DUAS observacoes, e com duas o delta
+    (primeira vs ultima) e o predicado correto (anterior vs atual) coincidem.
+    Com tres eles divergem: `signal_delta` continua dizendo 2 -> 9 para sempre,
+    entao usa-lo como predicado poe na lista todo paper que um dia ganhou uma
+    implementacao, permanentemente. Em poucas voltas da rotacao a secao vira as
+    trinta linhas de "nada de novo" que a spec, secao 7, existe para evitar.
+    """
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-06-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-06-01")
+    store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-06-01")
+
+    def dia(quando, impls, estrelas):
+        return run_day(
+            store=store, scope=SCOPE, thresholds=T, today=quando, model="modelo-de-teste",
+            fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+            fetch_signal=lambda pp, t: (fake_signal(impls, estrelas), []),
+            judge_all=lambda ps: {}, recheck_limit=10,
+        )
+
+    def secao(md):
+        corpo = md[md.index("## Re-consulta"):]
+        return corpo[:corpo.index("## Cortes")]
+
+    mexeu = dia(date(2026, 7, 1), 9, 340)            # 2 -> 9: movimento de verdade
+    assert "1 com movimento" in secao(mexeu.markdown)
+    assert "2210.17323" in secao(mexeu.markdown)
+    # A redacao do push e o acumulado desde a descoberta, e continua sendo.
+    assert "2 -> 9 impls independentes em 30 dias" in mexeu.push
+
+    parou = dia(date(2026, 8, 1), 9, 900)            # PAROU em 9; so estrelas subiram
+    assert "1 papers re-consultados, nenhum com movimento" in secao(parou.markdown)
+    assert "2210.17323" not in secao(parou.markdown)
+    # `signal_delta` continua acumulado (2 -> 9): e ele que NAO serve de predicado.
+    assert store.signal_delta("2210.17323")["independent_from"] == 2
+
+    ainda_parado = dia(date(2026, 9, 1), 9, 950)     # terceira volta, mesma coisa
+    assert "1 papers re-consultados, nenhum com movimento" in secao(ainda_parado.markdown)

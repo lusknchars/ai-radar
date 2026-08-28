@@ -87,12 +87,22 @@ def run_day(
                 continue
             trabalho.append((antigo, store.latest_judgment(antigo.arxiv_id), False))
 
-    candidates: list[tuple[RadarItem, bool, bool]] = []   # (item, elegivel, e_novo)
+    # (item, elegivel, e_novo, mexeu)
+    candidates: list[tuple[RadarItem, bool, bool, bool]] = []
     repos_by_paper: dict[str, list[dict]] = {}
 
     for paper, judgment, e_novo in trabalho:
         if judgment is None:
             cuts["sem_julgamento" if e_novo else "reconsulta_sem_julgamento"] += 1
+            if not e_novo:
+                # Espelha o ramo de falha de sinal abaixo: a rotacao avanca em
+                # TODO paper re-consultado (spec da re-consulta, secao 6). Sem
+                # isto o paper fica com `last_checked` NULL, e como
+                # `stalest_papers` ordena NULL primeiro ele volta na frente da
+                # fila todos os dias, para sempre, consumindo a vaga e travando
+                # a rotacao antes que ela alcance qualquer paper saudavel. Nao
+                # se cura sozinho: o unico caminho que destravaria era este.
+                store.touch_checked(paper.arxiv_id, at=day)
             continue
 
         try:
@@ -115,6 +125,21 @@ def run_day(
         if e_novo:
             store.upsert_paper(paper, seen_at=day)
             store.record_judgment(paper.arxiv_id, judgment, model=model, judged_at=day)
+
+        # "Movimento" e ter mudado desde a observacao ANTERIOR -- por isso a
+        # leitura acontece antes do insert de hoje, que seria a ultima linha.
+        # Nao da para derivar isto de `signal_delta`: aquele compara a PRIMEIRA
+        # com a ULTIMA observacao, o acumulado desde a descoberta, que e o que a
+        # redacao do push quer ("2 -> 9 impls independentes em 1396 dias") e
+        # exatamente o que um predicado de "mudou desde a ultima vez" nao pode
+        # usar. Com o delta no lugar do predicado, um paper que subiu uma unica
+        # vez entra na lista em toda re-consulta dali em diante, e em poucas
+        # voltas a secao vira as trinta linhas de "nada de novo" que o teto de
+        # legibilidade existe para evitar.
+        anterior = store.signal_history(paper.arxiv_id)
+        mexeu = (bool(anterior)
+                 and anterior[-1]["independent_impls"] != signal.independent_impls)
+
         store.record_signal(paper.arxiv_id, signal, score=result.value, checked_at=day)
         store.record_repos(paper.arxiv_id, classifications)
         store.touch_checked(paper.arxiv_id, at=day)
@@ -128,7 +153,7 @@ def run_day(
         # radar: ou entre os tres, ou entre os demais.
         if result.gated_by is not None:
             cuts["ja_estourou"] += 1
-            candidates.append((item, False, e_novo))
+            candidates.append((item, False, e_novo, mexeu))
         # `<=`, nao `<`, e a escolha e deliberada. O piso e o ultimo valor
         # REJEITADO, nao o primeiro aceito. Com o piso documentado em 0.0 e a
         # formula da spec, score == 0.0 acontece exatamente quando
@@ -139,7 +164,7 @@ def run_day(
         # vaga vazia diz a verdade, o paper sem implementacao nao.
         elif result.value <= thresholds.score_floor:
             cuts["abaixo_do_piso"] += 1
-            candidates.append((item, False, e_novo))
+            candidates.append((item, False, e_novo, mexeu))
         # Guarda de cinto e suspensorio (spec secao 6: "Nenhum paper e entregue
         # duas vezes no Telegram"). Hoje o filtro de `ja_conhecido` acima ja
         # barra qualquer paper que tenha sido entregue -- entregar exige estar
@@ -148,9 +173,9 @@ def run_day(
         # o unico obstaculo entre um paper antigo e uma segunda entrega.
         elif store.was_delivered(paper.arxiv_id, channel="telegram"):
             cuts["ja_entregue"] += 1
-            candidates.append((item, False, e_novo))
+            candidates.append((item, False, e_novo, mexeu))
         else:
-            candidates.append((item, True, e_novo))
+            candidates.append((item, True, e_novo, mexeu))
 
     # Ordem: executavel na 3090 primeiro, score depois. Sem isso, um paper que
     # depende de FP8 -- inexecutavel em Ampere por definicao -- consome uma das
@@ -158,7 +183,7 @@ def run_day(
     # Rebaixar preserva a visao periferica sem deixar o inexecutavel disputar
     # espaco com o acionavel. Afeta o push apenas; o markdown leva todos.
     eligible = sorted(
-        (i for i, ok, _ in candidates if ok),
+        (i for i, ok, _, _ in candidates if ok),
         key=lambda i: (i.judgment.runs_on_3090 != "nao", i.score),
         reverse=True,
     )
@@ -174,17 +199,15 @@ def run_day(
     # Spec da re-consulta, secao 4: re-consultado entra no radar, nunca no
     # feed. O feed responde "o que saiu hoje", e um paper de 2022 nao saiu
     # hoje. Restricao do codigo, nao consequencia acidental.
-    feed = [item for item, _, e_novo in candidates if e_novo and item not in radar]
+    feed = [item for item, _, e_novo, _ in candidates if e_novo and item not in radar]
 
-    # "Movimento" e o delta existir e as implementacoes independentes terem
-    # mudado. Delta existe para todo paper com duas observacoes; so vale
-    # reportar quem de fato mudou.
+    # Lista so quem se moveu desde a observacao anterior; os demais contam no
+    # total e ficam calados. Trinta linhas de "nada mudou" sao ruido, e o teto
+    # de legibilidade e a restricao de produto mais forte deste projeto.
     reconsultados_com_movimento = [
-        item for item, _, e_novo in candidates
-        if not e_novo and item.delta
-        and item.delta["independent_to"] != item.delta["independent_from"]
+        item for item, _, e_novo, mexeu in candidates if not e_novo and mexeu
     ]
-    total_reconsultado = sum(1 for _, _, e_novo in candidates if not e_novo)
+    total_reconsultado = sum(1 for _, _, e_novo, _ in candidates if not e_novo)
 
     if not dry_run:
         # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de
