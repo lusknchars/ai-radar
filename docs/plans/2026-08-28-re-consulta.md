@@ -441,9 +441,21 @@ def test_recheck_respects_the_limit(store):
     assert len(vistos) == 2
 
 
-def test_a_paper_discovered_today_is_not_also_rechecked(store):
-    """Sem a de-duplicacao, um paper novo entraria duas vezes na lista de
-    trabalho e teria o sinal buscado duas vezes."""
+def test_a_paper_discovered_today_has_its_signal_fetched_exactly_once(store):
+    """A propriedade e verdadeira, mas NAO pela razao que parece.
+
+    Nao e a guarda de de-duplicacao que a garante: `known_ids()` ja removeu de
+    `papers` tudo que esta no banco, e `papers_to_recheck` le exatamente o
+    banco, entao os dois conjuntos sao disjuntos antes de a guarda ser
+    consultada. Verificado por mutacao -- este teste passa com a guarda
+    deletada.
+
+    Ele fica porque a propriedade importa por si (buscar o sinal duas vezes
+    gastaria rate limit e gravaria `record_signal` em dobro) e porque quebraria
+    se alguem invertesse a ordem entre a consulta de re-consulta e o
+    `upsert_paper`. O que ele NAO faz e exercitar a guarda; o nome antigo
+    prometia isso e mentia.
+    """
     p = paper("2508.00001")
     vistos = []
     run_day(
@@ -512,8 +524,17 @@ E, logo depois de montar `trabalho` com os papers novos:
     if recheck_limit > 0:
         novos_ids = {p.arxiv_id for p in papers}
         for antigo in store.papers_to_recheck(limit=recheck_limit):
+            # HOJE ESTA GUARDA E INALCANCAVEL, e isso e proposital documentar.
+            # `known_ids()` acima ja removeu de `papers` tudo que esta no banco,
+            # e `papers_to_recheck` le exatamente o banco -- os dois conjuntos
+            # sao disjuntos por construcao. Ela fica como cinto e suspensorio:
+            # se um dia `upsert_paper` subir para antes desta consulta, ou o
+            # filtro de conhecidos afrouxar, ela passa a ser o unico obstaculo
+            # contra buscar o sinal do mesmo paper duas vezes no mesmo dia.
+            # Mesmo tratamento que a guarda `was_delivered` recebeu enquanto
+            # esteve inalcancavel.
             if antigo.arxiv_id in novos_ids:
-                continue     # ja esta na lista como novidade; nao buscar duas vezes
+                continue
             trabalho.append((antigo, store.latest_judgment(antigo.arxiv_id), False))
 ```
 
