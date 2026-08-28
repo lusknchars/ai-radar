@@ -679,6 +679,46 @@ def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
     assert len(result.radar) <= 3                          # teto vale sobre as duas fontes
 
 
+def test_only_papers_whose_implementation_count_moved_are_listed(store):
+    """Um paper que so ganhou estrelas NAO se moveu.
+
+    Estrelas sao o denominador do score, nao o sinal. Um paper que foi de 50
+    para 900 estrelas sem ganhar nenhuma implementacao independente nova nao
+    tem novidade a reportar: ele conta no TOTAL de re-consultados -- o trabalho
+    foi feito e o rate limit foi gasto -- mas nao entra na lista.
+
+    Sem esta distincao a secao vira as trinta linhas de "nada de novo" que o
+    teto de legibilidade existe para evitar. Nenhum dos testes de render cobre
+    isso: la a lista de movidos ja chega pronta, e quem decide quem se moveu e
+    o pipeline.
+    """
+    casos = {                       # arxiv_id: (impls antes, impls depois, estrelas antes, depois)
+        "2210.17323": (2, 9, 300, 340),    # mexeu as impls   -> entra na lista
+        "2305.14314": (4, 4, 50, 900),     # so estrelas      -> conta, nao lista
+        "2401.00001": (1, 1, 10, 10),      # parado           -> conta, nao lista
+    }
+    for pid, (antes, _, est_antes, _e) in casos.items():
+        store.upsert_paper(paper(pid), seen_at="2022-11-01")
+        store.record_signal(pid, fake_signal(antes, est_antes), score=0.1,
+                            checked_at="2022-11-01")
+        store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2022-11-01")
+
+    result = run_day(
+        store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
+        fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+        fetch_signal=lambda pp, t: (
+            fake_signal(casos[pp.arxiv_id][1], casos[pp.arxiv_id][3]), []),
+        judge_all=lambda ps: {}, recheck_limit=30,
+    )
+    secao = result.markdown[result.markdown.index("## Re-consulta"):]
+    secao = secao[:secao.index("## Cortes")]
+    assert "3 papers re-consultados" in secao      # os tres contam no total
+    assert "1 com movimento" in secao
+    assert "2210.17323" in secao                   # so o que ganhou impls e listado
+    assert "2305.14314" not in secao               # estrelas nao sao movimento
+    assert "2401.00001" not in secao
+
+
 def test_recheck_is_off_by_default(store):
     """recheck_limit=0 por default: os chamadores existentes nao ganham
     re-consulta sem pedir."""
