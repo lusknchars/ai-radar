@@ -96,3 +96,17 @@ def test_model_defaults_to_opus_5(monkeypatch):
     monkeypatch.delenv("RADAR_MODEL", raising=False)
     from radar.config import load_model
     assert load_model() == "claude-opus-5"
+
+
+def test_recheck_limit_defaults_to_thirty(monkeypatch):
+    monkeypatch.delenv("RADAR_RECHECK_LIMIT", raising=False)
+    from radar.config import load_recheck_limit
+    assert load_recheck_limit() == 30
+
+
+def test_recheck_limit_is_configurable_unlike_the_push_cap(monkeypatch):
+    """PUSH_CAP e decisao de produto e nao se mexe por ambiente. Este e
+    orcamento operacional: muda com o tamanho do banco e com GH_TOKEN."""
+    monkeypatch.setenv("RADAR_RECHECK_LIMIT", "5")
+    from radar.config import load_recheck_limit
+    assert load_recheck_limit() == 5

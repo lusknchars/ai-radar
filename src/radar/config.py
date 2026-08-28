@@ -14,6 +14,11 @@ from dataclasses import dataclass
 # lados, para que nao exista jeito de expressar um teto diferente.
 PUSH_CAP = 3
 
+# Configuravel, ao contrario de PUSH_CAP: aquele e decisao de produto sobre
+# legibilidade do digest; este e orcamento operacional, que muda com o tamanho
+# do banco e com a presenca de GH_TOKEN.
+RECHECK_LIMIT = 30
+
 
 @dataclass(frozen=True)
 class ScopeConfig:
@@ -70,3 +75,10 @@ def load_thresholds() -> Thresholds:
 
 def load_model() -> str:
     return os.environ.get("RADAR_MODEL") or "claude-opus-5"
+
+
+def load_recheck_limit() -> int:
+    # Configuravel, ao contrario de PUSH_CAP: aquele e decisao de produto sobre
+    # legibilidade do digest; este e orcamento operacional, que muda com o
+    # tamanho do banco e com a presenca de GH_TOKEN.
+    return _env_int("RADAR_RECHECK_LIMIT", RECHECK_LIMIT)
