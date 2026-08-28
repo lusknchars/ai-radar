@@ -694,6 +694,46 @@ def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
     assert len(result.radar) <= 3                          # teto vale sobre as duas fontes
 
 
+def test_a_second_run_on_the_same_day_does_not_report_broken_movement(store):
+    """`mexeu` e `signal_delta` tem de concordar, e so concordam se o predicado
+    ignorar observacoes do proprio dia.
+
+    `record_signal` usa INSERT OR REPLACE em (arxiv_id, checked_at), entao uma
+    segunda execucao no mesmo dia SUBSTITUI a observacao daquele dia. Comparar
+    com ela produzia `mexeu` verdadeiro enquanto `signal_delta` -- que le o
+    historico depois da escrita -- devolvia None, e a linha do markdown saia
+    como "None -> None impls independentes em None dias".
+
+    Alcancavel na pratica: `workflow_dispatch` esta habilitado e o plano
+    recomenda um disparo manual como primeiro contato com producao, o que pode
+    cair no mesmo dia do cron.
+    """
+    p = paper("2210.17323")
+    store.upsert_paper(p, seen_at="2026-01-01")
+    store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.1, checked_at="2026-01-01")
+    store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-01-01")
+
+    def roda():
+        return run_day(
+            store=store, scope=SCOPE, thresholds=T, today=date(2026, 1, 1),
+            model="modelo-de-teste",
+            fetch_papers=lambda s: Discovery(papers=[], cuts={}),
+            fetch_signal=lambda pp, t: (fake_signal(9, 340), []),
+            judge_all=lambda ps: {}, recheck_limit=5,
+        )
+
+    primeira = roda()
+    segunda = roda()
+    for resultado in (primeira, segunda):
+        secao = resultado.markdown[resultado.markdown.index("## Re-consulta"):]
+        secao = secao[:secao.index("## Cortes")]
+        assert "None" not in secao        # nunca "None -> None ... em None dias"
+    # A observacao do dia foi substituida, entao nao ha anterior sobrevivente
+    # com que comparar: o honesto e nao afirmar movimento.
+    assert "nenhum com movimento" in primeira.markdown
+    assert "nenhum com movimento" in segunda.markdown
+
+
 def test_only_papers_whose_implementation_count_moved_are_listed(store):
     """Um paper que so ganhou estrelas NAO se moveu.
 

@@ -79,6 +79,14 @@ Uma falha de sinal num paper re-consultado não derruba o dia. Vale a mesma guar
 
 **Todo paper re-consultado tem `touch_checked` atualizado, inclusive quando o sinal falha.** Sem isso a rotação não avança: `stalest_papers` devolveria os mesmos trinta papers todo dia, para sempre, e os demais nunca seriam re-checados. Marcar mesmo na falha é deliberado — um paper cuja busca falhou hoje vai para o fim da fila e volta na próxima volta, em vez de travar a rotação tentando o mesmo paper indefinidamente.
 
+### Duas execuções no mesmo dia
+
+`record_signal` usa `INSERT OR REPLACE` na chave `(arxiv_id, checked_at)`, então uma segunda execução no mesmo dia **substitui** a observação daquele dia em vez de acrescentar outra. Isso é correto — o histórico guarda uma observação por dia, não uma por execução.
+
+A consequência é que o predicado de movimento tem de **ignorar observações do próprio dia**. Comparar com uma linha que a própria execução vai substituir afirma movimento contra uma observação que deixará de existir, e o `signal_delta` — que lê o histórico depois da escrita — discorda, produzindo `None -> None impls independentes em None dias` no markdown.
+
+Regra: sem observação anterior **sobrevivente**, não há movimento a afirmar. O paper conta no total e a seção diz que nada se moveu. Isso é alcançável na prática, porque `workflow_dispatch` está habilitado e um disparo manual pode cair no mesmo dia do cron.
+
 ### A limitação, declarada
 
 O período de rotação cresce com o banco. Com 30 por dia e 3000 papers guardados, cada paper volta a cada 100 dias — tarde demais para pegar uma ressurreição enquanto ela importa.

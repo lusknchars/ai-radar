@@ -166,7 +166,16 @@ def run_day(
         # vez entra na lista em toda re-consulta dali em diante, e em poucas
         # voltas a secao vira as trinta linhas de "nada de novo" que o teto de
         # legibilidade existe para evitar.
-        anterior = store.signal_history(paper.arxiv_id)
+        # Descarta uma observacao do proprio dia: `record_signal` usa
+        # INSERT OR REPLACE em (arxiv_id, checked_at), entao uma linha de hoje
+        # sera SUBSTITUIDA por esta. Comparar com ela e comparar com uma linha
+        # que nao vai existir -- produzia `mexeu` verdadeiro enquanto
+        # `signal_delta` (que le o historico DEPOIS da escrita) devolvia None,
+        # e o markdown saia com "None -> None impls independentes em None
+        # dias". Filtrando aqui, `mexeu` e o delta concordam por construcao:
+        # sem observacao anterior sobrevivente nao ha movimento a afirmar.
+        anterior = [r for r in store.signal_history(paper.arxiv_id)
+                    if r["checked_at"] != day]
         mexeu = (bool(anterior)
                  and anterior[-1]["independent_impls"] != signal.independent_impls)
 
