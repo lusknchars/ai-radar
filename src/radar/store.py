@@ -11,7 +11,7 @@ import sqlite3
 from datetime import date
 from pathlib import Path
 
-from .models import Judgment, RepoClassification, Signal
+from .models import Judgment, Paper, RepoClassification, Signal
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS papers (
@@ -111,6 +111,25 @@ class Store:
             (limit,),
         )
         return [dict(r) for r in rows]
+
+    def papers_to_recheck(self, limit: int) -> list[Paper]:
+        """Os papers da vez na rotacao de re-consulta, ja como objetos.
+
+        `authors` e `categories` viajam como JSON nesta tabela; quem codificou
+        e quem decodifica. Devolver linhas cruas espalharia conhecimento do
+        formato de armazenamento para o pipeline.
+        """
+        return [
+            Paper(
+                arxiv_id=row["arxiv_id"],
+                title=row["title"],
+                abstract=row["abstract"],
+                authors=json.loads(row["authors"]),
+                categories=json.loads(row["categories"]),
+                published=row["published"],
+            )
+            for row in self.stalest_papers(limit)
+        ]
 
     # ---------- signals ----------
 

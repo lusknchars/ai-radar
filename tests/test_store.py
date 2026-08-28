@@ -160,3 +160,45 @@ def test_init_schema_is_idempotent(tmp_path):
     s.init_schema()
     s.init_schema()
     assert s.all_papers() == []
+
+
+def test_papers_to_recheck_returns_paper_objects(store):
+    """Quem codificou o JSON e quem decodifica. O pipeline nao deve saber
+    que authors e categories viajam serializados."""
+    store.upsert_paper(P, seen_at="2026-08-27")
+    papers = store.papers_to_recheck(limit=10)
+    assert len(papers) == 1
+    assert isinstance(papers[0], Paper)
+    assert papers[0].arxiv_id == P.arxiv_id
+
+
+def test_papers_to_recheck_round_trips_sequences_as_tuples(store):
+    store.upsert_paper(P, seen_at="2026-08-27")
+    recuperado = store.papers_to_recheck(limit=10)[0]
+    assert recuperado.authors == P.authors
+    assert recuperado.categories == P.categories
+    assert isinstance(recuperado.authors, tuple)
+
+
+def test_papers_to_recheck_puts_never_checked_first(store):
+    velho = Paper(arxiv_id="2508.00001", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-01")
+    nunca = Paper(arxiv_id="2508.00002", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-01")
+    store.upsert_paper(velho, seen_at="2026-08-01")
+    store.touch_checked(velho.arxiv_id, at="2026-08-01")
+    store.upsert_paper(nunca, seen_at="2026-08-01")
+    assert [p.arxiv_id for p in store.papers_to_recheck(limit=10)] == \
+        ["2508.00002", "2508.00001"]
+
+
+def test_papers_to_recheck_respects_the_limit(store):
+    for i in range(5):
+        store.upsert_paper(
+            Paper(arxiv_id=f"2508.0000{i}", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-01"), seen_at="2026-08-01")
+    assert len(store.papers_to_recheck(limit=3)) == 3
+
+
+def test_papers_to_recheck_is_empty_on_a_fresh_database(store):
+    assert store.papers_to_recheck(limit=10) == []
