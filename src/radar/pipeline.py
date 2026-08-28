@@ -58,13 +58,21 @@ def run_day(
         cuts["ja_conhecido"] += len(discovered) - len(papers)
 
     judgments = judge_all(papers) if papers else {}
-    candidates: list[tuple[RadarItem, bool]] = []   # (item, elegivel_para_push)
+
+    # Lista de trabalho: (paper, julgamento, e_novo). Papers novos trazem o
+    # julgamento do LLM; re-consultados trarao o julgamento lido do banco.
+    # `e_novo` controla tres coisas e so tres: o motivo de corte quando falta
+    # julgamento, quais gravacoes acontecem, e se o item pode chegar ao feed.
+    trabalho: list[tuple[Paper, Judgment | None, bool]] = [
+        (p, judgments.get(p.arxiv_id), True) for p in papers
+    ]
+
+    candidates: list[tuple[RadarItem, bool, bool]] = []   # (item, elegivel, e_novo)
     repos_by_paper: dict[str, list[dict]] = {}
 
-    for paper in papers:
-        judgment = judgments.get(paper.arxiv_id)
+    for paper, judgment, e_novo in trabalho:
         if judgment is None:
-            cuts["sem_julgamento"] += 1
+            cuts["sem_julgamento" if e_novo else "reconsulta_sem_julgamento"] += 1
             continue
 
         try:
@@ -76,14 +84,19 @@ def run_day(
             # pega-lo na re-consulta de amanha do que gravar um zero falso que
             # significaria "ninguem implementou isto". Mesma licao da Tarefa 4.
             cuts["sinal_indisponivel"] += 1
+            if not e_novo:
+                # A rotacao precisa avancar mesmo quando a busca falha, ou
+                # `stalest_papers` devolve os mesmos trinta para sempre.
+                store.touch_checked(paper.arxiv_id, at=day)
             continue
 
         result = evaluate(signal, thresholds)
 
-        store.upsert_paper(paper, seen_at=day)
+        if e_novo:
+            store.upsert_paper(paper, seen_at=day)
+            store.record_judgment(paper.arxiv_id, judgment, model=model, judged_at=day)
         store.record_signal(paper.arxiv_id, signal, score=result.value, checked_at=day)
         store.record_repos(paper.arxiv_id, classifications)
-        store.record_judgment(paper.arxiv_id, judgment, model=model, judged_at=day)
         store.touch_checked(paper.arxiv_id, at=day)
         repos_by_paper[paper.arxiv_id] = store.repos_for(paper.arxiv_id)
 
@@ -95,7 +108,7 @@ def run_day(
         # radar: ou entre os tres, ou entre os demais.
         if result.gated_by is not None:
             cuts["ja_estourou"] += 1
-            candidates.append((item, False))
+            candidates.append((item, False, e_novo))
         # `<=`, nao `<`, e a escolha e deliberada. O piso e o ultimo valor
         # REJEITADO, nao o primeiro aceito. Com o piso documentado em 0.0 e a
         # formula da spec, score == 0.0 acontece exatamente quando
@@ -106,7 +119,7 @@ def run_day(
         # vaga vazia diz a verdade, o paper sem implementacao nao.
         elif result.value <= thresholds.score_floor:
             cuts["abaixo_do_piso"] += 1
-            candidates.append((item, False))
+            candidates.append((item, False, e_novo))
         # Guarda de cinto e suspensorio (spec secao 6: "Nenhum paper e entregue
         # duas vezes no Telegram"). Hoje o filtro de `ja_conhecido` acima ja
         # barra qualquer paper que tenha sido entregue -- entregar exige estar
@@ -115,9 +128,9 @@ def run_day(
         # o unico obstaculo entre um paper antigo e uma segunda entrega.
         elif store.was_delivered(paper.arxiv_id, channel="telegram"):
             cuts["ja_entregue"] += 1
-            candidates.append((item, False))
+            candidates.append((item, False, e_novo))
         else:
-            candidates.append((item, True))
+            candidates.append((item, True, e_novo))
 
     # Ordem: executavel na 3090 primeiro, score depois. Sem isso, um paper que
     # depende de FP8 -- inexecutavel em Ampere por definicao -- consome uma das
@@ -125,7 +138,7 @@ def run_day(
     # Rebaixar preserva a visao periferica sem deixar o inexecutavel disputar
     # espaco com o acionavel. Afeta o push apenas; o markdown leva todos.
     eligible = sorted(
-        (i for i, ok in candidates if ok),
+        (i for i, ok, _ in candidates if ok),
         key=lambda i: (i.judgment.runs_on_3090 != "nao", i.score),
         reverse=True,
     )
@@ -137,7 +150,11 @@ def run_day(
     # Spec secao 7: o markdown e (1) os tres do radar e (2) todos os DEMAIS
     # candidatos. Calculado depois do corte para nao repetir os tres itens nas
     # duas secoes.
-    feed = [item for item, _ in candidates if item not in radar]
+    #
+    # Spec da re-consulta, secao 4: re-consultado entra no radar, nunca no
+    # feed. O feed responde "o que saiu hoje", e um paper de 2022 nao saiu
+    # hoje. Restricao do codigo, nao consequencia acidental.
+    feed = [item for item, _, e_novo in candidates if e_novo and item not in radar]
 
     if not dry_run:
         # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de
