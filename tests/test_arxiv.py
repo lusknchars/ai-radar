@@ -13,7 +13,7 @@ def test_endpoint_is_https():
 
 
 def test_query_combines_categories_with_or_and_ands_the_term():
-    q = build_query("quantization", ScopeConfig(categories=("cs.LG", "cs.AR"), terms=()))
+    q = build_query("quantization", ScopeConfig(name="teste", categories=("cs.LG", "cs.AR"), terms=()))
     assert "cat:cs.LG OR cat:cs.AR" in q
     assert 'abs:"quantization"' in q
     assert " AND " in q
@@ -61,7 +61,7 @@ def test_client_excludes_papers_with_no_category_in_scope():
         seen.append(url)
         return FIXTURE
 
-    scope = ScopeConfig(categories=("cs.LG", "cs.AR"), terms=("quantization",))
+    scope = ScopeConfig(name="teste", categories=("cs.LG", "cs.AR"), terms=("quantization",))
     achado = ArxivClient(fetch=fake_fetch, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.11111"]   # a eess.AS cai fora
     assert len(seen) == 1
@@ -92,14 +92,14 @@ def test_client_admits_a_paper_whose_only_in_scope_category_is_secondary():
     cuidam da precisao. Este teste distingue interseccao de primary-only;
     o teste acima nao distinguia, porque a entrada descartada da fixture nao
     tem NENHUMA categoria no escopo."""
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization",))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization",))
     achado = ArxivClient(fetch=lambda url: CROSS_LISTED, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.33333"]
     assert achado.cuts == {}
 
 
 def test_client_unions_terms_and_deduplicates_by_id():
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization", "sparsity"))
     achado = ArxivClient(fetch=lambda url: FIXTURE, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.11111"]
     # O paper fora de escopo aparece nos dois termos e conta UMA vez.
@@ -108,7 +108,7 @@ def test_client_unions_terms_and_deduplicates_by_id():
 
 def test_client_sleeps_between_calls_for_arxiv_etiquette():
     naps = []
-    scope = ScopeConfig(categories=("cs.LG",), terms=("a", "b", "c"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("a", "b", "c"))
     ArxivClient(fetch=lambda url: FIXTURE, sleep=naps.append).recent(scope)
     assert len(naps) == 2          # dorme entre chamadas, nao depois da ultima
     assert all(n >= 3 for n in naps)
@@ -121,7 +121,7 @@ def test_client_survives_a_term_whose_response_is_empty():
     def fetch(url):
         return "" if "sparsity" in url else FIXTURE
 
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization", "sparsity"))
     achado = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.11111"]
     assert achado.cuts["termo_falhou"] == 1
@@ -131,7 +131,7 @@ def test_client_survives_a_term_whose_response_is_malformed():
     def fetch(url):
         return "<feed><entry>truncad" if "sparsity" in url else FIXTURE
 
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization", "sparsity"))
     achado = ArxivClient(fetch=fetch, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.11111"]
     assert achado.cuts["termo_falhou"] == 1
@@ -143,7 +143,7 @@ def test_client_survives_one_failing_term():
             raise RuntimeError("502")
         return FIXTURE
 
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization", "sparsity"))
     achado = ArxivClient(fetch=flaky, sleep=lambda s: None).recent(scope)
     assert [p.arxiv_id for p in achado.papers] == ["2608.11111"]
     # Um termo que morre leva junto ate um doze avos da descoberta do dia.
@@ -159,7 +159,7 @@ def test_a_failing_term_is_logged_not_only_counted(caplog):
             raise RuntimeError("502 do arXiv")
         return FIXTURE
 
-    scope = ScopeConfig(categories=("cs.LG",), terms=("quantization", "sparsity"))
+    scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization", "sparsity"))
     with caplog.at_level("WARNING", logger="radar.arxiv"):
         ArxivClient(fetch=flaky, sleep=lambda s: None).recent(scope)
     assert "sparsity" in caplog.text

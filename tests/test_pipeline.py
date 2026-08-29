@@ -7,7 +7,7 @@ from radar.models import Discovery, Judgment, Paper
 from radar.pipeline import run_day
 from radar.store import Store
 
-SCOPE = ScopeConfig(categories=("cs.LG",), terms=("quantization",))
+SCOPE = ScopeConfig(name="teste", categories=("cs.LG",), terms=("quantization",))
 T = Thresholds(broke_out_stars=1000, broke_out_citations=200, score_floor=0.0)
 TODAY = date(2026, 8, 27)
 

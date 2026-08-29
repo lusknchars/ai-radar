@@ -1,6 +1,7 @@
 import pytest
 
-from radar.config import DEFAULT_SCOPE, PUSH_CAP, Thresholds, load_thresholds
+from radar.config import (AGENT_SCOPE, DEFAULT_SCOPE, PUSH_CAP, ScopeConfig,
+                          Thresholds, load_thresholds)
 from radar.models import Judgment, Paper, Signal
 
 
@@ -15,7 +16,12 @@ def test_scope_terms_are_non_empty_and_unique():
 
 
 def test_scope_excludes_out_of_scope_domains():
-    """O escopo estreito e deliberado: visao, audio e agentes ficam de fora."""
+    """O escopo de inferencia e estreito de proposito.
+
+    Agentes nao estao aqui porque tem escopo proprio (AGENT_SCOPE), nao porque
+    estejam fora do projeto -- a separacao e o que mantem os dois digests
+    legiveis e os scores comparaveis dentro de cada literatura.
+    """
     joined = " ".join(DEFAULT_SCOPE.terms).lower()
     for banned in ("vision", "speech", "robot", "agent", "retrieval"):
         assert banned not in joined
@@ -110,3 +116,42 @@ def test_recheck_limit_is_configurable_unlike_the_push_cap(monkeypatch):
     monkeypatch.setenv("RADAR_RECHECK_LIMIT", "5")
     from radar.config import load_recheck_limit
     assert load_recheck_limit() == 5
+
+
+# --- Tarefa 1 do plano do segundo escopo ---
+
+def test_cada_escopo_tem_nome_proprio():
+    assert DEFAULT_SCOPE.name == "inferencia"
+    assert AGENT_SCOPE.name == "agentes"
+
+
+def test_o_escopo_de_agentes_exclui_cs_lg():
+    # cs.LG triplica o volume com RL e robotica; medido em 2026-08-29:
+    # 75 papers/dia com cs.LG contra 25/dia sem. Ver spec secao 2.
+    assert "cs.LG" not in AGENT_SCOPE.categories
+    assert set(AGENT_SCOPE.categories) == {"cs.AI", "cs.CL", "cs.SE", "cs.MA"}
+
+
+def test_o_escopo_de_agentes_nao_carrega_termo_morto():
+    # `tool retrieval` foi medido e nao trouxe um paper inedito sequer:
+    # tudo que ele acha ja vem por `tool use` ou `tool calling`.
+    assert "tool retrieval" not in AGENT_SCOPE.terms
+    assert len(AGENT_SCOPE.terms) == 17
+
+
+def test_os_dois_escopos_nao_compartilham_termo():
+    assert not (set(AGENT_SCOPE.terms) & set(DEFAULT_SCOPE.terms))
+
+
+def test_escopo_nao_pode_ser_construido_anonimo():
+    """Nenhum campo de ScopeConfig pode ganhar default.
+
+    A regra vem do plano (tarefa 1, passo 4): `name` sem default e o que
+    impede uma linha sem escopo chegar a `papers`. O dataclass ja protege
+    contra dar default so a `name` -- campo com default nao pode preceder
+    campo sem, e a colecao quebra. Mas dar default aos TRES passa calado:
+    verificado por mutacao em 2026-08-29, 199 de 199 testes seguiram verdes.
+    E essa variante que este teste tranca.
+    """
+    with pytest.raises(TypeError):
+        ScopeConfig()

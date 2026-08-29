@@ -22,11 +22,16 @@ RECHECK_LIMIT = 30
 
 @dataclass(frozen=True)
 class ScopeConfig:
+    # `name` vem primeiro e nao tem default: e o que impede escopo anonimo de
+    # chegar ao banco. A coluna `papers.scope` existe para fatiar o acervo, e
+    # um default aqui deixaria um chamador novo gravar linha sem escopo calado.
+    name: str                      # 'inferencia' | 'agentes'
     categories: tuple[str, ...]
     terms: tuple[str, ...]
 
 
 DEFAULT_SCOPE = ScopeConfig(
+    name="inferencia",
     categories=("cs.LG", "cs.CL", "cs.DC", "cs.AR", "cs.PF"),
     terms=(
         "quantization",
@@ -41,6 +46,37 @@ DEFAULT_SCOPE = ScopeConfig(
         "memory bandwidth",
         "model serving",
         "efficient inference",
+    ),
+)
+
+# Medido em 2026-08-29 pela mesma consulta que o pipeline usa: ~25 papers/dia.
+# A lista ingenua tinha 20 termos sobre cs.AI/cs.CL/cs.LG/cs.SE/cs.MA e dava
+# ~75/dia, com `agentic`, `trajectory` e `planning` saturando o teto de 200 por
+# semana -- os tres capturam trajetoria de robo e planejamento classico, nao
+# harness. Tirar cs.LG e os tres cortou dois tercos do volume sem perder nada
+# especifico de harness. `tool retrieval` ficou de fora por medicao: zero
+# papers ineditos, tudo que ele acha ja vem por `tool use` ou `tool calling`.
+AGENT_SCOPE = ScopeConfig(
+    name="agentes",
+    categories=("cs.AI", "cs.CL", "cs.SE", "cs.MA"),
+    terms=(
+        "agent harness",
+        "LLM agent",
+        "agent trajectory",
+        "tool use",
+        "tool calling",
+        "function calling",
+        "agent memory",
+        "context management",
+        "context engineering",
+        "prompt caching",
+        "agent evaluation",
+        "agent benchmark",
+        "computer use",
+        "code agent",
+        "self-correction",
+        "guardrail",
+        "agent orchestration",
     ),
 )
 
