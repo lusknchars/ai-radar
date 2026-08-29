@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from typing import Literal
 
@@ -95,6 +96,35 @@ class Judge:
         return _to_domain(response.parsed_output)
 
 
+_CUSTOM_ID_OK = re.compile(r"^[a-zA-Z0-9_-]{1,64}$")
+
+
+def para_custom_id(arxiv_id: str) -> str:
+    """Converte um arXiv ID em custom_id valido para o Batch API.
+
+    A API exige `^[a-zA-Z0-9_-]{1,64}$` e recusa a requisicao inteira com 400
+    se algum id nao casar. arXiv IDs modernos sao `YYMM.NNNNN` -- tem um ponto,
+    que nao esta na classe. Sem esta conversao TODO lote falha, e nenhum teste
+    pega, porque todos falseiam o SDK.
+
+    Ponto vira underscore. A volta e biunivoca porque o formato moderno so tem
+    digitos e um unico ponto, e o filtro de escopo so traz categorias cs.*
+    modernas.
+    """
+    convertido = arxiv_id.replace(".", "_")
+    if not _CUSTOM_ID_OK.match(convertido):
+        raise ValueError(
+            f"arxiv_id {arxiv_id!r} nao vira um custom_id valido "
+            f"({convertido!r}); o Batch API recusaria o lote inteiro"
+        )
+    return convertido
+
+
+def de_custom_id(custom_id: str) -> str:
+    """Volta do custom_id para o arXiv ID."""
+    return custom_id.replace("_", ".")
+
+
 def build_batch_requests(papers: list[Paper], model: str) -> list[dict]:
     """Devolve dicts para permanecer testavel sem o SDK instalado.
 
@@ -103,7 +133,7 @@ def build_batch_requests(papers: list[Paper], model: str) -> list[dict]:
     """
     return [
         {
-            "custom_id": paper.arxiv_id,
+            "custom_id": para_custom_id(paper.arxiv_id),
             "params": {
                 "model": model,
                 "max_tokens": MAX_TOKENS,
@@ -134,7 +164,7 @@ def collect_batch_results(results) -> dict[str, Judgment]:
             _log.warning("julgamento de %s veio sem bloco de texto", result.custom_id)
             continue
         try:
-            out[result.custom_id] = _to_domain(JudgmentSchema(**json.loads(text)))
+            out[de_custom_id(result.custom_id)] = _to_domain(JudgmentSchema(**json.loads(text)))
         except Exception as exc:
             # Um julgamento malformado nao derruba o lote, mas tambem nao pode
             # sumir calado: sem o custom_id no log, o paper aparece como

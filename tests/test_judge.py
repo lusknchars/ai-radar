@@ -127,14 +127,46 @@ def test_batch_requests_ask_for_adaptive_thinking_at_low_effort():
     assert params["max_tokens"] >= 4096
 
 
-def test_batch_requests_are_keyed_by_arxiv_id():
-    from radar.judge import build_batch_requests
+def test_custom_id_satisfies_the_batch_api_pattern():
+    """O Batch API exige ^[a-zA-Z0-9_-]{1,64}$ e recusa o lote INTEIRO com 400
+    se um id nao casar. arXiv IDs modernos tem ponto, que nao esta na classe.
+    Descoberto por requisicao real: nenhum teste com SDK falso pega isto."""
+    import re
+    from radar.judge import para_custom_id
+    assert re.match(r"^[a-zA-Z0-9_-]{1,64}$", para_custom_id("2608.26581"))
+    assert "." not in para_custom_id("2608.26581")
+
+
+def test_custom_id_round_trips_back_to_the_arxiv_id():
+    from radar.judge import de_custom_id, para_custom_id
+    for pid in ("2608.26581", "2210.17323", "2305.14314"):
+        assert de_custom_id(para_custom_id(pid)) == pid
+
+
+def test_an_arxiv_id_that_cannot_become_a_custom_id_raises_early():
+    """Melhor falhar na construcao, com o id no erro, do que levar 400 no lote
+    inteiro sem saber qual paper causou."""
+    import pytest as _pytest
+    from radar.judge import para_custom_id
+    with _pytest.raises(ValueError, match="custom_id"):
+        para_custom_id("hep-th/9901001")
+
+
+def test_batch_requests_are_keyed_by_the_papers_own_id_not_by_position():
+    """O custom_id deriva do paper, nunca da posicao -- resultados de lote
+    chegam fora de ordem e indexar por posicao colaria o julgamento de um
+    paper em outro.
+
+    O id vai SANITIZADO: o Batch API exige ^[a-zA-Z0-9_-]{1,64}$ e recusa o
+    lote inteiro se um ponto passar. A volta acontece em collect_batch_results.
+    """
+    from radar.judge import build_batch_requests, de_custom_id
     papers = [PAPER, Paper(arxiv_id="2508.22222", title="T2", abstract="A2",
                            authors=[], categories=["cs.LG"], published="2026-08-21")]
     requests = build_batch_requests(papers, model="claude-opus-5")
-    assert [r["custom_id"] for r in requests] == ["2508.11111", "2508.22222"]
-
-
+    ids = [r["custom_id"] for r in requests]
+    assert ids == ["2508_11111", "2508_22222"]
+    assert [de_custom_id(i) for i in ids] == [p.arxiv_id for p in papers]
 class FakeBatches:
     def __init__(self, statuses, raise_on=None):
         self._statuses = list(statuses)
