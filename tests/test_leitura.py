@@ -193,3 +193,78 @@ def test_o_movimento_e_omitido_quando_ninguem_moveu():
 def test_o_movimento_aparece_com_historico():
     d = acervo_de([ponto()], dias_de_coleta=30, papers_que_moveram=2)
     assert "2 papers" in _so(afirmacoes(d), "ganharam implementação").texto
+
+
+# --- Tarefa 7: as guardas de linguagem ---
+# Só teste, e é deliberado: estas proibições são propriedades do CONJUNTO das
+# frases, não de cada função. O valor delas é pegar a violação que a sétima
+# afirmação vai introduzir daqui a seis meses.
+
+CAUSAIS = ("porque", "devido", "graças a", "por causa", "resulta de",
+           "leva a", "provoca", "explica")
+PREVISAO = ("vai ", "deve ", "tende a", "provavelmente", "espera-se",
+            "deverá", "no futuro")
+
+
+@pytest.fixture
+def acervo_completo(acervo_grande):
+    """Todas as seis afirmações emitidas ao mesmo tempo."""
+    d = SiteData(pontos=acervo_grande.pontos + [
+        ponto(arxiv_id="f1", independent_impls=4, stars_total=1),
+        ponto(arxiv_id="f2", independent_impls=3, stars_total=0)],
+        dia="2026-08-30", cortes={}, rechecked_total=0,
+        dias_de_coleta=45, papers_que_moveram=7)
+    assert len(afirmacoes(d)) == 6, "a fixture precisa emitir as seis"
+    return d
+
+
+def test_nenhuma_afirmacao_usa_verbo_causal(acervo_completo):
+    """O dado suporta "quantos", nunca "por quê"."""
+    for a in afirmacoes(acervo_completo):
+        for proibido in CAUSAIS:
+            assert proibido not in a.texto.lower(), f"{proibido!r} em {a.texto!r}"
+
+
+def test_nenhuma_afirmacao_preve(acervo_completo):
+    for a in afirmacoes(acervo_completo):
+        for proibido in PREVISAO:
+            assert proibido not in a.texto.lower(), f"{proibido!r} em {a.texto!r}"
+
+
+def test_nenhum_superlativo_sem_numero(acervo_completo):
+    import re
+    for a in afirmacoes(acervo_completo):
+        if re.search(r"\bmais\b|\bmaior\b|\bmenor\b|\bmelhor\b", a.texto.lower()):
+            assert re.search(r"\d", a.texto), a.texto
+
+
+def test_toda_afirmacao_com_numero_traz_denominador(acervo_completo):
+    """Percentual sem denominador é a forma mais fácil de enganar sem mentir."""
+    for a in afirmacoes(acervo_completo):
+        if "%" in a.texto:
+            assert " de " in a.texto or " das " in a.texto, a.texto
+
+
+def test_todo_filtro_emitido_e_aplicavel(acervo_completo):
+    validas = {"familia", "pratica", "ordenar"}
+    ordenaveis = {"impls", "estrelas", "citacoes", "ganho", "score"}
+    familias = {p.familia for p in acervo_completo.pontos}
+    for a in afirmacoes(acervo_completo):
+        if a.filtro is None:
+            continue
+        for chave, valor in a.filtro.items():
+            assert chave in validas, chave
+            if chave == "ordenar":
+                assert valor in ordenaveis, valor
+            if chave == "familia":
+                assert valor in familias, valor
+
+
+def test_toda_afirmacao_termina_em_ponto(acervo_completo):
+    for a in afirmacoes(acervo_completo):
+        assert a.texto.endswith("."), a.texto
+
+
+def test_nenhuma_afirmacao_leva_emoji(acervo_completo):
+    for a in afirmacoes(acervo_completo):
+        assert all(ord(c) < 0x2190 or c in "—–" for c in a.texto), a.texto
