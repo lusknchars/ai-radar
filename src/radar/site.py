@@ -12,7 +12,8 @@ from html import escape
 
 from .site_data import SiteData
 from .config import load_thresholds
-from .svg import METRICAS_X, render_avanco, render_scatter
+from .svg import (METRICAS_X, render_avanco,
+                  render_pequenos_multiplos, render_scatter)
 
 # Cor significa familia, e SO. Em nenhum grafico ela codifica outra coisa.
 # As matizes agrupam por escopo -- frios para inferencia, quentes para
@@ -47,6 +48,20 @@ _JS = """
 // Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
 // troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
 // atributo `hidden` mora no HTML e nao num `display:none` de CSS.
+// Filtro da tabela: `hidden` em linha, sem estado e sem URL.
+var filtros = {};
+document.querySelectorAll('[data-filtro]').forEach(function(s){
+  s.addEventListener('change', function(){
+    filtros[s.getAttribute('data-filtro')] = s.value;
+    document.querySelectorAll('.linha').forEach(function(tr){
+      var mostra = Object.keys(filtros).every(function(k){
+        return !filtros[k] || tr.getAttribute('data-' + k) === filtros[k];
+      });
+      tr.hidden = !mostra;
+    });
+  });
+});
+
 document.querySelectorAll('[data-eixo]').forEach(function(b){
   b.addEventListener('click', function(){
     var alvo = b.getAttribute('data-eixo');
@@ -99,6 +114,28 @@ color:var(--fraco)}
 .legenda i{display:inline-block;width:8px;height:8px;border-radius:2px;
 margin-right:5px;vertical-align:middle}
 .nota{font-size:11px;color:var(--fraco);margin-top:12px}
+.filtros{display:flex;gap:22px;margin-bottom:18px;flex-wrap:wrap}
+.filtros label{font-size:11px;color:var(--fraco);text-transform:uppercase;
+letter-spacing:0.06em;display:block;margin-bottom:5px}
+.filtros select{font:inherit;font-size:13px;padding:5px 9px;
+background:var(--fundo);color:var(--texto);border:1px solid var(--linha);
+border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;font-weight:550;font-size:11px;color:var(--fraco);
+text-transform:uppercase;letter-spacing:0.06em;padding:0 10px 9px 0;
+border-bottom:1px solid var(--linha)}
+td{padding:9px 10px 9px 0;border-bottom:1px solid var(--linha);
+vertical-align:top}
+td.num{text-align:right;font-variant-numeric:tabular-nums;
+white-space:nowrap;color:var(--fraco)}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;
+border:1px solid var(--linha);color:var(--fraco);white-space:nowrap}
+.tag.adotar{border-color:currentColor;color:var(--texto);font-weight:550}
+.pt{display:inline-block;width:7px;height:7px;border-radius:2px;
+margin-right:6px;vertical-align:middle}
+a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
+a:hover{border-bottom-color:var(--acento)}
+.rolagem{overflow-x:auto}
 footer{padding:40px 0;color:var(--fraco);font-size:12px}
 """
 
@@ -194,6 +231,69 @@ def _secao_avanco(d: SiteData) -> str:
               f"aparece com pelo menos cinco papers no trimestre.</p>")
 
 
+def _secao_familias(d: SiteData) -> str:
+    series: dict[str, dict[str, int]] = {}
+    for p in d.pontos:
+        series.setdefault(p.familia, {}).setdefault(p.publicado[:7], 0)
+        series[p.familia][p.publicado[:7]] += 1
+    return render_pequenos_multiplos(series, d.familias_presentes, CORES_FAMILIA)
+
+
+def _opcoes(valores: list[str]) -> str:
+    return '<option value="">todas</option>' + "".join(
+        f'<option value="{escape(v)}">{escape(v)}</option>' for v in valores)
+
+
+def _linha(p) -> str:
+    cor = CORES_FAMILIA.get(p.familia, "currentColor")
+    # `None` e desconhecido e vira travessao. Renderizar 0 aqui reintroduziria,
+    # pela camada de apresentacao, o mesmo defeito que o pipeline consertou.
+    cit = "—" if p.citations is None else str(p.citations)
+    ganho = (f"{p.ganho_fator:g}x" if p.ganho_fator is not None else "—")
+    return (
+        f'<tr class="linha" data-id="{escape(p.arxiv_id)}" '
+        f'data-familia="{escape(p.familia)}" data-pratica="{escape(p.pratica)}">'
+        f'<td><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
+        f"{escape(p.titulo)}</a></td>"
+        f'<td><span class="pt" style="background:{cor}"></span>'
+        f"{escape(p.familia)}</td>"
+        f'<td><span class="tag {escape(p.pratica)}">'
+        f'{escape(p.pratica.replace("_", " "))}</span></td>'
+        f'<td class="num">{p.independent_impls}</td>'
+        f'<td class="num">{p.stars_total}</td>'
+        f'<td class="num">{cit}</td>'
+        f'<td class="num">{ganho}</td>'
+        f"</tr>"
+    )
+
+
+def _secao_tabela(d: SiteData) -> str:
+    """Filtro por pratica e por familia, sem estado e sem URL.
+
+    O de PRATICA e o primario: e ele que responde "o que eu adoto", que e a
+    pergunta pela qual o leitor abriu a pagina. O de familia serve para
+    navegar a literatura, nao para decidir.
+    """
+    praticas = sorted({p.pratica for p in d.pontos})
+    linhas = "".join(_linha(p) for p in
+                     sorted(d.pontos, key=lambda p: -p.score))
+    return (
+        '<div class="filtros">'
+        f'<div><label for="f-pratica">o que fazer</label>'
+        f'<select id="f-pratica" data-filtro="pratica">{_opcoes(praticas)}'
+        f"</select></div>"
+        f'<div><label for="f-familia">família</label>'
+        f'<select id="f-familia" data-filtro="familia">'
+        f"{_opcoes(d.familias_presentes)}</select></div>"
+        "</div>"
+        '<div class="rolagem"><table><thead><tr>'
+        "<th>técnica</th><th>família</th><th>prática</th>"
+        '<th class="num">impls</th><th class="num">estrelas</th>'
+        '<th class="num">citações</th><th class="num">ganho</th>'
+        f"</tr></thead><tbody>{linhas}</tbody></table></div>"
+    )
+
+
 def _pendente(qual: str) -> str:
     """Marcador das secoes que as tarefas 5 a 8 preenchem.
 
@@ -220,11 +320,11 @@ def render_site(dados: SiteData) -> str:
                     avanco) if (avanco := _secao_avanco(dados)) else ""),
             _secao("As famílias no tempo",
                    "Volume por família, mês a mês, em escala compartilhada.",
-                   _pendente("pequenos múltiplos")),
+                   _secao_familias(dados)),
             _secao("O acervo",
                    "Tudo que passou pelo radar, filtrável pelo que você faz "
                    "com a técnica.",
-                   _pendente("tabela com filtro por prática e por família")),
+                   _secao_tabela(dados)),
             _secao("Uma técnica, de ponta a ponta",
                    "O paper de maior score, aberto: os repositórios "
                    "encontrados e a regra que classificou cada um.",

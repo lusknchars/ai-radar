@@ -190,3 +190,69 @@ def test_sem_secao_de_avanco_nao_ha_rotulo_orfao(dados_ganho_ralo):
 def test_com_cobertura_suficiente_a_secao_aparece(dados):
     assert dados.cobertura_de_ganho >= 0.35
     assert "avanço alegado" in render_site(dados).lower()
+
+
+# --- Tarefa 7: famílias no tempo, e a tabela ---
+
+def test_a_tabela_traz_uma_linha_por_paper(dados):
+    assert render_site(dados).count('class="linha"') == len(dados.pontos)
+
+
+def test_citacao_desconhecida_vira_travessao_e_nao_zero():
+    """Nao-resolvido nao e zero: ~8% dos papers nao tem DOI no OpenAlex.
+    Renderizar 0 ali seria o mesmo defeito que as tarefas 2, 3 e 8 do plano
+    anterior consertaram, reintroduzido pela camada de apresentacao."""
+    html = render_site(_acervo([ponto(citations=None)]))
+    assert "—" in html
+
+
+def test_citacao_zero_e_renderizada_como_zero():
+    html = render_site(_acervo([ponto(citations=0, arxiv_id="2608.33333")]))
+    import re
+    linha = re.search(r'<tr class="linha".*?</tr>', html, re.S).group(0)
+    assert ">0<" in linha
+
+
+def test_cada_linha_tem_link_de_arxiv_resolvivel(dados):
+    html = render_site(dados)
+    for p in dados.pontos:
+        assert f"https://arxiv.org/abs/{p.arxiv_id}" in html
+
+
+def test_a_linha_carrega_familia_e_pratica_como_atributo(dados):
+    """E o que o filtro le. Sem isso o JS teria que parsear texto visivel."""
+    html = render_site(dados)
+    assert 'data-familia="cache_kv"' in html
+    assert 'data-pratica="adotar"' in html
+
+
+def test_a_tabela_vem_ordenada_por_score(dados):
+    html = render_site(dados)
+    posicoes = [html.index(f'data-id="{p.arxiv_id}"')
+                for p in sorted(dados.pontos, key=lambda p: -p.score)]
+    assert posicoes == sorted(posicoes)
+
+
+def test_ha_filtro_por_pratica_e_por_familia(dados):
+    html = render_site(dados)
+    assert 'data-filtro="pratica"' in html
+    assert 'data-filtro="familia"' in html
+
+
+def test_o_titulo_do_paper_e_escapado():
+    """A divida que a tarefa 4 deixou anotada: o esqueleto nao renderizava
+    titulo, entao o escape dele so pode ser testado aqui."""
+    html = render_site(_acervo([ponto(titulo="A & B <script>x</script>")]))
+    assert "&amp;" in html
+    assert "<script>x</script>" not in html
+
+
+def test_a_secao_de_familias_traz_os_pequenos_multiplos(dados):
+    assert 'class="multiplos"' in render_site(dados)
+
+
+def test_os_pequenos_multiplos_cobrem_so_as_familias_presentes(dados):
+    import re
+    html = render_site(dados)
+    svg = re.search(r'<svg class="multiplos".*?</svg>', html, re.S).group(0)
+    assert svg.count('<g class="painel"') == len(dados.familias_presentes)
