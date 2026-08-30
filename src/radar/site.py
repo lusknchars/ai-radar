@@ -136,6 +136,19 @@ margin-right:6px;vertical-align:middle}
 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
 a:hover{border-bottom-color:var(--acento)}
 .rolagem{overflow-x:auto}
+.destaque h3{margin:0 0 4px;font-size:16px;font-weight:600}
+.destaque .meta{color:var(--fraco);font-size:12px;margin-bottom:14px}
+.destaque p.resumo{max-width:64ch;margin:0 0 20px}
+.repos{list-style:none;padding:0;margin:0;font-size:13px}
+.repos li{padding:8px 0;border-bottom:1px solid var(--linha);
+display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.repos .quem{color:var(--fraco);font-size:11px}
+.repos .indep{color:var(--texto);font-weight:550}
+.cortes{list-style:none;padding:0;margin:0;font-size:13px;
+font-variant-numeric:tabular-nums}
+.cortes li{padding:7px 0;border-bottom:1px solid var(--linha);
+display:flex;justify-content:space-between;max-width:420px}
+.cortes b{font-weight:600}
 footer{padding:40px 0;color:var(--fraco);font-size:12px}
 """
 
@@ -294,6 +307,71 @@ def _secao_tabela(d: SiteData) -> str:
     )
 
 
+def _secao_destaque(d: SiteData) -> str:
+    """O paper de maior score, aberto.
+
+    Existe para tornar o numero auditavel: sem ver os repositorios e a regra
+    que classificou cada um, "3 implementacoes independentes" e fe. E a
+    heuristica de autoria e heuristica -- ela precisa poder ser conferida.
+    """
+    p = d.destaque
+    if p is None:
+        return '<p class="vazio">Nada no acervo ainda.</p>'
+
+    if d.repos_do_destaque:
+        itens = []
+        for r in d.repos_do_destaque:
+            if r["is_author"]:
+                quem = f'autor — {escape(r["is_author_reason"] or "regra não registrada")}'
+                classe = "quem"
+            else:
+                quem, classe = "independente", "indep"
+            itens.append(
+                f'<li><a href="https://github.com/{escape(r["full_name"])}">'
+                f'{escape(r["full_name"])}</a>'
+                f'<span class="num">{r["stars"]} estrelas</span>'
+                f'<span class="{classe}">{quem}</span></li>'
+            )
+        repos = f'<ul class="repos">{"".join(itens)}</ul>'
+    else:
+        repos = ('<p class="nota">Nenhum repositório registrado para este '
+                 "paper.</p>")
+
+    ganho = ""
+    if p.ganho_fator is not None:
+        ganho = (f' · ganho {p.ganho_fator:g}x em {escape(p.ganho_eixo)} '
+                 f"({ROTULO_ALEGACAO})")
+    return (
+        f'<div class="destaque"><h3>'
+        f'<a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
+        f"{escape(p.titulo)}</a></h3>"
+        f'<div class="meta">{escape(p.familia)} · '
+        f'{escape(p.pratica.replace("_", " "))} · '
+        f"{p.independent_impls} de {p.total_impls} implementações "
+        f"independentes{ganho}</div>"
+        f'<p class="resumo">{escape(p.resumo)}</p>{repos}</div>'
+    )
+
+
+def _secao_cortes(d: SiteData) -> str:
+    """Todo corte contado chega ao leitor -- restricao global do projeto.
+
+    A secao aparece mesmo vazia: um dia sem cortes e informacao, e some-la
+    faria parecer que a contabilidade nao foi feita.
+    """
+    if d.cortes:
+        itens = "".join(
+            f"<li><span>{escape(motivo.replace('_', ' '))}</span>"
+            f"<b>{n}</b></li>"
+            for motivo, n in sorted(d.cortes.items(), key=lambda kv: -kv[1])
+        )
+        lista = f'<ul class="cortes">{itens}</ul>'
+    else:
+        lista = '<p class="nota">Nenhum corte hoje.</p>'
+    return (lista + f'<p class="nota">{d.rechecked_total} papers antigos '
+                    f"foram re-consultados nesta execução.</p>")
+
+
 def _pendente(qual: str) -> str:
     """Marcador das secoes que as tarefas 5 a 8 preenchem.
 
@@ -328,10 +406,10 @@ def render_site(dados: SiteData) -> str:
             _secao("Uma técnica, de ponta a ponta",
                    "O paper de maior score, aberto: os repositórios "
                    "encontrados e a regra que classificou cada um.",
-                   _pendente("destaque auditável")),
+                   _secao_destaque(dados)),
             _secao("O que ficou de fora",
                    "Todo corte é contado e chega ao leitor.",
-                   _pendente("contabilidade de cortes")),
+                   _secao_cortes(dados)),
         ))
 
     return (

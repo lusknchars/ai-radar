@@ -183,8 +183,22 @@ def test_a_secao_some_com_cobertura_abaixo_de_35_por_cento(dados_ganho_ralo):
     assert "avanço alegado" not in render_site(dados_ganho_ralo).lower()
 
 
-def test_sem_secao_de_avanco_nao_ha_rotulo_orfao(dados_ganho_ralo):
-    assert "alegado pelos autores" not in render_site(dados_ganho_ralo)
+def test_nenhum_ganho_aparece_sem_o_rotulo(dados_ganho_ralo):
+    """A regra e "todo ganho carrega o rotulo", nao "o rotulo so existe na
+    secao de avanco".
+
+    A versao anterior deste teste afirmava a segunda coisa, e passou a falhar
+    quando o destaque -- que mostra ganho com rotulo -- foi implementado na
+    tarefa 8. O teste estava errado, nao o codigo: um ganho no destaque com o
+    rotulo ao lado cumpre a regra da spec.
+    """
+    import re
+    html = render_site(dados_ganho_ralo)
+    # A secao de avanco nao existe (cobertura < 35%), mas o destaque pode
+    # mostrar ganho -- e sempre que mostrar, o rotulo tem que estar junto.
+    ganhos = re.findall(r"ganho [\d.]+x em", html)
+    if ganhos:
+        assert html.count("alegado pelos autores, não verificado") >= len(ganhos)
 
 
 def test_com_cobertura_suficiente_a_secao_aparece(dados):
@@ -271,3 +285,71 @@ def test_os_pequenos_multiplos_cobrem_so_as_familias_presentes(dados):
     html = render_site(dados)
     svg = re.search(r'<svg class="multiplos".*?</svg>', html, re.S).group(0)
     assert svg.count('<g class="painel"') == len(dados.familias_presentes)
+
+
+# --- Tarefa 8: ponta a ponta, e os cortes ---
+
+REPOS = [
+    {"full_name": "tridao/flash-attn", "owner": "tridao", "stars": 3200,
+     "is_author": 1, "is_author_reason": "sobrenome do autor no dono"},
+    {"full_name": "acme/fa-triton", "owner": "acme", "stars": 41,
+     "is_author": 0, "is_author_reason": None},
+]
+
+
+def test_o_destaque_e_o_de_maior_score():
+    d = _acervo([ponto(arxiv_id="baixo", score=0.1, resumo="RESUMO-BAIXO"),
+                 ponto(arxiv_id="alto", score=9.9, resumo="RESUMO-ALTO")])
+    html = render_site(d)
+    assert "RESUMO-ALTO" in html
+
+
+def test_o_destaque_mostra_a_regra_de_autoria_de_cada_repo():
+    """Sem isto, "3 implementacoes independentes" e fe.
+
+    E a secao que torna o numero auditavel: mostra os repositorios, o dono, as
+    estrelas, e QUAL REGRA classificou cada um.
+    """
+    d = SiteData(pontos=[ponto()], dia="2026-08-30", cortes={},
+                 rechecked_total=0, repos_do_destaque=REPOS)
+    html = render_site(d)
+    assert "sobrenome do autor no dono" in html
+    assert "tridao/flash-attn" in html
+    assert "acme/fa-triton" in html
+
+
+def test_o_destaque_separa_autor_de_independente():
+    d = SiteData(pontos=[ponto()], dia="2026-08-30", cortes={},
+                 rechecked_total=0, repos_do_destaque=REPOS)
+    html = render_site(d)
+    assert "independente" in html
+    assert "autor" in html
+
+
+def test_destaque_sem_repos_diz_isso_em_vez_de_sumir():
+    html = render_site(_acervo([ponto()]))
+    assert "nenhum repositório" in html.lower()
+
+
+def test_todos_os_cortes_do_dia_aparecem_com_contagem(dados):
+    """Restricao global do projeto: todo corte e contado e chega ao leitor."""
+    html = render_site(dados)
+    for motivo, n in dados.cortes.items():
+        # Renderizado legivel: `abaixo do piso`, nao `abaixo_do_piso`. O que a
+        # restricao global exige e que o corte CHEGUE ao leitor, com contagem.
+        assert motivo.replace("_", " ") in html
+        assert f"<b>{n}</b>" in html
+
+
+def test_dia_sem_corte_nenhum_ainda_mostra_a_secao():
+    html = render_site(_acervo([ponto()]))
+    assert "ficou de fora" in html.lower()
+    assert "nenhum corte" in html.lower()
+
+
+def test_o_total_re_consultado_aparece(dados):
+    assert "7" in render_site(dados)
+
+
+def test_acervo_sem_destaque_nao_explode(dados_vazio):
+    assert "</html>" in render_site(dados_vazio)
