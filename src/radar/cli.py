@@ -13,10 +13,12 @@ import anthropic
 import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
-from .config import DEFAULT_SCOPE, load_model, load_recheck_limit, load_thresholds
+from .config import AGENT_SCOPE, DEFAULT_SCOPE, load_model, load_recheck_limit, load_thresholds
 from .github import GitHubClient
 from .judge import collect_batch_results, submit_batch, wait_for_batch
+from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
 from .pipeline import run_day
+from .render import compose_day
 from .store import Store
 from .telegram import send
 
@@ -37,6 +39,12 @@ def _arxiv_fetch(url: str) -> str:
     r = httpx.get(url, headers={"User-Agent": USER_AGENT}, timeout=30.0)
     r.raise_for_status()
     return r.text
+
+
+def _openalex_fetch(url: str) -> dict:
+    r = httpx.get(url, headers={"User-Agent": OPENALEX_UA}, timeout=30.0)
+    r.raise_for_status()
+    return r.json()
 
 
 def _github_fetch(url: str) -> dict:
@@ -84,24 +92,38 @@ def _executar(args, db_path: Path, today) -> int:
             return {}
         return collect_batch_results(client.messages.batches.results(batch.id))
 
-    result = run_day(
-        store=store, scope=DEFAULT_SCOPE, thresholds=load_thresholds(), today=today,
-        model=model,
-        fetch_papers=arxiv.recent, fetch_signal=fetch_signal, judge_all=judge_all,
-        dry_run=args.dry_run,
-        recheck_limit=load_recheck_limit(),
-    )
+    openalex = OpenAlexClient(fetch=_openalex_fetch)
+    limiares = load_thresholds()
+    resultados: dict[str, object] = {}
+
+    for i, escopo in enumerate((DEFAULT_SCOPE, AGENT_SCOPE)):
+        r = run_day(
+            store=store, scope=escopo, thresholds=limiares, today=today,
+            model=model,
+            fetch_papers=arxiv.recent, fetch_signal=fetch_signal,
+            judge_all=judge_all, fetch_citations=openalex.citations_for,
+            dry_run=args.dry_run,
+            # A re-consulta e global e roda UMA VEZ SO: ela varre `papers`
+            # inteira e nao conhece escopo. Ligar nas duas passadas gastaria
+            # o dobro do orcamento re-consultando exatamente os mesmos papers.
+            recheck_limit=load_recheck_limit() if i == 0 else 0,
+        )
+        resultados[escopo.name] = r
+        print(f"{escopo.name}: radar {len(r.radar)} · feed {len(r.feed)} "
+              f"· cortes {r.cuts}")
+
+    markdown = compose_day(today.isoformat(), resultados)
+    push = "\n\n".join(r.push for r in resultados.values() if r.push)
 
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / f"{today.isoformat()}.md").write_text(result.markdown, encoding="utf-8")
-    print(f"radar: {len(result.radar)} · feed: {len(result.feed)} · cortes: {result.cuts}")
+    (args.out / f"{today.isoformat()}.md").write_text(markdown, encoding="utf-8")
 
     if args.dry_run:
         print("dry-run: push nao enviado, nada gravado no banco de verdade")
         return 0
 
     try:
-        sent = send(result.push,
+        sent = send(push,
                     token=os.environ.get("TELEGRAM_BOT_TOKEN", ""),
                     chat_id=os.environ.get("TELEGRAM_CHAT_ID", ""),
                     post=_telegram_post)

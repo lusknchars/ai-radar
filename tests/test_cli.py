@@ -27,9 +27,23 @@ class FakeGitHub:
     def __init__(self, fetch):
         pass
 
-    def signal_with_repos(self, paper, today, citations=0):
+    def signal_with_repos(self, paper, today):
         return Signal(total_impls=4, independent_impls=4, velocity_14d=1,
                       stars_total=30), []
+
+
+class FakeOpenAlex:
+    """Sem isto os testes da CLI batem em api.openalex.org de verdade.
+
+    Descoberto na tarefa 10 pela duracao: a suite pulou de 0,6s para 12s
+    quando o quarto servico externo entrou sem ser isolado. A restricao
+    global do projeto e que nenhum teste toque a rede.
+    """
+    def __init__(self, fetch):
+        pass
+
+    def citations_for(self, ids):
+        return {i: None for i in ids}
 
 
 class FakeAnthropic:
@@ -42,6 +56,7 @@ def ambiente(monkeypatch, tmp_path):
     """Isola a CLI de rede, de relogio e do ambiente da maquina."""
     monkeypatch.setattr(cli, "ArxivClient", FakeArxiv)
     monkeypatch.setattr(cli, "GitHubClient", FakeGitHub)
+    monkeypatch.setattr(cli, "OpenAlexClient", FakeOpenAlex)
     monkeypatch.setattr(cli.anthropic, "Anthropic", FakeAnthropic)
     monkeypatch.setattr(cli.time, "sleep", lambda s: None)
     monkeypatch.setattr(cli, "submit_batch",
@@ -168,4 +183,89 @@ def test_the_cli_passes_the_configured_recheck_limit(monkeypatch, tmp_path):
     monkeypatch.setattr("radar.cli.anthropic", type("A", (), {"Anthropic": lambda: None}))
     with pytest.raises(SystemExit):
         cli.main(["--dry-run", "--db", str(tmp_path / "r.db"), "--out", str(tmp_path)])
+    # A PRIMEIRA chamada leva o orcamento; a segunda leva zero (ver
+    # `test_a_reconsulta_roda_uma_vez_so`). Este teste captura a primeira,
+    # porque `fake_run_day` levanta SystemExit antes da segunda.
     assert capturado["recheck_limit"] == 7
+
+
+# --- Tarefa 10 do plano do segundo escopo ---
+
+def _espiar_run_day(monkeypatch):
+    """Captura os argumentos de cada chamada a run_day, devolvendo um
+    DayResult minimo e valido."""
+    from radar.pipeline import DayResult
+    vistos = []
+
+    def falso(**kw):
+        vistos.append(kw)
+        nome = kw["scope"].name
+        return DayResult(radar=[], feed=[], cuts={},
+                         markdown=f"# Radar — x\n\nmarcador-{nome}",
+                         push=f"push-{nome}")
+
+    monkeypatch.setattr(cli, "run_day", falso)
+    return vistos
+
+
+def test_a_cli_roda_os_dois_escopos_na_ordem(ambiente, monkeypatch):
+    """Inferencia primeiro: decisao travada da spec. O primeiro escopo a
+    descobrir um paper fica com ele; o segundo o corta por `ja_conhecido`."""
+    vistos = _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    assert [kw["scope"].name for kw in vistos] == ["inferencia", "agentes"]
+
+
+def test_a_reconsulta_roda_uma_vez_so(ambiente, monkeypatch):
+    """Ela varre `papers` inteira e nao conhece escopo. Passar o orcamento nas
+    duas passadas re-consultaria o dobro -- os mesmos papers, duas vezes."""
+    vistos = _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    limites = [kw["recheck_limit"] for kw in vistos]
+    assert limites[0] == cli.load_recheck_limit()
+    assert limites[1] == 0
+
+
+def test_o_arquivo_do_dia_e_um_so(ambiente, monkeypatch):
+    _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    arquivos = list((ambiente / "radar").glob("*.md"))
+    assert len(arquivos) == 1
+    texto = arquivos[0].read_text(encoding="utf-8")
+    assert "marcador-inferencia" in texto
+    assert "marcador-agentes" in texto
+
+
+def test_o_push_concatena_os_dois_radares(ambiente, monkeypatch):
+    _espiar_run_day(monkeypatch)
+    enviados = []
+    monkeypatch.setattr(cli, "send",
+                        lambda texto, **kw: enviados.append(texto) or True)
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "t")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "c")
+    cli.main(argv(ambiente))
+    assert "push-inferencia" in enviados[0]
+    assert "push-agentes" in enviados[0]
+
+
+def test_o_buscador_de_citacao_e_ligado_nos_dois_escopos(ambiente, monkeypatch):
+    """Sem isso o campo continua desconhecido para sempre e o portao de
+    estouro por citacao segue inerte, como esteve desde o dia um."""
+    vistos = _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    assert all(kw["fetch_citations"] is not None for kw in vistos)
+
+
+
+def test_nenhum_teste_da_cli_toca_a_rede(ambiente, monkeypatch):
+    """Guarda contra o defeito da tarefa 10: um servico externo novo ligado na
+    CLI sem entrar na fixture `ambiente`.
+
+    Se `httpx.get` for chamado, algum transporte real escapou do isolamento.
+    """
+    def proibido(*a, **kw):
+        raise AssertionError("teste tentou usar a rede de verdade")
+
+    monkeypatch.setattr(cli.httpx, "get", proibido)
+    monkeypatch.setattr(cli.httpx, "post", proibido)
+    assert cli.main(argv(ambiente, "--dry-run")) == 0
