@@ -11,7 +11,8 @@ from __future__ import annotations
 from html import escape
 
 from .site_data import SiteData
-from .svg import METRICAS_X
+from .config import load_thresholds
+from .svg import METRICAS_X, render_scatter
 
 # Cor significa familia, e SO. Em nenhum grafico ela codifica outra coisa.
 # As matizes agrupam por escopo -- frios para inferencia, quentes para
@@ -42,6 +43,23 @@ CORES_FAMILIA = {
     "outro":                      "#6b7280",
 }
 
+_JS = """
+// Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
+// troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
+// atributo `hidden` mora no HTML e nao num `display:none` de CSS.
+document.querySelectorAll('[data-eixo]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var alvo = b.getAttribute('data-eixo');
+    document.querySelectorAll('[data-eixo]').forEach(function(o){
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    document.querySelectorAll('.scatter').forEach(function(s){
+      s.hidden = (s.getAttribute('data-eixo') !== alvo);
+    });
+  });
+});
+"""
+
 _CSS = """
 :root{--fundo:#fff;--texto:#18181b;--fraco:#71717a;--linha:#e4e4e7;
 --acento:#18181b;--caixa:#fafafa}
@@ -70,6 +88,17 @@ h2{margin:0 0 6px;font-size:19px;font-weight:620;letter-spacing:-0.01em}
 .vazio{color:var(--fraco);padding:64px 0;text-align:center}
 svg{width:100%;height:auto;display:block;color:var(--fraco)}
 .futuro{color:var(--fraco);font-size:13px;font-style:italic;padding:24px 0}
+.eixos{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.eixos button{font:inherit;font-size:12px;padding:5px 11px;cursor:pointer;
+border:1px solid var(--linha);background:transparent;color:var(--fraco);
+border-radius:999px}
+.eixos button[aria-pressed="true"]{border-color:var(--acento);
+color:var(--acento);font-weight:550}
+.legenda{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:11px;
+color:var(--fraco)}
+.legenda i{display:inline-block;width:8px;height:8px;border-radius:2px;
+margin-right:5px;vertical-align:middle}
+.nota{font-size:11px;color:var(--fraco);margin-top:12px}
 footer{padding:40px 0;color:var(--fraco);font-size:12px}
 """
 
@@ -108,6 +137,41 @@ def _secao(titulo: str, sub: str, corpo: str) -> str:
             f"{corpo}</section>")
 
 
+def _legenda(d: SiteData) -> str:
+    """So as familias PRESENTES no acervo.
+
+    Listar as dezenove sempre encheria a legenda de cor que nao aparece em
+    ponto nenhum, e a legenda existe para decodificar o grafico, nao para
+    catalogar a taxonomia.
+    """
+    itens = "".join(
+        f'<span><i style="background:{CORES_FAMILIA[f]}"></i>{escape(f)}</span>'
+        for f in d.familias_presentes
+    )
+    return f'<div class="legenda">{itens}</div>'
+
+
+def _secao_fronteira(d: SiteData) -> str:
+    lim = load_thresholds()
+    botoes = "".join(
+        f'<button type="button" data-eixo="{m}" '
+        f'aria-pressed="{"true" if i == 0 else "false"}">{rotulo}</button>'
+        for i, (m, rotulo) in enumerate(METRICAS_X.items())
+    )
+    graficos = "".join(
+        render_scatter(d.pontos, m, CORES_FAMILIA)
+        .replace('<svg class="scatter"',
+                 f'<svg class="scatter" data-eixo="{m}"'
+                 + ("" if i == 0 else " hidden"))
+        for i, m in enumerate(METRICAS_X)
+    )
+    nota = (f'<p class="nota">Papers acima de {lim.broke_out_stars} estrelas ou '
+            f"{lim.broke_out_citations} citações não são pontuados: já "
+            f"estourou em atenção, e o radar existe para o que ainda não "
+            f"estourou.</p>")
+    return botoes and f'<div class="eixos">{botoes}</div>{graficos}{_legenda(d)}{nota}'
+
+
 def _pendente(qual: str) -> str:
     """Marcador das secoes que as tarefas 5 a 8 preenchem.
 
@@ -122,13 +186,12 @@ def render_site(dados: SiteData) -> str:
     if not dados.pontos:
         corpo = '<p class="vazio">Nenhum paper no acervo ainda.</p>'
     else:
-        eixos = " · ".join(METRICAS_X.values())
         corpo = "".join((
             _secao("A fronteira",
                    "Implementações independentes contra o quanto o paper já "
                    "foi olhado. A região interessante é o alto à esquerda: "
                    "muita gente construindo, pouca gente olhando.",
-                   _pendente(f"gráfico com eixo alternável entre {eixos}")),
+                   _secao_fronteira(dados)),
             _secao("O avanço alegado",
                    "Ganho declarado no resumo, por família, ao longo do tempo. "
                    "Alegado pelos autores, não verificado.",
@@ -159,5 +222,5 @@ def render_site(dados: SiteData) -> str:
         f"{corpo}"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"
-        "</div></body></html>"
+        f"</div><script>{_JS}</script></body></html>"
     )

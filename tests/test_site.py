@@ -105,3 +105,50 @@ def test_o_texto_vindo_do_dado_e_escapado(dados):
     # Nao `"<b>" not in html`: o cabecalho usa <b> de verdade nos numeros.
     # A afirmacao e que a string CRUA nao sobreviveu como marcacao.
     assert "A & B <b>" not in html
+
+
+# --- Tarefa 5: a seção da fronteira ---
+
+def test_a_fronteira_traz_um_svg_por_metrica(dados):
+    assert render_site(dados).count('class="scatter"') == 3
+
+
+def test_so_o_primeiro_scatter_comeca_visivel(dados):
+    """A pagina funciona com JS desligado: `hidden` no HTML e nao
+    `display:none` por CSS, para que o primeiro fique quando o JS nao roda."""
+    import re
+    html = render_site(dados)
+    # Regex e nao `count('class="scatter" hidden')`: aquela forma afirmava uma
+    # ORDEM DE ATRIBUTOS, nao o comportamento. Trocar a ordem no gerador
+    # quebraria o teste sem quebrar a pagina.
+    ocultos = re.findall(r'<svg class="scatter"[^>]*\shidden', html)
+    visiveis = re.findall(r'<svg class="scatter"(?:(?!\shidden)[^>])*>', html)
+    assert len(ocultos) == 2
+    assert len(visiveis) == 1
+
+
+def test_ha_um_botao_por_metrica(dados):
+    html = render_site(dados)
+    for rotulo in ("estrelas no GitHub", "dias desde a publicação",
+                   "implementações totais"):
+        assert rotulo in html
+
+
+def test_o_portao_de_estouro_esta_rotulado(dados):
+    """Quem olha precisa entender por que um paper muito citado nao aparece,
+    sem ler documentacao."""
+    html = render_site(dados)
+    assert "1000" in html
+    assert "estourou" in html.lower()
+
+
+def test_a_legenda_lista_so_as_familias_presentes(dados):
+    html = render_site(dados)
+    assert "cache_kv" in html
+    assert "destilacao" not in html      # ausente do acervo de teste
+
+
+def test_o_js_e_inline_e_nao_carrega_nada(dados):
+    html = render_site(dados)
+    assert "<script>" in html
+    assert "<script src" not in html
