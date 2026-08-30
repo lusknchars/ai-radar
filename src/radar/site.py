@@ -50,6 +50,23 @@ _JS = """
 // Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
 // troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
 // atributo `hidden` mora no HTML e nao num `display:none` de CSS.
+// Fundo interativo: dois valores CSS atualizados no ponteiro. Nada de canvas
+// nem de laco de animacao -- o navegador pinta o gradiente, e a pagina
+// continua leve. Quem pediu menos movimento nao recebe o listener.
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  var fundo = document.getElementById('fundo');
+  var pendente = false;
+  window.addEventListener('pointermove', function(e){
+    if (pendente) return;
+    pendente = true;
+    requestAnimationFrame(function(){
+      fundo.style.setProperty('--px', (e.clientX / window.innerWidth * 100) + '%');
+      fundo.style.setProperty('--py', (e.clientY / window.innerHeight * 100) + '%');
+      pendente = false;
+    });
+  }, {passive: true});
+}
+
 // Frases do bloco de leitura: clicar aplica o recorte que a reproduz.
 document.querySelectorAll('[data-aplicar]').forEach(function(b){
   b.addEventListener('click', function(){
@@ -149,102 +166,130 @@ document.querySelectorAll('[data-eixo]').forEach(function(b){
 });
 """
 
-_CSS = """
-:root{--fundo:#fff;--texto:#18181b;--fraco:#71717a;--linha:#e4e4e7;
---acento:#18181b;--caixa:#fafafa}
-@media (prefers-color-scheme: dark){:root{--fundo:#0c0c0d;--texto:#e4e4e7;
---fraco:#8b8b93;--linha:#26262a;--acento:#fafafa;--caixa:#141416}}
+_CSS = r"""
+:root{--fundo:#fbfaf8;--texto:#1a1a18;--fraco:#6b6b64;--linha:#e3e0d8;
+--acento:#1a1a18;--caixa:#f4f2ed;--brilho:26,26,24;--foco:#8a5a2b}
+@media (prefers-color-scheme: dark){:root{--fundo:#0e0e0d;--texto:#e8e5df;
+--fraco:#8f8d85;--linha:#282621;--acento:#faf8f4;--caixa:#161512;
+--brilho:232,229,223;--foco:#d4a373}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--fundo);color:var(--texto);
-font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
-.envelope{max-width:1000px;margin:0 auto;padding:0 24px 96px}
-header{padding:56px 0 40px;border-bottom:1px solid var(--linha)}
-h1{margin:0;font-size:30px;letter-spacing:-0.02em;font-weight:650}
-.dia{color:var(--fraco);font-size:13px;margin-top:6px;
-font-variant-numeric:tabular-nums}
-.numeros{display:flex;gap:40px;margin-top:28px;flex-wrap:wrap}
-.numero b{display:block;font-size:26px;font-weight:600;
-font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
-.numero span{font-size:11px;color:var(--fraco);text-transform:uppercase;
-letter-spacing:0.07em}
-section{padding:44px 0;border-bottom:1px solid var(--linha)}
+font-family:'Iowan Old Style','Palatino Linotype',Palatino,Charter,
+'Bitstream Charter',Georgia,'Times New Roman',serif;
+font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+#fundo{position:fixed;inset:0;z-index:-1;pointer-events:none;
+background:radial-gradient(680px circle at var(--px,50%) var(--py,22%),
+rgba(var(--brilho),0.055),transparent 62%),
+repeating-linear-gradient(90deg,transparent 0 119px,
+rgba(var(--brilho),0.028) 119px 120px)}
+@media (prefers-reduced-motion: reduce){#fundo{
+background:repeating-linear-gradient(90deg,transparent 0 119px,
+rgba(var(--brilho),0.028) 119px 120px)}}
+.pular{position:absolute;left:-9999px;top:0;background:var(--texto);
+color:var(--fundo);padding:10px 16px;z-index:10}
+.pular:focus{left:8px;top:8px}
+:focus-visible{outline:2px solid var(--foco);outline-offset:3px}
+.envelope{max-width:1060px;margin:0 auto;padding:0 28px 96px}
+.masthead{padding:60px 0 22px;border-bottom:3px double var(--linha)}
+h1{margin:0;font-size:52px;line-height:1;letter-spacing:-0.035em;font-weight:600}
+.dateline{margin-top:14px;padding-top:12px;border-top:1px solid var(--linha);
+font-family:system-ui,-apple-system,sans-serif;font-size:11px;
+text-transform:uppercase;letter-spacing:0.13em;color:var(--fraco);
+display:flex;gap:20px;flex-wrap:wrap}
+.numeros{display:flex;gap:48px;margin-top:26px;flex-wrap:wrap}
+.numero b{display:block;font-family:system-ui,-apple-system,sans-serif;
+font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;
+letter-spacing:-0.02em;line-height:1.1}
+.numero span{font-family:system-ui,-apple-system,sans-serif;font-size:10px;
+color:var(--fraco);text-transform:uppercase;letter-spacing:0.12em}
+section{padding:46px 0;border-bottom:1px solid var(--linha)}
 section:last-child{border-bottom:0}
-h2{margin:0 0 6px;font-size:19px;font-weight:620;letter-spacing:-0.01em}
-.sub{color:var(--fraco);font-size:13px;margin:0 0 22px;max-width:62ch}
-.enquadramento p{max-width:66ch;color:var(--fraco);font-size:14px}
-.enquadramento p:first-child{color:var(--texto)}
-.vazio{color:var(--fraco);padding:64px 0;text-align:center}
+h2{margin:0 0 6px;font-size:25px;font-weight:600;letter-spacing:-0.02em}
+h3{margin:0 0 4px;font-size:19px;font-weight:600}
+.sub{color:var(--fraco);font-size:15px;margin:0 0 24px;max-width:60ch;
+font-style:italic}
+.enquadramento{border-bottom:3px double var(--linha)}
+.enquadramento p{max-width:62ch;font-size:17px}
+.enquadramento p:first-child::first-letter{float:left;font-size:56px;
+line-height:.82;padding:4px 10px 0 0;font-weight:600}
+.enquadramento p+p{color:var(--fraco)}
+.leitura p.frase,.leitura button.frase{max-width:62ch;margin:0 0 12px;
+font-size:18px;line-height:1.5}
+.leitura b.n{font-family:system-ui,-apple-system,sans-serif;font-weight:620;
+font-variant-numeric:tabular-nums;font-size:.94em}
+.leitura button.frase{display:block;text-align:left;font-family:inherit;
+background:none;border:0;border-bottom:1px dotted var(--linha);padding:0 0 3px;
+cursor:pointer;color:inherit}
+.leitura button.frase:hover{border-bottom-color:var(--acento)}
+.vazio{color:var(--fraco);padding:64px 0;text-align:center;font-style:italic}
 svg{width:100%;height:auto;display:block;color:var(--fraco)}
-.futuro{color:var(--fraco);font-size:13px;font-style:italic;padding:24px 0}
-.eixos{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-.eixos button{font:inherit;font-size:12px;padding:5px 11px;cursor:pointer;
+.futuro{color:var(--fraco);font-size:14px;font-style:italic;padding:24px 0}
+footer{padding:44px 0;color:var(--fraco);font-size:12px;
+font-family:system-ui,-apple-system,sans-serif}
+.eixos,.filtros,.legenda,table,.repos,.cortes,.nota{
+font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eixos{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.eixos button{font:inherit;font-size:12px;padding:6px 13px;cursor:pointer;
 border:1px solid var(--linha);background:transparent;color:var(--fraco);
-border-radius:999px}
+border-radius:999px;min-height:32px}
 .eixos button[aria-pressed="true"]{border-color:var(--acento);
 color:var(--acento);font-weight:550}
-.legenda{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:11px;
+.legenda{display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;font-size:11px;
 color:var(--fraco)}
 .legenda i{display:inline-block;width:8px;height:8px;border-radius:2px;
 margin-right:5px;vertical-align:middle}
-.nota{font-size:11px;color:var(--fraco);margin-top:12px}
-.filtros{display:flex;gap:22px;margin-bottom:18px;flex-wrap:wrap}
-.filtros label{font-size:11px;color:var(--fraco);text-transform:uppercase;
-letter-spacing:0.06em;display:block;margin-bottom:5px}
-.filtros select{font:inherit;font-size:13px;padding:5px 9px;
-background:var(--fundo);color:var(--texto);border:1px solid var(--linha);
-border-radius:6px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{text-align:left;font-weight:550;font-size:11px;color:var(--fraco);
-text-transform:uppercase;letter-spacing:0.06em;padding:0 10px 9px 0;
-border-bottom:1px solid var(--linha)}
-td{padding:9px 10px 9px 0;border-bottom:1px solid var(--linha);
-vertical-align:top}
-td.num{text-align:right;font-variant-numeric:tabular-nums;
-white-space:nowrap;color:var(--fraco)}
-.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;
-border:1px solid var(--linha);color:var(--fraco);white-space:nowrap}
-.tag.adotar{border-color:currentColor;color:var(--texto);font-weight:550}
-.pt{display:inline-block;width:7px;height:7px;border-radius:2px;
-margin-right:6px;vertical-align:middle}
-a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
-a:hover{border-bottom-color:var(--acento)}
-.rolagem{overflow-x:auto}
-.leitura p.frase,.leitura button.frase{max-width:64ch;margin:0 0 10px;
-font-size:15px;line-height:1.5}
-.leitura b.n{font-weight:640;font-variant-numeric:tabular-nums}
-.leitura button.frase{display:block;text-align:left;font-family:inherit;
-background:none;border:0;border-bottom:1px dotted var(--linha);padding:0 0 2px;
-cursor:pointer;color:inherit}
-.leitura button.frase:hover{border-bottom-color:var(--acento)}
-.filtros input[type=search]{font:inherit;font-size:13px;padding:5px 9px;
-background:var(--fundo);color:var(--texto);border:1px solid var(--linha);
-border-radius:6px;min-width:210px}
+.legenda button{font:inherit;font-size:11px;color:var(--fraco);background:none;
+border:0;padding:3px 0;cursor:pointer}
+.legenda button[aria-pressed=true]{color:var(--acento);font-weight:600}
+.nota{font-size:12px;color:var(--fraco);margin-top:14px;max-width:58ch}
+.filtros{display:flex;gap:22px;margin-bottom:20px;flex-wrap:wrap}
+.filtros label{font-size:10px;color:var(--fraco);text-transform:uppercase;
+letter-spacing:0.12em;display:block;margin-bottom:6px}
+.filtros select,.filtros input[type=search]{font:inherit;font-size:13px;
+padding:7px 10px;background:var(--fundo);color:var(--texto);
+border:1px solid var(--linha);border-radius:4px;min-height:34px}
+.filtros input[type=search]{min-width:210px}
 .contagem span{font-size:13px;font-variant-numeric:tabular-nums;
-color:var(--fraco);display:inline-block;padding-top:5px}
-thead button{font:inherit;font-size:11px;text-transform:uppercase;
-letter-spacing:0.06em;color:var(--fraco);background:none;border:0;padding:0;
-cursor:pointer;font-weight:550}
+color:var(--fraco);display:inline-block;padding-top:7px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;font-weight:550;font-size:10px;color:var(--fraco);
+text-transform:uppercase;letter-spacing:0.12em;padding:0 12px 10px 0;
+border-bottom:2px solid var(--linha);position:sticky;top:0;
+background:var(--fundo)}
+thead button{font:inherit;font-size:10px;text-transform:uppercase;
+letter-spacing:0.12em;color:var(--fraco);background:none;border:0;padding:0;
+cursor:pointer;font-weight:550;min-height:24px}
 thead button:hover,thead button[aria-sort]{color:var(--acento)}
 thead button[aria-sort]::after{content:" \2193"}
 thead button[aria-sort=asc]::after{content:" \2191"}
-.legenda button{font:inherit;font-size:11px;color:var(--fraco);background:none;
-border:0;padding:2px 0;cursor:pointer}
-.legenda button[aria-pressed=true]{color:var(--acento);font-weight:600}
-.destaque h3{margin:0 0 4px;font-size:16px;font-weight:600}
-.destaque .meta{color:var(--fraco);font-size:12px;margin-bottom:14px}
-.destaque p.resumo{max-width:64ch;margin:0 0 20px}
+td{padding:10px 12px 10px 0;border-bottom:1px solid var(--linha);
+vertical-align:top}
+tbody tr:hover td{background:var(--caixa)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;
+color:var(--fraco)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;
+border:1px solid var(--linha);color:var(--fraco);white-space:nowrap}
+.tag.adotar{border-color:currentColor;color:var(--texto);font-weight:550}
+.pt{display:inline-block;width:7px;height:7px;border-radius:2px;
+margin-right:7px;vertical-align:middle}
+a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
+a:hover{border-bottom-color:var(--acento)}
+.rolagem{overflow-x:auto;max-height:70vh}
+.destaque .meta{color:var(--fraco);font-size:12px;margin-bottom:16px;
+font-family:system-ui,-apple-system,sans-serif}
+.destaque p.resumo{max-width:62ch;margin:0 0 22px}
 .repos{list-style:none;padding:0;margin:0;font-size:13px}
-.repos li{padding:8px 0;border-bottom:1px solid var(--linha);
-display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.repos li{padding:9px 0;border-bottom:1px solid var(--linha);display:flex;
+gap:14px;align-items:baseline;flex-wrap:wrap}
 .repos .quem{color:var(--fraco);font-size:11px}
 .repos .indep{color:var(--texto);font-weight:550}
 .cortes{list-style:none;padding:0;margin:0;font-size:13px;
 font-variant-numeric:tabular-nums}
-.cortes li{padding:7px 0;border-bottom:1px solid var(--linha);
-display:flex;justify-content:space-between;max-width:420px}
+.cortes li{padding:8px 0;border-bottom:1px solid var(--linha);display:flex;
+justify-content:space-between;max-width:420px}
 .cortes b{font-weight:600}
-footer{padding:40px 0;color:var(--fraco);font-size:12px}
+@media (max-width: 640px){.envelope{padding:0 18px 64px}h1{font-size:36px}
+.numeros{gap:28px}body{font-size:16px}}
 """
 
 # Contrato com o leitor. Escrito a mao e versionado -- nao e gerado, e nao
@@ -265,8 +310,10 @@ _ENQUADRAMENTO = (
 def _cabecalho(d: SiteData) -> str:
     impls = sum(p.independent_impls for p in d.pontos)
     return (
-        f"<header><h1>ai-radar</h1>"
-        f'<div class="dia">acervo em {escape(d.dia)}</div>'
+        f'<header class="masthead"><h1>ai-radar</h1>'
+        f'<div class="dateline"><span>acervo em {escape(d.dia)}</span>'
+        f'<span>implementação independente como sinal</span>'
+        f'<span>nada aqui foi reproduzido</span></div>'
         f'<div class="numeros">'
         f'<div class="numero"><b>{len(d.pontos)}</b><span>papers</span></div>'
         f'<div class="numero"><b>{len(d.familias_presentes)}</b>'
@@ -571,11 +618,16 @@ def render_site(dados: SiteData) -> str:
         "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
         f"<title>ai-radar — {escape(dados.dia)}</title>"
-        f"<style>{_CSS}</style></head><body><div class=\"envelope\">"
+        f"<style>{_CSS}</style></head><body>"
+        '<div id="fundo" aria-hidden="true"></div>'
+        '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
+        '<div class="envelope">'
         f"{_cabecalho(dados)}"
+        f'<main id="conteudo">'
         f'<section class="enquadramento">{_ENQUADRAMENTO}</section>'
         f"{_secao_leitura(dados)}"
         f"{corpo}"
+        "</main>"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"
         f"</div><script>{_JS}</script></body></html>"

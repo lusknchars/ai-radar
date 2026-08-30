@@ -441,3 +441,81 @@ def test_acervo_vazio_nao_desenha_o_bloco(dados_vazio):
 def test_os_numeros_do_bloco_ganham_destaque(dados):
     """Prosa com número destacado: o olho acha o número sem o cartão."""
     assert '<b class="n">' in render_site(dados)
+
+
+# --- Identidade editorial ---
+
+def test_a_serifa_do_sistema_carrega_o_texto_de_leitura(dados):
+    """Serifa para ler, sem-serifa para dados: a divisão clássica de jornal.
+
+    Do sistema, não remota — "sem dependência externa" continua literal e o
+    teste de requisição externa continua valendo.
+    """
+    html = render_site(dados)
+    assert "Iowan Old Style" in html or "Charter" in html
+    assert "Georgia" in html
+    assert "system-ui" in html          # a pilha sem-serifa sobrevive
+
+
+def test_os_dados_ficam_em_sem_serifa_com_algarismo_tabular(dados):
+    html = render_site(dados)
+    assert "tabular-nums" in html
+
+
+def test_ha_fundo_interativo(dados):
+    assert 'id="fundo"' in render_site(dados)
+
+
+def test_o_fundo_respeita_reducao_de_movimento(dados):
+    """Fundo que se move sem checar `prefers-reduced-motion` é gatilho
+    vestibular, não decoração."""
+    html = render_site(dados)
+    assert "prefers-reduced-motion" in html
+
+
+def test_o_fundo_nao_intercepta_clique(dados):
+    """Camada decorativa que come clique é bug de acessibilidade que só
+    aparece quando alguém não consegue usar a página."""
+    import re
+    html = render_site(dados)
+    bloco = re.search(r"#fundo\{[^}]*\}", html).group(0)
+    assert "pointer-events:none" in bloco
+
+
+def test_o_fundo_e_escondido_de_leitor_de_tela(dados):
+    assert 'id="fundo" aria-hidden="true"' in render_site(dados)
+
+
+def test_todo_elemento_focavel_tem_indicador_visivel(dados):
+    """A skill de UI/UX apontou a lacuna: sem `:focus-visible` a navegação
+    por teclado é invisível e a página fica inutilizável sem mouse."""
+    assert ":focus-visible" in render_site(dados)
+
+
+def test_ha_link_de_pular_para_o_conteudo(dados):
+    html = render_site(dados)
+    assert 'class="pular"' in html
+    assert 'href="#conteudo"' in html
+
+
+def test_o_cabecalho_tem_estrutura_de_masthead(dados):
+    html = render_site(dados)
+    assert 'class="masthead"' in html
+    assert 'class="dateline"' in html
+
+
+def test_a_hierarquia_de_titulos_e_logica(dados):
+    """h1 uma vez, e nenhum h3 sem h2 antes."""
+    import re
+    html = render_site(dados)
+    assert html.count("<h1") == 1
+    titulos = re.findall(r"<h([1-6])", html)
+    assert "3" not in titulos or "2" in titulos[:titulos.index("3")]
+
+
+def test_o_link_de_pular_tem_destino_que_existe(dados):
+    """Link de pulo apontando para lugar nenhum é pior que nenhum: ele
+    promete a quem navega por teclado um atalho que não funciona."""
+    html = render_site(dados)
+    assert 'href="#conteudo"' in html
+    assert 'id="conteudo"' in html
