@@ -5,6 +5,31 @@ import re
 from dataclasses import dataclass, field
 
 VALID_VERDICTS = frozenset({"sim", "sim_com_ressalva", "nao"})
+
+# Fechado por decisao de produto. O seed de 2026-08-29 produziu 1088 valores
+# distintos de `technique` para 1088 papers: uma taxonomia com N categorias
+# para N itens nao agrega nada, e agregacao e a razao de existir do acervo.
+#
+# Familia NAO e derivada de escopo. Um paper descoberto pelo escopo de agentes
+# pode ser legitimamente `cache_kv`; `scope` diz por onde ele entrou, `familia`
+# diz do que ele trata.
+FAMILIAS = frozenset({
+    # inferencia
+    "quantizacao", "cache_kv", "decodificacao_especulativa",
+    "esparsidade_e_poda", "kernels_e_atencao", "serving_e_batching",
+    "arquitetura_eficiente", "destilacao", "treino_eficiente",
+    # agentes
+    "uso_de_ferramenta", "memoria_e_contexto", "planejamento_e_decomposicao",
+    "orquestracao_multiagente", "avaliacao_de_agente", "recuperacao_de_falha",
+    "agentes_de_codigo", "seguranca_e_guardrails", "recuperacao_e_rag",
+    # Escape, e instrumento de medicao: sem ele o modelo e forcado a encaixar
+    # mal e o erro fica invisivel. A frequencia de `outro` mede se a taxonomia
+    # esta errada, e o gate da spec e 10%.
+    "outro",
+})
+
+PRATICAS = frozenset({"adotar", "testar", "observar", "nao_aplica"})
+GANHO_EIXOS = frozenset({"velocidade", "memoria", "custo", "qualidade", "nenhum"})
 _VERSIONED = re.compile(r"v\d+$")
 
 
@@ -88,13 +113,48 @@ class ScoreResult:
 @dataclass(frozen=True)
 class Judgment:
     technique: str
-    summary: str
-    runs_on_3090: str
-    rationale: str
+    # Os campos abaixo entram com default na tarefa 4 e PERDEM o default na
+    # tarefa 7. E o que mantem a suite verde enquanto judge, store e render
+    # migram um por vez. Se estes defaults sobreviverem a tarefa 7, o plano
+    # falhou -- eles permitiriam julgamento sem familia chegar ao banco.
+    summary: str = ""                        # morre na tarefa 7
+    runs_on_3090: str = "sim_com_ressalva"   # morre na tarefa 7
+    rationale: str = ""                      # morre na tarefa 7
+    familia: str = "outro"
+    pratica: str = "observar"
+    ganho_eixo: str = "nenhum"
+    ganho_fator: float | None = None
+    ganho_texto: str = ""
+    resumo: str = ""
+    porque: str = ""
 
     def __post_init__(self) -> None:
         if self.runs_on_3090 not in VALID_VERDICTS:
             raise ValueError(
                 f"runs_on_3090={self.runs_on_3090!r} invalido; "
                 f"use um de {sorted(VALID_VERDICTS)}"
+            )
+        if self.familia not in FAMILIAS:
+            raise ValueError(
+                f"familia={self.familia!r} fora da taxonomia; "
+                f"use um de {sorted(FAMILIAS)}"
+            )
+        if self.pratica not in PRATICAS:
+            raise ValueError(
+                f"pratica={self.pratica!r} invalida; use um de {sorted(PRATICAS)}"
+            )
+        if self.ganho_eixo not in GANHO_EIXOS:
+            raise ValueError(
+                f"ganho_eixo={self.ganho_eixo!r} invalido; "
+                f"use um de {sorted(GANHO_EIXOS)}"
+            )
+        if self.ganho_eixo == "nenhum" and self.ganho_fator is not None:
+            raise ValueError(
+                f"ganho_fator={self.ganho_fator!r} com ganho_eixo='nenhum': "
+                f"fator sem dimensao e numero solto"
+            )
+        if self.ganho_fator is not None and self.ganho_fator <= 0:
+            raise ValueError(
+                f"ganho_fator={self.ganho_fator!r} nao e razao de melhora; "
+                f"precisa ser > 0"
             )

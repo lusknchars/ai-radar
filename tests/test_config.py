@@ -2,7 +2,8 @@ import pytest
 
 from radar.config import (AGENT_SCOPE, DEFAULT_SCOPE, PUSH_CAP, ScopeConfig,
                           Thresholds, load_thresholds)
-from radar.models import Judgment, Paper, Signal
+from radar.models import (FAMILIAS, GANHO_EIXOS, PRATICAS, Judgment,
+                          Paper, Signal)
 
 
 def test_scope_covers_the_five_arxiv_categories():
@@ -162,3 +163,73 @@ def test_escopo_nao_pode_ser_construido_anonimo():
     """
     with pytest.raises(TypeError):
         ScopeConfig()
+
+
+# --- Tarefa 4 do plano do segundo escopo ---
+# O plano pedia estes testes em tests/test_models.py, que nao existe: os
+# modelos sao testados aqui desde o inicio do projeto. Segui a convencao do
+# repositorio.
+
+def julgamento(**kw):
+    base = dict(technique="t", familia="cache_kv", pratica="testar",
+                ganho_eixo="velocidade", ganho_fator=2.3,
+                ganho_texto="2.3x mais rapido que vLLM",
+                resumo="r", porque="p")
+    return Judgment(**{**base, **kw})
+
+
+def test_a_taxonomia_tem_dezenove_valores_com_o_escape():
+    assert len(FAMILIAS) == 19
+    assert "outro" in FAMILIAS
+
+
+def test_familia_fora_da_taxonomia_e_recusada():
+    with pytest.raises(ValueError, match="familia"):
+        julgamento(familia="quantizacao_magica")
+
+
+def test_pratica_fora_do_conjunto_e_recusada():
+    assert PRATICAS == frozenset({"adotar", "testar", "observar", "nao_aplica"})
+    with pytest.raises(ValueError, match="pratica"):
+        julgamento(pratica="talvez")
+
+
+def test_ganho_eixo_fora_do_conjunto_e_recusado():
+    assert GANHO_EIXOS == frozenset(
+        {"velocidade", "memoria", "custo", "qualidade", "nenhum"})
+    with pytest.raises(ValueError, match="ganho_eixo"):
+        julgamento(ganho_eixo="elegancia")
+
+
+def test_sem_eixo_de_ganho_nao_pode_haver_fator():
+    # Um fator sem dimensao e numero solto: se o paper nao alega nada, nao
+    # existe 2.3 de coisa nenhuma.
+    with pytest.raises(ValueError, match="ganho_fator"):
+        julgamento(ganho_eixo="nenhum", ganho_fator=2.3)
+
+
+def test_sem_eixo_de_ganho_o_fator_nulo_e_valido():
+    assert julgamento(ganho_eixo="nenhum", ganho_fator=None,
+                      ganho_texto="").ganho_fator is None
+
+
+def test_fator_precisa_ser_razao_de_melhora():
+    # Fator e razao. Zero e negativo nao sao razao de melhora, e um zero aqui
+    # viraria coordenada invalida na escala log do grafico do jornal.
+    for ruim in (0, -1.0, 0.0):
+        with pytest.raises(ValueError, match="ganho_fator"):
+            julgamento(ganho_fator=ruim)
+
+
+def test_fator_abaixo_de_um_e_valido_porque_e_piora_relativa_declarada():
+    # 0.8 significa "entrega 80% do baseline". E razao positiva, e o paper
+    # pode legitimamente alegar isso ao trocar qualidade por velocidade.
+    assert julgamento(ganho_fator=0.8).ganho_fator == 0.8
+
+
+def test_as_familias_cobrem_os_dois_escopos():
+    # Familia nao e derivada de escopo: um paper descoberto pelo escopo de
+    # agentes pode ser legitimamente `cache_kv`. Os dois campos existem
+    # separados justamente por isso.
+    assert {"quantizacao", "cache_kv"} <= FAMILIAS          # inferencia
+    assert {"uso_de_ferramenta", "memoria_e_contexto"} <= FAMILIAS   # agentes
