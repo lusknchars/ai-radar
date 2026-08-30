@@ -202,8 +202,15 @@ def test_citacao_desconhecida_vira_travessao_e_nao_zero():
     """Nao-resolvido nao e zero: ~8% dos papers nao tem DOI no OpenAlex.
     Renderizar 0 ali seria o mesmo defeito que as tarefas 2, 3 e 8 do plano
     anterior consertaram, reintroduzido pela camada de apresentacao."""
-    html = render_site(_acervo([ponto(citations=None)]))
-    assert "—" in html
+    import re
+    # Nao `"—" in html`: o travessao tambem aparece na coluna de ganho, entao
+    # aquela forma passava mesmo com a citacao virando zero. Verificado por
+    # mutacao em 2026-08-30. A afirmacao precisa ser sobre A CELULA.
+    html = render_site(_acervo([ponto(citations=None, ganho_fator=2.0)]))
+    celulas = re.findall(r'<td class="num">([^<]*)</td>',
+                         re.search(r'<tr class="linha".*?</tr>', html, re.S).group(0))
+    assert celulas[2] == "—"        # impls, estrelas, CITACOES, ganho
+    assert celulas[3] == "2x"       # o ganho tem numero, provando que nao e ele
 
 
 def test_citacao_zero_e_renderizada_como_zero():
@@ -226,11 +233,19 @@ def test_a_linha_carrega_familia_e_pratica_como_atributo(dados):
     assert 'data-pratica="adotar"' in html
 
 
-def test_a_tabela_vem_ordenada_por_score(dados):
-    html = render_site(dados)
-    posicoes = [html.index(f'data-id="{p.arxiv_id}"')
-                for p in sorted(dados.pontos, key=lambda p: -p.score)]
-    assert posicoes == sorted(posicoes)
+def test_a_tabela_vem_ordenada_por_score():
+    """A fixture entra em ordem CRESCENTE de score, de proposito.
+
+    A versao anterior usava pontos que ja chegavam em ordem decrescente, entao
+    remover o `sorted` do gerador nao mudava nada e o teste passava pelo motivo
+    errado. Verificado por mutacao em 2026-08-30.
+    """
+    pontos = [ponto(arxiv_id="baixo", score=0.1),
+              ponto(arxiv_id="meio", score=0.5),
+              ponto(arxiv_id="alto", score=9.9)]
+    html = render_site(_acervo(pontos))
+    assert (html.index('data-id="alto"') < html.index('data-id="meio"')
+            < html.index('data-id="baixo"'))
 
 
 def test_ha_filtro_por_pratica_e_por_familia(dados):
