@@ -1,6 +1,6 @@
 import pytest
 
-from radar.judge import HARDWARE_BRIEF, Judge, JudgmentSchema, build_prompt
+from radar.judge import LEITOR_BRIEF, Judge, JudgmentSchema, build_prompt
 from radar.models import Judgment, Paper
 
 PAPER = Paper(arxiv_id="2508.11111", title="Fused INT4 Kernels",
@@ -29,22 +29,29 @@ class FakeClient:
 
 
 def valid_schema():
-    return JudgmentSchema(technique="Kernel INT4 fundido",
-                          summary="Satura banda em batch unitario.",
-                          runs_on_3090="sim", rationale="INT4 roda em Ampere.")
+    return JudgmentSchema(technique="Kernel INT4 fundido", familia="quantizacao",
+                          pratica="testar", ganho_eixo="velocidade",
+                          ganho_fator=2.3, ganho_texto="2.3x sobre FP16",
+                          resumo="Troca o kernel FP16 por INT4 fundido.",
+                          porque="Roda em infra pequena, mas o ganho depende do caso.")
 
 
-def test_hardware_brief_names_the_real_constraints():
-    """O veredito so vale se o modelo souber o que a maquina nao tem."""
-    for fact in ("Ampere", "24", "FP8", "936"):
-        assert fact in HARDWARE_BRIEF
+def test_leitor_brief_descreve_a_restricao_que_importa():
+    """O briefing deixou de ser sobre a placa e passou a ser sobre o leitor.
+
+    Substituiu `test_hardware_brief_names_the_real_constraints`, que checava
+    Ampere/24GB/FP8/936 -- fatos verdadeiros sobre uma maquina que o produto
+    parou de considerar quando deixou de reproduzir papers.
+    """
+    for fato in ("INFRA PEQUENA", "24 GB", "sem cluster", "adotar"):
+        assert fato in LEITOR_BRIEF
 
 
-def test_prompt_includes_the_paper_and_the_hardware_brief():
+def test_prompt_includes_the_paper_and_the_reader_brief():
     prompt = build_prompt(PAPER)
     assert PAPER.title in prompt
     assert PAPER.abstract in prompt
-    assert HARDWARE_BRIEF in prompt
+    assert LEITOR_BRIEF in prompt
 
 
 def test_schema_forbids_additional_properties():
@@ -66,16 +73,18 @@ def test_batch_request_carries_the_schema_with_additional_properties_forbidden()
     assert schema["additionalProperties"] is False
 
 
-def test_schema_rejects_a_verdict_outside_the_enum():
+def test_schema_rejects_a_familia_outside_the_enum():
     with pytest.raises(Exception):
-        JudgmentSchema(technique="T", summary="S", runs_on_3090="talvez", rationale="R")
+        JudgmentSchema(technique="T", familia="familia_inventada",
+                       pratica="testar", ganho_eixo="nenhum", ganho_texto="",
+                       resumo="R", porque="P")
 
 
 def test_judge_one_returns_a_domain_judgment():
     judge = Judge(client=FakeClient(valid_schema()), model="claude-opus-5")
     result = judge.judge_one(PAPER)
     assert isinstance(result, Judgment)
-    assert result.runs_on_3090 == "sim"
+    assert result.pratica == "testar"
     assert result.technique == "Kernel INT4 fundido"
 
 
@@ -102,11 +111,7 @@ def test_judge_one_asks_for_adaptive_thinking_at_low_effort():
     assert chamada["output_config"]["effort"] == "low"
 
 
-def test_the_verdict_field_tells_the_model_the_criterion():
-    """runs_on_3090 e o veredito que o usuario le. O Literal restringe o token
-    mas nao diz nada sobre o criterio."""
-    campo = JudgmentSchema.model_json_schema()["properties"]["runs_on_3090"]
-    assert "FP8" in campo["description"]
+
 
 
 def test_max_tokens_leaves_room_for_thinking():
@@ -245,8 +250,9 @@ def test_batch_results_are_keyed_not_positional():
                 "type": "succeeded",
                 "message": type("M", (), {"content": [
                     type("B", (), {"type": "text", "text":
-                        '{"technique":"%s","summary":"S","runs_on_3090":"sim",'
-                        '"rationale":"R"}' % tech})()]})()})()
+                        '{"technique":"%s","familia":"cache_kv","pratica":"testar",'
+                        '"ganho_eixo":"nenhum","ganho_texto":"",'
+                        '"resumo":"R","porque":"P"}' % tech})()]})()})()
 
     out = collect_batch_results([R("2508.22222", "B"), R("2508.11111", "A")])
     assert out["2508.11111"].technique == "A"
@@ -282,11 +288,64 @@ def test_a_malformed_judgment_is_logged_with_its_custom_id(caplog):
     assert "2508.44444" in caplog.text
 
 
-def test_a_judgment_with_an_invalid_verdict_is_logged_not_swallowed(caplog):
+def test_a_judgment_with_an_invalid_familia_is_logged_not_swallowed(caplog):
     from radar.judge import collect_batch_results
-    payload = ('{"technique":"T","summary":"S","runs_on_3090":"talvez",'
-               '"rationale":"R"}')
+    payload = ('{"technique":"T","familia":"nao_existe","pratica":"testar",'
+               '"ganho_eixo":"nenhum","ganho_texto":"","resumo":"R","porque":"P"}')
     with caplog.at_level("WARNING", logger="radar.judge"):
         out = collect_batch_results([_sucesso_com_texto("2508.55555", payload)])
     assert out == {}
     assert "2508.55555" in caplog.text
+
+
+# --- Tarefa 5 do plano do segundo escopo ---
+
+def test_o_schema_cobre_exatamente_a_taxonomia():
+    """Se alguem adicionar familia em models.py e esquecer do judge, o modelo
+    nunca consegue emitir o valor novo e o campo morre calado."""
+    from radar.models import FAMILIAS
+    campo = JudgmentSchema.model_fields["familia"]
+    assert set(campo.annotation.__args__) == FAMILIAS
+
+
+def test_o_schema_cobre_exatamente_as_praticas_e_os_eixos():
+    from radar.models import GANHO_EIXOS, PRATICAS
+    assert set(JudgmentSchema.model_fields["pratica"].annotation.__args__) == PRATICAS
+    assert set(JudgmentSchema.model_fields["ganho_eixo"].annotation.__args__) == GANHO_EIXOS
+
+
+def test_o_schema_nao_pergunta_mais_de_hardware():
+    """runs_on_3090 respondeu `sim_com_ressalva` em 566 de 1088 papers no seed
+    de 2026-08-29. Um eixo cuja resposta modal e "mais ou menos" nao separa
+    nada e custa um campo de saida estruturada em todo julgamento."""
+    assert "runs_on_3090" not in JudgmentSchema.model_fields
+
+
+def test_o_prompt_descreve_o_leitor_e_nao_a_placa():
+    texto = build_prompt(PAPER)
+    assert "infra pequena" in texto.lower()
+    assert "3090" not in texto
+    assert "RTX" not in texto
+
+
+def test_o_prompt_pede_as_tres_perguntas_do_resumo():
+    """Resumo que nao diz custo nem trade-off e propaganda, e propaganda e o
+    que um radar anti-hype nao pode produzir."""
+    texto = build_prompt(PAPER).lower()
+    for exigencia in ("substitui", "custa", "quebra"):
+        assert exigencia in texto
+
+
+def test_o_campo_de_pratica_diz_o_criterio_ao_modelo():
+    """O Literal restringe o token; e a descricao que diz qual criterio usar.
+    Este e o veredito que o leitor le."""
+    campo = JudgmentSchema.model_json_schema()["properties"]["pratica"]
+    for criterio in ("adotar", "infra pequena", "validacao"):
+        assert criterio in campo["description"]
+
+
+def test_o_campo_de_fator_ensina_a_normalizacao():
+    """A regra mais facil de errar: pontos percentuais NAO sao razao."""
+    campo = JudgmentSchema.model_json_schema()["properties"]["ganho_fator"]
+    assert "2.5" in campo["description"]      # o exemplo de 1/0.4
+    assert "null" in campo["description"].lower()

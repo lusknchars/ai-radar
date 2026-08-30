@@ -23,10 +23,28 @@ _log = logging.getLogger(__name__)
 BATCH_POLL_SECONDS = 30
 BATCH_TIMEOUT_SECONDS = 45 * 60   # um cron diario que espera mais que isso ja falhou
 
-HARDWARE_BRIEF = (
-    "A maquina alvo tem uma NVIDIA RTX 3090: arquitetura Ampere GA102, 24 GB de "
-    "VRAM, 936 GB/s de banda de memoria, PCIe 4.0, e SEM unidades FP8. Tecnicas "
-    "que dependem de FP8, de multiplas GPUs, ou de mais de 24 GB nao rodam nela."
+# Substitui o HARDWARE_BRIEF. O produto deixou de ser bancada de reproducao e
+# virou jornal: o que importa nao e se a tecnica roda numa placa especifica, e
+# se o leitor deve adotar, testar, observar ou ignorar.
+LEITOR_BRIEF = (
+    "O leitor e um engenheiro de AI/ML com INFRA PEQUENA: uma GPU de 24 GB ou "
+    "APIs de terceiros, sem cluster, sem treino de modelo base, orcamento de "
+    "nuvem baixo, time pequeno. Ele decide o que adotar nas praticas do dia a "
+    "dia, nao o que pesquisar."
+)
+
+# Tupla literal, nao `tuple(FAMILIAS)`: frozenset nao tem ordem estavel, e um
+# schema JSON que muda de ordem entre execucoes invalida cache de prompt. O
+# teste `test_o_schema_cobre_exatamente_a_taxonomia` garante que ela bate com
+# FAMILIAS -- e o que impede as duas listas de divergirem em silencio.
+_FAMILIAS = (
+    "quantizacao", "cache_kv", "decodificacao_especulativa",
+    "esparsidade_e_poda", "kernels_e_atencao", "serving_e_batching",
+    "arquitetura_eficiente", "destilacao", "treino_eficiente",
+    "uso_de_ferramenta", "memoria_e_contexto", "planejamento_e_decomposicao",
+    "orquestracao_multiagente", "avaliacao_de_agente", "recuperacao_de_falha",
+    "agentes_de_codigo", "seguranca_e_guardrails", "recuperacao_e_rag",
+    "outro",
 )
 
 # Spec secao 5: thinking adaptativo com esforco baixo -- a tarefa e curta e bem
@@ -52,31 +70,63 @@ class JudgmentSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     technique: str = Field(description="Rotulo curto da tecnica, ate 8 palavras")
-    summary: str = Field(description="UMA frase dizendo o que a tecnica faz")
-    runs_on_3090: Literal["sim", "sim_com_ressalva", "nao"] = Field(
-        description="'sim' se a tecnica roda na 3090 como descrita; "
-                    "'sim_com_ressalva' se roda com perda, adaptacao ou modelo "
-                    "menor; 'nao' se depende de FP8, de multiplas GPUs ou de "
-                    "mais de 24 GB. O Literal restringe o token, e esta "
-                    "descricao diz ao modelo qual criterio usar -- este campo e "
-                    "o veredito que o usuario le.")
-    rationale: str = Field(description="Uma linha justificando o veredito de hardware")
+    familia: Literal[_FAMILIAS] = Field(
+        description="A familia da tecnica. Use 'outro' apenas quando nenhuma "
+                    "das dezoito couber de verdade -- encaixar a forca destroi "
+                    "a agregacao, que e para o que este campo existe.")
+    pratica: Literal["adotar", "testar", "observar", "nao_aplica"] = Field(
+        description="O que o leitor faz com isso. 'adotar': da para usar ja, "
+                    "com infra pequena, ganho claro, sem pre-requisito exotico. "
+                    "'testar': plausivel com infra pequena, mas o ganho depende "
+                    "de validacao no caso concreto. 'observar': importa, e exige "
+                    "escala, hardware ou dado que ele nao tem. 'nao_aplica': "
+                    "fora do que ele faz.")
+    ganho_eixo: Literal["velocidade", "memoria", "custo", "qualidade", "nenhum"] = Field(
+        description="Em que dimensao o paper alega melhorar. 'nenhum' quando o "
+                    "paper nao faz alegacao quantificada -- resposta legitima e "
+                    "frequente, nao use as outras por educacao.")
+    ganho_fator: float | None = Field(
+        default=None,
+        description="O ganho como FATOR MULTIPLICATIVO de melhora, quando e so "
+                    "quando o paper permite. '2.3x mais rapido' vira 2.3. "
+                    "'reduz memoria em 60%' vira 2.5, que e 1/0.4. "
+                    "'+3 pontos de acuracia' NAO vira fator: e null, porque "
+                    "pontos percentuais nao sao razao. Com ganho_eixo='nenhum', "
+                    "sempre null.")
+    ganho_texto: str = Field(
+        description="A alegacao como o paper a faz, em texto curto, para que o "
+                    "numero seja auditavel ate a frase que o originou. String "
+                    "vazia quando nao ha alegacao.")
+    resumo: str = Field(
+        description="Ate TRES frases, nesta ordem: o que a tecnica substitui, o "
+                    "que ela custa (memoria, latencia, complexidade ou qualidade "
+                    "perdida), e o que quebra se o leitor adotar.")
+    porque: str = Field(description="Uma linha justificando o veredito de pratica")
 
 
 def build_prompt(paper: Paper) -> str:
     return (
-        f"{HARDWARE_BRIEF}\n\n"
+        f"{LEITOR_BRIEF}\n\n"
         f"Paper (arXiv {paper.arxiv_id}):\n"
         f"Titulo: {paper.title}\n"
         f"Resumo: {paper.abstract}\n\n"
-        f"Resuma a tecnica em uma frase e diga se ela roda nessa maquina. "
+        f"Classifique a tecnica numa familia, diga o que o leitor faz com ela, "
+        f"e extraia a alegacao de ganho se houver. No resumo diga o que ela "
+        f"substitui, o que custa, e o que quebra. "
         f"Escreva em portugues, sem emoji, sem adjetivo promocional."
     )
 
 
 def _to_domain(schema: JudgmentSchema) -> Judgment:
-    return Judgment(technique=schema.technique, summary=schema.summary,
-                    runs_on_3090=schema.runs_on_3090, rationale=schema.rationale)
+    return Judgment(
+        technique=schema.technique, familia=schema.familia,
+        pratica=schema.pratica, ganho_eixo=schema.ganho_eixo,
+        ganho_fator=schema.ganho_fator, ganho_texto=schema.ganho_texto,
+        resumo=schema.resumo, porque=schema.porque,
+        # Ponte ate a tarefa 7, que remove `summary` do dominio. Se esta linha
+        # sobreviver, dois campos guardam o mesmo texto para sempre.
+        summary=schema.resumo,
+    )
 
 
 class Judge:
