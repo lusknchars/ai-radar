@@ -19,6 +19,7 @@ from .judge import collect_batch_results, submit_batch, wait_for_batch
 from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
 from .pipeline import run_day
 from .render import compose_day
+from .site import render_site
 from .store import Store
 from .telegram import send
 
@@ -117,6 +118,16 @@ def _executar(args, db_path: Path, today) -> int:
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{today.isoformat()}.md").write_text(markdown, encoding="utf-8")
+
+    if not args.dry_run:
+        # O jornal e o acervo INTEIRO, nao o dia: por isso ele le do banco em
+        # vez de usar os DayResult acima. E por isso tambem que o ensaio a
+        # seco nao o escreve -- ele nao gravou nada no banco de verdade.
+        pagina = args.out.parent / "site"
+        pagina.mkdir(parents=True, exist_ok=True)
+        (pagina / "index.html").write_text(
+            render_site(store.site_data(today)), encoding="utf-8")
+        print(f"jornal: {pagina / 'index.html'}")
 
     if args.dry_run:
         print("dry-run: push nao enviado, nada gravado no banco de verdade")

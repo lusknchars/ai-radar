@@ -269,3 +269,28 @@ def test_nenhum_teste_da_cli_toca_a_rede(ambiente, monkeypatch):
     monkeypatch.setattr(cli.httpx, "get", proibido)
     monkeypatch.setattr(cli.httpx, "post", proibido)
     assert cli.main(argv(ambiente, "--dry-run")) == 0
+
+
+# --- Tarefa 9 do plano do jornal ---
+
+def test_a_execucao_escreve_a_pagina(ambiente, monkeypatch):
+    _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    assert (ambiente / "site" / "index.html").exists()
+
+
+def test_a_pagina_escrita_e_html_completo(ambiente, monkeypatch):
+    _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    html = (ambiente / "site" / "index.html").read_text(encoding="utf-8")
+    assert html.lstrip().startswith("<!doctype html>")
+    assert "</html>" in html
+
+
+def test_o_ensaio_a_seco_nao_escreve_a_pagina(ambiente, monkeypatch):
+    """O dry-run ja nao escreve markdown nem banco; a pagina segue a mesma
+    regra. Publicar no Pages a partir de um ensaio seria efeito duravel de
+    uma execucao que promete nao ter nenhum."""
+    _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente, "--dry-run"))
+    assert not (ambiente / "site").exists()

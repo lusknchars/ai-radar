@@ -12,6 +12,8 @@ on:
 
 permissions:
   contents: write            # necessario para commitar o db e o markdown
+  pages: write               # publicar o jornal
+  id-token: write            # exigido pelo deploy-pages
 
 concurrency:
   group: radar
@@ -62,6 +64,29 @@ jobs:
           # git sair 128 e o passo inteiro falhar -- levando junto o digest
           # que ja tinha sido escrito. `mkdir -p` NAO resolve: cria o
           # diretorio, nao o arquivo. Esta forma estagia o que existir.
-          git add -A -- data radar
+          git add -A -- data radar site
           git diff --staged --quiet || git commit -m "radar: digest de $(date -u +%F)"
           git push
+
+      - name: Empacotar o jornal
+        if: ${{ !cancelled() }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    # Job separado porque `deploy-pages` exige um environment proprio, e
+    # declarar environment no job que faz `git push` prenderia o commit do
+    # digest a uma aprovacao de deploy.
+    needs: run
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
