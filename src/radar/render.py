@@ -22,6 +22,20 @@ class RadarItem:
     delta: dict | None = None
 
 
+def _linha_de_ganho(j: Judgment) -> str | None:
+    """O rotulo NAO e opcional.
+
+    `ganho_fator` e alegacao de abstract, nunca medicao -- nada aqui foi
+    reproduzido. Um numero desses apresentado como resultado seria exatamente
+    o hype de que este projeto existe para fugir. Se um dia nao couber o
+    rotulo, corta-se a linha, nao o rotulo.
+    """
+    if j.ganho_fator is None:
+        return None
+    return (f"ganho {j.ganho_fator:g}x em {j.ganho_eixo} "
+            f"— alegado pelos autores, nao verificado")
+
+
 def _numbers_line(item: RadarItem) -> str:
     if item.delta:
         d = item.delta
@@ -40,10 +54,11 @@ def render_telegram(items: list[RadarItem]) -> str:
     for item in items:
         blocks.append(
             f"[TECNICA] {item.judgment.technique}\n"
-            f"{item.judgment.summary}\n"
+            f"{item.judgment.resumo}\n"
             f"{_numbers_line(item)}\n"
-            f"Roda na 3090: {item.judgment.runs_on_3090.replace('_', ' ')}\n"
-            f"arxiv.org/abs/{item.paper.arxiv_id}"
+            f"Pratica: {item.judgment.pratica.replace('_', ' ')}\n"
+            + (f"{ganho}\n" if (ganho := _linha_de_ganho(item.judgment)) else "")
+            + f"arxiv.org/abs/{item.paper.arxiv_id}"
         )
     return "\n\n".join(blocks)
 
@@ -66,12 +81,15 @@ def render_markdown(
         for rank, item in enumerate(radar, start=1):
             out.append(f"### {rank}. {item.judgment.technique}")
             out.append("")
-            out.append(item.judgment.summary)
+            out.append(item.judgment.resumo)
             out.append("")
             out.append(f"- score: {item.score:.4f}")
             out.append(f"- {_numbers_line(item)}")
-            out.append(f"- roda na 3090: {item.judgment.runs_on_3090} "
-                       f"({item.judgment.rationale})")
+            out.append(f"- familia: {item.judgment.familia}")
+            out.append(f"- pratica: {item.judgment.pratica} "
+                       f"({item.judgment.porque})")
+            if (ganho := _linha_de_ganho(item.judgment)):
+                out.append(f"- {ganho}")
             out.append(f"- arxiv.org/abs/{item.paper.arxiv_id}")
             for repo in repos.get(item.paper.arxiv_id, []):
                 marca = f"autor ({repo['is_author_reason']})" if repo["is_author"] else "independente"
@@ -85,8 +103,8 @@ def render_markdown(
     out.append("")
     if feed:
         for item in feed:
-            out.append(f"- **{item.judgment.technique}** — {item.judgment.summary} "
-                       f"(3090: {item.judgment.runs_on_3090}) "
+            out.append(f"- **{item.judgment.technique}** — {item.judgment.resumo} "
+                       f"({item.judgment.familia} · {item.judgment.pratica}) "
                        f"arxiv.org/abs/{item.paper.arxiv_id}")
     else:
         out.append("Nada novo no escopo hoje.")

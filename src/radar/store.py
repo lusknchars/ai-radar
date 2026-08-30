@@ -229,7 +229,6 @@ class Store:
             pratica=row["pratica"], ganho_eixo=row["ganho_eixo"],
             ganho_fator=row["ganho_fator"], ganho_texto=row["ganho_texto"],
             resumo=row["resumo"], porque=row["porque"],
-            summary=row["resumo"],      # ponte ate a tarefa 7
         )
 
     def papers_por_familia(self) -> dict[str, int]:

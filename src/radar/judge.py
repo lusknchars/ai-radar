@@ -123,9 +123,6 @@ def _to_domain(schema: JudgmentSchema) -> Judgment:
         pratica=schema.pratica, ganho_eixo=schema.ganho_eixo,
         ganho_fator=schema.ganho_fator, ganho_texto=schema.ganho_texto,
         resumo=schema.resumo, porque=schema.porque,
-        # Ponte ate a tarefa 7, que remove `summary` do dominio. Se esta linha
-        # sobreviver, dois campos guardam o mesmo texto para sempre.
-        summary=schema.resumo,
     )
 
 

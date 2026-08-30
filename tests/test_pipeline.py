@@ -24,7 +24,18 @@ def fake_signal(indep, stars, vel=1, cites=0):
 
 
 def judgment(tech="T"):
-    return Judgment(technique=tech, summary="S", runs_on_3090="sim", rationale="R")
+    return Judgment(technique=tech, familia="quantizacao", pratica="testar",
+                    ganho_eixo="nenhum", ganho_fator=None, ganho_texto="",
+                    resumo="S", porque="P")
+
+
+def julg(tech, pratica="testar"):
+    """Julgamento com a pratica escolhida. Substitui as construcoes
+    posicionais `Judgment("FP8", "S", "nao", "R")`, que deixaram de existir
+    quando o dominio perdeu `summary`, `runs_on_3090` e `rationale`."""
+    return Judgment(technique=tech, familia="quantizacao", pratica=pratica,
+                    ganho_eixo="nenhum", ganho_fator=None, ganho_texto="",
+                    resumo="S", porque="P")
 
 
 @pytest.fixture
@@ -320,56 +331,65 @@ def test_empty_day_produces_markdown_but_empty_push(store):
     assert "## Cortes" in result.markdown
 
 
-def test_non_executable_is_demoted_below_executable_with_lower_score(store):
-    """Paper de FP8 nao roda em Ampere. Mesmo com score maior, entra depois."""
+def test_nao_acionavel_e_rebaixado_abaixo_de_acionavel_com_score_menor(store):
+    """Traducao da regra "executavel primeiro" para o eixo de pratica.
+
+    Antes media hardware (`runs_on_3090 != "nao"`); agora mede aplicabilidade.
+    Um paper que o leitor nao pode usar hoje nao consome uma das tres vagas
+    competindo de igual para igual com um que ele pode.
+    """
     papers = [paper("2508.00001"), paper("2508.00002")]
     signals = {"2508.00001": fake_signal(9, 10),    # score ALTO, mas nao roda
                "2508.00002": fake_signal(2, 40)}    # score menor, roda
     result = run(store, papers, signals, judgments={
-        "2508.00001": Judgment("FP8", "S", "nao", "R"),
-        "2508.00002": Judgment("INT4", "S", "sim", "R"),
+        "2508.00001": julg("FP8", pratica="nao_aplica"),
+        "2508.00002": julg("INT4", pratica="adotar"),
     })
     assert [i.paper.arxiv_id for i in result.radar] == ["2508.00002", "2508.00001"]
 
 
-def test_non_executable_is_dropped_when_executables_fill_the_cap(store):
+def test_nao_acionavel_cai_quando_os_acionaveis_enchem_o_teto(store):
     papers = [paper(f"2508.0000{i}") for i in range(4)]
     signals = {p.arxiv_id: fake_signal(4, 20) for p in papers}
-    judgments = {p.arxiv_id: Judgment("T", "S", "sim", "R") for p in papers[:3]}
-    judgments["2508.00003"] = Judgment("FP8", "S", "nao", "R")
+    judgments = {p.arxiv_id: julg("T", pratica="adotar") for p in papers[:3]}
+    judgments["2508.00003"] = julg("FP8", pratica="nao_aplica")
     result = run(store, papers, signals, judgments=judgments)
     assert len(result.radar) == 3
     assert "2508.00003" not in [i.paper.arxiv_id for i in result.radar]
 
 
-def test_non_executable_still_enters_when_a_slot_remains(store):
+def test_nao_acionavel_ainda_entra_quando_sobra_vaga(store):
     papers = [paper("2508.00001"), paper("2508.00002")]
     signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
     result = run(store, papers, signals, judgments={
-        "2508.00001": Judgment("T", "S", "sim", "R"),
-        "2508.00002": Judgment("FP8", "S", "nao", "R"),
+        "2508.00001": julg("T", pratica="adotar"),
+        "2508.00002": julg("FP8", pratica="nao_aplica"),
     })
     assert len(result.radar) == 2
 
 
-def test_sim_com_ressalva_ranks_as_executable(store):
-    """Ressalva nao e recusa: continua na frente do que nao roda."""
+def test_testar_conta_como_acionavel_junto_com_adotar(store):
+    """`testar` nao e `observar`: continua na frente do nao acionavel.
+
+    Sucessor de `test_sim_com_ressalva_ranks_as_executable`, que fazia a mesma
+    afirmacao no eixo de hardware -- "ressalva nao e recusa".
+    """
     papers = [paper("2508.00001"), paper("2508.00002")]
     signals = {"2508.00001": fake_signal(9, 10),    # score maior, nao roda
                "2508.00002": fake_signal(2, 40)}    # score menor, com ressalva
     result = run(store, papers, signals, judgments={
-        "2508.00001": Judgment("FP8", "S", "nao", "R"),
-        "2508.00002": Judgment("INT4", "S", "sim_com_ressalva", "R"),
+        "2508.00001": julg("FP8", pratica="observar"),
+        "2508.00002": julg("INT4", pratica="testar"),
     })
     assert result.radar[0].paper.arxiv_id == "2508.00002"
 
 
-def test_non_executable_always_reaches_the_feed(store):
+def test_nao_acionavel_sempre_chega_ao_feed(store):
     """Rebaixar afeta o push, nunca o arquivo."""
     papers = [paper(f"2508.0000{i}") for i in range(4)]
     signals = {p.arxiv_id: fake_signal(4, 20) for p in papers}
-    judgments = {p.arxiv_id: Judgment("T", "S", "sim", "R") for p in papers[:3]}
-    judgments["2508.00003"] = Judgment("FP8", "S", "nao", "R")
+    judgments = {p.arxiv_id: julg("T", pratica="adotar") for p in papers[:3]}
+    judgments["2508.00003"] = julg("FP8", pratica="nao_aplica")
     result = run(store, papers, signals, judgments=judgments)
     assert "2508.00003" in [i.paper.arxiv_id for i in result.feed]
 

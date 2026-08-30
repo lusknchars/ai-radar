@@ -5,9 +5,11 @@ from radar.render import RadarItem, render_markdown, render_telegram
 
 P = Paper(arxiv_id="2508.11111", title="Fused INT4 Kernels", abstract="A",
           authors=["A B"], categories=["cs.LG"], published="2026-08-20")
-J = Judgment(technique="Kernel INT4 fundido",
-             summary="Satura banda de memoria em batch unitario.",
-             runs_on_3090="sim", rationale="INT4 roda nativo em Ampere.")
+J = Judgment(technique="Kernel INT4 fundido", familia="quantizacao",
+             pratica="testar", ganho_eixo="velocidade", ganho_fator=2.3,
+             ganho_texto="2.3x sobre o kernel FP16",
+             resumo="Satura banda de memoria em batch unitario.",
+             porque="Roda em infra pequena; o ganho depende do modelo.")
 
 
 def item(score=0.53, delta=None, judgment=J, paper=P):
@@ -20,12 +22,12 @@ def test_telegram_output_has_no_emoji():
     assert all(ord(c) < 0x2190 for c in text), "push do Telegram nao leva emoji"
 
 
-def test_telegram_shows_technique_summary_numbers_and_verdict():
+def test_telegram_shows_technique_resumo_numbers_and_pratica():
     text = render_telegram([item()])
     assert "Kernel INT4 fundido" in text
     assert "Satura banda" in text
     assert "4 impls independentes" in text
-    assert "Roda na 3090: sim" in text
+    assert "Pratica: testar" in text
     assert "arxiv.org/abs/2508.11111" in text
 
 
@@ -86,17 +88,19 @@ def test_markdown_includes_the_full_feed_with_verdicts():
                                  authors=[], categories=["cs.LG"], published="2026-08-21"))
     md = render_markdown("2026-08-27", radar=[], feed=[feed_item], cuts={})
     assert ("- **Kernel INT4 fundido** — Satura banda de memoria em batch unitario. "
-            "(3090: sim) arxiv.org/abs/2508.99999") in md
+            "(quantizacao · testar) arxiv.org/abs/2508.99999") in md
 
 
 def test_markdown_feed_carries_the_verdict_of_each_item():
     """Contraprova: o veredito renderizado e o do item, nao um literal fixo."""
-    nao_roda = Judgment(technique="Kernel FP8", summary="Depende de FP8.",
-                        runs_on_3090="nao", rationale="Ampere nao tem FP8.")
+    fora = Judgment(technique="Kernel FP8", familia="kernels_e_atencao",
+                    pratica="nao_aplica", ganho_eixo="nenhum", ganho_fator=None,
+                    ganho_texto="", resumo="Depende de FP8.",
+                    porque="Fora do que o leitor faz.")
     md = render_markdown("2026-08-27", radar=[], cuts={},
-                         feed=[item(judgment=nao_roda)])
-    assert "(3090: nao)" in md
-    assert "(3090: sim)" not in md
+                         feed=[item(judgment=fora)])
+    assert "nao_aplica" in md
+    assert "· testar)" not in md
 
 
 def test_recheck_section_lists_only_what_moved():
@@ -128,3 +132,39 @@ def test_recheck_section_shows_the_current_score():
     md = render_markdown("2026-08-27", radar=[], feed=[], cuts={},
                          rechecked=[mexeu], rechecked_total=5)
     assert "score 0.4032" in md
+
+
+# --- Tarefa 7 do plano do segundo escopo ---
+
+def test_o_item_mostra_a_pratica_e_nao_o_hardware():
+    saida = render_markdown("2026-08-29", [item()], [], {})
+    assert "testar" in saida
+    assert "3090" not in saida
+
+
+def test_o_ganho_alegado_aparece_rotulado_como_alegado():
+    """O rotulo e inegociavel: numero de abstract apresentado como medicao e
+    exatamente o hype de que este projeto existe para fugir."""
+    saida = render_markdown("2026-08-29", [item()], [], {})
+    assert "2.3" in saida
+    assert "alegado" in saida.lower()
+
+
+def test_sem_ganho_nao_ha_rotulo_de_alegacao():
+    j = Judgment(technique="T", familia="outro", pratica="observar",
+                 ganho_eixo="nenhum", ganho_fator=None, ganho_texto="",
+                 resumo="R", porque="P")
+    saida = render_markdown("2026-08-29", [item(judgment=j)], [], {})
+    assert "alegado" not in saida.lower()
+
+
+def test_julgamento_sem_familia_e_recusado_na_construcao():
+    """Os defaults temporarios das tarefas 4 a 6 caem aqui.
+
+    Enquanto existiam, `Judgment(technique="t")` produzia um julgamento com
+    familia 'outro' e pratica 'observar' sem ninguem ter decidido isso. A
+    auto-revisao do plano marcou esta como a divida mais provavel de
+    sobreviver; este teste e o que a mata.
+    """
+    with pytest.raises(TypeError):
+        Judgment(technique="so o rotulo")

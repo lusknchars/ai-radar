@@ -10,8 +10,9 @@ from radar.models import Discovery, Judgment, Paper, Signal
 
 PAPER = Paper(arxiv_id="2508.11111", title="Fused INT4 Kernels", abstract="A",
               authors=["A B"], categories=["cs.LG"], published="2026-08-20")
-JUDGMENT = Judgment(technique="Kernel INT4", summary="S", runs_on_3090="sim",
-                    rationale="R")
+JUDGMENT = Judgment(technique="Kernel INT4", familia="quantizacao",
+                    pratica="testar", ganho_eixo="nenhum", ganho_fator=None,
+                    ganho_texto="", resumo="S", porque="P")
 
 
 class FakeArxiv:

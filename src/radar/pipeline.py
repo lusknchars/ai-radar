@@ -11,7 +11,7 @@ from datetime import date
 from typing import Callable
 
 from .config import PUSH_CAP, ScopeConfig, Thresholds
-from .models import Discovery, Judgment, Paper, RepoClassification, Signal
+from .models import ACIONAVEIS, Discovery, Judgment, Paper, RepoClassification, Signal
 from .render import RadarItem, render_markdown, render_telegram
 from .scoring import evaluate
 from .store import Store
@@ -219,13 +219,20 @@ def run_day(
             candidates.append((item, True, e_novo, mexeu))
 
     # Ordem: executavel na 3090 primeiro, score depois. Sem isso, um paper que
-    # depende de FP8 -- inexecutavel em Ampere por definicao -- consome uma das
-    # tres vagas competindo de igual para igual com o que voce pode testar hoje.
-    # Rebaixar preserva a visao periferica sem deixar o inexecutavel disputar
-    # espaco com o acionavel. Afeta o push apenas; o markdown leva todos.
+    # Traducao da regra "executavel primeiro" da spec original, que ordenava
+    # por `runs_on_3090 != "nao"`. Com o eixo de hardware removido, acionavel
+    # passa a ser `adotar` + `testar`: o que o leitor pode usar hoje com infra
+    # pequena. `observar` exige escala que ele nao tem e `nao_aplica` esta fora
+    # do que ele faz -- os dois consumiriam uma das tres vagas competindo de
+    # igual para igual com o acionavel.
+    #
+    # A ordenacao continua BINARIA de proposito: o score decide dentro do
+    # nivel, como decidia antes. Uma ordem de quatro niveis faria um `testar`
+    # de score alto perder para um `adotar` de score baixo, que e mudanca de
+    # comportamento e nao traducao. Afeta o push apenas; o markdown leva todos.
     eligible = sorted(
         (i for i, ok, _, _ in candidates if ok),
-        key=lambda i: (i.judgment.runs_on_3090 != "nao", i.score),
+        key=lambda i: (i.judgment.pratica in ACIONAVEIS, i.score),
         reverse=True,
     )
     # Fatiado por PUSH_CAP, a mesma constante que o render usa como guarda.

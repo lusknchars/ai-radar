@@ -4,8 +4,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-VALID_VERDICTS = frozenset({"sim", "sim_com_ressalva", "nao"})
-
 # Fechado por decisao de produto. O seed de 2026-08-29 produziu 1088 valores
 # distintos de `technique` para 1088 papers: uma taxonomia com N categorias
 # para N itens nao agrega nada, e agregacao e a razao de existir do acervo.
@@ -29,6 +27,12 @@ FAMILIAS = frozenset({
 })
 
 PRATICAS = frozenset({"adotar", "testar", "observar", "nao_aplica"})
+
+# O que o leitor pode usar HOJE, com infra pequena. Traduz a regra "executavel
+# primeiro" da spec original, que media hardware; agora mede aplicabilidade.
+# `observar` exige escala que ele nao tem, `nao_aplica` esta fora do que faz --
+# nenhum deve disputar uma das tres vagas do push com o acionavel.
+ACIONAVEIS = frozenset({"adotar", "testar"})
 GANHO_EIXOS = frozenset({"velocidade", "memoria", "custo", "qualidade", "nenhum"})
 _VERSIONED = re.compile(r"v\d+$")
 
@@ -113,27 +117,15 @@ class ScoreResult:
 @dataclass(frozen=True)
 class Judgment:
     technique: str
-    # Os campos abaixo entram com default na tarefa 4 e PERDEM o default na
-    # tarefa 7. E o que mantem a suite verde enquanto judge, store e render
-    # migram um por vez. Se estes defaults sobreviverem a tarefa 7, o plano
-    # falhou -- eles permitiriam julgamento sem familia chegar ao banco.
-    summary: str = ""                        # morre na tarefa 7
-    runs_on_3090: str = "sim_com_ressalva"   # morre na tarefa 7
-    rationale: str = ""                      # morre na tarefa 7
-    familia: str = "outro"
-    pratica: str = "observar"
-    ganho_eixo: str = "nenhum"
-    ganho_fator: float | None = None
-    ganho_texto: str = ""
-    resumo: str = ""
-    porque: str = ""
+    familia: str
+    pratica: str
+    ganho_eixo: str
+    ganho_fator: float | None
+    ganho_texto: str
+    resumo: str
+    porque: str
 
     def __post_init__(self) -> None:
-        if self.runs_on_3090 not in VALID_VERDICTS:
-            raise ValueError(
-                f"runs_on_3090={self.runs_on_3090!r} invalido; "
-                f"use um de {sorted(VALID_VERDICTS)}"
-            )
         if self.familia not in FAMILIAS:
             raise ValueError(
                 f"familia={self.familia!r} fora da taxonomia; "

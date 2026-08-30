@@ -73,16 +73,6 @@ def test_signal_defaults_citations_to_unknown():
     assert s.citations is None
 
 
-def test_judgment_rejects_unknown_verdict():
-    with pytest.raises(ValueError, match="runs_on_3090"):
-        Judgment(technique="T", summary="S", runs_on_3090="talvez", rationale="R")
-
-
-def test_judgment_accepts_the_three_valid_verdicts():
-    for verdict in ("sim", "sim_com_ressalva", "nao"):
-        j = Judgment(technique="T", summary="S", runs_on_3090=verdict, rationale="R")
-        assert j.runs_on_3090 == verdict
-
 
 def test_thresholds_come_from_env_with_documented_defaults(monkeypatch):
     monkeypatch.delenv("RADAR_BROKE_OUT_STARS", raising=False)
