@@ -129,3 +129,78 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
 
     partes.append("</svg>")
     return "".join(partes)
+
+
+# O avanco alegado. Escala log no y porque fatores de ganho variam por ordens
+# de grandeza: 1.2x e 40x no mesmo eixo linear achatam tudo perto de zero.
+AVANCO_L, AVANCO_A = 860, 400
+MIN_PARA_MEDIANA = 5
+
+
+def _trimestre(publicado: str) -> str:
+    ano, mes = publicado[:4], int(publicado[5:7])
+    return f"{ano}-T{(mes - 1) // 3 + 1}"
+
+
+def render_avanco(pontos: list[Ponto], cores: dict[str, str]) -> str:
+    """Ganho alegado ao longo do tempo, por familia.
+
+    ATENCAO, e a regra mais importante da pagina: `ganho_fator` e ALEGACAO
+    extraida do resumo, nunca medicao -- nada aqui foi reproduzido. Quem chama
+    esta funcao e obrigado a exibir o rotulo de nao-verificado junto. Se nao
+    couber o rotulo, corta-se o grafico, nao o rotulo.
+    """
+    from math import log10
+
+    com_fator = [p for p in pontos if p.ganho_fator is not None]
+    for p in com_fator:
+        if p.ganho_fator <= 0:
+            # Explodir alto em vez de gerar coordenada NaN: um SVG com NaN
+            # desenha errado em silencio, que e pior que nao desenhar.
+            raise ValueError(
+                f"ganho_fator={p.ganho_fator!r} em {p.arxiv_id}: a escala log "
+                f"exige fator > 0"
+            )
+
+    partes = [f'<svg class="avanco" viewBox="0 0 {AVANCO_L} {AVANCO_A}" '
+              f'role="img" aria-label="ganho alegado ao longo do tempo">']
+    if com_fator:
+        meses = sorted({p.publicado[:7] for p in com_fator})
+        idx = {m: i for i, m in enumerate(meses)}
+        max_log = max(log10(p.ganho_fator) for p in com_fator) or 1.0
+
+        def coord(p):
+            x = projetar(idx[p.publicado[:7]], max(len(meses) - 1, 1),
+                         AVANCO_L, PAD)
+            y = projetar(max(log10(p.ganho_fator), 0.0), max_log,
+                         AVANCO_A, PAD, inverter=True)
+            return x, y
+
+        for p in com_fator:
+            x, y = coord(p)
+            partes.append(
+                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" '
+                f'fill="{cores.get(p.familia, "currentColor")}" opacity="0.75">'
+                f"<title>{escape(p.titulo)}: {p.ganho_fator:g}x em "
+                f"{escape(p.ganho_eixo)} (alegado)</title></circle>"
+            )
+
+        # Mediana por familia por trimestre, e SO onde houver massa: abaixo de
+        # cinco papers a mediana e ruido com aparencia de tendencia, e uma
+        # linha num grafico le como afirmacao.
+        grupos: dict[tuple[str, str], list] = {}
+        for p in com_fator:
+            grupos.setdefault((p.familia, _trimestre(p.publicado)), []).append(p)
+        for (familia, _tri), grupo in sorted(grupos.items()):
+            if len(grupo) < MIN_PARA_MEDIANA:
+                continue
+            xs = sorted(coord(p)[0] for p in grupo)
+            ys = sorted(coord(p)[1] for p in grupo)
+            partes.append(
+                f'<line class="mediana" x1="{xs[0]:.1f}" x2="{xs[-1]:.1f}" '
+                f'y1="{ys[len(ys) // 2]:.1f}" y2="{ys[len(ys) // 2]:.1f}" '
+                f'stroke="{cores.get(familia, "currentColor")}" '
+                f'stroke-width="2" opacity="0.6"/>'
+            )
+    partes.append("</svg>")
+    return "".join(partes)

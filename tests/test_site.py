@@ -152,3 +152,41 @@ def test_o_js_e_inline_e_nao_carrega_nada(dados):
     html = render_site(dados)
     assert "<script>" in html
     assert "<script src" not in html
+
+
+# --- Tarefa 6: a seção de avanço na página ---
+
+def _acervo(pontos, **kw):
+    base = dict(dia="2026-08-30", cortes={}, rechecked_total=0)
+    return SiteData(pontos=list(pontos), **{**base, **kw})
+
+
+@pytest.fixture
+def dados_ganho_ralo():
+    # 1 de 10 tem fator: 10%, bem abaixo do piso de 35%.
+    com = [ponto(ganho_fator=2.0)]
+    sem = [ponto(arxiv_id=f"26{i}", ganho_fator=None, ganho_eixo="nenhum")
+           for i in range(9)]
+    return _acervo(com + sem)
+
+
+def test_todo_ganho_visivel_carrega_o_rotulo(dados):
+    """Inegociavel: numero de abstract apresentado como medicao e exatamente
+    o hype de que este projeto existe para fugir. Se nao couber o rotulo,
+    corta-se o grafico, nao o rotulo."""
+    assert "alegado pelos autores, não verificado" in render_site(dados)
+
+
+def test_a_secao_some_com_cobertura_abaixo_de_35_por_cento(dados_ganho_ralo):
+    """Grafico sobre dado ralo e pior que grafico ausente."""
+    assert dados_ganho_ralo.cobertura_de_ganho < 0.35
+    assert "avanço alegado" not in render_site(dados_ganho_ralo).lower()
+
+
+def test_sem_secao_de_avanco_nao_ha_rotulo_orfao(dados_ganho_ralo):
+    assert "alegado pelos autores" not in render_site(dados_ganho_ralo)
+
+
+def test_com_cobertura_suficiente_a_secao_aparece(dados):
+    assert dados.cobertura_de_ganho >= 0.35
+    assert "avanço alegado" in render_site(dados).lower()

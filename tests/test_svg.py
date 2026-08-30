@@ -153,3 +153,45 @@ def test_os_meses_saem_em_ordem_cronologica():
     s = {"a": {"2026-09": 1, "2026-07": 9, "2026-08": 5}}
     alturas = _alturas(render_pequenos_multiplos(s, ["a"], {}))
     assert alturas == sorted(alturas, reverse=True)   # 9, 5, 1
+
+
+# --- Tarefa 6: o avanço alegado ---
+
+from radar.svg import render_avanco                              # noqa: E402
+
+
+def pa(fator, mes="2026-07", familia="cache_kv"):
+    return ponto(ganho_fator=fator, publicado=f"{mes}-01", familia=familia,
+                 ganho_eixo="velocidade" if fator else "nenhum")
+
+
+def test_a_escala_log_recusa_fator_nao_positivo():
+    """Um zero aqui viraria coordenada NaN no SVG, e o grafico sairia
+    silenciosamente errado em vez de quebrar alto."""
+    for ruim in (0.0, -1.0):
+        with pytest.raises(ValueError, match="fator"):
+            render_avanco([ponto(ganho_fator=ruim)], CORES)
+
+
+def test_papers_sem_fator_sao_ignorados_e_nao_zerados():
+    svg = render_avanco([pa(2.0), pa(None), pa(None)], CORES)
+    assert svg.count("<circle") == 1
+
+
+def test_a_mediana_trimestral_exige_cinco_papers():
+    """Abaixo de cinco a mediana e ruido com aparencia de tendencia."""
+    quatro = [pa(2.0) for _ in range(4)]
+    assert 'class="mediana"' not in render_avanco(quatro, CORES)
+    assert 'class="mediana"' in render_avanco(quatro + [pa(2.0)], CORES)
+
+
+def test_a_mediana_conta_por_familia_e_por_trimestre():
+    # Cinco no mesmo trimestre mas em familias diferentes nao formam mediana.
+    misto = [pa(2.0, familia=f) for f in
+             ("cache_kv", "outro", "quantizacao", "destilacao", "cache_kv")]
+    assert 'class="mediana"' not in render_avanco(misto, CORES)
+
+
+def test_avanco_vazio_gera_svg_valido():
+    svg = render_avanco([], CORES)
+    assert svg.startswith("<svg") and svg.rstrip().endswith("</svg>")

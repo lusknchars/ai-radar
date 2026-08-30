@@ -12,7 +12,7 @@ from html import escape
 
 from .site_data import SiteData
 from .config import load_thresholds
-from .svg import METRICAS_X, render_scatter
+from .svg import METRICAS_X, render_avanco, render_scatter
 
 # Cor significa familia, e SO. Em nenhum grafico ela codifica outra coisa.
 # As matizes agrupam por escopo -- frios para inferencia, quentes para
@@ -172,6 +172,28 @@ def _secao_fronteira(d: SiteData) -> str:
     return botoes and f'<div class="eixos">{botoes}</div>{graficos}{_legenda(d)}{nota}'
 
 
+# Abaixo disso a secao de avanco nao e construida: grafico sobre dado ralo e
+# pior que grafico ausente. Ver spec do jornal, secao 3.4.
+COBERTURA_MINIMA = 0.35
+
+ROTULO_ALEGACAO = "alegado pelos autores, não verificado"
+
+
+def _secao_avanco(d: SiteData) -> str:
+    """Devolve string vazia quando o dado nao sustenta o grafico.
+
+    O chamador precisa omitir a SECAO INTEIRA nesse caso -- titulo e subtitulo
+    incluidos -- para nao sobrar rotulo orfao nem promessa vazia.
+    """
+    if d.cobertura_de_ganho < COBERTURA_MINIMA:
+        return ""
+    com = sum(1 for p in d.pontos if p.ganho_fator is not None)
+    return (render_avanco(d.pontos, CORES_FAMILIA) + _legenda(d)
+            + f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
+              f"quantificado. Escala logarítmica; a linha por família só "
+              f"aparece com pelo menos cinco papers no trimestre.</p>")
+
+
 def _pendente(qual: str) -> str:
     """Marcador das secoes que as tarefas 5 a 8 preenchem.
 
@@ -192,10 +214,10 @@ def render_site(dados: SiteData) -> str:
                    "foi olhado. A região interessante é o alto à esquerda: "
                    "muita gente construindo, pouca gente olhando.",
                    _secao_fronteira(dados)),
-            _secao("O avanço alegado",
-                   "Ganho declarado no resumo, por família, ao longo do tempo. "
-                   "Alegado pelos autores, não verificado.",
-                   _pendente("gráfico condicional à cobertura do dado")),
+            (_secao("O avanço alegado",
+                    "Ganho declarado no resumo, por família, ao longo do tempo "
+                    f"— {ROTULO_ALEGACAO}.",
+                    avanco) if (avanco := _secao_avanco(dados)) else ""),
             _secao("As famílias no tempo",
                    "Volume por família, mês a mês, em escala compartilhada.",
                    _pendente("pequenos múltiplos")),
