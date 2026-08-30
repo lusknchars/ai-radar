@@ -36,6 +36,11 @@ class SiteData:
     dia: str
     cortes: dict[str, int]
     rechecked_total: int
+    # Historico de coleta. Existem para a frase de movimento do bloco de
+    # leitura, e default 0 mantem todo construtor existente valido -- quem os
+    # preenche e o `store`, explicitamente.
+    dias_de_coleta: int = 0
+    papers_que_moveram: int = 0
     repos_do_destaque: list[dict] = field(default_factory=list)
 
     @property

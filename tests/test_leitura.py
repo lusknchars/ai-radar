@@ -60,3 +60,136 @@ def test_a_leitura_nao_faz_io():
     fonte = open(m.__file__, encoding="utf-8").read()
     for proibido in ("import sqlite3", "import httpx", "import anthropic"):
         assert proibido not in fonte
+
+
+# --- Tarefas 2 a 6: as afirmações ---
+
+@pytest.fixture
+def acervo_grande():
+    """1000 papers com sinal suficiente para as guardas de concentração."""
+    return acervo_de(
+        [ponto(arxiv_id=f"z{i}") for i in range(700)]
+        + [ponto(arxiv_id=f"o{i}", familia="outro") for i in range(94)]
+        # As tres familias com sinal sao calibradas para que NENHUMA passe
+        # de metade sozinha e DUAS passem juntas -- e o caso que o teste do
+        # "menor conjunto" precisa exercitar. Uma familia dominante faria o
+        # teste passar sem provar nada sobre o acumulo.
+        + [ponto(arxiv_id=f"q{i}", familia="quantizacao", independent_impls=2,
+                 stars_total=5, ganho_eixo="velocidade", ganho_fator=2.0)
+           for i in range(100)]                      # 200
+        + [ponto(arxiv_id=f"k{i}", familia="cache_kv", independent_impls=3,
+                 stars_total=3) for i in range(60)]  # 180
+        + [ponto(arxiv_id=f"s{i}", familia="serving_e_batching",
+                 independent_impls=2, stars_total=8) for i in range(46)])  # 92
+
+
+def test_a_escassez_traz_contagem_e_denominador(acervo):
+    a = _so(afirmacoes(acervo), "não têm")
+    assert "3 de 5" in a.texto
+    assert "60%" in a.texto
+
+
+def test_a_escassez_sai_mesmo_quando_e_cem_por_cento():
+    assert _so(afirmacoes(acervo_de([ponto()])), "não têm") is not None
+
+
+def test_a_escassez_sai_mesmo_quando_e_zero():
+    a = _so(afirmacoes(acervo_de([ponto(independent_impls=1)])), "não têm")
+    assert "0 de 1" in a.texto
+
+
+def test_a_escassez_vem_primeiro(acervo):
+    assert "não têm" in afirmacoes(acervo)[0].texto
+
+
+def test_a_fronteira_conta_quem_tem_impl_e_nao_tem_atencao():
+    d = acervo_de([ponto(arxiv_id="a", independent_impls=3, stars_total=2),
+                   ponto(arxiv_id="b", independent_impls=5, stars_total=9),
+                   ponto(arxiv_id="c", independent_impls=3, stars_total=50)])
+    assert "2 papers" in _so(afirmacoes(d), "fronteira").texto
+
+
+def test_a_fronteira_e_omitida_quando_ninguem_qualifica(acervo):
+    """Guarda que não passa OMITE. "0 papers estão na fronteira" é ruído;
+    a ausência da frase já diz."""
+    assert _so(afirmacoes(acervo), "fronteira") is None
+
+
+def test_a_fronteira_exclui_quem_ja_tem_estrelas():
+    d = acervo_de([ponto(independent_impls=9, stars_total=500)])
+    assert _so(afirmacoes(d), "fronteira") is None
+
+
+def test_a_fronteira_carrega_o_filtro_que_a_reproduz():
+    d = acervo_de([ponto(independent_impls=3, stars_total=0)])
+    assert _so(afirmacoes(d), "fronteira").filtro == {"ordenar": "impls"}
+
+
+def test_a_concentracao_nomeia_o_menor_conjunto_acima_de_metade(acervo_grande):
+    a = _so(afirmacoes(acervo_grande), "concentram")
+    assert "2 famílias" in a.texto
+    assert "cache_kv" in a.texto and "quantizacao" in a.texto
+
+
+def test_a_concentracao_e_omitida_em_acervo_pequeno():
+    """99 papers com MUITA implementação: a guarda de tamanho reprova sozinha."""
+    d = acervo_de([ponto(arxiv_id=f"p{i}", independent_impls=9)
+                   for i in range(99)])
+    assert _so(afirmacoes(d), "concentram") is None
+
+
+def test_a_concentracao_e_omitida_com_poucas_implementacoes():
+    """200 papers e 49 implementações: as guardas são conjuntivas."""
+    d = acervo_de([ponto(arxiv_id=f"p{i}") for i in range(199)]
+                  + [ponto(arxiv_id="x", independent_impls=49)])
+    assert _so(afirmacoes(d), "concentram") is None
+
+
+def test_a_concentracao_carrega_um_filtro_de_familia(acervo_grande):
+    a = _so(afirmacoes(acervo_grande), "concentram")
+    assert a.filtro["familia"] in ("cache_kv", "quantizacao")
+
+
+def test_a_cobertura_traz_contagem_denominador_e_o_rotulo(acervo):
+    a = _so(afirmacoes(acervo), "ganho quantificado")
+    assert "1 de 5" in a.texto
+    assert "alegado" in a.texto.lower()
+
+
+def test_a_cobertura_sai_mesmo_com_zero():
+    assert _so(afirmacoes(acervo_de([ponto()])), "ganho quantificado") is not None
+
+
+def test_a_taxonomia_reporta_a_taxa_de_outro(acervo):
+    assert "1 de 5" in _so(afirmacoes(acervo), "'outro'").texto
+
+
+def test_a_taxonomia_traz_denominador_proprio_e_nao_por_acidente(acervo):
+    """A redação do plano passava no teste de denominador pelo " das " de
+    "nenhuma das dezoito famílias" — coincidência, não contrato."""
+    import re
+    assert re.search(r"\d+ de \d+ papers", _so(afirmacoes(acervo), "'outro'").texto)
+
+
+def test_a_taxonomia_sai_mesmo_sem_nenhum_outro():
+    d = acervo_de([ponto(arxiv_id=f"p{i}") for i in range(5)])
+    assert "0 de 5 papers" in _so(afirmacoes(d), "'outro'").texto
+
+
+def test_o_movimento_e_omitido_sem_historico(acervo_grande):
+    assert _so(afirmacoes(acervo_grande), "ganharam implementação") is None
+
+
+def test_o_movimento_e_omitido_com_menos_de_trinta_dias():
+    d = acervo_de([ponto()], dias_de_coleta=29, papers_que_moveram=5)
+    assert _so(afirmacoes(d), "ganharam implementação") is None
+
+
+def test_o_movimento_e_omitido_quando_ninguem_moveu():
+    d = acervo_de([ponto()], dias_de_coleta=60, papers_que_moveram=0)
+    assert _so(afirmacoes(d), "ganharam implementação") is None
+
+
+def test_o_movimento_aparece_com_historico():
+    d = acervo_de([ponto()], dias_de_coleta=30, papers_que_moveram=2)
+    assert "2 papers" in _so(afirmacoes(d), "ganharam implementação").texto
