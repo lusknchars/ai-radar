@@ -246,6 +246,55 @@ class Store:
         """)
         return {familia: n for familia, n in linhas}
 
+    def site_data(self, hoje):
+        """Monta o `SiteData` do acervo inteiro.
+
+        `hoje` entra por argumento e nao de `date.today()`: o relogio dentro
+        da leitura faria o teste mudar de resultado todo dia, e a pagina
+        mentir sobre idade quando gerada com atraso.
+
+        Papers sem julgamento nao viram ponto -- nao ha o que agrupar nem o
+        que desenhar. Julgamento e sinal sao sempre os MAIS RECENTES.
+        """
+        from datetime import date as _date
+
+        from .site_data import Ponto, SiteData
+
+        linhas = self._conn.execute("""
+            SELECT p.arxiv_id, p.title, p.published, p.scope,
+                   j.familia, j.pratica, j.ganho_eixo, j.ganho_fator,
+                   j.ganho_texto, j.resumo,
+                   s.independent_impls, s.total_impls, s.stars_total,
+                   s.citations, s.score
+              FROM papers p
+              JOIN judgments j ON j.arxiv_id = p.arxiv_id
+              JOIN (SELECT arxiv_id, MAX(judged_at) m FROM judgments
+                    GROUP BY arxiv_id) uj
+                ON uj.arxiv_id = j.arxiv_id AND uj.m = j.judged_at
+              JOIN signals s ON s.arxiv_id = p.arxiv_id
+              JOIN (SELECT arxiv_id, MAX(checked_at) m FROM signals
+                    GROUP BY arxiv_id) us
+                ON us.arxiv_id = s.arxiv_id AND us.m = s.checked_at
+        """)
+
+        pontos = []
+        for r in linhas:
+            publicado = _date.fromisoformat(r["published"][:10])
+            pontos.append(Ponto(
+                arxiv_id=r["arxiv_id"], titulo=r["title"],
+                familia=r["familia"], pratica=r["pratica"],
+                independent_impls=r["independent_impls"],
+                total_impls=r["total_impls"], stars_total=r["stars_total"],
+                citations=r["citations"],
+                idade_dias=(hoje - publicado).days,
+                ganho_eixo=r["ganho_eixo"], ganho_fator=r["ganho_fator"],
+                ganho_texto=r["ganho_texto"], resumo=r["resumo"],
+                publicado=r["published"], score=r["score"] or 0.0,
+                scope=r["scope"],
+            ))
+        return SiteData(pontos=pontos, dia=hoje.isoformat(),
+                        cortes={}, rechecked_total=0)
+
     # ---------- deliveries ----------
 
     def mark_delivered(self, arxiv_id: str, channel: str, at: str, rank: int | None) -> None:
