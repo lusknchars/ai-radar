@@ -48,17 +48,72 @@ _JS = """
 // Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
 // troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
 // atributo `hidden` mora no HTML e nao num `display:none` de CSS.
-// Filtro da tabela: `hidden` em linha, sem estado e sem URL.
+// Filtro, busca e contagem. Tudo sobre `hidden` em linha: sem estado, sem
+// URL, sem framework. A contagem existe porque um filtro que devolve pouco e
+// indistinguivel de um filtro quebrado sem ela.
 var filtros = {};
+var busca = '';
+var corpo = document.querySelector('tbody');
+var contador = document.getElementById('contador');
+
+function aplicar(){
+  var linhas = document.querySelectorAll('.linha'), n = 0;
+  linhas.forEach(function(tr){
+    var passa = Object.keys(filtros).every(function(k){
+      return !filtros[k] || tr.getAttribute('data-' + k) === filtros[k];
+    }) && (!busca || tr.getAttribute('data-texto').indexOf(busca) !== -1);
+    tr.hidden = !passa;
+    if (passa) n++;
+  });
+  if (contador) contador.textContent = n + ' de ' + linhas.length;
+}
+
 document.querySelectorAll('[data-filtro]').forEach(function(s){
   s.addEventListener('change', function(){
     filtros[s.getAttribute('data-filtro')] = s.value;
-    document.querySelectorAll('.linha').forEach(function(tr){
-      var mostra = Object.keys(filtros).every(function(k){
-        return !filtros[k] || tr.getAttribute('data-' + k) === filtros[k];
-      });
-      tr.hidden = !mostra;
+    aplicar();
+  });
+});
+
+var campo = document.querySelector('[data-busca]');
+if (campo) campo.addEventListener('input', function(){
+  busca = campo.value.trim().toLowerCase();
+  aplicar();
+});
+
+// Ordenacao por ATRIBUTO, nunca pelo texto da celula: "\u2014" e "2.3x" nao sao
+// numeros, e parsear o visivel quebraria calado nos dois.
+document.querySelectorAll('[data-ordenar]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var chave = b.getAttribute('data-ordenar');
+    var asc = b.getAttribute('aria-sort') === 'desc';
+    document.querySelectorAll('[data-ordenar]').forEach(function(o){
+      o.removeAttribute('aria-sort');
     });
+    b.setAttribute('aria-sort', asc ? 'asc' : 'desc');
+    var linhas = Array.prototype.slice.call(document.querySelectorAll('.linha'));
+    linhas.sort(function(x, y){
+      var a = parseFloat(x.getAttribute('data-' + chave));
+      var c = parseFloat(y.getAttribute('data-' + chave));
+      return asc ? a - c : c - a;
+    });
+    linhas.forEach(function(tr){ corpo.appendChild(tr); });
+  });
+});
+
+// Legenda clicavel: o cruzamento entre ver o grafico e interrogar a tabela.
+document.querySelectorAll('[data-legenda]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var f = b.getAttribute('data-legenda');
+    var ligado = b.getAttribute('aria-pressed') === 'true';
+    document.querySelectorAll('[data-legenda]').forEach(function(o){
+      o.setAttribute('aria-pressed', 'false');
+    });
+    b.setAttribute('aria-pressed', String(!ligado));
+    filtros.familia = ligado ? '' : f;
+    var sel = document.getElementById('f-familia');
+    if (sel) sel.value = filtros.familia;
+    aplicar();
   });
 });
 
@@ -136,6 +191,20 @@ margin-right:6px;vertical-align:middle}
 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
 a:hover{border-bottom-color:var(--acento)}
 .rolagem{overflow-x:auto}
+.filtros input[type=search]{font:inherit;font-size:13px;padding:5px 9px;
+background:var(--fundo);color:var(--texto);border:1px solid var(--linha);
+border-radius:6px;min-width:210px}
+.contagem span{font-size:13px;font-variant-numeric:tabular-nums;
+color:var(--fraco);display:inline-block;padding-top:5px}
+thead button{font:inherit;font-size:11px;text-transform:uppercase;
+letter-spacing:0.06em;color:var(--fraco);background:none;border:0;padding:0;
+cursor:pointer;font-weight:550}
+thead button:hover,thead button[aria-sort]{color:var(--acento)}
+thead button[aria-sort]::after{content:" \2193"}
+thead button[aria-sort=asc]::after{content:" \2191"}
+.legenda button{font:inherit;font-size:11px;color:var(--fraco);background:none;
+border:0;padding:2px 0;cursor:pointer}
+.legenda button[aria-pressed=true]{color:var(--acento);font-weight:600}
 .destaque h3{margin:0 0 4px;font-size:16px;font-weight:600}
 .destaque .meta{color:var(--fraco);font-size:12px;margin-bottom:14px}
 .destaque p.resumo{max-width:64ch;margin:0 0 20px}
@@ -195,7 +264,8 @@ def _legenda(d: SiteData) -> str:
     catalogar a taxonomia.
     """
     itens = "".join(
-        f'<span><i style="background:{CORES_FAMILIA[f]}"></i>{escape(f)}</span>'
+        f'<button type="button" data-legenda="{escape(f)}">'
+        f'<i style="background:{CORES_FAMILIA[f]}"></i>{escape(f)}</button>'
         for f in d.familias_presentes
     )
     return f'<div class="legenda">{itens}</div>'
@@ -263,9 +333,23 @@ def _linha(p) -> str:
     # pela camada de apresentacao, o mesmo defeito que o pipeline consertou.
     cit = "—" if p.citations is None else str(p.citations)
     ganho = (f"{p.ganho_fator:g}x" if p.ganho_fator is not None else "—")
+    # Valores de ordenacao viajam como ATRIBUTO, nao no texto visivel: a
+    # celula mostra "—" e "2.3x", que nao sao numeros, e um JS que parseasse
+    # o texto quebraria em silencio nos dois casos.
+    #
+    # Citacao desconhecida ordena como -1 e nao 0: mandar zero faria
+    # "nao perguntamos" empatar com "ninguem citou", que e exatamente a
+    # confusao que o pipeline inteiro existe para evitar.
+    ord_cit = -1 if p.citations is None else p.citations
+    ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
+    texto = f"{p.titulo} {p.familia} {p.pratica} {p.arxiv_id}".lower()
     return (
         f'<tr class="linha" data-id="{escape(p.arxiv_id)}" '
-        f'data-familia="{escape(p.familia)}" data-pratica="{escape(p.pratica)}">'
+        f'data-familia="{escape(p.familia)}" data-pratica="{escape(p.pratica)}" '
+        f'data-texto="{escape(texto)}" '
+        f'data-impls="{p.independent_impls}" data-estrelas="{p.stars_total}" '
+        f'data-citacoes="{ord_cit}" data-ganho="{ord_ganho:g}" '
+        f'data-score="{p.score:g}">'
         f'<td><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
         f"{escape(p.titulo)}</a></td>"
         f'<td><span class="pt" style="background:{cor}"></span>'
@@ -298,11 +382,19 @@ def _secao_tabela(d: SiteData) -> str:
         f'<div><label for="f-familia">família</label>'
         f'<select id="f-familia" data-filtro="familia">'
         f"{_opcoes(d.familias_presentes)}</select></div>"
+        '<div><label for="f-busca">buscar</label>'
+        '<input id="f-busca" type="search" data-busca '
+        'placeholder="quantization, agent, cache..."></div>'
+        f'<div class="contagem"><label>mostrando</label>'
+        f'<span id="contador">{len(d.pontos)} de {len(d.pontos)}</span></div>'
         "</div>"
         '<div class="rolagem"><table><thead><tr>'
-        "<th>técnica</th><th>família</th><th>prática</th>"
-        '<th class="num">impls</th><th class="num">estrelas</th>'
-        '<th class="num">citações</th><th class="num">ganho</th>'
+        '<th><button type="button" data-ordenar="score">técnica</button></th>'
+        "<th>família</th><th>prática</th>"
+        '<th class="num"><button type="button" data-ordenar="impls">impls</button></th>'
+        '<th class="num"><button type="button" data-ordenar="estrelas">estrelas</button></th>'
+        '<th class="num"><button type="button" data-ordenar="citacoes">citações</button></th>'
+        '<th class="num"><button type="button" data-ordenar="ganho">ganho</button></th>'
         f"</tr></thead><tbody>{linhas}</tbody></table></div>"
     )
 

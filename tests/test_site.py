@@ -353,3 +353,55 @@ def test_o_total_re_consultado_aparece(dados):
 
 def test_acervo_sem_destaque_nao_explode(dados_vazio):
     assert "</html>" in render_site(dados_vazio)
+
+
+# --- Manipulabilidade: ordenar, buscar, contar, cruzar ---
+
+def test_toda_coluna_numerica_e_ordenavel(dados):
+    """Ordenar por coluna e o que permite ao leitor fazer a pergunta que EU
+    nao antecipei -- "os mais implementados que ninguem olhou", por exemplo."""
+    html = render_site(dados)
+    for chave in ("impls", "estrelas", "citacoes", "ganho", "score"):
+        assert f'data-ordenar="{chave}"' in html
+
+
+def test_cada_linha_carrega_os_valores_de_ordenacao(dados):
+    """O JS ordena por atributo, nao parseando texto visivel: `1.2k` e `—`
+    nao sao numeros, e um parser de texto quebraria em silencio nos dois."""
+    html = render_site(dados)
+    assert 'data-impls="3"' in html
+    assert 'data-score="1.2"' in html
+
+
+def test_citacao_desconhecida_ordena_como_menos_um(dados):
+    """`None` precisa de valor ordenavel proprio. Mandar zero faria
+    desconhecido empatar com "ninguem citou" -- a mesma confusao que o
+    pipeline inteiro existe para evitar."""
+    html = render_site(_acervo([ponto(citations=None)]))
+    assert 'data-citacoes="-1"' in html
+
+
+def test_ha_busca_em_texto_livre(dados):
+    html = render_site(dados)
+    assert 'data-busca' in html
+    assert 'type="search"' in html
+
+
+def test_a_linha_carrega_o_texto_de_busca_em_caixa_baixa(dados):
+    """Buscar sem normalizar faria "Quantization" nao casar com "quantization",
+    e o leitor concluiria que nao ha nada sobre o assunto."""
+    html = render_site(_acervo([ponto(titulo="Fused INT4 KERNELS")]))
+    assert 'data-texto="fused int4 kernels' in html
+
+
+def test_ha_contador_vivo_de_linhas(dados):
+    """Sem contagem, um filtro que devolve pouco e indistinguivel de um
+    filtro quebrado."""
+    html = render_site(dados)
+    assert 'id="contador"' in html
+    assert f"de {len(dados.pontos)}" in html
+
+
+def test_a_legenda_e_clicavel_e_carrega_a_familia(dados):
+    html = render_site(dados)
+    assert 'data-legenda="cache_kv"' in html
