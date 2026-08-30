@@ -67,7 +67,12 @@ class Signal:
     independent_impls: int
     velocity_14d: int
     stars_total: int
-    citations: int = 0
+    # None = desconhecido, NUNCA zero. A distincao existe porque ~8% dos papers
+    # nao resolvem no OpenAlex (arXiv so passou a cunhar DOI automatico por
+    # volta de 2022), e gravar zero para esses recria o defeito que este campo
+    # teve desde o dia um: 1088 linhas constantes em zero participando de uma
+    # formula e de um portao.
+    citations: int | None = None
 
 
 @dataclass(frozen=True)

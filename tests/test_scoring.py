@@ -77,3 +77,29 @@ def test_thresholds_are_respected_not_hardcoded():
 def test_negative_input_is_rejected():
     with pytest.raises(ValueError, match="negativ"):
         evaluate(sig(-1, 0, 0, 0), T)
+
+
+# --- Tarefa 2 do plano do segundo escopo ---
+# Uso o helper `sig` do proprio arquivo em vez do Signal explicito do plano:
+# mesmo comportamento, e mantem a idiomatica daqui.
+
+def test_citacao_desconhecida_nao_dispara_o_portao():
+    # Um paper sem citacao resolvida nao pode ser cortado por citacao:
+    # nao sabemos o numero. Cortar aqui seria inventar dado.
+    assert evaluate(sig(3, 1, 10, None), T).gated_by is None
+
+
+def test_citacao_desconhecida_contribui_zero_para_atencao():
+    # log1p(0) == 0, entao desconhecido e "ninguem citou" pontuam igual.
+    # E deliberado: a alternativa seria descartar o paper, e um paper sem DOI
+    # no OpenAlex nao merece sumir do radar por isso.
+    assert evaluate(sig(3, 1, 10, None), T).value == evaluate(sig(3, 1, 10, 0), T).value
+
+
+def test_citacao_conhecida_acima_do_limiar_ainda_corta():
+    assert evaluate(sig(3, 1, 10, 201), T).gated_by == "citacoes"
+
+
+def test_citacao_negativa_continua_sendo_erro():
+    with pytest.raises(ValueError, match="citations"):
+        evaluate(sig(3, 1, 10, -1), T)

@@ -25,17 +25,19 @@ def evaluate(signal: Signal, thresholds: Thresholds) -> ScoreResult:
         ("stars_total", signal.stars_total),
         ("citations", signal.citations),
     ):
-        if value < 0:
+        if value is not None and value < 0:
             raise ValueError(f"{name} negativo: {value}")
 
     # Etapa 1: portao. Estrelas antes de citacoes -- o motivo reportado e o
     # primeiro que dispara, e estrelas sao o sinal mais imediato de que estourou.
     if signal.stars_total > thresholds.broke_out_stars:
         return ScoreResult(value=None, gated_by="estrelas")
-    if signal.citations > thresholds.broke_out_citations:
+    # `None` e desconhecido: nao ha numero para comparar com o limiar, e
+    # inventar zero so para poder comparar seria fabricar dado. O paper passa.
+    if signal.citations is not None and signal.citations > thresholds.broke_out_citations:
         return ScoreResult(value=None, gated_by="citacoes")
 
     # Etapa 2: razao entre os que passaram.
     strength = log1p(signal.independent_impls) * (1 + 0.5 * log1p(signal.velocity_14d))
-    attention = log1p(signal.stars_total) + log1p(signal.citations)
+    attention = log1p(signal.stars_total) + log1p(signal.citations or 0)
     return ScoreResult(value=strength / (1 + attention), gated_by=None)

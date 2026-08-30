@@ -60,9 +60,16 @@ def test_paper_coerces_sequences_so_contents_cannot_be_mutated():
         p.authors.append("intruso")
 
 
-def test_signal_defaults_citations_to_zero():
+def test_signal_defaults_citations_to_unknown():
+    """O default virou `None`, e a mudanca e o ponto da tarefa 2.
+
+    Antes era `0`, o que fazia "ninguem citou" e "nao perguntamos" ficarem
+    indistinguiveis -- e foi assim que 1088 linhas ficaram constantes em zero
+    participando da formula de atencao e do portao de estouro sem que ninguem
+    percebesse.
+    """
     s = Signal(total_impls=4, independent_impls=3, velocity_14d=1, stars_total=60)
-    assert s.citations == 0
+    assert s.citations is None
 
 
 def test_judgment_rejects_unknown_verdict():
