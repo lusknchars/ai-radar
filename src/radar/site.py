@@ -1,0 +1,163 @@
+"""O jornal: uma pagina HTML autocontida, gerada por funcao pura.
+
+Sem framework, sem passo de build, sem dependencia externa -- nem no servidor
+nem no cliente. A pagina e um arquivo, e funciona com JS desligado.
+
+Recebe `SiteData` pronto e NUNCA o `Store`: a coleta mora no banco, o desenho
+nao sabe de onde o dado veio.
+"""
+from __future__ import annotations
+
+from html import escape
+
+from .site_data import SiteData
+from .svg import METRICAS_X
+
+# Cor significa familia, e SO. Em nenhum grafico ela codifica outra coisa.
+# As matizes agrupam por escopo -- frios para inferencia, quentes para
+# agentes, neutro para o escape -- o que ajuda a leitura sem que a cor passe
+# a significar escopo: dentro de cada grupo elas sao distintas e arbitrarias.
+CORES_FAMILIA = {
+    # inferencia: frios
+    "quantizacao":                "#2563eb",
+    "cache_kv":                   "#0891b2",
+    "decodificacao_especulativa": "#0d9488",
+    "esparsidade_e_poda":         "#4f46e5",
+    "kernels_e_atencao":          "#7c3aed",
+    "serving_e_batching":         "#1d4ed8",
+    "arquitetura_eficiente":      "#0369a1",
+    "destilacao":                 "#155e75",
+    "treino_eficiente":           "#3730a3",
+    # agentes: quentes
+    "uso_de_ferramenta":          "#ea580c",
+    "memoria_e_contexto":         "#d97706",
+    "planejamento_e_decomposicao": "#dc2626",
+    "orquestracao_multiagente":   "#b91c1c",
+    "avaliacao_de_agente":        "#a16207",
+    "recuperacao_de_falha":       "#c2410c",
+    "agentes_de_codigo":          "#be123c",
+    "seguranca_e_guardrails":     "#9f1239",
+    "recuperacao_e_rag":          "#92400e",
+    # escape: neutro, e de proposito o menos chamativo da paleta
+    "outro":                      "#6b7280",
+}
+
+_CSS = """
+:root{--fundo:#fff;--texto:#18181b;--fraco:#71717a;--linha:#e4e4e7;
+--acento:#18181b;--caixa:#fafafa}
+@media (prefers-color-scheme: dark){:root{--fundo:#0c0c0d;--texto:#e4e4e7;
+--fraco:#8b8b93;--linha:#26262a;--acento:#fafafa;--caixa:#141416}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--texto);
+font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.envelope{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+header{padding:56px 0 40px;border-bottom:1px solid var(--linha)}
+h1{margin:0;font-size:30px;letter-spacing:-0.02em;font-weight:650}
+.dia{color:var(--fraco);font-size:13px;margin-top:6px;
+font-variant-numeric:tabular-nums}
+.numeros{display:flex;gap:40px;margin-top:28px;flex-wrap:wrap}
+.numero b{display:block;font-size:26px;font-weight:600;
+font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.numero span{font-size:11px;color:var(--fraco);text-transform:uppercase;
+letter-spacing:0.07em}
+section{padding:44px 0;border-bottom:1px solid var(--linha)}
+section:last-child{border-bottom:0}
+h2{margin:0 0 6px;font-size:19px;font-weight:620;letter-spacing:-0.01em}
+.sub{color:var(--fraco);font-size:13px;margin:0 0 22px;max-width:62ch}
+.enquadramento p{max-width:66ch;color:var(--fraco);font-size:14px}
+.enquadramento p:first-child{color:var(--texto)}
+.vazio{color:var(--fraco);padding:64px 0;text-align:center}
+svg{width:100%;height:auto;display:block;color:var(--fraco)}
+.futuro{color:var(--fraco);font-size:13px;font-style:italic;padding:24px 0}
+footer{padding:40px 0;color:var(--fraco);font-size:12px}
+"""
+
+# Contrato com o leitor. Escrito a mao e versionado -- nao e gerado, e nao
+# muda com o dado do dia.
+_ENQUADRAMENTO = (
+    "<p>Este radar mede uma coisa só: quantas <strong>implementações "
+    "independentes</strong> um paper atraiu no GitHub, descontando os "
+    "repositórios dos próprios autores. A hipótese é que gente reimplementando "
+    "por conta própria diz mais sobre uma técnica do que citação ou estrela.</p>"
+    "<p>Ele <strong>não mede</strong> se a técnica funciona. Nada aqui foi "
+    "reproduzido, não há benchmark, e todo número de ganho que aparecer é "
+    "alegação dos autores extraída do resumo — nunca resultado verificado. "
+    "Papers que já estouraram em atenção são cortados de propósito: o radar "
+    "existe para achar o que ainda não foi olhado.</p>"
+)
+
+
+def _cabecalho(d: SiteData) -> str:
+    impls = sum(p.independent_impls for p in d.pontos)
+    return (
+        f"<header><h1>ai-radar</h1>"
+        f'<div class="dia">acervo em {escape(d.dia)}</div>'
+        f'<div class="numeros">'
+        f'<div class="numero"><b>{len(d.pontos)}</b><span>papers</span></div>'
+        f'<div class="numero"><b>{len(d.familias_presentes)}</b>'
+        f"<span>famílias</span></div>"
+        f'<div class="numero"><b>{impls}</b>'
+        f"<span>implementações independentes</span></div>"
+        f"</div></header>"
+    )
+
+
+def _secao(titulo: str, sub: str, corpo: str) -> str:
+    return (f"<section><h2>{titulo}</h2><p class=\"sub\">{sub}</p>"
+            f"{corpo}</section>")
+
+
+def _pendente(qual: str) -> str:
+    """Marcador das secoes que as tarefas 5 a 8 preenchem.
+
+    A tarefa 4 entrega a pagina inteira com as secoes vazias de proposito:
+    ajustar identidade visual com elas vazias custa uma fracao de ajustar
+    depois de preenchidas.
+    """
+    return f'<p class="futuro">{qual}</p>'
+
+
+def render_site(dados: SiteData) -> str:
+    if not dados.pontos:
+        corpo = '<p class="vazio">Nenhum paper no acervo ainda.</p>'
+    else:
+        eixos = " · ".join(METRICAS_X.values())
+        corpo = "".join((
+            _secao("A fronteira",
+                   "Implementações independentes contra o quanto o paper já "
+                   "foi olhado. A região interessante é o alto à esquerda: "
+                   "muita gente construindo, pouca gente olhando.",
+                   _pendente(f"gráfico com eixo alternável entre {eixos}")),
+            _secao("O avanço alegado",
+                   "Ganho declarado no resumo, por família, ao longo do tempo. "
+                   "Alegado pelos autores, não verificado.",
+                   _pendente("gráfico condicional à cobertura do dado")),
+            _secao("As famílias no tempo",
+                   "Volume por família, mês a mês, em escala compartilhada.",
+                   _pendente("pequenos múltiplos")),
+            _secao("O acervo",
+                   "Tudo que passou pelo radar, filtrável pelo que você faz "
+                   "com a técnica.",
+                   _pendente("tabela com filtro por prática e por família")),
+            _secao("Uma técnica, de ponta a ponta",
+                   "O paper de maior score, aberto: os repositórios "
+                   "encontrados e a regra que classificou cada um.",
+                   _pendente("destaque auditável")),
+            _secao("O que ficou de fora",
+                   "Todo corte é contado e chega ao leitor.",
+                   _pendente("contabilidade de cortes")),
+        ))
+
+    return (
+        "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">"
+        "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
+        f"<title>ai-radar — {escape(dados.dia)}</title>"
+        f"<style>{_CSS}</style></head><body><div class=\"envelope\">"
+        f"{_cabecalho(dados)}"
+        f'<section class="enquadramento">{_ENQUADRAMENTO}</section>'
+        f"{corpo}"
+        "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
+        "sem requisição externa.</footer>"
+        "</div></body></html>"
+    )
