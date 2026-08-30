@@ -168,3 +168,64 @@ def test_julgamento_sem_familia_e_recusado_na_construcao():
     """
     with pytest.raises(TypeError):
         Judgment(technique="so o rotulo")
+
+
+# --- Tarefa 9 do plano do segundo escopo ---
+
+def _dia(radar=(), feed=(), cuts=None):
+    from radar.pipeline import DayResult
+    cuts = cuts or {}
+    return DayResult(radar=list(radar), feed=list(feed), cuts=cuts,
+                     markdown=render_markdown("2026-08-29", list(radar),
+                                              list(feed), cuts),
+                     push="")
+
+
+def test_a_composicao_traz_as_duas_secoes_na_ordem():
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {"inferencia": _dia(radar=[item()]),
+                                       "agentes": _dia(radar=[item()])})
+    assert saida.index("Inferência") < saida.index("Agentes")
+
+
+def test_escopo_com_radar_vazio_ainda_aparece():
+    """Um escopo silencioso e informacao: sumir com a secao faria parecer que
+    o escopo nao rodou."""
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {"inferencia": _dia(radar=[item()]),
+                                       "agentes": _dia()})
+    assert "Agentes" in saida
+    assert "Nenhum item passou o piso hoje." in saida
+
+
+def test_a_composicao_nao_perde_corte_de_nenhum_escopo():
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {
+        "inferencia": _dia(cuts={"abaixo_do_piso": 7}),
+        "agentes": _dia(cuts={"ja_conhecido": 3}),
+    })
+    assert "abaixo_do_piso" in saida
+    assert "ja_conhecido" in saida
+
+
+def test_o_cabecalho_do_dia_aparece_uma_vez_so():
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {"inferencia": _dia(), "agentes": _dia()})
+    assert saida.count("# Radar — 2026-08-29") == 1
+
+
+def test_os_titulos_internos_descem_um_nivel():
+    """O rotulo de escopo entra como h2; sem rebaixar os de dentro, `## Radar`
+    viraria irmao de `## Inferência` quando na verdade e filho."""
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {"inferencia": _dia(radar=[item()])})
+    assert "## Inferência" in saida
+    assert "### Radar" in saida
+    assert "\n## Radar" not in saida
+    assert "#### 1. Kernel INT4 fundido" in saida
+
+
+def test_escopo_ausente_do_dicionario_nao_gera_secao():
+    from radar.render import compose_day
+    saida = compose_day("2026-08-29", {"inferencia": _dia()})
+    assert "Agentes" not in saida

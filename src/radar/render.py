@@ -143,3 +143,48 @@ def render_markdown(
         out.append("Nenhum corte hoje.")
     out.append("")
     return "\n".join(out)
+
+
+# Rotulo legivel por escopo, e a ordem em que aparecem no arquivo do dia.
+# `inferencia` primeiro por decisao travada: e o primeiro escopo a descobrir,
+# e o que fica com o paper quando os dois o encontram.
+ROTULO_ESCOPO = {"inferencia": "Inferência", "agentes": "Agentes"}
+ORDEM_ESCOPO = ("inferencia", "agentes")
+
+
+def _rebaixa_titulos(linha: str) -> str:
+    """Desce um nivel os titulos vindos de `render_markdown`.
+
+    O rotulo de escopo entra como h2. Sem rebaixar, `## Radar` viraria irmao
+    de `## Inferência` quando na verdade e filho dele, e o documento passaria
+    a mentir sobre a propria estrutura.
+
+    Nao ha bloco de codigo no markdown do radar, entao nao existe `#` de
+    conteudo para proteger aqui.
+    """
+    return "#" + linha if linha.startswith("#") else linha
+
+
+def compose_day(day: str, por_escopo: dict) -> str:
+    """Costura o markdown de cada escopo num arquivo unico do dia.
+
+    NAO reabre `render_markdown`: cada DayResult ja traz o seu markdown pronto
+    e testado -- e ela e a funcao mais coberta do projeto. Aqui so se remove o
+    cabecalho duplicado, se rebaixa o resto, e se rotula a secao.
+    """
+    out = [f"# Radar — {day}", ""]
+    for nome in ORDEM_ESCOPO:
+        r = por_escopo.get(nome)
+        if r is None:
+            continue
+        out.append(f"## {ROTULO_ESCOPO[nome]}")
+        # Sem `out.append("")` aqui: o corpo ja comeca com a linha em branco
+        # que vinha logo depois do cabecalho removido.
+        corpo = r.markdown.split("\n")
+        # A primeira linha de cada markdown e o cabecalho `# Radar — <dia>`;
+        # ele vira uma vez so, no topo do arquivo composto.
+        if corpo and corpo[0].startswith("# Radar"):
+            corpo = corpo[1:]
+        out.extend(_rebaixa_titulos(l) for l in corpo)
+        out.append("")
+    return "\n".join(out)
