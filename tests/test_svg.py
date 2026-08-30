@@ -98,3 +98,58 @@ def test_o_titulo_do_ponto_e_escapado():
 def test_familia_sem_cor_declarada_nao_quebra_o_desenho():
     svg = render_scatter([ponto(familia="destilacao")], "stars_total", {})
     assert "<circle" in svg
+
+
+# --- Tarefa 3: pequenos multiplos ---
+
+import re                                                        # noqa: E402
+
+from radar.svg import render_pequenos_multiplos                  # noqa: E402
+
+
+def _alturas(svg):
+    return [float(x) for x in re.findall(r'<rect[^>]*height="([\d.]+)"', svg)]
+
+
+def test_um_painel_por_familia_pedida():
+    s = {"cache_kv": {"2026-07": 3}, "outro": {"2026-07": 1}}
+    svg = render_pequenos_multiplos(s, ["cache_kv", "outro"], CORES)
+    assert svg.count('<g class="painel"') == 2
+
+
+def test_a_escala_e_compartilhada_entre_os_paineis():
+    """Escala por painel faria 3 papers e 300 desenharem a mesma altura, e a
+    comparacao entre familias -- a unica pergunta que a secao responde --
+    passaria a mentir."""
+    s = {"a": {"2026-07": 1}, "b": {"2026-07": 100}}
+    alturas = _alturas(render_pequenos_multiplos(s, ["a", "b"], {}))
+    assert alturas[0] < alturas[1] / 10
+
+
+def test_familia_sem_dado_ainda_ganha_painel_vazio():
+    """Ausencia e informacao: um painel vazio diz "nada saiu nesta familia",
+    e some-la faria parecer que a familia nao existe."""
+    svg = render_pequenos_multiplos({"a": {"2026-07": 2}}, ["a", "b"], {})
+    assert svg.count('<g class="painel"') == 2
+
+
+def test_o_rotulo_da_familia_aparece_em_cada_painel():
+    svg = render_pequenos_multiplos({"cache_kv": {"2026-07": 2}}, ["cache_kv"], CORES)
+    assert "cache_kv" in svg
+
+
+def test_series_vazias_geram_svg_valido():
+    svg = render_pequenos_multiplos({}, [], {})
+    assert svg.startswith("<svg") and svg.rstrip().endswith("</svg>")
+
+
+def test_todo_mundo_em_zero_nao_divide_por_zero():
+    svg = render_pequenos_multiplos({"a": {"2026-07": 0}}, ["a"], {})
+    assert "<svg" in svg
+    assert all(h >= 0 for h in _alturas(svg))
+
+
+def test_os_meses_saem_em_ordem_cronologica():
+    s = {"a": {"2026-09": 1, "2026-07": 9, "2026-08": 5}}
+    alturas = _alturas(render_pequenos_multiplos(s, ["a"], {}))
+    assert alturas == sorted(alturas, reverse=True)   # 9, 5, 1

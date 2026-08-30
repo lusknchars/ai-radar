@@ -66,3 +66,66 @@ def render_scatter(pontos: list[Ponto], x_metrica: str,
             )
     partes.append("</svg>")
     return "".join(partes)
+
+
+# Pequenos multiplos: grade de paineis de mesma escala, um por familia.
+PAINEL_L, PAINEL_A, PAINEL_PAD = 200, 110, 22
+COLUNAS = 4
+
+
+def render_pequenos_multiplos(series: dict[str, dict[str, int]],
+                              familias: list[str],
+                              cores: dict[str, str]) -> str:
+    """Volume por familia por mes, em paineis de ESCALA COMPARTILHADA.
+
+    Pequenos multiplos e nao area empilhada: a pergunta e "esta familia esta
+    crescendo?", nao "que fatia do total ela e". Empilhar faz cada serie
+    depender das vizinhas e destroi a leitura individual.
+
+    A escala e compartilhada porque a comparacao entre familias e a unica
+    pergunta que a secao responde. Escala por painel faria 3 papers e 300
+    desenharem a mesma altura -- o grafico continuaria bonito e passaria a
+    mentir.
+
+    Uma familia sem dado ainda ganha painel: ausencia e informacao, e some-la
+    faria parecer que a familia nao existe.
+    """
+    linhas = (len(familias) + COLUNAS - 1) // COLUNAS
+    largura = COLUNAS * PAINEL_L
+    altura = max(linhas, 1) * PAINEL_A
+
+    # Maximo GLOBAL, calculado sobre todas as series antes de desenhar
+    # qualquer uma. Move esta linha para dentro do laco e a escala vira
+    # por painel.
+    maximo = max((v for meses in series.values() for v in meses.values()),
+                 default=0)
+
+    partes = [f'<svg class="multiplos" viewBox="0 0 {largura} {altura}" '
+              f'role="img" aria-label="volume por família ao longo do tempo">']
+
+    for i, familia in enumerate(familias):
+        ox = (i % COLUNAS) * PAINEL_L
+        oy = (i // COLUNAS) * PAINEL_A
+        cor = cores.get(familia, "currentColor")
+        partes.append(f'<g class="painel" transform="translate({ox},{oy})">')
+        partes.append(
+            f'<text x="4" y="12" font-size="10">{escape(familia)}</text>')
+
+        meses = series.get(familia, {})
+        util_a = PAINEL_A - PAINEL_PAD - 14
+        if meses:
+            # Ordem cronologica: `sorted` sobre chaves ISO `YYYY-MM` ja da a
+            # ordem certa sem parsear data.
+            ordenados = sorted(meses.items())
+            larg_barra = max((PAINEL_L - 8) / len(ordenados) - 2, 1)
+            for k, (_mes, n) in enumerate(ordenados):
+                h = 0.0 if maximo <= 0 else util_a * (n / maximo)
+                x = 4 + k * (larg_barra + 2)
+                partes.append(
+                    f'<rect x="{x:.1f}" y="{14 + util_a - h:.1f}" '
+                    f'width="{larg_barra:.1f}" height="{h:.1f}" fill="{cor}"/>'
+                )
+        partes.append("</g>")
+
+    partes.append("</svg>")
+    return "".join(partes)
