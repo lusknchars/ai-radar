@@ -169,7 +169,7 @@ def test_already_delivered_paper_is_not_pushed_twice(store):
     Quem a entrega hoje e o filtro de ja-conhecido: entregar exige estar no
     banco, e quem esta no banco nao reentra como novidade."""
     p = paper("2508.00001")
-    store.upsert_paper(p, seen_at="2026-08-26")
+    store.upsert_paper(p, seen_at="2026-08-26", scope="teste")
     store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-26", rank=1)
     result = run(store, [p], {"2508.00001": fake_signal(4, 30)})
     assert result.radar == []
@@ -180,7 +180,7 @@ def test_paper_already_in_the_database_is_not_rediscovered_as_news(store):
     responde "o que saiu hoje" -- um paper de ontem nao saiu hoje, entao fica
     fora do radar E do feed, contado na secao de cortes."""
     velho, novo = paper("2508.00001"), paper("2508.00002")
-    store.upsert_paper(velho, seen_at="2026-08-26")
+    store.upsert_paper(velho, seen_at="2026-08-26", scope="teste")
     result = run(store, [velho, novo],
                  {"2508.00001": fake_signal(4, 30), "2508.00002": fake_signal(3, 20)})
     assert [i.paper.arxiv_id for i in result.radar] == ["2508.00002"]
@@ -192,7 +192,7 @@ def test_a_known_paper_is_never_sent_to_the_judge(store):
     """O corte precisa acontecer ANTES do julgamento: e o custo do lote que
     estoura quando o dia 2 re-julga tudo que o dia 1 ja julgou."""
     velho, novo = paper("2508.00001"), paper("2508.00002")
-    store.upsert_paper(velho, seen_at="2026-08-26")
+    store.upsert_paper(velho, seen_at="2026-08-26", scope="teste")
     julgados: list[list[str]] = []
 
     def judge_all(ps):
@@ -210,7 +210,7 @@ def test_a_known_paper_is_never_sent_to_the_judge(store):
 
 def test_a_day_whose_papers_are_all_known_judges_nothing(store):
     velho = paper("2508.00001")
-    store.upsert_paper(velho, seen_at="2026-08-26")
+    store.upsert_paper(velho, seen_at="2026-08-26", scope="teste")
     chamadas = []
 
     def judge_all(ps):
@@ -456,7 +456,7 @@ def test_every_discovered_paper_is_either_rendered_or_counted_as_a_cut(store):
     descoberto tem de aparecer no radar, no feed ou numa contagem de remocao,
     uma vez so."""
     conhecido = paper("2508.00000")
-    store.upsert_paper(conhecido, seen_at="2026-08-26")
+    store.upsert_paper(conhecido, seen_at="2026-08-26", scope="teste")
     papers = [conhecido] + [paper(f"2508.0000{i}") for i in range(1, 7)]
     signals = {
         "2508.00001": fake_signal(6, 20),      # radar
@@ -497,7 +497,7 @@ def test_a_rechecked_paper_can_reach_the_radar_with_delta_wording(store):
     """O caso que a feature existe para pegar: paper guardado, nunca entregue
     porque o sinal era fraco, volta quando o sinal cresce."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
     store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-08-01")
 
@@ -516,7 +516,7 @@ def test_a_rechecked_paper_can_reach_the_radar_with_delta_wording(store):
 def test_a_rechecked_paper_never_reaches_the_feed(store):
     """O feed responde 'o que saiu hoje'. Um paper de 2022 nao saiu hoje."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
     store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
     store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-01", rank=1)
@@ -535,7 +535,7 @@ def test_a_rechecked_paper_never_reaches_the_feed(store):
 def test_an_already_delivered_paper_never_comes_back(store):
     """Spec secao 6, sem excecao: nenhum paper e entregue duas vezes."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-08-01")
     store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
     store.mark_delivered(p.arxiv_id, channel="telegram", at="2026-08-01", rank=1)
@@ -554,7 +554,7 @@ def test_recheck_reuses_the_stored_judgment_and_never_calls_the_llm(store):
     """Re-consulta nao gasta token. Re-julgar trinta papers por dia
     multiplicaria a conta para produzir texto que ja esta no banco."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 30), score=0.11, checked_at="2026-08-01")
     store.record_judgment(p.arxiv_id, judgment("Tecnica Guardada"), model="m",
                           judged_at="2026-08-01")
@@ -574,7 +574,7 @@ def test_a_rechecked_paper_without_a_stored_judgment_is_cut_distinctly(store):
     """Motivo distinto do `sem_julgamento` dos novos: la o LLM falhou, aqui e
     linha antiga sem julgamento. Causas e consertos diferentes."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")     # sem record_judgment
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")     # sem record_judgment
 
     result = run_day(
         store=store, scope=SCOPE, thresholds=T, today=TODAY, model="modelo-de-teste",
@@ -589,7 +589,7 @@ def test_a_rechecked_paper_without_a_stored_judgment_is_cut_distinctly(store):
 def test_recheck_respects_the_limit(store):
     for i in range(5):
         pp = paper(f"2508.0000{i}")
-        store.upsert_paper(pp, seen_at="2026-08-01")
+        store.upsert_paper(pp, seen_at="2026-08-01", scope="teste")
         store.record_judgment(pp.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
     vistos = []
     run_day(
@@ -632,7 +632,7 @@ def test_recheck_advances_the_rotation_even_when_the_signal_fails(store):
     """Sem touch_checked na falha, `stalest_papers` devolveria os mesmos
     papers para sempre e a rotacao nunca chegaria aos demais."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
 
     result = run_day(
@@ -656,7 +656,7 @@ def test_a_mixed_batch_keeps_new_and_rechecked_papers_in_their_lanes(store):
     """
     for pid, imp in [("2210.17323", 2), ("2305.14314", 1)]:
         antigo = paper(pid)
-        store.upsert_paper(antigo, seen_at="2022-11-01")
+        store.upsert_paper(antigo, seen_at="2022-11-01", scope="teste")
         store.record_signal(pid, fake_signal(imp, 300), score=0.1, checked_at="2022-11-01")
         store.record_judgment(pid, judgment(f"Antigo {pid}"), model="m", judged_at="2022-11-01")
 
@@ -709,7 +709,7 @@ def test_a_second_run_on_the_same_day_does_not_report_broken_movement(store):
     cair no mesmo dia do cron.
     """
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-01-01")
+    store.upsert_paper(p, seen_at="2026-01-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.1, checked_at="2026-01-01")
     store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-01-01")
 
@@ -753,7 +753,7 @@ def test_only_papers_whose_implementation_count_moved_are_listed(store):
         "2401.00001": (1, 1, 10, 10),      # parado           -> conta, nao lista
     }
     for pid, (antes, _, est_antes, _e) in casos.items():
-        store.upsert_paper(paper(pid), seen_at="2022-11-01")
+        store.upsert_paper(paper(pid), seen_at="2022-11-01", scope="teste")
         store.record_signal(pid, fake_signal(antes, est_antes), score=0.1,
                             checked_at="2022-11-01")
         store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2022-11-01")
@@ -778,7 +778,7 @@ def test_recheck_is_off_by_default(store):
     """recheck_limit=0 por default: os chamadores existentes nao ganham
     re-consulta sem pedir."""
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-08-01")
+    store.upsert_paper(p, seen_at="2026-08-01", scope="teste")
     store.record_judgment(p.arxiv_id, judgment(), model="m", judged_at="2026-08-01")
     vistos = []
     run_day(
@@ -800,9 +800,9 @@ def test_recheck_advances_the_rotation_even_when_the_judgment_is_missing(store):
     unico caminho que destravaria e justamente o que estava faltando.
     """
     sem_julg = paper("2210.17323")
-    store.upsert_paper(sem_julg, seen_at="2026-08-01")       # sem record_judgment
+    store.upsert_paper(sem_julg, seen_at="2026-08-01", scope="teste")       # sem record_judgment
     saudavel = paper("2305.14314")
-    store.upsert_paper(saudavel, seen_at="2026-08-01")
+    store.upsert_paper(saudavel, seen_at="2026-08-01", scope="teste")
     store.record_judgment(saudavel.arxiv_id, judgment("Saudavel"), model="m",
                           judged_at="2026-08-01")
     store.touch_checked(saudavel.arxiv_id, at="2026-08-01")  # ja checado: fica atras
@@ -838,7 +838,7 @@ def test_a_rechecked_paper_that_stopped_moving_is_not_reported_as_movement(store
     trinta linhas de "nada de novo" que a spec, secao 7, existe para evitar.
     """
     p = paper("2210.17323")
-    store.upsert_paper(p, seen_at="2026-06-01")
+    store.upsert_paper(p, seen_at="2026-06-01", scope="teste")
     store.record_signal(p.arxiv_id, fake_signal(2, 300), score=0.11, checked_at="2026-06-01")
     store.record_judgment(p.arxiv_id, judgment("GPTQ"), model="m", judged_at="2026-06-01")
 
@@ -876,7 +876,7 @@ def test_the_recheck_total_counts_attempts_not_survivors(store):
     um numero menor do que o dia teve."""
     for pid, tem_julgamento in [("2210.17323", True), ("2305.14314", True),
                                 ("2401.00001", False)]:
-        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.upsert_paper(paper(pid), seen_at="2026-08-01", scope="teste")
         store.record_signal(pid, fake_signal(2, 300), score=0.1, checked_at="2026-08-01")
         if tem_julgamento:
             store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
@@ -904,7 +904,7 @@ def test_the_recheck_section_appears_even_when_every_recheck_failed(store):
     secao inteira desaparecia. Silencio ambiguo faz parecer que o trabalho nao
     foi feito -- a mesma razao pela qual a secao de Cortes e obrigatoria."""
     for pid in ("2210.17323", "2305.14314"):
-        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.upsert_paper(paper(pid), seen_at="2026-08-01", scope="teste")
         store.record_judgment(pid, judgment(), model="m", judged_at="2026-08-01")
 
     result = run_day(
@@ -930,7 +930,7 @@ def test_an_eligible_rechecked_paper_that_loses_the_race_becomes_a_cut(store):
     """
     impls = {"2210.17323": 9, "2305.14314": 7, "2401.00001": 5, "2402.00002": 3}
     for pid in impls:
-        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.upsert_paper(paper(pid), seen_at="2026-08-01", scope="teste")
         store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
 
     result = run_day(
@@ -969,7 +969,7 @@ def test_every_rechecked_paper_lands_in_the_radar_or_in_a_recheck_cut(store):
         "2409.00009": fake_signal(6, 40),      # elegivel, perde -> reconsulta_fora_do_top3
     }
     for pid, sinal in guardados.items():
-        store.upsert_paper(paper(pid), seen_at="2026-08-01")
+        store.upsert_paper(paper(pid), seen_at="2026-08-01", scope="teste")
         if sinal is not None:
             store.record_judgment(pid, judgment(f"T{pid}"), model="m", judged_at="2026-08-01")
     store.mark_delivered(entregue, channel="telegram", at="2026-08-01", rank=1)

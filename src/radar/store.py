@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS papers (
     categories   TEXT NOT NULL,
     published    TEXT NOT NULL,
     first_seen   TEXT NOT NULL,
-    last_checked TEXT
+    last_checked TEXT,
+    scope        TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS signals (
     arxiv_id          TEXT NOT NULL REFERENCES papers(arxiv_id),
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS signals (
     independent_impls INTEGER NOT NULL,
     velocity_14d      INTEGER NOT NULL,
     stars_total       INTEGER NOT NULL,
-    citations         INTEGER NOT NULL DEFAULT 0,
+    citations         INTEGER,          -- NULL = desconhecido, != 0
     score             REAL,
     PRIMARY KEY (arxiv_id, checked_at)
 );
@@ -50,9 +51,13 @@ CREATE TABLE IF NOT EXISTS judgments (
     judged_at    TEXT NOT NULL,
     model        TEXT NOT NULL,
     technique    TEXT NOT NULL,
-    summary      TEXT NOT NULL,
-    runs_on_3090 TEXT NOT NULL,
-    rationale    TEXT NOT NULL,
+    familia      TEXT NOT NULL,
+    pratica      TEXT NOT NULL,
+    ganho_eixo   TEXT NOT NULL,
+    ganho_fator  REAL,              -- NULL e legitimo: nem todo paper alega
+    ganho_texto  TEXT NOT NULL,
+    resumo       TEXT NOT NULL,
+    porque       TEXT NOT NULL,
     PRIMARY KEY (arxiv_id, judged_at)
 );
 CREATE TABLE IF NOT EXISTS deliveries (
@@ -78,16 +83,24 @@ class Store:
 
     # ---------- papers ----------
 
-    def upsert_paper(self, paper, seen_at: str) -> None:
+    def upsert_paper(self, paper, seen_at: str, scope: str) -> None:
+        """`scope` e obrigatorio e nao tem default de proposito.
+
+        Um default deixaria um chamador novo gravar linha sem escopo em
+        silencio, e a coluna existe justamente para fatiar o acervo entre as
+        duas literaturas. O ON CONFLICT tambem NAO atualiza `scope`: o primeiro
+        escopo que descobre o paper fica com ele.
+        """
         # first_seen so e gravado na insercao; ON CONFLICT nao o toca.
         self._conn.execute(
             """INSERT INTO papers
-                 (arxiv_id, title, abstract, authors, categories, published, first_seen)
-               VALUES (?, ?, ?, ?, ?, ?, ?)
+                 (arxiv_id, title, abstract, authors, categories, published,
+                  first_seen, scope)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                ON CONFLICT(arxiv_id) DO UPDATE SET
                  title=excluded.title, abstract=excluded.abstract""",
             (paper.arxiv_id, paper.title, paper.abstract, json.dumps(paper.authors),
-             json.dumps(paper.categories), paper.published, seen_at),
+             json.dumps(paper.categories), paper.published, seen_at, scope),
         )
         self._conn.commit()
 
@@ -197,9 +210,11 @@ class Store:
     def record_judgment(self, arxiv_id: str, j: Judgment, model: str, judged_at: str) -> None:
         self._conn.execute(
             """INSERT OR REPLACE INTO judgments
-                 (arxiv_id, judged_at, model, technique, summary, runs_on_3090, rationale)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (arxiv_id, judged_at, model, j.technique, j.summary, j.runs_on_3090, j.rationale),
+                 (arxiv_id, judged_at, model, technique, familia, pratica,
+                  ganho_eixo, ganho_fator, ganho_texto, resumo, porque)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (arxiv_id, judged_at, model, j.technique, j.familia, j.pratica,
+             j.ganho_eixo, j.ganho_fator, j.ganho_texto, j.resumo, j.porque),
         )
         self._conn.commit()
 
@@ -209,8 +224,28 @@ class Store:
             (arxiv_id,)).fetchone()
         if row is None:
             return None
-        return Judgment(technique=row["technique"], summary=row["summary"],
-                        runs_on_3090=row["runs_on_3090"], rationale=row["rationale"])
+        return Judgment(
+            technique=row["technique"], familia=row["familia"],
+            pratica=row["pratica"], ganho_eixo=row["ganho_eixo"],
+            ganho_fator=row["ganho_fator"], ganho_texto=row["ganho_texto"],
+            resumo=row["resumo"], porque=row["porque"],
+            summary=row["resumo"],      # ponte ate a tarefa 7
+        )
+
+    def papers_por_familia(self) -> dict[str, int]:
+        """Contagem por familia sobre o julgamento MAIS RECENTE de cada paper.
+
+        Contar a tabela inteira somaria o historico: um paper re-julgado
+        apareceria duas vezes, e ainda contaria na familia antiga.
+        """
+        linhas = self._conn.execute("""
+            SELECT j.familia, COUNT(*) FROM judgments j
+            JOIN (SELECT arxiv_id, MAX(judged_at) m FROM judgments
+                  GROUP BY arxiv_id) u
+              ON j.arxiv_id = u.arxiv_id AND j.judged_at = u.m
+            GROUP BY j.familia
+        """)
+        return {familia: n for familia, n in linhas}
 
     # ---------- deliveries ----------
 

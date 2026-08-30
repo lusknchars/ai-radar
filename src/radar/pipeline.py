@@ -153,7 +153,7 @@ def run_day(
         result = evaluate(signal, thresholds)
 
         if e_novo:
-            store.upsert_paper(paper, seen_at=day)
+            store.upsert_paper(paper, seen_at=day, scope=scope.name)
             store.record_judgment(paper.arxiv_id, judgment, model=model, judged_at=day)
 
         # "Movimento" e ter mudado desde a observacao ANTERIOR -- por isso a

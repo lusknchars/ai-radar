@@ -116,7 +116,7 @@ def test_dry_run_still_reads_the_real_state(ambiente, monkeypatch):
     from radar.store import Store
     real = Store(ambiente / "radar.db")
     real.init_schema()
-    real.upsert_paper(PAPER, seen_at="2026-08-26")
+    real.upsert_paper(PAPER, seen_at="2026-08-26", scope="teste")
 
     monkeypatch.setattr(cli, "send", lambda *a, **k: True)
     assert cli.main(argv(ambiente, "--dry-run")) == 0
