@@ -95,7 +95,7 @@ def test_no_results_yields_a_zeroed_signal():
     s = GitHubClient(fetch=lambda url: {"total_count": 0, "incomplete_results": False, "items": []}).signal_for(
         PAPER, today=TODAY)
     assert s == type(s)(total_impls=0, independent_impls=0, velocity_14d=0,
-                        stars_total=0, citations=0)
+                        stars_total=0, citations=None)
 
 
 def test_classifications_are_exposed_for_the_audit_trail():
@@ -106,6 +106,16 @@ def test_classifications_are_exposed_for_the_audit_trail():
     assert flagged[0].reason == "mais_antigo_e_mais_estrelado"
 
 
-def test_citations_default_to_zero_when_not_supplied():
+def test_o_github_nao_opina_sobre_citacao():
+    """Inverte `test_citations_default_to_zero_when_not_supplied`.
+
+    Aquele teste abencoava o defeito: ele afirmava que o sinal do GitHub sai
+    com `citations == 0`, e era exatamente esse zero que ficou constante nas
+    1088 linhas do acervo, participando da formula de atencao e do portao de
+    estouro como se fosse fato medido.
+
+    O GitHub mede GitHub. Citacao vem do OpenAlex, e quem compoe as duas
+    fontes e o pipeline.
+    """
     s = GitHubClient(fetch=lambda url: PAYLOAD).signal_for(PAPER, today=TODAY)
-    assert s.citations == 0
+    assert s.citations is None

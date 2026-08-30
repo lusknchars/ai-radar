@@ -6,7 +6,7 @@ judge_all), o que torna o fluxo inteiro testavel offline.
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from typing import Callable
 
@@ -50,6 +50,10 @@ def run_day(
     fetch_papers: Callable[[ScopeConfig], Discovery],
     fetch_signal: Callable[[Paper, date], tuple[Signal, list[RepoClassification]]],
     judge_all: Callable[[list[Paper]], dict[str, Judgment]],
+    # Default None mantem todo teste existente valido: sem buscador, ninguem
+    # ganha citacao e todos ficam desconhecidos -- que e a resposta honesta
+    # quando nao se perguntou. Quem liga e a CLI, explicitamente.
+    fetch_citations: Callable[[list[str]], dict[str, int | None]] | None = None,
     dry_run: bool = False,
     recheck_limit: int = 0,
 ) -> DayResult:
@@ -113,6 +117,13 @@ def run_day(
     total_reconsultado = sum(1 for _, _, e_novo in trabalho if not e_novo)
 
     # (item, elegivel, e_novo, mexeu)
+    # Uma requisicao para o dia inteiro: 40 ids cabem no lote de 50 do
+    # OpenAlex. O GitHub nao carrega este dado -- ele mede GitHub. O pipeline
+    # e quem compoe as duas fontes.
+    citacoes: dict[str, int | None] = {}
+    if fetch_citations is not None:
+        citacoes = fetch_citations([p.arxiv_id for p, _, _ in trabalho])
+
     candidates: list[tuple[RadarItem, bool, bool, bool]] = []
     repos_by_paper: dict[str, list[dict]] = {}
 
@@ -149,6 +160,10 @@ def run_day(
                 # `stalest_papers` devolve os mesmos trinta para sempre.
                 store.touch_checked(paper.arxiv_id, at=day)
             continue
+
+        # `.get` sem default: ausente do dicionario vira None, nunca 0. Um
+        # paper que o OpenAlex nao resolveu e desconhecido, nao inedito.
+        signal = replace(signal, citations=citacoes.get(paper.arxiv_id))
 
         result = evaluate(signal, thresholds)
 

@@ -1018,3 +1018,85 @@ def test_every_rechecked_paper_lands_in_the_radar_or_in_a_recheck_cut(store):
     # A particao exata: radar + cortes da trilha == papers re-consultados.
     assert len(result.radar) + cortes_da_reconsulta == len(guardados)
     assert f"{len(guardados)} papers re-consultados" in result.markdown
+
+
+# --- Tarefa 8 do plano do segundo escopo ---
+
+def test_o_escopo_do_run_chega_ao_banco(store):
+    p = paper("2508.00001")
+    run(store, [p], {p.arxiv_id: fake_signal(3, 20)})
+    assert store.all_papers()[0]["scope"] == SCOPE.name
+
+
+def test_as_citacoes_sao_buscadas_uma_vez_so_para_todos(store):
+    """Uma requisicao para o dia inteiro: 40 ids cabem no lote de 50 do
+    OpenAlex. Uma busca por paper seria 40 vezes mais lenta sem ganho."""
+    chamadas = []
+
+    def buscar(ids):
+        chamadas.append(list(ids))
+        return {i: 5 for i in ids}
+
+    papers = [paper(f"2508.0000{i}") for i in range(3)]
+    signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
+    run(store, papers, signals, fetch_citations=buscar)
+    assert len(chamadas) == 1
+    assert sorted(chamadas[0]) == sorted(p.arxiv_id for p in papers)
+
+
+def test_a_citacao_buscada_entra_no_sinal_gravado(store):
+    p = paper("2508.00001")
+    run(store, [p], {p.arxiv_id: fake_signal(3, 20)},
+        fetch_citations=lambda ids: {i: 42 for i in ids})
+    assert store.signal_history(p.arxiv_id)[0]["citations"] == 42
+
+
+def test_sem_buscador_de_citacao_o_sinal_fica_desconhecido(store):
+    # Nao zero: nao perguntamos. O `fetch_signal` devolve `cites=0` por
+    # default do helper, e mesmo assim o gravado tem que ser None -- e o
+    # pipeline que decide, nao o GitHub.
+    p = paper("2508.00001")
+    run(store, [p], {p.arxiv_id: fake_signal(3, 20)}, fetch_citations=None)
+    assert store.signal_history(p.arxiv_id)[0]["citations"] is None
+
+
+def test_paper_ausente_no_openalex_fica_desconhecido_e_nao_zerado(store):
+    """~8% dos papers nao resolvem (arXiv so cunha DOI automatico desde ~2022).
+    Zerar esses recriaria o defeito que a tarefa 2 consertou."""
+    a, b = paper("2508.00001"), paper("2508.00002")
+    signals = {a.arxiv_id: fake_signal(3, 20), b.arxiv_id: fake_signal(3, 20)}
+    run(store, [a, b], signals, fetch_citations=lambda ids: {ids[0]: 3})
+    achados = {r["arxiv_id"]: r["citations"]
+               for pid in (a.arxiv_id, b.arxiv_id)
+               for r in store.signal_history(pid)}
+    assert achados[b.arxiv_id] is None
+    assert achados[b.arxiv_id] != 0
+
+
+def test_um_paper_ja_no_banco_pelo_outro_escopo_nao_e_redescoberto(store):
+    """O primeiro escopo grava; o segundo o encontra e corta por ja_conhecido.
+
+    E o que impede o escopo de agentes de re-julgar -- e re-pagar -- tudo que
+    o de inferencia acabou de gravar na mesma execucao.
+    """
+    outro = ScopeConfig(name="agentes", categories=("cs.AI",), terms=("tool use",))
+    papers = [paper(f"2508.0000{i}") for i in range(3)]
+    signals = {p.arxiv_id: fake_signal(3, 20) for p in papers}
+    run(store, papers, signals)
+    julgados = []
+
+    def judge_all(ps):
+        julgados.append([p.arxiv_id for p in ps])
+        return {p.arxiv_id: judgment() for p in ps}
+
+    r = run_day(store=store, scope=outro, thresholds=T, today=TODAY,
+                model="modelo-de-teste",
+                fetch_papers=lambda s: Discovery(papers=papers),
+                fetch_signal=lambda p, today: (signals[p.arxiv_id], []),
+                judge_all=judge_all)
+    assert r.cuts["ja_conhecido"] == 3
+    # Nenhum id foi mandado para julgamento -- seja porque `judge_all` nem
+    # foi chamado, seja porque foi chamado com lista vazia. As duas coisas
+    # satisfazem o que importa: o segundo escopo nao re-paga o primeiro.
+    assert [i for ids in julgados for i in ids] == []
+    assert store.all_papers()[0]["scope"] == SCOPE.name

@@ -72,7 +72,7 @@ class GitHubClient:
         self._fetch = fetch
 
     def signal_with_repos(
-        self, paper: Paper, today: date, citations: int = 0
+        self, paper: Paper, today: date
     ) -> tuple[Signal, list[RepoClassification]]:
         repos = parse_search(self._fetch(build_search_url(paper.arxiv_id)))
         classifications = classify_repos(repos, paper.authors, paper.abstract)
@@ -88,9 +88,11 @@ class GitHubClient:
             independent_impls=sum(1 for c in classifications if not c.is_author),
             velocity_14d=velocity,
             stars_total=sum(r.stars for r in repos),
-            citations=citations,
-        )
+        )   # citations fica None: o GitHub nao sabe disso, e nunca soube.
+            # O parametro `citations: int = 0` vivia aqui com default e nenhum
+            # chamador jamais passou outro valor -- ele e a origem das 1088
+            # linhas constantes em zero, nao a solucao delas.
         return signal, classifications
 
-    def signal_for(self, paper: Paper, today: date, citations: int = 0) -> Signal:
-        return self.signal_with_repos(paper, today, citations)[0]
+    def signal_for(self, paper: Paper, today: date) -> Signal:
+        return self.signal_with_repos(paper, today)[0]
