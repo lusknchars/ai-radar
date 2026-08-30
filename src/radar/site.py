@@ -8,8 +8,10 @@ nao sabe de onde o dado veio.
 """
 from __future__ import annotations
 
+import re
 from html import escape
 
+from .leitura import afirmacoes
 from .site_data import SiteData
 from .config import load_thresholds
 from .svg import (METRICAS_X, render_avanco,
@@ -48,6 +50,23 @@ _JS = """
 // Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
 // troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
 // atributo `hidden` mora no HTML e nao num `display:none` de CSS.
+// Frases do bloco de leitura: clicar aplica o recorte que a reproduz.
+document.querySelectorAll('[data-aplicar]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var chave = b.getAttribute('data-aplicar');
+    var valor = b.getAttribute('data-valor');
+    if (chave === 'ordenar'){
+      var alvo = document.querySelector('[data-ordenar="' + valor + '"]');
+      if (alvo) alvo.click();
+    } else {
+      var sel = document.getElementById('f-' + chave);
+      if (sel){ sel.value = valor; filtros[chave] = valor; aplicar(); }
+    }
+    var tabela = document.querySelector('.rolagem');
+    if (tabela) tabela.scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
+});
+
 // Filtro, busca e contagem. Tudo sobre `hidden` em linha: sem estado, sem
 // URL, sem framework. A contagem existe porque um filtro que devolve pouco e
 // indistinguivel de um filtro quebrado sem ela.
@@ -191,6 +210,13 @@ margin-right:6px;vertical-align:middle}
 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
 a:hover{border-bottom-color:var(--acento)}
 .rolagem{overflow-x:auto}
+.leitura p.frase,.leitura button.frase{max-width:64ch;margin:0 0 10px;
+font-size:15px;line-height:1.5}
+.leitura b.n{font-weight:640;font-variant-numeric:tabular-nums}
+.leitura button.frase{display:block;text-align:left;font-family:inherit;
+background:none;border:0;border-bottom:1px dotted var(--linha);padding:0 0 2px;
+cursor:pointer;color:inherit}
+.leitura button.frase:hover{border-bottom-color:var(--acento)}
 .filtros input[type=search]{font:inherit;font-size:13px;padding:5px 9px;
 background:var(--fundo);color:var(--texto);border:1px solid var(--linha);
 border-radius:6px;min-width:210px}
@@ -312,6 +338,43 @@ def _secao_avanco(d: SiteData) -> str:
             + f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
               f"quantificado. Escala logarítmica; a linha por família só "
               f"aparece com pelo menos cinco papers no trimestre.</p>")
+
+
+def _destacar_numeros(texto: str) -> str:
+    """Envolve os numeros em <b>, sobre o texto JA escapado.
+
+    A ordem importa: escapar depois de inserir a tag comeria a propria tag.
+    """
+    return re.sub(r"(\d[\d.,]*%?)", r'<b class="n">\1</b>', escape(texto))
+
+
+def _secao_leitura(d: SiteData) -> str:
+    """Prosa, nao cartoes de metrica.
+
+    Cartao convida a leitura por varredura, e varredura e o modo em que numero
+    sem contexto vira impressao. As frases entram em paragrafo, com os numeros
+    em destaque tipografico.
+
+    Frase com filtro vira botao que aplica o recorte na tabela abaixo -- e o
+    que separa esta secao de um resumo gerado. Uma afirmacao conferivel em
+    dois cliques e verificavel; uma que so pode ser aceita e autoridade.
+    """
+    afs = afirmacoes(d)
+    if not afs:
+        return ""
+    partes = []
+    for a in afs:
+        corpo = _destacar_numeros(a.texto)
+        if a.filtro:
+            chave, valor = next(iter(a.filtro.items()))
+            partes.append(
+                f'<button type="button" class="frase" '
+                f'data-aplicar="{escape(chave)}" '
+                f'data-valor="{escape(str(valor))}">{corpo}</button>'
+            )
+        else:
+            partes.append(f'<p class="frase">{corpo}</p>')
+    return f'<section class="leitura">{"".join(partes)}</section>'
 
 
 def _secao_familias(d: SiteData) -> str:
@@ -511,6 +574,7 @@ def render_site(dados: SiteData) -> str:
         f"<style>{_CSS}</style></head><body><div class=\"envelope\">"
         f"{_cabecalho(dados)}"
         f'<section class="enquadramento">{_ENQUADRAMENTO}</section>'
+        f"{_secao_leitura(dados)}"
         f"{corpo}"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"

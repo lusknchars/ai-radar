@@ -405,3 +405,39 @@ def test_ha_contador_vivo_de_linhas(dados):
 def test_a_legenda_e_clicavel_e_carrega_a_familia(dados):
     html = render_site(dados)
     assert 'data-legenda="cache_kv"' in html
+
+
+# --- Tarefa 8 do bloco de leitura ---
+
+def test_o_bloco_aparece_acima_do_grafico(dados):
+    html = render_site(dados)
+    assert html.index('class="leitura"') < html.index('class="scatter"')
+
+
+def test_o_bloco_vem_prosa_e_nao_cartoes(dados):
+    """Cartão convida à leitura por varredura, e varredura é o modo em que
+    número sem contexto vira impressão."""
+    html = render_site(dados)
+    assert '<p class="frase"' in html
+    assert 'class="cartao"' not in html
+
+
+def test_a_frase_com_filtro_vira_link_aplicavel(dados):
+    assert "data-aplicar=" in render_site(dados)
+
+
+def test_frase_sem_filtro_nao_vira_link(dados):
+    """A de escassez não tem filtro: ela é o denominador, não um recorte."""
+    import re
+    html = render_site(dados)
+    frase = re.search(r'<p class="frase"[^>]*>.*?não têm.*?</p>', html, re.S)
+    assert frase and "data-aplicar" not in frase.group(0)
+
+
+def test_acervo_vazio_nao_desenha_o_bloco(dados_vazio):
+    assert 'class="leitura"' not in render_site(dados_vazio)
+
+
+def test_os_numeros_do_bloco_ganham_destaque(dados):
+    """Prosa com número destacado: o olho acha o número sem o cartão."""
+    assert '<b class="n">' in render_site(dados)
