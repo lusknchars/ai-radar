@@ -6,21 +6,24 @@ import os
 import shutil
 import tempfile
 import time
-from datetime import datetime, timezone
+from collections import Counter
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import anthropic
 import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
-from .config import AGENT_SCOPE, DEFAULT_SCOPE, load_model, load_recheck_limit, load_thresholds
+from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
+                     load_kimi_request_interval, load_llm_provider, load_model,
+                     load_recheck_limit, load_thresholds)
 from .github import GitHubClient
-from .judge import collect_batch_results, submit_batch, wait_for_batch
+from .judge import KimiJudge, collect_batch_results, submit_batch, wait_for_batch
 from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
 from .pipeline import run_day
 from .render import compose_day
-from .site import render_site
-from .store import Store
+from .publish import publish_site
+from .store import SchemaMigrationRequired, Store
 from .telegram import send
 
 # A busca do GitHub permite 10 req/min sem autenticacao e 30/min com token, e o
@@ -71,8 +74,33 @@ def _executar(args, db_path: Path, today) -> int:
 
     arxiv = ArxivClient(fetch=_arxiv_fetch)
     github = GitHubClient(fetch=_github_fetch)
-    client = anthropic.Anthropic()
+    provider = load_llm_provider()
     model = load_model()
+
+    if provider == "kimi":
+        kimi = KimiJudge(
+            os.environ.get("KIMI_API_KEY", ""), model,
+            request_interval=load_kimi_request_interval(),
+            base_url=load_kimi_base_url(),
+        )
+
+        def judge_all(papers):
+            return kimi.judge_all(papers)
+    else:
+        client = anthropic.Anthropic()
+
+        def judge_all(papers):
+            if not papers:
+                return {}
+            batch = submit_batch(client, papers, model)
+            if not wait_for_batch(client, batch.id):
+                # Degradacao visivel: o dia segue, e todos os papers entram na
+                # secao de cortes como `sem_julgamento` em vez de o workflow
+                # ficar preso ate o timeout do runner.
+                print(f"lote {batch.id} nao concluiu no prazo; o dia segue sem julgamentos",
+                      flush=True)
+                return {}
+            return collect_batch_results(client.messages.batches.results(batch.id))
 
     intervalo = github_sleep_seconds()
 
@@ -80,22 +108,10 @@ def _executar(args, db_path: Path, today) -> int:
         time.sleep(intervalo)
         return github.signal_with_repos(paper, today=day)
 
-    def judge_all(papers):
-        if not papers:
-            return {}
-        batch = submit_batch(client, papers, model)
-        if not wait_for_batch(client, batch.id):
-            # Degradacao visivel: o dia segue, e todos os papers entram na
-            # secao de cortes como `sem_julgamento` em vez de o workflow
-            # ficar preso ate o timeout do runner.
-            print(f"lote {batch.id} nao concluiu no prazo; o dia segue sem julgamentos",
-                  flush=True)
-            return {}
-        return collect_batch_results(client.messages.batches.results(batch.id))
-
     openalex = OpenAlexClient(fetch=_openalex_fetch)
     limiares = load_thresholds()
     resultados: dict[str, object] = {}
+    cortes_do_dia: Counter[str] = Counter()
 
     for i, escopo in enumerate((DEFAULT_SCOPE, AGENT_SCOPE)):
         r = run_day(
@@ -110,6 +126,7 @@ def _executar(args, db_path: Path, today) -> int:
             recheck_limit=load_recheck_limit() if i == 0 else 0,
         )
         resultados[escopo.name] = r
+        cortes_do_dia.update(r.cuts)
         print(f"{escopo.name}: radar {len(r.radar)} · feed {len(r.feed)} "
               f"· cortes {r.cuts}")
 
@@ -124,9 +141,7 @@ def _executar(args, db_path: Path, today) -> int:
         # vez de usar os DayResult acima. E por isso tambem que o ensaio a
         # seco nao o escreve -- ele nao gravou nada no banco de verdade.
         pagina = args.out.parent / "site"
-        pagina.mkdir(parents=True, exist_ok=True)
-        (pagina / "index.html").write_text(
-            render_site(store.site_data(today)), encoding="utf-8")
+        publish_site(store, pagina, today, cuts=dict(cortes_do_dia))
         print(f"jornal: {pagina / 'index.html'}")
 
     if args.dry_run:
@@ -178,7 +193,11 @@ def main(argv: list[str] | None = None) -> int:
             shutil.copy2(args.db, db_path)   # le o estado real, escreve na copia
 
     try:
-        return _executar(args, db_path, today)
+        try:
+            return _executar(args, db_path, today)
+        except SchemaMigrationRequired as exc:
+            print(f"pipeline bloqueado: {exc}", flush=True)
+            return 2
     finally:
         # `finally`, nao o caminho feliz: qualquer excecao entre o mkdtemp e o
         # fim -- arXiv fora do ar, submit do lote falhando, disco cheio ao

@@ -16,7 +16,7 @@ permissions:
   id-token: write            # exigido pelo deploy-pages
 
 concurrency:
-  group: radar
+  group: radar-state
   # Serializa execucoes: duas em paralelo (por exemplo um dispatch manual
   # durante o run agendado) brigariam no `git push` sobre os mesmos arquivos.
   # NAO e para preservar estado parcial -- o runner e efemero, e nada em
@@ -27,6 +27,8 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
+    outputs:
+      site_ready: ${{ steps.site_status.outputs.ready }}
     steps:
       - uses: actions/checkout@v4
 
@@ -39,7 +41,11 @@ jobs:
 
       - name: Rodar o radar
         env:
+          RADAR_LLM_PROVIDER:  ${{ vars.RADAR_LLM_PROVIDER }}
+          RADAR_MODEL:         ${{ vars.RADAR_MODEL }}
+          RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          KIMI_API_KEY:        ${{ secrets.KIMI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
           GH_TOKEN:           ${{ secrets.GH_TOKEN }}
@@ -58,18 +64,26 @@ jobs:
         run: |
           git config user.name  "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          # `-A -- data radar` em vez de nomear data/radar.db: no primeiro
-          # ensaio com --dry-run o banco vive num diretorio temporario e o
-          # arquivo nao existe aqui, e nomear um pathspec inexistente faz o
-          # git sair 128 e o passo inteiro falhar -- levando junto o digest
-          # que ja tinha sido escrito. `mkdir -p` NAO resolve: cria o
-          # diretorio, nao o arquivo. Esta forma estagia o que existir.
-          git add -A -- data radar site
+          # data/ e radar/ existem no checkout. site/ so existe depois que a
+          # publicacao termina; passar um pathspec ausente faz git add sair
+          # 128 e esconder a falha original do radar.
+          git add -A -- data radar
+          if test -d site; then git add -A -- site; fi
           git diff --staged --quiet || git commit -m "radar: digest de $(date -u +%F)"
           git push
 
-      - name: Empacotar o jornal
+      - name: Verificar artefato do jornal
+        id: site_status
         if: ${{ !cancelled() }}
+        run: |
+          if test -f site/index.html; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Empacotar o jornal
+        if: ${{ !cancelled() && steps.site_status.outputs.ready == 'true' }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
@@ -79,7 +93,7 @@ jobs:
     # declarar environment no job que faz `git push` prenderia o commit do
     # digest a uma aprovacao de deploy.
     needs: run
-    if: ${{ !cancelled() }}
+    if: ${{ always() && !cancelled() && needs.run.outputs.site_ready == 'true' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

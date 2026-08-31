@@ -1,19 +1,23 @@
-"""O jornal: uma pagina HTML autocontida, gerada por funcao pura.
+"""Renderizadores semanticos do acervo, gerados por funcoes puras.
 
 Sem framework, sem passo de build, sem dependencia externa -- nem no servidor
 nem no cliente. A pagina e um arquivo, e funciona com JS desligado.
 
 Recebe `SiteData` pronto e NUNCA o `Store`: a coleta mora no banco, o desenho
-nao sabe de onde o dado veio.
+nao sabe de onde o dado veio. CSS e comportamento do navegador pertencem a
+``site_assets``; este modulo decide apenas estrutura, conteudo e links.
 """
 from __future__ import annotations
 
 import re
 from html import escape
+from urllib.parse import urlencode
 
-from .leitura import afirmacoes
-from .site_data import SiteData
 from .config import load_thresholds
+from .leitura import afirmacoes
+from .report import ReportDocument
+from .site_assets import SCRIPT as _JS, STYLES as _CSS
+from .site_data import SiteData
 from .svg import (METRICAS_X, render_avanco,
                   render_pequenos_multiplos, render_scatter)
 
@@ -46,251 +50,68 @@ CORES_FAMILIA = {
     "outro":                      "#6b7280",
 }
 
-_JS = """
-// Toda a interatividade da pagina. Os tres SVGs ja vem renderizados; o JS so
-// troca qual esta visivel. Com ele desligado, o primeiro fica -- por isso o
-// atributo `hidden` mora no HTML e nao num `display:none` de CSS.
-// Fundo interativo: dois valores CSS atualizados no ponteiro. Nada de canvas
-// nem de laco de animacao -- o navegador pinta o gradiente, e a pagina
-// continua leve. Quem pediu menos movimento nao recebe o listener.
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  var fundo = document.getElementById('fundo');
-  var pendente = false;
-  window.addEventListener('pointermove', function(e){
-    if (pendente) return;
-    pendente = true;
-    requestAnimationFrame(function(){
-      fundo.style.setProperty('--px', (e.clientX / window.innerWidth * 100) + '%');
-      fundo.style.setProperty('--py', (e.clientY / window.innerHeight * 100) + '%');
-      pendente = false;
-    });
-  }, {passive: true});
+ROTULOS_FAMILIA = {
+    "quantizacao": "quantização",
+    "cache_kv": "cache KV",
+    "decodificacao_especulativa": "decodificação especulativa",
+    "esparsidade_e_poda": "esparsidade e poda",
+    "kernels_e_atencao": "kernels e atenção",
+    "serving_e_batching": "serving e batching",
+    "arquitetura_eficiente": "arquitetura eficiente",
+    "destilacao": "destilação",
+    "treino_eficiente": "treino eficiente",
+    "uso_de_ferramenta": "uso de ferramenta",
+    "memoria_e_contexto": "memória e contexto",
+    "planejamento_e_decomposicao": "planejamento e decomposição",
+    "orquestracao_multiagente": "orquestração multiagente",
+    "avaliacao_de_agente": "avaliação de agente",
+    "recuperacao_de_falha": "recuperação de falha",
+    "agentes_de_codigo": "agentes de código",
+    "seguranca_e_guardrails": "segurança e guardrails",
+    "recuperacao_e_rag": "recuperação e RAG",
+    "outro": "outro",
 }
 
-// Frases do bloco de leitura: clicar aplica o recorte que a reproduz.
-document.querySelectorAll('[data-aplicar]').forEach(function(b){
-  b.addEventListener('click', function(){
-    var chave = b.getAttribute('data-aplicar');
-    var valor = b.getAttribute('data-valor');
-    if (chave === 'ordenar'){
-      var alvo = document.querySelector('[data-ordenar="' + valor + '"]');
-      if (alvo) alvo.click();
-    } else {
-      var sel = document.getElementById('f-' + chave);
-      if (sel){ sel.value = valor; filtros[chave] = valor; aplicar(); }
-    }
-    var tabela = document.querySelector('.rolagem');
-    if (tabela) tabela.scrollIntoView({behavior: 'smooth', block: 'start'});
-  });
-});
-
-// Filtro, busca e contagem. Tudo sobre `hidden` em linha: sem estado, sem
-// URL, sem framework. A contagem existe porque um filtro que devolve pouco e
-// indistinguivel de um filtro quebrado sem ela.
-var filtros = {};
-var busca = '';
-var corpo = document.querySelector('tbody');
-var contador = document.getElementById('contador');
-
-function aplicar(){
-  var linhas = document.querySelectorAll('.linha'), n = 0;
-  linhas.forEach(function(tr){
-    var passa = Object.keys(filtros).every(function(k){
-      return !filtros[k] || tr.getAttribute('data-' + k) === filtros[k];
-    }) && (!busca || tr.getAttribute('data-texto').indexOf(busca) !== -1);
-    tr.hidden = !passa;
-    if (passa) n++;
-  });
-  if (contador) contador.textContent = n + ' de ' + linhas.length;
+ROTULOS_PRATICA = {
+    "adotar": "adotar",
+    "testar": "testar",
+    "observar": "observar",
+    "nao_aplica": "não se aplica",
 }
 
-document.querySelectorAll('[data-filtro]').forEach(function(s){
-  s.addEventListener('change', function(){
-    filtros[s.getAttribute('data-filtro')] = s.value;
-    aplicar();
-  });
-});
+ROTULOS_INFRA = {
+    "api_or_cpu": "API ou CPU",
+    "single_gpu_24gb": "1 GPU, até 24 GB",
+    "single_gpu_48_80gb": "1 GPU, 48 a 80 GB",
+    "multi_gpu": "múltiplas GPUs",
+    "cluster": "cluster",
+    "custom_hardware": "hardware específico",
+    "unknown": "não informado",
+}
 
-var campo = document.querySelector('[data-busca]');
-if (campo) campo.addEventListener('input', function(){
-  busca = campo.value.trim().toLowerCase();
-  aplicar();
-});
+ROTULOS_BASE_INFRA = {
+    "explicit": "declarada no paper",
+    "inferred": "inferida dos requisitos",
+    "unknown": "não informada",
+}
 
-// Ordenacao por ATRIBUTO, nunca pelo texto da celula: "\u2014" e "2.3x" nao sao
-// numeros, e parsear o visivel quebraria calado nos dois.
-document.querySelectorAll('[data-ordenar]').forEach(function(b){
-  b.addEventListener('click', function(){
-    var chave = b.getAttribute('data-ordenar');
-    var asc = b.getAttribute('aria-sort') === 'desc';
-    document.querySelectorAll('[data-ordenar]').forEach(function(o){
-      o.removeAttribute('aria-sort');
-    });
-    b.setAttribute('aria-sort', asc ? 'asc' : 'desc');
-    var linhas = Array.prototype.slice.call(document.querySelectorAll('.linha'));
-    linhas.sort(function(x, y){
-      var a = parseFloat(x.getAttribute('data-' + chave));
-      var c = parseFloat(y.getAttribute('data-' + chave));
-      return asc ? a - c : c - a;
-    });
-    linhas.forEach(function(tr){ corpo.appendChild(tr); });
-  });
-});
+ROTULOS_TREINO = {
+    "none": "nenhum",
+    "inference_only": "somente inferência",
+    "fine_tuning": "fine-tuning",
+    "train_from_scratch": "treino do zero",
+    "unknown": "não informado",
+}
 
-// Legenda clicavel: o cruzamento entre ver o grafico e interrogar a tabela.
-document.querySelectorAll('[data-legenda]').forEach(function(b){
-  b.addEventListener('click', function(){
-    var f = b.getAttribute('data-legenda');
-    var ligado = b.getAttribute('aria-pressed') === 'true';
-    document.querySelectorAll('[data-legenda]').forEach(function(o){
-      o.setAttribute('aria-pressed', 'false');
-    });
-    b.setAttribute('aria-pressed', String(!ligado));
-    filtros.familia = ligado ? '' : f;
-    var sel = document.getElementById('f-familia');
-    if (sel) sel.value = filtros.familia;
-    aplicar();
-  });
-});
-
-document.querySelectorAll('[data-eixo]').forEach(function(b){
-  b.addEventListener('click', function(){
-    var alvo = b.getAttribute('data-eixo');
-    document.querySelectorAll('[data-eixo]').forEach(function(o){
-      o.setAttribute('aria-pressed', String(o === b));
-    });
-    document.querySelectorAll('.scatter').forEach(function(s){
-      s.hidden = (s.getAttribute('data-eixo') !== alvo);
-    });
-  });
-});
-"""
-
-_CSS = r"""
-:root{--fundo:#fbfaf8;--texto:#1a1a18;--fraco:#6b6b64;--linha:#e3e0d8;
---acento:#1a1a18;--caixa:#f4f2ed;--brilho:26,26,24;--foco:#8a5a2b}
-@media (prefers-color-scheme: dark){:root{--fundo:#0e0e0d;--texto:#e8e5df;
---fraco:#8f8d85;--linha:#282621;--acento:#faf8f4;--caixa:#161512;
---brilho:232,229,223;--foco:#d4a373}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--fundo);color:var(--texto);
-font-family:'Iowan Old Style','Palatino Linotype',Palatino,Charter,
-'Bitstream Charter',Georgia,'Times New Roman',serif;
-font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
-#fundo{position:fixed;inset:0;z-index:-1;pointer-events:none;
-background:radial-gradient(680px circle at var(--px,50%) var(--py,22%),
-rgba(var(--brilho),0.055),transparent 62%),
-repeating-linear-gradient(90deg,transparent 0 119px,
-rgba(var(--brilho),0.028) 119px 120px)}
-@media (prefers-reduced-motion: reduce){#fundo{
-background:repeating-linear-gradient(90deg,transparent 0 119px,
-rgba(var(--brilho),0.028) 119px 120px)}}
-.pular{position:absolute;left:-9999px;top:0;background:var(--texto);
-color:var(--fundo);padding:10px 16px;z-index:10}
-.pular:focus{left:8px;top:8px}
-:focus-visible{outline:2px solid var(--foco);outline-offset:3px}
-.envelope{max-width:1060px;margin:0 auto;padding:0 28px 96px}
-.masthead{padding:60px 0 22px;border-bottom:3px double var(--linha)}
-h1{margin:0;font-size:52px;line-height:1;letter-spacing:-0.035em;font-weight:600}
-.dateline{margin-top:14px;padding-top:12px;border-top:1px solid var(--linha);
-font-family:system-ui,-apple-system,sans-serif;font-size:11px;
-text-transform:uppercase;letter-spacing:0.13em;color:var(--fraco);
-display:flex;gap:20px;flex-wrap:wrap}
-.numeros{display:flex;gap:48px;margin-top:26px;flex-wrap:wrap}
-.numero b{display:block;font-family:system-ui,-apple-system,sans-serif;
-font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;
-letter-spacing:-0.02em;line-height:1.1}
-.numero span{font-family:system-ui,-apple-system,sans-serif;font-size:10px;
-color:var(--fraco);text-transform:uppercase;letter-spacing:0.12em}
-section{padding:46px 0;border-bottom:1px solid var(--linha)}
-section:last-child{border-bottom:0}
-h2{margin:0 0 6px;font-size:25px;font-weight:600;letter-spacing:-0.02em}
-h3{margin:0 0 4px;font-size:19px;font-weight:600}
-.sub{color:var(--fraco);font-size:15px;margin:0 0 24px;max-width:60ch;
-font-style:italic}
-.enquadramento{border-bottom:3px double var(--linha)}
-.enquadramento p{max-width:62ch;font-size:17px}
-.enquadramento p:first-child::first-letter{float:left;font-size:56px;
-line-height:.82;padding:4px 10px 0 0;font-weight:600}
-.enquadramento p+p{color:var(--fraco)}
-.leitura p.frase,.leitura button.frase{max-width:62ch;margin:0 0 12px;
-font-size:18px;line-height:1.5}
-.leitura b.n{font-family:system-ui,-apple-system,sans-serif;font-weight:620;
-font-variant-numeric:tabular-nums;font-size:.94em}
-.leitura button.frase{display:block;text-align:left;font-family:inherit;
-background:none;border:0;border-bottom:1px dotted var(--linha);padding:0 0 3px;
-cursor:pointer;color:inherit}
-.leitura button.frase:hover{border-bottom-color:var(--acento)}
-.vazio{color:var(--fraco);padding:64px 0;text-align:center;font-style:italic}
-svg{width:100%;height:auto;display:block;color:var(--fraco)}
-.futuro{color:var(--fraco);font-size:14px;font-style:italic;padding:24px 0}
-footer{padding:44px 0;color:var(--fraco);font-size:12px;
-font-family:system-ui,-apple-system,sans-serif}
-.eixos,.filtros,.legenda,table,.repos,.cortes,.nota{
-font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-.eixos{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.eixos button{font:inherit;font-size:12px;padding:6px 13px;cursor:pointer;
-border:1px solid var(--linha);background:transparent;color:var(--fraco);
-border-radius:999px;min-height:32px}
-.eixos button[aria-pressed="true"]{border-color:var(--acento);
-color:var(--acento);font-weight:550}
-.legenda{display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;font-size:11px;
-color:var(--fraco)}
-.legenda i{display:inline-block;width:8px;height:8px;border-radius:2px;
-margin-right:5px;vertical-align:middle}
-.legenda button{font:inherit;font-size:11px;color:var(--fraco);background:none;
-border:0;padding:3px 0;cursor:pointer}
-.legenda button[aria-pressed=true]{color:var(--acento);font-weight:600}
-.nota{font-size:12px;color:var(--fraco);margin-top:14px;max-width:58ch}
-.filtros{display:flex;gap:22px;margin-bottom:20px;flex-wrap:wrap}
-.filtros label{font-size:10px;color:var(--fraco);text-transform:uppercase;
-letter-spacing:0.12em;display:block;margin-bottom:6px}
-.filtros select,.filtros input[type=search]{font:inherit;font-size:13px;
-padding:7px 10px;background:var(--fundo);color:var(--texto);
-border:1px solid var(--linha);border-radius:4px;min-height:34px}
-.filtros input[type=search]{min-width:210px}
-.contagem span{font-size:13px;font-variant-numeric:tabular-nums;
-color:var(--fraco);display:inline-block;padding-top:7px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{text-align:left;font-weight:550;font-size:10px;color:var(--fraco);
-text-transform:uppercase;letter-spacing:0.12em;padding:0 12px 10px 0;
-border-bottom:2px solid var(--linha);position:sticky;top:0;
-background:var(--fundo)}
-thead button{font:inherit;font-size:10px;text-transform:uppercase;
-letter-spacing:0.12em;color:var(--fraco);background:none;border:0;padding:0;
-cursor:pointer;font-weight:550;min-height:24px}
-thead button:hover,thead button[aria-sort]{color:var(--acento)}
-thead button[aria-sort]::after{content:" \2193"}
-thead button[aria-sort=asc]::after{content:" \2191"}
-td{padding:10px 12px 10px 0;border-bottom:1px solid var(--linha);
-vertical-align:top}
-tbody tr:hover td{background:var(--caixa)}
-td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;
-color:var(--fraco)}
-.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;
-border:1px solid var(--linha);color:var(--fraco);white-space:nowrap}
-.tag.adotar{border-color:currentColor;color:var(--texto);font-weight:550}
-.pt{display:inline-block;width:7px;height:7px;border-radius:2px;
-margin-right:7px;vertical-align:middle}
-a{color:inherit;text-decoration:none;border-bottom:1px solid var(--linha)}
-a:hover{border-bottom-color:var(--acento)}
-.rolagem{overflow-x:auto;max-height:70vh}
-.destaque .meta{color:var(--fraco);font-size:12px;margin-bottom:16px;
-font-family:system-ui,-apple-system,sans-serif}
-.destaque p.resumo{max-width:62ch;margin:0 0 22px}
-.repos{list-style:none;padding:0;margin:0;font-size:13px}
-.repos li{padding:9px 0;border-bottom:1px solid var(--linha);display:flex;
-gap:14px;align-items:baseline;flex-wrap:wrap}
-.repos .quem{color:var(--fraco);font-size:11px}
-.repos .indep{color:var(--texto);font-weight:550}
-.cortes{list-style:none;padding:0;margin:0;font-size:13px;
-font-variant-numeric:tabular-nums}
-.cortes li{padding:8px 0;border-bottom:1px solid var(--linha);display:flex;
-justify-content:space-between;max-width:420px}
-.cortes b{font-weight:600}
-@media (max-width: 640px){.envelope{padding:0 18px 64px}h1{font-size:36px}
-.numeros{gap:28px}body{font-size:16px}}
-"""
+ROTULOS_SETUP = {
+    "standard_python": "Python padrão",
+    "containerized": "container",
+    "custom_runtime": "runtime próprio",
+    "custom_cuda_kernel": "kernel CUDA próprio",
+    "distributed_stack": "stack distribuída",
+    "specialized_simulator": "simulador especializado",
+    "unknown": "não informado",
+}
 
 # Contrato com o leitor. Escrito a mao e versionado -- nao e gerado, e nao
 # muda com o dado do dia.
@@ -307,14 +128,56 @@ _ENQUADRAMENTO = (
 )
 
 
-def _cabecalho(d: SiteData) -> str:
-    impls = sum(p.independent_impls for p in d.pontos)
+def _nav(atual: str) -> str:
+    itens = (
+        ("acervo", "/ai-radar/#acervo", "papers"),
+        ("sinais", "/ai-radar/#sinais", "sinais"),
+        ("edicoes", "/ai-radar/edicoes/", "edições"),
+        ("about", "/ai-radar/about.html", "sobre"),
+        ("rss", "/ai-radar/feed.xml", "RSS"),
+    )
+    links = "".join(
+        f'<a href="{href}"'
+        f'{" aria-current=\"page\"" if chave == atual else ""}>{rotulo}</a>'
+        for chave, href, rotulo in itens
+    )
+    return f'<nav class="nav" aria-label="principal">{links}</nav>'
+
+
+def _sheen_content(label: str) -> str:
     return (
-        f'<header class="masthead"><h1>ai-radar</h1>'
-        f'<div class="dateline"><span>acervo em {escape(d.dia)}</span>'
-        f'<span>implementação independente como sinal</span>'
-        f'<span>nada aqui foi reproduzido</span></div>'
-        f'<div class="numeros">'
+        '<span class="sheen-sweep" aria-hidden="true"></span>'
+        '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" '
+        'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" '
+        'stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"></path></svg>'
+        f'<span class="sheen-label">{escape(label)}</span>'
+    )
+
+
+def _sheen_link(label: str, href: str, *, classes: str = "",
+                aria_label: str | None = None, rel: str = "") -> str:
+    aria = f' aria-label="{escape(aria_label)}"' if aria_label else ""
+    relationship = f' rel="{escape(rel)}"' if rel else ""
+    return (
+        f'<a class="sheen-button {classes}" href="{escape(href)}"'
+        f'{aria}{relationship}>'
+        f'{_sheen_content(label)}</a>'
+    )
+
+
+def _cabecalho(d: SiteData, edicao: bool = False) -> str:
+    impls = sum(p.independent_impls for p in d.pontos)
+    contexto = "edição preservada" if edicao else "fila de leitura"
+    return (
+        '<header class="masthead"><div class="hero-copy">'
+        f'<p class="hero-eyebrow">{contexto} · {escape(d.dia)}</p>'
+        '<h1><span class="marca">ai-radar</span>Leia menos.<br>'
+        '<em>Teste melhor.</em></h1>'
+        '<p class="hero-deck">Papers de AI classificados por implementação '
+        'independente. Briefs para decidir rápido, relatórios completos apenas '
+        'quando uma técnica merece o seu tempo.</p>'
+        f'{_sheen_link("ver os briefs", "#acervo")}</div>'
+        f'<div class="numeros" aria-label="resumo do acervo">'
         f'<div class="numero"><b>{len(d.pontos)}</b><span>papers</span></div>'
         f'<div class="numero"><b>{len(d.familias_presentes)}</b>'
         f"<span>famílias</span></div>"
@@ -324,8 +187,9 @@ def _cabecalho(d: SiteData) -> str:
     )
 
 
-def _secao(titulo: str, sub: str, corpo: str) -> str:
-    return (f"<section><h2>{titulo}</h2><p class=\"sub\">{sub}</p>"
+def _secao(titulo: str, sub: str, corpo: str, *, section_id: str = "") -> str:
+    identificador = f' id="{escape(section_id)}"' if section_id else ""
+    return (f"<section{identificador}><h2>{titulo}</h2><p class=\"sub\">{sub}</p>"
             f"{corpo}</section>")
 
 
@@ -338,7 +202,8 @@ def _legenda(d: SiteData) -> str:
     """
     itens = "".join(
         f'<button type="button" data-legenda="{escape(f)}">'
-        f'<i style="background:{CORES_FAMILIA[f]}"></i>{escape(f)}</button>'
+        f'<i style="background:{CORES_FAMILIA[f]}"></i>'
+        f'{escape(ROTULOS_FAMILIA[f])}</button>'
         for f in d.familias_presentes
     )
     return f'<div class="legenda">{itens}</div>'
@@ -370,6 +235,8 @@ def _secao_fronteira(d: SiteData) -> str:
 COBERTURA_MINIMA = 0.35
 
 ROTULO_ALEGACAO = "alegado pelos autores, não verificado"
+BRIEF_INITIAL_LIMIT = 30
+REPORT_REPOSITORY = "lusknchars/ai-radar"
 
 
 def _secao_avanco(d: SiteData) -> str:
@@ -388,11 +255,18 @@ def _secao_avanco(d: SiteData) -> str:
 
 
 def _destacar_numeros(texto: str) -> str:
-    """Envolve os numeros em <b>, sobre o texto JA escapado.
+    """Escapa cada trecho e envolve apenas numeros do texto original.
 
-    A ordem importa: escapar depois de inserir a tag comeria a propria tag.
+    Aplicar a regex depois de `escape()` tambem pegava o 27 de `&#x27;`,
+    quebrando aspas em `&#x<b>27</b>;` e exibindo a entidade no navegador.
     """
-    return re.sub(r"(\d[\d.,]*%?)", r'<b class="n">\1</b>', escape(texto))
+    numero = re.compile(r"^\d[\d.,]*%?$")
+    partes = re.split(r"(\d[\d.,]*%?)", texto)
+    return "".join(
+        f'<b class="n">{escape(parte)}</b>' if numero.fullmatch(parte)
+        else escape(parte)
+        for parte in partes
+    )
 
 
 def _secao_leitura(d: SiteData) -> str:
@@ -429,15 +303,43 @@ def _secao_familias(d: SiteData) -> str:
     for p in d.pontos:
         series.setdefault(p.familia, {}).setdefault(p.publicado[:7], 0)
         series[p.familia][p.publicado[:7]] += 1
-    return render_pequenos_multiplos(series, d.familias_presentes, CORES_FAMILIA)
+    return render_pequenos_multiplos(
+        series, d.familias_presentes, CORES_FAMILIA, ROTULOS_FAMILIA)
 
 
-def _opcoes(valores: list[str]) -> str:
+def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
+    rotulos = rotulos or {}
     return '<option value="">todas</option>' + "".join(
-        f'<option value="{escape(v)}">{escape(v)}</option>' for v in valores)
+        f'<option value="{escape(v)}">{escape(rotulos.get(v, v))}</option>'
+        for v in valores)
 
 
-def _linha(p) -> str:
+def _report_action(p, has_report: bool) -> str:
+    if has_report:
+        return _sheen_link(
+            "ler relatório", f"/ai-radar/reports/{p.arxiv_id}/",
+            classes="report-action", aria_label=f"ler relatório de {p.titulo}",
+        )
+    query = urlencode({
+        "title": f"[report] {p.arxiv_id}",
+        "body": (
+            f"Generate a deep report for arXiv {p.arxiv_id}.\n\n"
+            f"Paper: {p.titulo}\n\n"
+            "Requested from the ai-radar archive.\n\n"
+            "Credit protection: generation runs only when the repository "
+            "owner opens this issue."
+        ),
+    })
+    return _sheen_link(
+        "gerar relatório",
+        f"https://github.com/{REPORT_REPOSITORY}/issues/new?{query}",
+        classes="report-action secondary",
+        aria_label=f"gerar relatório de {p.titulo}",
+        rel="nofollow",
+    )
+
+
+def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
     cor = CORES_FAMILIA.get(p.familia, "currentColor")
     # `None` e desconhecido e vira travessao. Renderizar 0 aqui reintroduziria,
     # pela camada de apresentacao, o mesmo defeito que o pipeline consertou.
@@ -453,28 +355,31 @@ def _linha(p) -> str:
     ord_cit = -1 if p.citations is None else p.citations
     ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
     texto = f"{p.titulo} {p.familia} {p.pratica} {p.arxiv_id}".lower()
+    estado_inicial = ' data-inicial="oculta" hidden' if initial_hidden else ""
     return (
         f'<tr class="linha" data-id="{escape(p.arxiv_id)}" '
         f'data-familia="{escape(p.familia)}" data-pratica="{escape(p.pratica)}" '
         f'data-texto="{escape(texto)}" '
         f'data-impls="{p.independent_impls}" data-estrelas="{p.stars_total}" '
         f'data-citacoes="{ord_cit}" data-ganho="{ord_ganho:g}" '
-        f'data-score="{p.score:g}">'
-        f'<td><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
-        f"{escape(p.titulo)}</a></td>"
-        f'<td><span class="pt" style="background:{cor}"></span>'
-        f"{escape(p.familia)}</td>"
-        f'<td><span class="tag {escape(p.pratica)}">'
-        f'{escape(p.pratica.replace("_", " "))}</span></td>'
-        f'<td class="num">{p.independent_impls}</td>'
-        f'<td class="num">{p.stars_total}</td>'
-        f'<td class="num">{cit}</td>'
-        f'<td class="num">{ganho}</td>'
+        f'data-score="{p.score:g}"{estado_inicial}>'
+        f'<td data-label="paper"><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
+        f'{escape(p.titulo)}</a><span class="paper-brief">'
+        f'{escape(p.resumo)}</span></td>'
+        f'<td data-label="família"><span class="pt" style="background:{cor}"></span>'
+        f"{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))}</td>"
+        f'<td data-label="prática"><span class="tag {escape(p.pratica)}">'
+        f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))}</span></td>'
+        f'<td class="num" data-label="impls">{p.independent_impls}</td>'
+        f'<td class="num" data-label="estrelas">{p.stars_total}</td>'
+        f'<td class="num" data-label="citações">{cit}</td>'
+        f'<td class="num" data-label="ganho">{ganho}</td>'
+        f'<td class="acao" data-label="relatório">{_report_action(p, has_report)}</td>'
         f"</tr>"
     )
 
 
-def _secao_tabela(d: SiteData) -> str:
+def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
     """Filtro por pratica e por familia, sem estado e sem URL.
 
     O de PRATICA e o primario: e ele que responde "o que eu adoto", que e a
@@ -482,21 +387,33 @@ def _secao_tabela(d: SiteData) -> str:
     navegar a literatura, nao para decidir.
     """
     praticas = sorted({p.pratica for p in d.pontos})
-    linhas = "".join(_linha(p) for p in
-                     sorted(d.pontos, key=lambda p: -p.score))
+    ordenados = sorted(d.pontos, key=lambda p: -p.score)
+    linhas = "".join(
+        _linha(p, has_report=p.arxiv_id in report_ids,
+               initial_hidden=index >= BRIEF_INITIAL_LIMIT)
+        for index, p in enumerate(ordenados)
+    )
+    inicial = min(len(d.pontos), BRIEF_INITIAL_LIMIT)
+    mostrar = (
+        '<button type="button" class="sheen-button secondary show-all" '
+        f'data-mostrar-todos>{_sheen_content(f"mostrar todos os {len(d.pontos)} papers")}'
+        '</button>'
+        if len(d.pontos) > BRIEF_INITIAL_LIMIT else ""
+    )
     return (
         '<div class="filtros">'
         f'<div><label for="f-pratica">o que fazer</label>'
-        f'<select id="f-pratica" data-filtro="pratica">{_opcoes(praticas)}'
+        f'<select id="f-pratica" data-filtro="pratica">'
+        f'{_opcoes(praticas, ROTULOS_PRATICA)}'
         f"</select></div>"
         f'<div><label for="f-familia">família</label>'
         f'<select id="f-familia" data-filtro="familia">'
-        f"{_opcoes(d.familias_presentes)}</select></div>"
+        f"{_opcoes(d.familias_presentes, ROTULOS_FAMILIA)}</select></div>"
         '<div><label for="f-busca">buscar</label>'
         '<input id="f-busca" type="search" data-busca '
         'placeholder="quantization, agent, cache..."></div>'
         f'<div class="contagem"><label>mostrando</label>'
-        f'<span id="contador">{len(d.pontos)} de {len(d.pontos)}</span></div>'
+        f'<span id="contador">{inicial} de {len(d.pontos)}</span></div>'
         "</div>"
         '<div class="rolagem"><table><thead><tr>'
         '<th><button type="button" data-ordenar="score">técnica</button></th>'
@@ -505,7 +422,8 @@ def _secao_tabela(d: SiteData) -> str:
         '<th class="num"><button type="button" data-ordenar="estrelas">estrelas</button></th>'
         '<th class="num"><button type="button" data-ordenar="citacoes">citações</button></th>'
         '<th class="num"><button type="button" data-ordenar="ganho">ganho</button></th>'
-        f"</tr></thead><tbody>{linhas}</tbody></table></div>"
+        '<th>relatório</th>'
+        f"</tr></thead><tbody>{linhas}</tbody></table></div>{mostrar}"
     )
 
 
@@ -547,8 +465,8 @@ def _secao_destaque(d: SiteData) -> str:
         f'<div class="destaque"><h3>'
         f'<a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
         f"{escape(p.titulo)}</a></h3>"
-        f'<div class="meta">{escape(p.familia)} · '
-        f'{escape(p.pratica.replace("_", " "))} · '
+        f'<div class="meta">{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))} · '
+        f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))} · '
         f"{p.independent_impls} de {p.total_impls} implementações "
         f"independentes{ganho}</div>"
         f'<p class="resumo">{escape(p.resumo)}</p>{repos}</div>'
@@ -561,7 +479,10 @@ def _secao_cortes(d: SiteData) -> str:
     A secao aparece mesmo vazia: um dia sem cortes e informacao, e some-la
     faria parecer que a contabilidade nao foi feita.
     """
-    if d.cortes:
+    if d.cortes is None:
+        lista = ('<p class="nota">A contagem de cortes não foi registrada '
+                 'para esta edição.</p>')
+    elif d.cortes:
         itens = "".join(
             f"<li><span>{escape(motivo.replace('_', ' '))}</span>"
             f"<b>{n}</b></li>"
@@ -584,16 +505,24 @@ def _pendente(qual: str) -> str:
     return f'<p class="futuro">{qual}</p>'
 
 
-def render_site(dados: SiteData) -> str:
+def render_site(
+    dados: SiteData, *, edicao: bool = False,
+    report_ids: set[str] | None = None,
+) -> str:
+    report_ids = report_ids or set()
     if not dados.pontos:
         corpo = '<p class="vazio">Nenhum paper no acervo ainda.</p>'
     else:
         corpo = "".join((
+            _secao("Papers para decidir agora",
+                   "Os 30 maiores sinais aparecem primeiro. Busque e filtre "
+                   "o acervo inteiro sem gastar outra chamada de modelo.",
+                   _secao_tabela(dados, report_ids), section_id="acervo"),
             _secao("A fronteira",
                    "Implementações independentes contra o quanto o paper já "
                    "foi olhado. A região interessante é o alto à esquerda: "
                    "muita gente construindo, pouca gente olhando.",
-                   _secao_fronteira(dados)),
+                   _secao_fronteira(dados), section_id="sinais"),
             (_secao("O avanço alegado",
                     "Ganho declarado no resumo, por família, ao longo do tempo "
                     f"— {ROTULO_ALEGACAO}.",
@@ -601,10 +530,6 @@ def render_site(dados: SiteData) -> str:
             _secao("As famílias no tempo",
                    "Volume por família, mês a mês, em escala compartilhada.",
                    _secao_familias(dados)),
-            _secao("O acervo",
-                   "Tudo que passou pelo radar, filtrável pelo que você faz "
-                   "com a técnica.",
-                   _secao_tabela(dados)),
             _secao("Uma técnica, de ponta a ponta",
                    "O paper de maior score, aberto: os repositórios "
                    "encontrados e a regra que classificou cada um.",
@@ -617,18 +542,140 @@ def render_site(dados: SiteData) -> str:
     return (
         "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-        f"<title>ai-radar — {escape(dados.dia)}</title>"
+        '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
+        'href="/ai-radar/feed.xml">'
+        f"<title>ai-radar — {'edição ' if edicao else ''}{escape(dados.dia)}</title>"
         f"<style>{_CSS}</style></head><body>"
         '<div id="fundo" aria-hidden="true"></div>'
         '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
         '<div class="envelope">'
-        f"{_cabecalho(dados)}"
+        f"{_nav('edicoes' if edicao else 'acervo')}"
+        f"{_cabecalho(dados, edicao=edicao)}"
         f'<main id="conteudo">'
-        f'<section class="enquadramento">{_ENQUADRAMENTO}</section>'
         f"{_secao_leitura(dados)}"
         f"{corpo}"
+        f'<section id="metodo" class="enquadramento">{_ENQUADRAMENTO}</section>'
         "</main>"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"
         f"</div><script>{_JS}</script></body></html>"
+    )
+
+
+def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
+                     *, heading: str | None = None) -> str:
+    """Casca das paginas de distribuicao.
+
+    Compartilha a tipografia e a navegacao do acervo, mas nao carrega o JS da
+    tabela. Links e texto continuam funcionando com qualquer bloqueador de
+    script, e a pagina nao faz requisicao externa.
+    """
+    return (
+        '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
+        'href="/ai-radar/feed.xml">'
+        f'<title>{escape(titulo)}</title><style>{_CSS}</style></head><body>'
+        '<div id="fundo" aria-hidden="true"></div>'
+        '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
+        f'<div class="envelope">{_nav(atual)}'
+        '<header class="static-masthead">'
+        f'<p class="hero-eyebrow">atualizado em {escape(dia)}</p>'
+        f'<h1>{escape(heading or titulo)}</h1></header>'
+        f'<main id="conteudo" class="pagina">{corpo}</main>'
+        '<footer>Gerado pelo próprio pipeline. Sem framework, sem build, '
+        'sem requisição externa.</footer></div></body></html>'
+    )
+
+
+def render_editions(dias: list[str], dia: str) -> str:
+    if dias:
+        itens = "".join(
+            f'<li><a href="/ai-radar/edicoes/{escape(d)}/">'
+            f'<time datetime="{escape(d)}">{escape(d)}</time></a></li>'
+            for d in sorted(dias, reverse=True)
+        )
+        lista = f'<ol class="edicoes">{itens}</ol>'
+    else:
+        lista = '<p class="vazio">Nenhuma edição publicada ainda.</p>'
+    corpo = (
+        '<section><h2>Edições diárias</h2>'
+        '<p>Cada URL preserva o recorte de papers entregue naquele dia. O '
+        'acervo principal continua mostrando a observação mais recente.</p>'
+        f'{lista}</section>'
+    )
+    return _pagina_estatica("edições — ai-radar", "edicoes", dia, corpo)
+
+
+def render_about(dia: str, *, papers: int, edicoes: int) -> str:
+    corpo = (
+        '<section><h2>O que este radar mede</h2>'
+        '<p>O ai-radar procura papers de inferência eficiente e de agentes e '
+        'conta quantos repositórios independentes os implementam. Repositórios '
+        'dos autores são separados por uma heurística publicada junto do dado.</p>'
+        '<p>O score favorece implementação independente com pouca atenção. '
+        'Papers acima de 1000 estrelas ou 200 citações ficam fora porque já '
+        'deixaram de ser material de radar.</p></section>'
+        '<section><h2>O que ele não mede</h2>'
+        '<p>Nenhum resultado foi reproduzido. Ganhos vêm do resumo do paper e '
+        'aparecem rotulados como alegação dos autores. O radar também não '
+        'explica por que uma técnica recebeu implementações e não prevê quais '
+        'papers vão crescer.</p></section>'
+        '<section><h2>Estado do acervo</h2>'
+        f'<p>{papers} papers em {edicoes} edições. O banco, o código do score '
+        'e as regras de corte ficam versionados no mesmo repositório.</p></section>'
+    )
+    return _pagina_estatica("sobre — ai-radar", "about", dia, corpo)
+
+
+def _lista_report(items: list[str], *, ordered: bool = False) -> str:
+    if not items:
+        return '<p class="nota">Não informado no paper.</p>'
+    tag = "ol" if ordered else "ul"
+    return f'<{tag}>' + "".join(f'<li>{escape(item)}</li>' for item in items) + f'</{tag}>'
+
+
+def render_report(document: ReportDocument) -> str:
+    r = document.report
+    evidence = "".join(
+        '<li><strong>' + escape(item.claim) + '</strong>'
+        + (f'<span>resultado: {escape(item.result)}</span>' if item.result else "")
+        + (f'<span>baseline: {escape(item.baseline)}</span>' if item.baseline else "")
+        + (f'<span>condições: {escape(item.conditions)}</span>' if item.conditions else "")
+        + "</li>"
+        for item in r.evidence
+    ) or '<li>Nenhuma evidência quantificada foi localizada.</li>'
+    setup = ", ".join(ROTULOS_SETUP[value] for value in r.software_setup)
+    corpo = (
+        '<article class="report">'
+        f'<p class="report-kicker">relatório sob demanda · arXiv '
+        f'{escape(document.arxiv_id)}</p>'
+        f'<p class="report-lead">{escape(r.one_sentence)}</p>'
+        '<div class="infra-grid">'
+        f'<div><span>teste mínimo</span><b>{escape(ROTULOS_INFRA[r.validation_tier])}</b></div>'
+        f'<div><span>experimento do paper</span><b>{escape(ROTULOS_INFRA[r.evidence_tier])}</b></div>'
+        f'<div><span>base da classificação</span><b>{escape(ROTULOS_BASE_INFRA[r.infrastructure_basis])}</b></div>'
+        f'<div><span>treino</span><b>{escape(ROTULOS_TREINO[r.training_required])}</b></div>'
+        '</div>'
+        '<section><h2>Problema</h2>' + f'<p>{escape(r.problem)}</p></section>'
+        '<section><h2>Como funciona</h2>' + f'<p>{escape(r.mechanism)}</p>'
+        f'<p class="nota">Setup: {escape(setup)}</p></section>'
+        '<section><h2>Evidência relatada</h2>'
+        f'<ul class="evidence">{evidence}</ul></section>'
+        '<section><h2>Menor teste útil</h2>'
+        + _lista_report(r.minimum_test, ordered=True) + '</section>'
+        '<section><h2>Matemática que merece leitura</h2>'
+        + _lista_report(r.math_to_understand) + '</section>'
+        '<section><h2>Riscos</h2>' + _lista_report(r.main_risks) + '</section>'
+        '<section><h2>Antes de adotar, descubra</h2>'
+        + _lista_report(r.unanswered_questions) + '</section>'
+        '<p class="report-source">Gerado de '
+        f'<a href="{escape(document.source_url)}">PDF do arXiv</a> com '
+        f'{escape(document.model)} em {escape(document.generated_at[:10])}. '
+        'Este relatório não reproduz o experimento.</p>'
+        '</article>'
+    )
+    return _pagina_estatica(
+        f"{document.title} — relatório — ai-radar", "acervo",
+        document.generated_at[:10], corpo, heading=document.title,
     )

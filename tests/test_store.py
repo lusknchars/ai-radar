@@ -38,6 +38,12 @@ def test_known_ids_is_empty_on_a_fresh_database(store):
     assert store.known_ids() == set()
 
 
+def test_get_paper_returns_the_domain_object_or_none(store):
+    assert store.get_paper(P.arxiv_id) is None
+    store.upsert_paper(P, seen_at="2026-08-27", scope="teste")
+    assert store.get_paper(P.arxiv_id) == P
+
+
 def test_signals_are_append_only(store):
     store.upsert_paper(P, seen_at="2026-08-27", scope="teste")
     store.record_signal(P.arxiv_id, Signal(2, 2, 1, 40), score=0.4, checked_at="2026-08-27")
@@ -171,6 +177,24 @@ def test_init_schema_is_idempotent(tmp_path):
     s.init_schema()
     s.init_schema()
     assert s.all_papers() == []
+
+
+def test_init_schema_rejects_the_legacy_judgment_schema_before_the_pipeline(tmp_path):
+    import sqlite3
+
+    from radar.store import SchemaMigrationRequired
+
+    path = tmp_path / "legacy.db"
+    conn = sqlite3.connect(path)
+    conn.execute("""CREATE TABLE judgments (
+        arxiv_id TEXT, judged_at TEXT, model TEXT, technique TEXT,
+        summary TEXT, runs_on_3090 TEXT, rationale TEXT
+    )""")
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(SchemaMigrationRequired, match="migrar_e_rejulgar.py"):
+        Store(path).init_schema()
 
 
 def test_papers_to_recheck_returns_paper_objects(store):

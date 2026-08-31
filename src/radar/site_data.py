@@ -34,7 +34,10 @@ class Ponto:
 class SiteData:
     pontos: list[Ponto]
     dia: str
-    cortes: dict[str, int]
+    # None significa "nao registrado". Dicionario vazio significa que a
+    # contabilidade rodou e nenhum corte aconteceu. Misturar os dois faria uma
+    # edicao historica afirmar "nenhum corte" sem ter o dado para provar.
+    cortes: dict[str, int] | None
     rechecked_total: int
     # Historico de coleta. Existem para a frase de movimento do bloco de
     # leitura, e default 0 mantem todo construtor existente valido -- quem os

@@ -68,7 +68,8 @@ def ambiente(monkeypatch, tmp_path):
         "batches": type("B", (), {"results": staticmethod(lambda bid: [])})()})(),
         raising=False)
     for chave in ("GH_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID",
-                  "RADAR_MODEL", "RADAR_SCORE_FLOOR"):
+                  "RADAR_MODEL", "RADAR_SCORE_FLOOR", "RADAR_LLM_PROVIDER",
+                  "KIMI_API_KEY", "RADAR_KIMI_BASE_URL"):
         monkeypatch.delenv(chave, raising=False)
     return tmp_path
 
@@ -154,6 +155,48 @@ def test_a_real_run_sends_and_records(ambiente, monkeypatch):
     from radar.store import Store
     store = Store(ambiente / "radar.db")
     assert store.was_delivered(PAPER.arxiv_id, channel="telegram") is True
+
+
+def test_a_cli_uses_kimi_when_configured(ambiente, monkeypatch):
+    calls = []
+
+    class FakeKimi:
+        def __init__(self, api_key, model, request_interval, base_url):
+            calls.append((api_key, model, request_interval, base_url))
+
+        def judge_all(self, papers):
+            return {paper.arxiv_id: JUDGMENT for paper in papers}
+
+    monkeypatch.setattr(cli, "KimiJudge", FakeKimi)
+    monkeypatch.setenv("RADAR_LLM_PROVIDER", "kimi")
+    monkeypatch.setenv("KIMI_API_KEY", "secret")
+    monkeypatch.setenv("RADAR_KIMI_REQUEST_INTERVAL", "0")
+    monkeypatch.setattr(cli, "send", lambda *a, **k: True)
+
+    assert cli.main(argv(ambiente)) == 0
+    assert calls == [("secret", "kimi-k3", 0.0,
+                      "https://api.moonshot.ai/v1")]
+
+
+def test_legacy_database_stops_before_any_network_work(ambiente, monkeypatch, capsys):
+    import sqlite3
+
+    path = ambiente / "legacy.db"
+    conn = sqlite3.connect(path)
+    conn.execute("""CREATE TABLE judgments (
+        arxiv_id TEXT, judged_at TEXT, model TEXT, technique TEXT,
+        summary TEXT, runs_on_3090 TEXT, rationale TEXT
+    )""")
+    conn.commit()
+    conn.close()
+    monkeypatch.setattr(cli, "ArxivClient",
+                        lambda *a, **k: (_ for _ in ()).throw(
+                            AssertionError("rede inicializada antes do preflight")))
+
+    assert cli.main(["--db", str(path), "--out", str(ambiente / "out")]) == 2
+    output = capsys.readouterr().out
+    assert "pipeline bloqueado" in output
+    assert "migrar_e_rejulgar.py" in output
 
 
 def test_a_missing_telegram_secret_does_not_throw_away_the_digest(ambiente, capsys):
@@ -277,6 +320,14 @@ def test_a_execucao_escreve_a_pagina(ambiente, monkeypatch):
     _espiar_run_day(monkeypatch)
     cli.main(argv(ambiente))
     assert (ambiente / "site" / "index.html").exists()
+
+
+def test_a_execucao_escreve_os_artefatos_de_distribuicao(ambiente, monkeypatch):
+    _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    site = ambiente / "site"
+    for relativo in ("feed.xml", "about.html", "edicoes/index.html"):
+        assert (site / relativo).exists(), relativo
 
 
 def test_a_pagina_escrita_e_html_completo(ambiente, monkeypatch):

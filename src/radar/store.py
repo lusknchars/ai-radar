@@ -13,6 +13,17 @@ from pathlib import Path
 
 from .models import Judgment, Paper, RepoClassification, Signal
 
+
+class SchemaMigrationRequired(RuntimeError):
+    """O banco existe, mas nao pode ser lido pelo codigo atual."""
+
+
+EXPECTED_JUDGMENT_COLUMNS = {
+    "arxiv_id", "judged_at", "model", "technique", "familia", "pratica",
+    "ganho_eixo", "ganho_fator", "ganho_texto", "resumo", "porque",
+}
+
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS papers (
     arxiv_id     TEXT PRIMARY KEY,
@@ -78,8 +89,26 @@ class Store:
         self._conn.row_factory = sqlite3.Row
 
     def init_schema(self) -> None:
+        existing = {
+            row["name"] for row in self._conn.execute("PRAGMA table_info(judgments)")
+        }
+        if existing and existing != EXPECTED_JUDGMENT_COLUMNS:
+            self._raise_schema_mismatch(existing)
         self._conn.executescript(SCHEMA)
         self._conn.commit()
+        columns = {
+            row["name"] for row in self._conn.execute("PRAGMA table_info(judgments)")
+        }
+        if columns != EXPECTED_JUDGMENT_COLUMNS:
+            self._raise_schema_mismatch(columns)
+
+    def _raise_schema_mismatch(self, columns: set[str]) -> None:
+        legacy = {"summary", "runs_on_3090", "rationale"} <= columns
+        detail = "schema legado" if legacy else f"colunas inesperadas: {sorted(columns)}"
+        raise SchemaMigrationRequired(
+            f"{self.path} usa {detail}; rode "
+            "'python scripts/migrar_e_rejulgar.py' antes do pipeline"
+        )
 
     # ---------- papers ----------
 
@@ -113,6 +142,18 @@ class Store:
 
     def all_papers(self) -> list[dict]:
         return [dict(r) for r in self._conn.execute("SELECT * FROM papers")]
+
+    def get_paper(self, arxiv_id: str) -> Paper | None:
+        row = self._conn.execute(
+            "SELECT * FROM papers WHERE arxiv_id=?", (arxiv_id,)
+        ).fetchone()
+        if row is None:
+            return None
+        return Paper(
+            arxiv_id=row["arxiv_id"], title=row["title"], abstract=row["abstract"],
+            authors=json.loads(row["authors"]),
+            categories=json.loads(row["categories"]), published=row["published"],
+        )
 
     def touch_checked(self, arxiv_id: str, at: str) -> None:
         self._conn.execute("UPDATE papers SET last_checked=? WHERE arxiv_id=?", (at, arxiv_id))
@@ -246,7 +287,7 @@ class Store:
         """)
         return {familia: n for familia, n in linhas}
 
-    def site_data(self, hoje):
+    def site_data(self, hoje, delivered_on: str | None = None):
         """Monta o `SiteData` do acervo inteiro.
 
         `hoje` entra por argumento e nao de `date.today()`: o relogio dentro
@@ -260,7 +301,14 @@ class Store:
 
         from .site_data import Ponto, SiteData
 
-        linhas = self._conn.execute("""
+        limite_julgamento = "AND judged_at <= :dia" if delivered_on else ""
+        limite_sinal = "AND checked_at <= :dia" if delivered_on else ""
+        filtro_entrega = (
+            "WHERE EXISTS (SELECT 1 FROM deliveries d "
+            "WHERE d.arxiv_id = p.arxiv_id AND d.delivered_at = :dia)"
+            if delivered_on else ""
+        )
+        linhas = self._conn.execute(f"""
             SELECT p.arxiv_id, p.title, p.published, p.scope,
                    j.familia, j.pratica, j.ganho_eixo, j.ganho_fator,
                    j.ganho_texto, j.resumo,
@@ -269,13 +317,16 @@ class Store:
               FROM papers p
               JOIN judgments j ON j.arxiv_id = p.arxiv_id
               JOIN (SELECT arxiv_id, MAX(judged_at) m FROM judgments
+                    WHERE 1 = 1 {limite_julgamento}
                     GROUP BY arxiv_id) uj
                 ON uj.arxiv_id = j.arxiv_id AND uj.m = j.judged_at
               JOIN signals s ON s.arxiv_id = p.arxiv_id
               JOIN (SELECT arxiv_id, MAX(checked_at) m FROM signals
+                    WHERE 1 = 1 {limite_sinal}
                     GROUP BY arxiv_id) us
                 ON us.arxiv_id = s.arxiv_id AND us.m = s.checked_at
-        """)
+              {filtro_entrega}
+        """, {"dia": delivered_on} if delivered_on else {})
 
         pontos = []
         for r in linhas:
@@ -292,8 +343,39 @@ class Store:
                 publicado=r["published"], score=r["score"] or 0.0,
                 scope=r["scope"],
             ))
-        return SiteData(pontos=pontos, dia=hoje.isoformat(),
-                        cortes={}, rechecked_total=0)
+        dia = delivered_on or hoje.isoformat()
+        destaque = max(pontos, key=lambda p: p.score, default=None)
+        repos = self.repos_for(destaque.arxiv_id) if destaque else []
+        limite_historico = "WHERE checked_at <= :dia" if delivered_on else ""
+        params = {"dia": delivered_on} if delivered_on else {}
+        dias_de_coleta = self._conn.execute(
+            f"SELECT COUNT(DISTINCT checked_at) FROM signals {limite_historico}",
+            params).fetchone()[0]
+        # Compara as DUAS ultimas observacoes, nao maximo e minimo historicos.
+        # Um paper que subiu uma vez e depois ficou parado nao pode continuar
+        # contado como movimento em toda edicao futura.
+        papers_que_moveram = self._conn.execute(f"""
+            WITH ranked AS (
+                SELECT arxiv_id, independent_impls,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY arxiv_id ORDER BY checked_at DESC) AS rn
+                  FROM signals
+                  {limite_historico}
+            ), pares AS (
+                SELECT arxiv_id,
+                       MAX(CASE WHEN rn = 1 THEN independent_impls END) atual,
+                       MAX(CASE WHEN rn = 2 THEN independent_impls END) anterior
+                  FROM ranked
+                 WHERE rn <= 2
+                 GROUP BY arxiv_id
+            )
+            SELECT COUNT(*) FROM pares
+             WHERE anterior IS NOT NULL AND atual > anterior
+        """, params).fetchone()[0]
+        return SiteData(pontos=pontos, dia=dia, cortes=None, rechecked_total=0,
+                        dias_de_coleta=dias_de_coleta,
+                        papers_que_moveram=papers_que_moveram,
+                        repos_do_destaque=repos)
 
     # ---------- deliveries ----------
 
@@ -308,3 +390,44 @@ class Store:
             "SELECT 1 FROM deliveries WHERE arxiv_id=? AND channel=? LIMIT 1",
             (arxiv_id, channel)).fetchone()
         return row is not None
+
+    def delivery_days(self) -> list[str]:
+        rows = self._conn.execute(
+            "SELECT DISTINCT delivered_at FROM deliveries "
+            "ORDER BY delivered_at DESC")
+        return [row["delivered_at"] for row in rows]
+
+    def feed_items(self, limit: int = 100):
+        """Um item por paper, na data da primeira entrega.
+
+        Telegram e markdown registram o mesmo paper em canais diferentes. O
+        RSS nao pode duplicar o item por causa disso, entao a data vem de
+        `MIN(delivered_at)` e o agrupamento acontece antes dos joins.
+        """
+        from .feed import ItemFeed
+
+        rows = self._conn.execute("""
+            SELECT p.arxiv_id, p.title, d.delivered_at,
+                   j.resumo, j.familia, j.pratica,
+                   s.independent_impls, s.stars_total
+              FROM papers p
+              JOIN (SELECT arxiv_id, MIN(delivered_at) delivered_at
+                      FROM deliveries GROUP BY arxiv_id) d
+                ON d.arxiv_id = p.arxiv_id
+              JOIN judgments j ON j.arxiv_id = p.arxiv_id
+              JOIN (SELECT arxiv_id, MAX(judged_at) m FROM judgments
+                    GROUP BY arxiv_id) uj
+                ON uj.arxiv_id = j.arxiv_id AND uj.m = j.judged_at
+              JOIN signals s ON s.arxiv_id = p.arxiv_id
+              JOIN (SELECT arxiv_id, MAX(checked_at) m FROM signals
+                    GROUP BY arxiv_id) us
+                ON us.arxiv_id = s.arxiv_id AND us.m = s.checked_at
+             ORDER BY d.delivered_at DESC, p.arxiv_id
+             LIMIT ?
+        """, (max(limit, 0),))
+        return [ItemFeed(
+            arxiv_id=r["arxiv_id"], titulo=r["title"], resumo=r["resumo"],
+            familia=r["familia"], pratica=r["pratica"],
+            independent_impls=r["independent_impls"],
+            stars_total=r["stars_total"], entregue_em=r["delivered_at"],
+        ) for r in rows]

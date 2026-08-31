@@ -96,6 +96,50 @@ def test_a_leitura_usa_o_julgamento_e_o_sinal_MAIS_RECENTES(store, paper_rejulga
     assert p.independent_impls == 9      # o segundo sinal
 
 
+def test_a_edicao_usa_o_dado_que_existia_naquele_dia(store, paper_rejulgado):
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-29", None)
+    p = store.site_data(date(2026, 8, 29), delivered_on="2026-08-29").pontos[0]
+    assert p.familia == "cache_kv"
+    assert p.independent_impls == 3
+
+
+def test_os_dias_de_edicao_sao_unicos_e_decrescentes(store, paper_e_julgamento):
+    store.mark_delivered(_P.arxiv_id, "telegram", "2026-08-29", 1)
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-29", None)
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-30", None)
+    assert store.delivery_days() == ["2026-08-30", "2026-08-29"]
+
+
+def test_o_feed_deduplica_canais_do_mesmo_paper(store, paper_e_julgamento):
+    store.mark_delivered(_P.arxiv_id, "telegram", "2026-08-29", 1)
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-29", None)
+    itens = store.feed_items()
+    assert len(itens) == 1
+    assert itens[0].arxiv_id == _P.arxiv_id
+    assert itens[0].entregue_em == "2026-08-29"
+
+
+def test_o_feed_respeita_o_limite_de_acompanhamento(store, paper_e_julgamento):
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-29", None)
+    assert store.feed_items(limit=0) == []
+
+
+def test_movimento_compara_so_as_duas_ultimas_observacoes(store, paper_rejulgado):
+    assert store.site_data(date(2026, 8, 30)).papers_que_moveram == 1
+    s, checked = _sinal(9, "2026-08-31")
+    store.record_signal(_P.arxiv_id, s, score=0.9, checked_at=checked)
+    assert store.site_data(date(2026, 8, 31)).papers_que_moveram == 0
+
+
+def test_edicao_nao_enxerga_movimento_do_futuro(store, paper_rejulgado):
+    store.mark_delivered(_P.arxiv_id, "markdown", "2026-08-30", None)
+    s, checked = _sinal(9, "2026-08-31")
+    store.record_signal(_P.arxiv_id, s, score=0.9, checked_at=checked)
+    edition = store.site_data(date(2026, 8, 30), delivered_on="2026-08-30")
+    assert edition.dias_de_coleta == 2
+    assert edition.papers_que_moveram == 1
+
+
 # --- fixtures ---
 
 import pytest                                                    # noqa: E402

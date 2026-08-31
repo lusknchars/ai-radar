@@ -1,6 +1,7 @@
 import pytest
 
-from radar.judge import LEITOR_BRIEF, Judge, JudgmentSchema, build_prompt
+from radar.judge import (LEITOR_BRIEF, Judge, JudgmentSchema, KimiJudge,
+                         build_kimi_request, build_prompt)
 from radar.models import Judgment, Paper
 
 PAPER = Paper(arxiv_id="2508.11111", title="Fused INT4 Kernels",
@@ -109,6 +110,88 @@ def test_judge_one_asks_for_adaptive_thinking_at_low_effort():
     chamada = client.messages.calls[0]
     assert chamada["thinking"] == {"type": "adaptive"}
     assert chamada["output_config"]["effort"] == "low"
+
+
+class FakeKimiResponse:
+    def __init__(self, payload, status_code=200, headers=None):
+        self._payload = payload
+        self.status_code = status_code
+        self.headers = headers or {}
+
+    def json(self):
+        return self._payload
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError(f"HTTP {self.status_code}")
+
+
+def _kimi_payload(schema=None):
+    schema = schema or valid_schema()
+    return {"choices": [{"message": {"content": schema.model_dump_json()}}]}
+
+
+def test_kimi_request_uses_strict_json_schema_and_low_reasoning():
+    body = build_kimi_request(PAPER, "kimi-k3")
+    assert body["model"] == "kimi-k3"
+    assert body["max_completion_tokens"] == 8192
+    assert "max_tokens" not in body
+    assert body["reasoning_effort"] == "low"
+    assert body["response_format"]["json_schema"]["strict"] is True
+    assert body["response_format"]["json_schema"]["schema"][
+        "additionalProperties"] is False
+
+
+def test_kimi_judge_parses_only_the_structured_message_content():
+    calls = []
+
+    def post(*args, **kwargs):
+        calls.append((args, kwargs))
+        payload = _kimi_payload()
+        payload["choices"][0]["message"]["reasoning_content"] = "nao e JSON"
+        return FakeKimiResponse(payload)
+
+    result = KimiJudge("secret", post=post, sleep=lambda _: None,
+                       request_interval=0).judge_one(PAPER)
+    assert result.familia == "quantizacao"
+    assert calls[0][1]["headers"]["Authorization"] == "Bearer secret"
+
+
+def test_kimi_judge_uses_the_configured_regional_endpoint():
+    calls = []
+
+    def post(url, **kwargs):
+        calls.append(url)
+        return FakeKimiResponse(_kimi_payload())
+
+    KimiJudge("secret", post=post, sleep=lambda _: None, request_interval=0,
+              base_url="https://api.moonshot.cn/v1/").judge_one(PAPER)
+    assert calls == ["https://api.moonshot.cn/v1/chat/completions"]
+
+
+def test_kimi_retries_a_rate_limit_using_retry_after():
+    responses = [
+        FakeKimiResponse({}, status_code=429, headers={"Retry-After": "7"}),
+        FakeKimiResponse(_kimi_payload()),
+    ]
+    sleeps = []
+    judge = KimiJudge("secret", post=lambda *a, **k: responses.pop(0),
+                      sleep=sleeps.append, request_interval=0)
+    assert judge.judge_one(PAPER).pratica == "testar"
+    assert sleeps == [7.0]
+
+
+def test_kimi_judge_all_keeps_good_results_when_one_paper_fails(caplog):
+    other = Paper(arxiv_id="2508.22222", title="Other", abstract="A",
+                  authors=[], categories=["cs.LG"], published="2026-08-20")
+    responses = [FakeKimiResponse(_kimi_payload()),
+                 FakeKimiResponse({}, status_code=400)]
+    judge = KimiJudge("secret", post=lambda *a, **k: responses.pop(0),
+                      sleep=lambda _: None, request_interval=0)
+    with caplog.at_level("WARNING", logger="radar.judge"):
+        result = judge.judge_all([PAPER, other])
+    assert set(result) == {PAPER.arxiv_id}
+    assert other.arxiv_id in caplog.text
 
 
 

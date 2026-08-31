@@ -75,7 +75,8 @@ COLUNAS = 4
 
 def render_pequenos_multiplos(series: dict[str, dict[str, int]],
                               familias: list[str],
-                              cores: dict[str, str]) -> str:
+                              cores: dict[str, str],
+                              rotulos: dict[str, str] | None = None) -> str:
     """Volume por familia por mes, em paineis de ESCALA COMPARTILHADA.
 
     Pequenos multiplos e nao area empilhada: a pergunta e "esta familia esta
@@ -90,6 +91,7 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
     Uma familia sem dado ainda ganha painel: ausencia e informacao, e some-la
     faria parecer que a familia nao existe.
     """
+    rotulos = rotulos or {}
     linhas = (len(familias) + COLUNAS - 1) // COLUNAS
     largura = COLUNAS * PAINEL_L
     altura = max(linhas, 1) * PAINEL_A
@@ -109,7 +111,8 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
         cor = cores.get(familia, "currentColor")
         partes.append(f'<g class="painel" transform="translate({ox},{oy})">')
         partes.append(
-            f'<text x="4" y="12" font-size="10">{escape(familia)}</text>')
+            f'<text x="4" y="12" font-size="10">'
+            f'{escape(rotulos.get(familia, familia))}</text>')
 
         meses = series.get(familia, {})
         util_a = PAINEL_A - PAINEL_PAD - 14

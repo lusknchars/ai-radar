@@ -1,7 +1,9 @@
 import pytest
 
 from radar.models import FAMILIAS
-from radar.site import CORES_FAMILIA, render_site
+from radar.report import DeepReport, EvidenceClaim, ReportDocument
+from radar.site import (CORES_FAMILIA, render_about, render_editions,
+                        render_report, render_site)
 from radar.site_data import Ponto, SiteData
 
 
@@ -34,6 +36,34 @@ def test_a_pagina_e_html_completo(dados):
     assert "</html>" in html
 
 
+def test_a_navegacao_publica_liga_acervo_edicoes_about_e_rss(dados):
+    html = render_site(dados)
+    for caminho in ("/ai-radar/", "/ai-radar/edicoes/",
+                    "/ai-radar/about.html", "/ai-radar/feed.xml"):
+        assert caminho in html
+    assert 'rel="alternate" type="application/rss+xml"' in html
+
+
+def test_a_edicao_se_identifica_como_recorte_diario(dados):
+    html = render_site(dados, edicao=True)
+    assert "edição preservada · 2026-08-30" in html
+    assert "<title>ai-radar — edição 2026-08-30</title>" in html
+
+
+def test_o_indice_de_edicoes_usa_urls_estaveis():
+    html = render_editions(["2026-08-29", "2026-08-30"], "2026-08-30")
+    assert "/ai-radar/edicoes/2026-08-29/" in html
+    assert "/ai-radar/edicoes/2026-08-30/" in html
+    assert html.index("2026-08-30") < html.rindex("2026-08-29")
+
+
+def test_about_declara_o_que_o_radar_nao_mede():
+    html = render_about("2026-08-30", papers=12, edicoes=2)
+    assert "12 papers em 2 edições" in html
+    assert "Nenhum resultado foi reproduzido" in html
+    assert "requisição externa" in html
+
+
 def test_toda_familia_tem_cor_propria():
     """Cor significa familia, e so. Uma familia sem cor cairia em
     `currentColor` e duas familias virariam o mesmo ponto no grafico."""
@@ -45,15 +75,17 @@ def test_a_pagina_nao_faz_requisicao_externa(dados):
     """"Sem dependencia externa" e literal: nada de CDN, nada de fonte
     remota, nenhuma requisicao saindo da pagina. Links para o arXiv sao
     navegacao do leitor, nao carregamento de recurso."""
-    html = render_site(dados).replace("https://arxiv.org", "")
+    html = (render_site(dados)
+            .replace("https://arxiv.org", "")
+            .replace("https://github.com", ""))
     for proibido in ("https://", "http://", "//cdn", "@import", "<script src"):
         assert proibido not in html
 
 
-def test_a_pagina_define_tema_claro_e_escuro(dados):
+def test_a_pagina_usa_a_paleta_escura_da_familia_halo(dados):
     html = render_site(dados)
-    assert "prefers-color-scheme: dark" in html
-    assert ":root" in html
+    assert "--fundo:#09090b" in html
+    assert "--acento:#62e6a3" in html
 
 
 def test_a_fonte_e_do_sistema(dados):
@@ -221,7 +253,7 @@ def test_citacao_desconhecida_vira_travessao_e_nao_zero():
     # aquela forma passava mesmo com a citacao virando zero. Verificado por
     # mutacao em 2026-08-30. A afirmacao precisa ser sobre A CELULA.
     html = render_site(_acervo([ponto(citations=None, ganho_fator=2.0)]))
-    celulas = re.findall(r'<td class="num">([^<]*)</td>',
+    celulas = re.findall(r'<td class="num"[^>]*>([^<]*)</td>',
                          re.search(r'<tr class="linha".*?</tr>', html, re.S).group(0))
     assert celulas[2] == "—"        # impls, estrelas, CITACOES, ganho
     assert celulas[3] == "2x"       # o ganho tem numero, provando que nao e ele
@@ -347,6 +379,12 @@ def test_dia_sem_corte_nenhum_ainda_mostra_a_secao():
     assert "nenhum corte" in html.lower()
 
 
+def test_edicao_sem_contabilidade_nao_afirma_que_nao_houve_corte():
+    html = render_site(_acervo([ponto()], cortes=None), edicao=True)
+    assert "não foi registrada" in html
+    assert "nenhum corte" not in html.lower()
+
+
 def test_o_total_re_consultado_aparece(dados):
     assert "7" in render_site(dados)
 
@@ -443,18 +481,20 @@ def test_os_numeros_do_bloco_ganham_destaque(dados):
     assert '<b class="n">' in render_site(dados)
 
 
+def test_destaque_numerico_nao_quebra_entidade_de_aspa(dados):
+    html = render_site(dados)
+    assert "&#x<b" not in html
+    assert "&#x27;outro&#x27;" in html
+
+
 # --- Identidade editorial ---
 
-def test_a_serifa_do_sistema_carrega_o_texto_de_leitura(dados):
-    """Serifa para ler, sem-serifa para dados: a divisão clássica de jornal.
-
-    Do sistema, não remota — "sem dependência externa" continua literal e o
-    teste de requisição externa continua valendo.
-    """
+def test_a_tipografia_segue_a_familia_halo_sem_fonte_remota(dados):
+    """Switzer degrada para system-ui; dados usam a pilha mono local."""
     html = render_site(dados)
-    assert "Iowan Old Style" in html or "Charter" in html
-    assert "Georgia" in html
-    assert "system-ui" in html          # a pilha sem-serifa sobrevive
+    assert "Switzer" in html
+    assert "system-ui" in html
+    assert "ui-monospace" in html
 
 
 def test_os_dados_ficam_em_sem_serifa_com_algarismo_tabular(dados):
@@ -462,8 +502,9 @@ def test_os_dados_ficam_em_sem_serifa_com_algarismo_tabular(dados):
     assert "tabular-nums" in html
 
 
-def test_ha_fundo_interativo(dados):
+def test_ha_fundo_atmosferico_sem_loop_de_animacao(dados):
     assert 'id="fundo"' in render_site(dados)
+    assert "pointermove" not in render_site(dados)
 
 
 def test_o_fundo_respeita_reducao_de_movimento(dados):
@@ -501,7 +542,8 @@ def test_ha_link_de_pular_para_o_conteudo(dados):
 def test_o_cabecalho_tem_estrutura_de_masthead(dados):
     html = render_site(dados)
     assert 'class="masthead"' in html
-    assert 'class="dateline"' in html
+    assert 'class="hero-eyebrow"' in html
+    assert "Leia menos" in html
 
 
 def test_a_hierarquia_de_titulos_e_logica(dados):
@@ -519,3 +561,98 @@ def test_o_link_de_pular_tem_destino_que_existe(dados):
     html = render_site(dados)
     assert 'href="#conteudo"' in html
     assert 'id="conteudo"' in html
+
+
+# --- Briefs e relatorios sob demanda ---
+
+def test_o_acervo_mostra_trinta_briefs_antes_de_pedir_expansao():
+    pontos = [ponto(arxiv_id=f"2608.{10000 + i}", score=float(i))
+              for i in range(31)]
+    html = render_site(_acervo(pontos))
+    assert html.count('data-inicial="oculta" hidden') == 1
+    assert '<span id="contador">30 de 31</span>' in html
+    assert 'data-mostrar-todos' in html
+    assert 'mostrar todos os 31 papers' in html
+
+
+def test_busca_e_filtro_podem_sair_do_recorte_inicial():
+    html = render_site(_acervo([ponto()]))
+    assert "recorteAtivo" in html
+    assert "mostrarTodos" in html
+
+
+def test_cada_brief_tem_acao_segura_para_pedir_relatorio():
+    html = render_site(_acervo([ponto()]))
+    assert 'class="paper-brief"' in html
+    assert 'github.com/lusknchars/ai-radar/issues/new?' in html
+    assert 'title=%5Breport%5D+2608.11111' in html
+    assert 'gerar relatório' in html
+    assert 'min-height:44px' in html
+
+
+def test_acao_porta_o_sheen_button_do_frontend_lab():
+    html = render_site(_acervo([ponto()]))
+    assert 'class="sheen-sweep"' in html
+    assert "color-mix(in oklab,var(--acc)" in html
+    assert "translateX(105%)" in html
+    assert "prefers-reduced-motion:reduce" in html
+
+
+def test_fila_de_papers_aparece_antes_dos_graficos(dados):
+    html = render_site(dados)
+    assert html.index('id="acervo"') < html.index('class="scatter"')
+
+
+def test_relatorio_existente_troca_a_acao_por_link_de_leitura():
+    html = render_site(_acervo([ponto()]), report_ids={"2608.11111"})
+    assert '/ai-radar/reports/2608.11111/' in html
+    assert 'ler relatório' in html
+    assert 'issues/new?' not in html
+
+
+def _report_document() -> ReportDocument:
+    return ReportDocument(
+        arxiv_id="2608.11111", title="Fast <Attention>",
+        generated_at="2026-08-31T18:00:00+00:00", provider="kimi",
+        model="kimi-k3", source_url="https://arxiv.org/pdf/2608.11111",
+        source_sha256="a" * 64,
+        report=DeepReport(
+            one_sentence="Troca atenção densa por blocos.",
+            problem="Contexto longo ocupa memória.",
+            mechanism="Seleciona blocos antes do kernel.",
+            math_to_understand=["O(n log n)"],
+            evidence=[EvidenceClaim(
+                claim="Reduz memória", result="2x", baseline="atenção densa",
+                conditions="modelo 7B",
+            )],
+            validation_tier="single_gpu_24gb", evidence_tier="multi_gpu",
+            infrastructure_basis="explicit",
+            software_setup=["custom_cuda_kernel"],
+            training_required="inference_only",
+            minimum_test=["Compare no mesmo workload"],
+            main_risks=["Kernel incompatível"],
+            unanswered_questions=["Qual a perda de qualidade?"],
+        ),
+    )
+
+
+def test_pagina_de_relatorio_separa_teste_minimo_de_experimento():
+    html = render_report(_report_document())
+    assert "1 GPU, até 24 GB" in html
+    assert "múltiplas GPUs" in html
+    assert "teste mínimo" in html
+    assert "experimento do paper" in html
+    assert "Este relatório não reproduz o experimento" in html
+
+
+def test_rotulos_publicos_nao_expoem_os_enums_internos(dados):
+    html = render_site(dados)
+    assert "cache KV" in html
+    assert 'data-familia="cache_kv"' in html
+    assert ">cache_kv<" not in html
+
+
+def test_pagina_de_relatorio_escapa_texto_do_modelo():
+    html = render_report(_report_document())
+    assert "Fast &lt;Attention&gt;" in html
+    assert "Fast <Attention>" not in html

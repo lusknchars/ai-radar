@@ -1,0 +1,122 @@
+name: paper report
+
+on:
+  issues:
+    types: [opened]
+
+permissions: {}
+
+concurrency:
+  # O radar diario e os relatorios commitam o mesmo site e banco. Uma fila
+  # unica impede push concorrente e deploy de um artefato mais antigo.
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  reject-untrusted:
+    if: >-
+      github.event.issue.user.login != github.repository_owner &&
+      startsWith(github.event.issue.title, '[report] ')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Explicar proteção de créditos
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "A geração automática usa créditos privados e só roda para pedidos abertos pelo proprietário do repositório."
+          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY"
+
+  generate:
+    if: >-
+      github.event.issue.user.login == github.repository_owner &&
+      startsWith(github.event.issue.title, '[report] ')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    outputs:
+      arxiv_id: ${{ steps.paper.outputs.arxiv_id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar
+        run: pip install -e .
+
+      - name: Validar paper pedido
+        id: paper
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          python -c 'import os,re; value=os.environ["ISSUE_TITLE"].removeprefix("[report] ").strip(); assert re.fullmatch(r"\d{4}\.\d{4,5}", value), "invalid arXiv id"; open(os.environ["GITHUB_OUTPUT"], "a").write(f"arxiv_id={value}\n")'
+
+      - name: Gerar relatório e republicar site
+        env:
+          ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
+          RADAR_LLM_PROVIDER: kimi
+          RADAR_MODEL: ${{ vars.RADAR_MODEL }}
+          RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: python scripts/gerar_relatorio.py --arxiv-id "$ARXIV_ID"
+
+      - name: Commitar relatório e site
+        env:
+          ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A -- reports site
+          git diff --staged --quiet || git commit -m "report: arXiv $ARXIV_ID"
+          git push
+
+      - name: Empacotar site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Registrar falha no pedido
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Não consegui gerar o relatório. Diagnóstico: $RUN_URL"
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      issues: write
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Responder e fechar pedido
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ARXIV_ID: ${{ needs.generate.outputs.arxiv_id }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Relatório publicado: https://lusknchars.github.io/ai-radar/reports/$ARXIV_ID/"
+          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY"
+
+      - name: Registrar falha no deploy
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "O relatório foi gerado, mas o deploy falhou. Diagnóstico: $RUN_URL"

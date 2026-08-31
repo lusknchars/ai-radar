@@ -20,6 +20,11 @@ DESCRICAO = (
     "Papers que já estouraram em atenção são cortados de propósito."
 )
 
+# O arquivo de edicoes preserva o historico inteiro. O RSS e a janela de
+# acompanhamento: milhares de itens num primeiro carregamento travam leitores
+# sem acrescentar nada a quem acabou de assinar.
+MAX_ITEMS = 100
+
 _DIAS = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 _MESES = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")

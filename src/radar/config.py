@@ -110,7 +110,41 @@ def load_thresholds() -> Thresholds:
 
 
 def load_model() -> str:
-    return os.environ.get("RADAR_MODEL") or "claude-opus-5"
+    provider = load_llm_provider()
+    default = "kimi-k3" if provider == "kimi" else "claude-opus-5"
+    return os.environ.get("RADAR_MODEL") or default
+
+
+def load_llm_provider() -> str:
+    """Escolhe o adaptador sem confundir nome de modelo com protocolo.
+
+    A variavel explicita vence. Sem ela, uma instalacao que tenha apenas a
+    chave da Kimi usa Kimi; todos os demais casos preservam Anthropic como o
+    comportamento historico.
+    """
+    configured = os.environ.get("RADAR_LLM_PROVIDER")
+    if configured:
+        provider = configured.strip().lower()
+    elif os.environ.get("KIMI_API_KEY") and not os.environ.get("ANTHROPIC_API_KEY"):
+        provider = "kimi"
+    else:
+        provider = "anthropic"
+    if provider not in {"anthropic", "kimi"}:
+        raise ValueError(
+            f"RADAR_LLM_PROVIDER={provider!r} invalido; use 'anthropic' ou 'kimi'"
+        )
+    return provider
+
+
+def load_kimi_request_interval() -> float:
+    """Intervalo conservador para contas Kimi no tier inicial de 3 RPM."""
+    return _env_float("RADAR_KIMI_REQUEST_INTERVAL", 20.0)
+
+
+def load_kimi_base_url() -> str:
+    """Endpoint da mesma regiao onde a chave e os creditos foram criados."""
+    return (os.environ.get("RADAR_KIMI_BASE_URL")
+            or "https://api.moonshot.ai/v1").rstrip("/")
 
 
 def load_recheck_limit() -> int:

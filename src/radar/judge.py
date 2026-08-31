@@ -12,9 +12,11 @@ import json
 import logging
 import re
 import time
-from typing import Literal
+from typing import Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+import httpx
+
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from .models import Judgment, Paper
 
@@ -60,6 +62,9 @@ EFFORT = "low"
 # orcamento: so o que for realmente gerado e cobrado, e a saida util aqui e de
 # umas 200 palavras.
 MAX_TOKENS = 8192
+KIMI_DEFAULT_BASE_URL = "https://api.moonshot.ai/v1"
+KIMI_MAX_RETRIES = 4
+StructuredOutput = TypeVar("StructuredOutput", bound=BaseModel)
 
 
 class JudgmentSchema(BaseModel):
@@ -141,6 +146,153 @@ class Judge:
             output_format=JudgmentSchema,
         )
         return _to_domain(response.parsed_output)
+
+
+def build_kimi_request(paper: Paper, model: str) -> dict:
+    """Corpo OpenAI-compatible aceito pelo endpoint da Moonshot."""
+    return build_kimi_structured_request(
+        messages=[{"role": "user", "content": build_prompt(paper)}],
+        model=model,
+        output_type=JudgmentSchema,
+        schema_name="paper_judgment",
+    )
+
+
+def build_kimi_structured_request(
+    *, messages: list[dict], model: str,
+    output_type: type[BaseModel], schema_name: str,
+) -> dict:
+    """Monta uma chamada estruturada sem acoplar Kimi a um unico dominio."""
+    return {
+        "model": model,
+        "max_completion_tokens": MAX_TOKENS,
+        "reasoning_effort": EFFORT,
+        "messages": messages,
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": schema_name,
+                "strict": True,
+                "schema": output_type.model_json_schema(),
+            },
+        },
+    }
+
+
+class KimiJudge:
+    """Julgador Kimi K3 com saida estrita e repeticao limitada.
+
+    K3 nao participa do Batch API da Kimi. O adaptador usa Chat Completions e
+    respeita um intervalo configuravel entre papers. A chave fica somente no
+    header e nunca entra em logs ou checkpoints.
+    """
+
+    def __init__(
+        self,
+        api_key: str,
+        model: str = "kimi-k3",
+        *,
+        post=None,
+        sleep=time.sleep,
+        request_interval: float = 20.0,
+        max_retries: int = KIMI_MAX_RETRIES,
+        base_url: str = KIMI_DEFAULT_BASE_URL,
+    ) -> None:
+        if not api_key:
+            raise ValueError("KIMI_API_KEY ausente")
+        if request_interval < 0:
+            raise ValueError("request_interval precisa ser >= 0")
+        self._api_key = api_key
+        self._model = model
+        self._post_override = post
+        self._http_client: httpx.Client | None = None
+        self._sleep = sleep
+        self._request_interval = request_interval
+        self._max_retries = max_retries
+        self._api_url = f"{base_url.rstrip('/')}/chat/completions"
+
+    def judge_one(self, paper: Paper) -> Judgment:
+        schema = self.parse_structured(
+            messages=[{"role": "user", "content": build_prompt(paper)}],
+            output_type=JudgmentSchema,
+            schema_name="paper_judgment",
+            subject=paper.arxiv_id,
+        )
+        return _to_domain(schema)
+
+    def parse_structured(
+        self, *, messages: list[dict], output_type: type[StructuredOutput],
+        schema_name: str, subject: str,
+    ) -> StructuredOutput:
+        body = build_kimi_structured_request(
+            messages=messages, model=self._model, output_type=output_type,
+            schema_name=schema_name,
+        )
+        for attempt in range(self._max_retries):
+            try:
+                response = self._post(
+                    self._api_url,
+                    headers={
+                        "Authorization": f"Bearer {self._api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json=body,
+                    timeout=120.0,
+                )
+                if response.status_code == 429 or response.status_code >= 500:
+                    if attempt + 1 == self._max_retries:
+                        response.raise_for_status()
+                    retry_after = response.headers.get("Retry-After")
+                    try:
+                        delay = float(retry_after) if retry_after else 2 ** attempt
+                    except ValueError:
+                        delay = 2 ** attempt
+                    self._sleep(delay)
+                    continue
+                response.raise_for_status()
+                payload = response.json()
+                content = payload["choices"][0]["message"]["content"]
+                return output_type.model_validate_json(content)
+            except (httpx.TimeoutException, httpx.NetworkError):
+                if attempt + 1 == self._max_retries:
+                    raise
+                self._sleep(2 ** attempt)
+            except (KeyError, IndexError, TypeError, ValidationError) as exc:
+                if attempt + 1 == self._max_retries:
+                    raise RuntimeError(
+                        f"Kimi devolveu saida malformada para {subject}"
+                    ) from exc
+                self._sleep(2 ** attempt)
+        raise RuntimeError("Kimi esgotou as tentativas sem devolver julgamento")
+
+    def judge_all(self, papers: list[Paper]) -> dict[str, Judgment]:
+        results: dict[str, Judgment] = {}
+        try:
+            for index, paper in enumerate(papers):
+                if index:
+                    self.wait_between_requests()
+                try:
+                    results[paper.arxiv_id] = self.judge_one(paper)
+                except Exception as exc:
+                    _log.warning("julgamento Kimi de %s falhou: %s", paper.arxiv_id, exc)
+        finally:
+            self.close()
+        return results
+
+    def wait_between_requests(self) -> None:
+        self._sleep(self._request_interval)
+
+    def _post(self, *args, **kwargs):
+        if self._post_override is not None:
+            return self._post_override(*args, **kwargs)
+        if self._http_client is None:
+            self._http_client = httpx.Client()
+        return self._http_client.post(*args, **kwargs)
+
+    def close(self) -> None:
+        if self._http_client is not None:
+            self._http_client.close()
+            self._http_client = None
 
 
 _CUSTOM_ID_OK = re.compile(r"^[a-zA-Z0-9_-]{1,64}$")

@@ -98,8 +98,39 @@ def test_push_cap_is_three_and_lives_outside_thresholds():
 
 def test_model_defaults_to_opus_5(monkeypatch):
     monkeypatch.delenv("RADAR_MODEL", raising=False)
+    monkeypatch.delenv("RADAR_LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("KIMI_API_KEY", raising=False)
     from radar.config import load_model
     assert load_model() == "claude-opus-5"
+
+
+def test_kimi_is_selected_when_it_is_the_only_configured_provider(monkeypatch):
+    monkeypatch.delenv("RADAR_MODEL", raising=False)
+    monkeypatch.delenv("RADAR_LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("KIMI_API_KEY", "secret")
+    from radar.config import load_llm_provider, load_model
+    assert load_llm_provider() == "kimi"
+    assert load_model() == "kimi-k3"
+
+
+def test_an_unknown_llm_provider_is_rejected(monkeypatch):
+    monkeypatch.setenv("RADAR_LLM_PROVIDER", "misterioso")
+    from radar.config import load_llm_provider
+    with pytest.raises(ValueError, match="RADAR_LLM_PROVIDER"):
+        load_llm_provider()
+
+
+def test_kimi_base_url_defaults_to_the_international_platform(monkeypatch):
+    monkeypatch.delenv("RADAR_KIMI_BASE_URL", raising=False)
+    from radar.config import load_kimi_base_url
+    assert load_kimi_base_url() == "https://api.moonshot.ai/v1"
+
+
+def test_kimi_base_url_accepts_the_china_platform(monkeypatch):
+    monkeypatch.setenv("RADAR_KIMI_BASE_URL", "https://api.moonshot.cn/v1/")
+    from radar.config import load_kimi_base_url
+    assert load_kimi_base_url() == "https://api.moonshot.cn/v1"
 
 
 def test_recheck_limit_defaults_to_thirty(monkeypatch):

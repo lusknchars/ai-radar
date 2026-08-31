@@ -4,6 +4,8 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+data/*.bak-*
+data/rejudge-*.jsonl
 
 # workspace do subagent-driven-development (scratch, nao versionado)
 .superpowers/
