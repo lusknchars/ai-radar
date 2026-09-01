@@ -79,7 +79,9 @@ def test_a_pagina_nao_faz_requisicao_externa(dados):
     navegacao do leitor, nao carregamento de recurso."""
     html = (render_site(dados)
             .replace("https://arxiv.org", "")
-            .replace("https://github.com", ""))
+            .replace("https://github.com", "")
+            # Identificador de namespace, nao URL de recurso nem requisicao.
+            .replace('xmlns="http://www.w3.org/2000/svg"', ""))
     for proibido in ("https://", "http://", "//cdn", "@import", "<script src"):
         assert proibido not in html
 
@@ -151,6 +153,15 @@ def test_o_texto_vindo_do_dado_e_escapado(dados):
 
 def test_a_fronteira_traz_um_svg_por_metrica(dados):
     assert render_site(dados).count('class="scatter"') == 3
+
+
+def test_os_graficos_formam_um_unico_caderno_de_sinais(dados):
+    html = render_site(dados)
+    assert 'id="sinais"' in html
+    assert 'class="chart-suite"' in html
+    assert html.count('class="chart-card') >= 2
+    assert "cor = família" in html
+    assert 'class="chart-scroll"' in html
 
 
 def test_so_o_primeiro_scatter_comeca_visivel(dados):

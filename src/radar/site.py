@@ -212,6 +212,18 @@ def _legenda(d: SiteData) -> str:
     return f'<div class="legenda">{itens}</div>'
 
 
+def _cartao_grafico(numero: str, titulo: str, descricao: str, corpo: str,
+                    *, classe: str = "") -> str:
+    modificador = f" {escape(classe)}" if classe else ""
+    return (
+        f'<article class="chart-card{modificador}">'
+        '<header class="chart-card-head">'
+        f'<p class="chart-kicker">{escape(numero)}</p>'
+        f'<div><h3>{escape(titulo)}</h3><p>{escape(descricao)}</p></div>'
+        f'</header><div class="chart-card-body">{corpo}</div></article>'
+    )
+
+
 def _secao_fronteira(d: SiteData) -> str:
     lim = load_thresholds()
     botoes = "".join(
@@ -230,7 +242,13 @@ def _secao_fronteira(d: SiteData) -> str:
             f"{lim.broke_out_citations} citações não são pontuados: já "
             f"estourou em atenção, e o radar existe para o que ainda não "
             f"estourou.</p>")
-    return botoes and f'<div class="eixos">{botoes}</div>{graficos}{_legenda(d)}{nota}'
+    return botoes and (
+        f'<div class="eixos chart-controls" aria-label="eixo horizontal">'
+        f'<span>comparar por</span>{botoes}</div>'
+        f'<div class="chart-scroll" tabindex="0" '
+        f'aria-label="gráfico da fronteira; role horizontalmente para explorar">'
+        f'{graficos}</div>{nota}'
+    )
 
 
 # Abaixo disso a secao de avanco nao e construida: grafico sobre dado ralo e
@@ -251,10 +269,14 @@ def _secao_avanco(d: SiteData) -> str:
     if d.cobertura_de_ganho < COBERTURA_MINIMA:
         return ""
     com = sum(1 for p in d.pontos if p.ganho_fator is not None)
-    return (render_avanco(d.pontos, CORES_FAMILIA) + _legenda(d)
-            + f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
-              f"quantificado. Escala logarítmica; a linha por família só "
-              f"aparece com pelo menos cinco papers no trimestre.</p>")
+    return (
+        '<div class="chart-scroll" tabindex="0" '
+        'aria-label="gráfico de ganho alegado; role horizontalmente para explorar">'
+        f'{render_avanco(d.pontos, CORES_FAMILIA)}</div>'
+        f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
+        f'quantificado. Escala logarítmica; a linha por família só aparece '
+        f'com pelo menos cinco papers no trimestre.</p>'
+    )
 
 
 def _destacar_numeros(texto: str) -> str:
@@ -306,8 +328,43 @@ def _secao_familias(d: SiteData) -> str:
     for p in d.pontos:
         series.setdefault(p.familia, {}).setdefault(p.publicado[:7], 0)
         series[p.familia][p.publicado[:7]] += 1
-    return render_pequenos_multiplos(
+    grafico = render_pequenos_multiplos(
         series, d.familias_presentes, CORES_FAMILIA, ROTULOS_FAMILIA)
+    return (
+        '<div class="chart-scroll" tabindex="0" '
+        'aria-label="gráfico das famílias no tempo; role horizontalmente para explorar">'
+        f'{grafico}</div>'
+        '<p class="nota">Todos os painéis compartilham o mesmo calendário e '
+        'a mesma escala vertical; uma coluna vazia significa zero papers.</p>'
+    )
+
+
+def _secao_graficos(d: SiteData) -> str:
+    """Um único caderno visual, com uma legenda e ordem de leitura explícita."""
+    cartoes = [
+        _cartao_grafico(
+            "01 · atenção × adoção", "A fronteira",
+            "Procure o alto à esquerda: implementação independente antes de atenção massiva.",
+            _secao_fronteira(d), classe="chart-card--frontier",
+        ),
+        _cartao_grafico(
+            "02 · cadência", "As famílias no tempo",
+            "Compare o volume mensal sem trocar a régua ou deslocar o calendário.",
+            _secao_familias(d), classe="chart-card--families",
+        ),
+    ]
+    avanco = _secao_avanco(d)
+    if avanco:
+        cartoes.append(_cartao_grafico(
+            "03 · alegação", "O avanço alegado",
+            f"Ganho declarado no resumo — {ROTULO_ALEGACAO}.",
+            avanco, classe="chart-card--gain",
+        ))
+    return (
+        '<div class="chart-suite">'
+        '<div class="chart-shared-legend"><span>cor = família</span>'
+        f'{_legenda(d)}</div>{"".join(cartoes)}</div>'
+    )
 
 
 def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
@@ -548,18 +605,11 @@ def render_site(
                    "traz um brief, o paper original e o caminho para uma "
                    "análise completa quando ela merecer o custo.",
                    _secao_tabela(dados, report_ids), section_id="acervo"),
-            _secao("A fronteira",
-                   "Implementações independentes contra o quanto o paper já "
-                   "foi olhado. A região interessante é o alto à esquerda: "
-                   "muita gente construindo, pouca gente olhando.",
-                   _secao_fronteira(dados), section_id="sinais"),
-            (_secao("O avanço alegado",
-                    "Ganho declarado no resumo, por família, ao longo do tempo "
-                    f"— {ROTULO_ALEGACAO}.",
-                    avanco) if (avanco := _secao_avanco(dados)) else ""),
-            _secao("As famílias no tempo",
-                   "Volume por família, mês a mês, em escala compartilhada.",
-                   _secao_familias(dados)),
+            _secao("Sinais do acervo",
+                   "Três leituras do mesmo conjunto: adoção contra atenção, "
+                   "cadência por família e, quando a cobertura permite, o "
+                   "ganho que os próprios autores declaram.",
+                   _secao_graficos(dados), section_id="sinais"),
             _secao("Uma técnica, de ponta a ponta",
                    "O paper de maior score, aberto: os repositórios "
                    "encontrados e a regra que classificou cada um.",

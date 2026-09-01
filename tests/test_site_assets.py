@@ -21,6 +21,11 @@ def test_electrolize_e_woff2_embutido_sem_requisicao_remota():
     assert "fonts.gstatic.com" not in STYLES
 
 
+def test_subtitulos_usam_a_fonte_display_selecionada():
+    assert ".hero-deck,.article-deck,.sub,.chart-card-head h3+p" in STYLES
+    assert "font-family:var(--display)" in STYLES
+
+
 def test_script_so_aprimora_o_html_ja_renderizado():
     assert "data-mostrar-todos" in SCRIPT
     assert "data-ordenar" in SCRIPT

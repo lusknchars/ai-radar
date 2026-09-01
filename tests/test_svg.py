@@ -53,6 +53,15 @@ def test_o_scatter_desenha_um_circulo_por_ponto():
     assert render_scatter(TRES, "stars_total", CORES).count("<circle") == 3
 
 
+def test_o_scatter_publica_eixos_grade_e_valores_de_referencia():
+    svg = render_scatter(TRES, "stars_total", CORES)
+    assert 'class="chart-grid"' in svg
+    assert 'class="x-axis"' in svg
+    assert 'class="y-axis"' in svg
+    assert "estrelas no GitHub" in svg
+    assert "implementações independentes" in svg
+
+
 def test_a_cor_do_circulo_vem_da_familia():
     svg = render_scatter(TRES, "stars_total", CORES)
     assert 'fill="#abc"' in svg
@@ -155,6 +164,21 @@ def test_os_meses_saem_em_ordem_cronologica():
     assert alturas == sorted(alturas, reverse=True)   # 9, 5, 1
 
 
+def test_o_mes_ocupa_a_mesma_coluna_em_todas_as_familias():
+    """Agosto não pode virar a primeira coluna só porque julho está ausente."""
+    svg = render_pequenos_multiplos(
+        {"a": {"2026-07": 2, "2026-08": 3}, "b": {"2026-08": 1}},
+        ["a", "b"], CORES,
+    )
+    grupos = re.findall(r'<g class="painel".*?</g>', svg)
+    agosto_a = re.search(
+        r'<rect[^>]*data-month="2026-08"[^>]*x="([\d.]+)"', grupos[0])
+    agosto_b = re.search(
+        r'<rect[^>]*data-month="2026-08"[^>]*x="([\d.]+)"', grupos[1])
+    assert agosto_a and agosto_b
+    assert agosto_a.group(1) == agosto_b.group(1)
+
+
 # --- Tarefa 6: o avanço alegado ---
 
 from radar.svg import render_avanco                              # noqa: E402
@@ -176,6 +200,14 @@ def test_a_escala_log_recusa_fator_nao_positivo():
 def test_papers_sem_fator_sao_ignorados_e_nao_zerados():
     svg = render_avanco([pa(2.0), pa(None), pa(None)], CORES)
     assert svg.count("<circle") == 1
+
+
+def test_avanco_mostra_baseline_e_escala_logaritmica():
+    svg = render_avanco([pa(2.0), pa(10.0, mes="2026-08")], CORES)
+    assert 'class="chart-grid"' in svg
+    assert 'class="baseline"' in svg
+    assert "1x" in svg
+    assert "escala log" in svg
 
 
 def test_a_mediana_trimestral_exige_cinco_papers():
