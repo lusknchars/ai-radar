@@ -62,6 +62,8 @@ def test_about_declara_o_que_o_radar_nao_mede():
     assert "12 papers em 2 edições" in html
     assert "Nenhum resultado foi reproduzido" in html
     assert "requisição externa" in html
+    assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
+    assert "getContext('2d'" in html
 
 
 def test_toda_familia_tem_cor_propria():
@@ -82,10 +84,16 @@ def test_a_pagina_nao_faz_requisicao_externa(dados):
         assert proibido not in html
 
 
-def test_a_pagina_usa_a_paleta_escura_da_familia_halo(dados):
+def test_a_pagina_usa_a_paleta_editorial_da_publicacao(dados):
     html = render_site(dados)
-    assert "--fundo:#09090b" in html
-    assert "--acento:#62e6a3" in html
+    for color in ("#eeeeee", "#000000", "#dddddd", "#cb2957"):
+        assert color in html
+
+
+def test_a_navegacao_nao_renderiza_o_monograma_antigo(dados):
+    html = render_site(dados)
+    assert 'content:"AI/R"' not in html
+    assert ".nav::before" not in html
 
 
 def test_a_fonte_e_do_sistema(dados):
@@ -238,10 +246,10 @@ def test_com_cobertura_suficiente_a_secao_aparece(dados):
     assert "avanço alegado" in render_site(dados).lower()
 
 
-# --- Tarefa 7: famílias no tempo, e a tabela ---
+# --- Tarefa 7: famílias no tempo, e o índice editorial ---
 
-def test_a_tabela_traz_uma_linha_por_paper(dados):
-    assert render_site(dados).count('class="linha"') == len(dados.pontos)
+def test_o_indice_traz_uma_entrada_por_paper(dados):
+    assert render_site(dados).count('class="linha paper-entry"') == len(dados.pontos)
 
 
 def test_citacao_desconhecida_vira_travessao_e_nao_zero():
@@ -253,17 +261,19 @@ def test_citacao_desconhecida_vira_travessao_e_nao_zero():
     # aquela forma passava mesmo com a citacao virando zero. Verificado por
     # mutacao em 2026-08-30. A afirmacao precisa ser sobre A CELULA.
     html = render_site(_acervo([ponto(citations=None, ganho_fator=2.0)]))
-    celulas = re.findall(r'<td class="num"[^>]*>([^<]*)</td>',
-                         re.search(r'<tr class="linha".*?</tr>', html, re.S).group(0))
-    assert celulas[2] == "—"        # impls, estrelas, CITACOES, ganho
-    assert celulas[3] == "2x"       # o ganho tem numero, provando que nao e ele
+    entrada = re.search(
+        r'<article class="linha paper-entry".*?</article>', html, re.S).group(0)
+    valores = re.findall(r'<div><b>([^<]*)</b><span>[^<]*</span></div>', entrada)
+    assert valores[2] == "—"        # impls, estrelas, CITACOES, ganho
+    assert valores[3] == "2x"       # o ganho tem numero, provando que nao e ele
 
 
 def test_citacao_zero_e_renderizada_como_zero():
     html = render_site(_acervo([ponto(citations=0, arxiv_id="2608.33333")]))
     import re
-    linha = re.search(r'<tr class="linha".*?</tr>', html, re.S).group(0)
-    assert ">0<" in linha
+    entrada = re.search(
+        r'<article class="linha paper-entry".*?</article>', html, re.S).group(0)
+    assert "<b>0</b><span>citações</span>" in entrada
 
 
 def test_cada_linha_tem_link_de_arxiv_resolvivel(dados):
@@ -489,12 +499,15 @@ def test_destaque_numerico_nao_quebra_entidade_de_aspa(dados):
 
 # --- Identidade editorial ---
 
-def test_a_tipografia_segue_a_familia_halo_sem_fonte_remota(dados):
-    """Switzer degrada para system-ui; dados usam a pilha mono local."""
+def test_a_tipografia_usa_electrolize_embutida_sem_fonte_remota(dados):
+    """Display usa Electrolize; texto e dados conservam fallbacks locais."""
     html = render_site(dados)
+    assert "Electrolize" in html
+    assert "data:font/woff2;base64" in html
     assert "Switzer" in html
     assert "system-ui" in html
     assert "ui-monospace" in html
+    assert "fonts.gstatic.com" not in html
 
 
 def test_os_dados_ficam_em_sem_serifa_com_algarismo_tabular(dados):
@@ -502,9 +515,10 @@ def test_os_dados_ficam_em_sem_serifa_com_algarismo_tabular(dados):
     assert "tabular-nums" in html
 
 
-def test_ha_fundo_atmosferico_sem_loop_de_animacao(dados):
-    assert 'id="fundo"' in render_site(dados)
-    assert "pointermove" not in render_site(dados)
+def test_ha_fundo_dither_sem_interacao_de_ponteiro(dados):
+    html = render_site(dados)
+    assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
+    assert "pointermove" not in html
 
 
 def test_o_fundo_respeita_reducao_de_movimento(dados):
@@ -541,9 +555,19 @@ def test_ha_link_de_pular_para_o_conteudo(dados):
 
 def test_o_cabecalho_tem_estrutura_de_masthead(dados):
     html = render_site(dados)
-    assert 'class="masthead"' in html
+    assert 'class="masthead publication-head"' in html
     assert 'class="hero-eyebrow"' in html
-    assert "Leia menos" in html
+    assert "Pesquisa aplicada" in html
+
+
+def test_o_indice_tem_hierarquia_de_publicacao_e_sinal_auditavel(dados):
+    html = render_site(dados)
+    assert 'class="research-index"' in html
+    assert "publicado" in html
+    assert "paper e brief" in html
+    assert 'class="evidence-fingerprint"' in html
+    assert "sinal observado" in html
+    assert "paper original" in html
 
 
 def test_a_hierarquia_de_titulos_e_logica(dados):
@@ -623,7 +647,8 @@ def _report_document() -> ReportDocument:
             math_to_understand=["O(n log n)"],
             evidence=[EvidenceClaim(
                 claim="Reduz memória", result="2x", baseline="atenção densa",
-                conditions="modelo 7B",
+                conditions="modelo 7B", source_page=7,
+                source_excerpt="Peak memory falls by half against dense attention.",
             )],
             validation_tier="single_gpu_24gb", evidence_tier="multi_gpu",
             infrastructure_basis="explicit",
@@ -643,6 +668,37 @@ def test_pagina_de_relatorio_separa_teste_minimo_de_experimento():
     assert "teste mínimo" in html
     assert "experimento do paper" in html
     assert "Este relatório não reproduz o experimento" in html
+
+
+def test_relatorio_tem_hierarquia_de_artigo_e_volta_ao_indice():
+    html = render_report(_report_document())
+    assert 'class="static-masthead article-masthead"' in html
+    assert 'class="article-deck"' in html
+    assert 'class="report-layout"' in html
+    assert 'class="report-toc" aria-label="Nesta análise"' in html
+    assert 'href="#infra"' in html
+    assert 'href="#evidencia"' in html
+    assert 'data-report-progress' in html
+    assert "IntersectionObserver" in html
+    assert 'href="/ai-radar/#acervo"' in html
+    assert "deep report · arXiv 2608.11111" in html
+
+
+def test_relatorio_abre_com_custo_e_origem_da_analise():
+    html = render_report(_report_document())
+    assert 'id="infra" class="report-section infra-exhibit"' in html
+    assert "O custo antes da leitura" in html
+    assert "exhibit 01" in html
+    assert "análise gerada com kimi-k3" in html
+    assert "leitura de 5 min" in html
+
+
+def test_evidencia_liga_direto_para_a_pagina_do_pdf():
+    html = render_report(_report_document())
+    assert 'href="https://arxiv.org/pdf/2608.11111#page=7"' in html
+    assert "abrir página 7 no PDF" in html
+    assert "Peak memory falls by half" in html
+    assert "abrir página do paper" in html
 
 
 def test_rotulos_publicos_nao_expoem_os_enums_internos(dados):

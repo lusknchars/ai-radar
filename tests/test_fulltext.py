@@ -30,6 +30,9 @@ def test_fulltext_downloads_the_official_pdf_and_extracts_pages(monkeypatch):
 
     text = fulltext.fetch_full_text("2608.11111", get=get)
     assert "A" * 100 in text and "B" * 100 in text
+    assert "[AI-RADAR PAGE 1]" in text
+    assert "[AI-RADAR PAGE 2]" in text
+    assert text.index("[AI-RADAR PAGE 1]") < text.index("[AI-RADAR PAGE 2]")
     assert calls[0][0] == "https://arxiv.org/pdf/2608.11111"
     assert calls[0][1]["follow_redirects"] is True
 

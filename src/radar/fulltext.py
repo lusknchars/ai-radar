@@ -10,6 +10,7 @@ from pypdf import PdfReader
 MAX_PDF_BYTES = 30 * 1024 * 1024
 MAX_TEXT_CHARS = 240_000
 _MODERN_ARXIV_ID = re.compile(r"^\d{4}\.\d{4,5}$")
+PAGE_MARKER = "[AI-RADAR PAGE {page}]"
 
 
 def fetch_full_text(arxiv_id: str, *, get=httpx.get) -> str:
@@ -26,9 +27,13 @@ def fetch_full_text(arxiv_id: str, *, get=httpx.get) -> str:
     if len(content) > MAX_PDF_BYTES:
         raise ValueError(f"PDF de {arxiv_id} excede {MAX_PDF_BYTES} bytes")
     pages = PdfReader(io.BytesIO(content)).pages
-    text = "\n\n".join(page.extract_text() or "" for page in pages).strip()
-    if len(text) < 500:
+    extracted = [(page.extract_text() or "").strip() for page in pages]
+    if len("\n\n".join(extracted)) < 500:
         raise ValueError(f"PDF de {arxiv_id} nao produziu texto suficiente")
+    text = "\n\n".join(
+        f"{PAGE_MARKER.format(page=number)}\n{page_text}"
+        for number, page_text in enumerate(extracted, start=1)
+    )
     if len(text) > MAX_TEXT_CHARS:
         text = text[:MAX_TEXT_CHARS] + "\n\n[TEXTO TRUNCADO PELO RADAR]"
     return text

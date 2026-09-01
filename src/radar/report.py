@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Protocol
@@ -10,7 +11,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .models import Paper
 
-REPORT_SCHEMA_VERSION = 1
+REPORT_SCHEMA_VERSION = 2
+_PAGE_MARKER = re.compile(r"^\[AI-RADAR PAGE (\d+)\]$", re.MULTILINE)
+_WHITESPACE = re.compile(r"\s+")
+MIN_SOURCE_EXCERPT_CHARS = 24
 
 InfrastructureTier = Literal[
     "api_or_cpu", "single_gpu_24gb", "single_gpu_48_80gb", "multi_gpu",
@@ -34,6 +38,12 @@ class EvidenceClaim(BaseModel):
     baseline: str = Field(description="Baseline comparado; vazio se ausente")
     conditions: str = Field(
         description="Modelo, dataset, hardware ou condicao que limita a comparacao")
+    source_page: int | None = Field(
+        default=None, ge=1,
+        description="Pagina do PDF que sustenta a alegacao; null se nao localizada")
+    source_excerpt: str = Field(
+        default="", max_length=320,
+        description="Trecho literal e curto copiado da pagina; vazio se nao localizado")
 
 
 class DeepReport(BaseModel):
@@ -95,7 +105,11 @@ SYSTEM_PROMPT = (
     "Quando o paper nao informa a infraestrutura, use unknown. Diferencie a "
     "infra do experimento original da menor infra para um teste util. Um teste "
     "util tenta invalidar a tecnica no workload do leitor; nao promete reproduzir "
-    "o resultado publicado. Escreva em portugues claro."
+    "o resultado publicado. Para cada evidencia, informe source_page e copie em "
+    "source_excerpt um trecho literal curto daquela pagina. Use os marcadores "
+    "[AI-RADAR PAGE N] para localizar a pagina. Nunca parafraseie o trecho. Se "
+    "nao localizar apoio textual direto, use source_page null e source_excerpt "
+    "vazio. Escreva em portugues claro."
 )
 
 
@@ -105,11 +119,48 @@ def build_report_prompt(paper: Paper, full_text: str) -> str:
         f"Titulo: {paper.title}\n\n"
         "Produza um relatorio que permita decidir em menos de cinco minutos se "
         "vale ler e testar este paper. Separe alegacao de evidencia, exponha a "
-        "infraestrutura e proponha o menor teste capaz de refutar o ganho.\n\n"
+        "infraestrutura e proponha o menor teste capaz de refutar o ganho. Cada "
+        "alegacao de evidencia deve apontar para a pagina e para um trecho "
+        "literal do PDF que a sustenta.\n\n"
         "<paper>\n"
         f"{full_text}\n"
         "</paper>"
     )
+
+
+def _source_pages(full_text: str) -> dict[int, str]:
+    """Separa paginas sem acoplar o dominio ao adaptador de PDF."""
+    matches = list(_PAGE_MARKER.finditer(full_text))
+    return {
+        int(match.group(1)): full_text[
+            match.end():matches[index + 1].start() if index + 1 < len(matches)
+            else len(full_text)
+        ].strip()
+        for index, match in enumerate(matches)
+    }
+
+
+def _normalized_source(text: str) -> str:
+    return _WHITESPACE.sub(" ", text).strip().casefold()
+
+
+def _ground_evidence(report: DeepReport, full_text: str) -> DeepReport:
+    """Mantem a citacao somente quando o trecho existe na pagina indicada."""
+    pages = _source_pages(full_text)
+    grounded: list[EvidenceClaim] = []
+    for item in report.evidence:
+        excerpt = _normalized_source(item.source_excerpt)
+        page = _normalized_source(pages.get(item.source_page, ""))
+        if (item.source_page is not None
+                and len(excerpt) >= MIN_SOURCE_EXCERPT_CHARS
+                and excerpt in page):
+            grounded.append(item)
+        else:
+            grounded.append(item.model_copy(update={
+                "source_page": None,
+                "source_excerpt": "",
+            }))
+    return report.model_copy(update={"evidence": grounded})
 
 
 def generate_report(
@@ -126,6 +177,7 @@ def generate_report(
         schema_name="deep_paper_report",
         subject=paper.arxiv_id,
     )
+    report = _ground_evidence(report, full_text)
     return ReportDocument(
         arxiv_id=paper.arxiv_id,
         title=paper.title,

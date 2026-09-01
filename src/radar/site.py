@@ -16,38 +16,40 @@ from urllib.parse import urlencode
 from .config import load_thresholds
 from .leitura import afirmacoes
 from .report import ReportDocument
+from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
+from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
 from .site_data import SiteData
 from .svg import (METRICAS_X, render_avanco,
                   render_pequenos_multiplos, render_scatter)
 
 # Cor significa familia, e SO. Em nenhum grafico ela codifica outra coisa.
-# As matizes agrupam por escopo -- frios para inferencia, quentes para
-# agentes, neutro para o escape -- o que ajuda a leitura sem que a cor passe
+# As matizes agrupam por escopo -- escala de preto para inferencia, framboesa
+# para agentes, cinza para o escape -- o que ajuda a leitura sem que a cor passe
 # a significar escopo: dentro de cada grupo elas sao distintas e arbitrarias.
 CORES_FAMILIA = {
-    # inferencia: frios
-    "quantizacao":                "#2563eb",
-    "cache_kv":                   "#0891b2",
-    "decodificacao_especulativa": "#0d9488",
-    "esparsidade_e_poda":         "#4f46e5",
-    "kernels_e_atencao":          "#7c3aed",
-    "serving_e_batching":         "#1d4ed8",
-    "arquitetura_eficiente":      "#0369a1",
-    "destilacao":                 "#155e75",
-    "treino_eficiente":           "#3730a3",
-    # agentes: quentes
-    "uso_de_ferramenta":          "#ea580c",
-    "memoria_e_contexto":         "#d97706",
-    "planejamento_e_decomposicao": "#dc2626",
-    "orquestracao_multiagente":   "#b91c1c",
-    "avaliacao_de_agente":        "#a16207",
-    "recuperacao_de_falha":       "#c2410c",
-    "agentes_de_codigo":          "#be123c",
-    "seguranca_e_guardrails":     "#9f1239",
-    "recuperacao_e_rag":          "#92400e",
+    # inferencia: escala de preto
+    "quantizacao":                "#000000",
+    "cache_kv":                   "#121212",
+    "decodificacao_especulativa": "#242424",
+    "esparsidade_e_poda":         "#363636",
+    "kernels_e_atencao":          "#484848",
+    "serving_e_batching":         "#5a5a5a",
+    "arquitetura_eficiente":      "#6c6c6c",
+    "destilacao":                 "#7e7e7e",
+    "treino_eficiente":           "#909090",
+    # agentes: escala de framboesa
+    "uso_de_ferramenta":          "#cb2957",
+    "memoria_e_contexto":         "#b92450",
+    "planejamento_e_decomposicao": "#a82049",
+    "orquestracao_multiagente":   "#971c43",
+    "avaliacao_de_agente":        "#86183c",
+    "recuperacao_de_falha":       "#751436",
+    "agentes_de_codigo":          "#641130",
+    "seguranca_e_guardrails":     "#d2456c",
+    "recuperacao_e_rag":          "#db6683",
     # escape: neutro, e de proposito o menos chamativo da paleta
-    "outro":                      "#6b7280",
+    "outro":                      "#aaaaaa",
 }
 
 ROTULOS_FAMILIA = {
@@ -130,10 +132,10 @@ _ENQUADRAMENTO = (
 
 def _nav(atual: str) -> str:
     itens = (
-        ("acervo", "/ai-radar/#acervo", "papers"),
+        ("acervo", "/ai-radar/#acervo", "pesquisa"),
         ("sinais", "/ai-radar/#sinais", "sinais"),
         ("edicoes", "/ai-radar/edicoes/", "edições"),
-        ("about", "/ai-radar/about.html", "sobre"),
+        ("about", "/ai-radar/about.html", "método"),
         ("rss", "/ai-radar/feed.xml", "RSS"),
     )
     links = "".join(
@@ -167,30 +169,31 @@ def _sheen_link(label: str, href: str, *, classes: str = "",
 
 def _cabecalho(d: SiteData, edicao: bool = False) -> str:
     impls = sum(p.independent_impls for p in d.pontos)
-    contexto = "edição preservada" if edicao else "fila de leitura"
+    contexto = "edição preservada" if edicao else "caderno de pesquisa"
     return (
-        '<header class="masthead"><div class="hero-copy">'
+        '<header class="masthead publication-head"><div class="hero-copy">'
         f'<p class="hero-eyebrow">{contexto} · {escape(d.dia)}</p>'
-        '<h1><span class="marca">ai-radar</span>Leia menos.<br>'
-        '<em>Teste melhor.</em></h1>'
-        '<p class="hero-deck">Papers de AI classificados por implementação '
-        'independente. Briefs para decidir rápido, relatórios completos apenas '
-        'quando uma técnica merece o seu tempo.</p>'
-        f'{_sheen_link("ver os briefs", "#acervo")}</div>'
-        f'<div class="numeros" aria-label="resumo do acervo">'
-        f'<div class="numero"><b>{len(d.pontos)}</b><span>papers</span></div>'
-        f'<div class="numero"><b>{len(d.familias_presentes)}</b>'
-        f"<span>famílias</span></div>"
-        f'<div class="numero"><b>{impls}</b>'
-        f"<span>implementações independentes</span></div>"
-        f"</div></header>"
+        '<h1><span class="marca">ai-radar · research notes</span>'
+        'Pesquisa aplicada.<br><em>Antes do hype.</em></h1>'
+        '<p class="hero-deck">Uma publicação sobre papers de AI que podem '
+        'mudar o trabalho de engenharia. Cada nota separa a ideia, o sinal '
+        'independente e o custo real de testar.</p>'
+        f'{_sheen_link("abrir o índice", "#acervo")}</div>'
+        '<dl class="edition-ledger" aria-label="resumo desta edição">'
+        f'<div><dt>edição</dt><dd>{escape(d.dia)}</dd></div>'
+        f'<div><dt>briefs</dt><dd>{len(d.pontos)}</dd></div>'
+        f'<div><dt>famílias</dt><dd>{len(d.familias_presentes)}</dd></div>'
+        f'<div><dt>implementações independentes</dt><dd>{impls}</dd></div>'
+        '</dl></header>'
     )
 
 
 def _secao(titulo: str, sub: str, corpo: str, *, section_id: str = "") -> str:
     identificador = f' id="{escape(section_id)}"' if section_id else ""
-    return (f"<section{identificador}><h2>{titulo}</h2><p class=\"sub\">{sub}</p>"
-            f"{corpo}</section>")
+    return (
+        f'<section{identificador}><div class="section-head">'
+        f'<h2>{titulo}</h2><p class="sub">{sub}</p></div>{corpo}</section>'
+    )
 
 
 def _legenda(d: SiteData) -> str:
@@ -339,6 +342,18 @@ def _report_action(p, has_report: bool) -> str:
     )
 
 
+MESES = {
+    "01": "jan", "02": "fev", "03": "mar", "04": "abr",
+    "05": "mai", "06": "jun", "07": "jul", "08": "ago",
+    "09": "set", "10": "out", "11": "nov", "12": "dez",
+}
+
+
+def _data_editorial(publicado: str) -> str:
+    ano, mes, _ = publicado.split("-", 2)
+    return f"{MESES.get(mes, mes)} {ano}"
+
+
 def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
     cor = CORES_FAMILIA.get(p.familia, "currentColor")
     # `None` e desconhecido e vira travessao. Renderizar 0 aqui reintroduziria,
@@ -354,33 +369,45 @@ def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
     # confusao que o pipeline inteiro existe para evitar.
     ord_cit = -1 if p.citations is None else p.citations
     ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
-    texto = f"{p.titulo} {p.familia} {p.pratica} {p.arxiv_id}".lower()
+    texto = (
+        f"{p.titulo} {p.resumo} {p.familia} {p.pratica} {p.arxiv_id}"
+    ).lower()
     estado_inicial = ' data-inicial="oculta" hidden' if initial_hidden else ""
     return (
-        f'<tr class="linha" data-id="{escape(p.arxiv_id)}" '
+        f'<article class="linha paper-entry" data-id="{escape(p.arxiv_id)}" '
         f'data-familia="{escape(p.familia)}" data-pratica="{escape(p.pratica)}" '
         f'data-texto="{escape(texto)}" '
         f'data-impls="{p.independent_impls}" data-estrelas="{p.stars_total}" '
         f'data-citacoes="{ord_cit}" data-ganho="{ord_ganho:g}" '
         f'data-score="{p.score:g}"{estado_inicial}>'
-        f'<td data-label="paper"><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
-        f'{escape(p.titulo)}</a><span class="paper-brief">'
-        f'{escape(p.resumo)}</span></td>'
-        f'<td data-label="família"><span class="pt" style="background:{cor}"></span>'
-        f"{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))}</td>"
-        f'<td data-label="prática"><span class="tag {escape(p.pratica)}">'
-        f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))}</span></td>'
-        f'<td class="num" data-label="impls">{p.independent_impls}</td>'
-        f'<td class="num" data-label="estrelas">{p.stars_total}</td>'
-        f'<td class="num" data-label="citações">{cit}</td>'
-        f'<td class="num" data-label="ganho">{ganho}</td>'
-        f'<td class="acao" data-label="relatório">{_report_action(p, has_report)}</td>'
-        f"</tr>"
+        '<div class="entry-date">'
+        f'<time datetime="{escape(p.publicado)}">{escape(_data_editorial(p.publicado))}</time>'
+        f'<span>arXiv {escape(p.arxiv_id)}</span></div>'
+        '<div class="entry-main">'
+        '<div class="entry-taxonomy">'
+        f'<span><i class="pt" style="background:{cor}"></i>'
+        f'{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))}</span>'
+        f'<span class="tag {escape(p.pratica)}">'
+        f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))}</span></div>'
+        f'<h3><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
+        'target="_blank" rel="noopener noreferrer">'
+        f'{escape(p.titulo)}</a></h3>'
+        f'<p class="paper-brief">{escape(p.resumo)}</p></div>'
+        '<div class="evidence-fingerprint" aria-label="sinal de evidência">'
+        '<span class="fingerprint-label">sinal observado</span>'
+        f'<div><b>{p.independent_impls}</b><span>impl.</span></div>'
+        f'<div><b>{p.stars_total}</b><span>estrelas</span></div>'
+        f'<div><b>{cit}</b><span>citações</span></div>'
+        f'<div><b>{ganho}</b><span>ganho</span></div></div>'
+        f'<div class="entry-action">{_report_action(p, has_report)}'
+        f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
+        'target="_blank" rel="noopener noreferrer">paper original ↗</a></div>'
+        '</article>'
     )
 
 
 def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
-    """Filtro por pratica e por familia, sem estado e sem URL.
+    """Indice editorial com filtro por pratica e por familia.
 
     O de PRATICA e o primario: e ele que responde "o que eu adoto", que e a
     pergunta pela qual o leitor abriu a pagina. O de familia serve para
@@ -415,15 +442,17 @@ def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
         f'<div class="contagem"><label>mostrando</label>'
         f'<span id="contador">{inicial} de {len(d.pontos)}</span></div>'
         "</div>"
-        '<div class="rolagem"><table><thead><tr>'
-        '<th><button type="button" data-ordenar="score">técnica</button></th>'
-        "<th>família</th><th>prática</th>"
-        '<th class="num"><button type="button" data-ordenar="impls">impls</button></th>'
-        '<th class="num"><button type="button" data-ordenar="estrelas">estrelas</button></th>'
-        '<th class="num"><button type="button" data-ordenar="citacoes">citações</button></th>'
-        '<th class="num"><button type="button" data-ordenar="ganho">ganho</button></th>'
-        '<th>relatório</th>'
-        f"</tr></thead><tbody>{linhas}</tbody></table></div>{mostrar}"
+        '<div class="index-sort" aria-label="ordenar índice">'
+        '<span>ordenar por</span>'
+        '<button type="button" data-ordenar="score">sinal</button>'
+        '<button type="button" data-ordenar="impls">implementações</button>'
+        '<button type="button" data-ordenar="estrelas">estrelas</button>'
+        '<button type="button" data-ordenar="citacoes">citações</button>'
+        '<button type="button" data-ordenar="ganho">ganho</button></div>'
+        '<div class="research-index"><div class="index-head" aria-hidden="true">'
+        '<span>publicado</span><span>paper e brief</span>'
+        '<span>sinal</span><span>leitura</span></div>'
+        f'<div class="paper-list" data-paper-list>{linhas}</div></div>{mostrar}'
     )
 
 
@@ -514,9 +543,10 @@ def render_site(
         corpo = '<p class="vazio">Nenhum paper no acervo ainda.</p>'
     else:
         corpo = "".join((
-            _secao("Papers para decidir agora",
-                   "Os 30 maiores sinais aparecem primeiro. Busque e filtre "
-                   "o acervo inteiro sem gastar outra chamada de modelo.",
+            _secao("Índice de pesquisa",
+                   "Os 30 sinais mais fortes abrem esta edição. Cada entrada "
+                   "traz um brief, o paper original e o caminho para uma "
+                   "análise completa quando ela merecer o custo.",
                    _secao_tabela(dados, report_ids), section_id="acervo"),
             _secao("A fronteira",
                    "Implementações independentes contra o quanto o paper já "
@@ -546,7 +576,7 @@ def render_site(
         'href="/ai-radar/feed.xml">'
         f"<title>ai-radar — {'edição ' if edicao else ''}{escape(dados.dia)}</title>"
         f"<style>{_CSS}</style></head><body>"
-        '<div id="fundo" aria-hidden="true"></div>'
+        '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
         '<div class="envelope">'
         f"{_nav('edicoes' if edicao else 'acervo')}"
@@ -558,33 +588,45 @@ def render_site(
         "</main>"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"
-        f"</div><script>{_JS}</script></body></html>"
+        f"</div><script>{_BACKGROUND_JS}</script><script>{_JS}</script></body></html>"
     )
 
 
 def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
-                     *, heading: str | None = None) -> str:
+                     *, heading: str | None = None, kicker: str | None = None,
+                     deck: str | None = None, back_href: str | None = None,
+                     extra_script: str = "") -> str:
     """Casca das paginas de distribuicao.
 
     Compartilha a tipografia e a navegacao do acervo, mas nao carrega o JS da
     tabela. Links e texto continuam funcionando com qualquer bloqueador de
-    script, e a pagina nao faz requisicao externa.
+    script. Relatorios podem receber aprimoramento local, sem requisicao
+    externa, para progresso de leitura e sumario ativo.
     """
+    back = (
+        f'<a class="back-link" href="{escape(back_href)}">← voltar ao índice</a>'
+        if back_href else ""
+    )
+    header_class = "static-masthead article-masthead" if deck else "static-masthead"
+    main_class = "pagina article-page" if deck else "pagina"
+    header_deck = f'<p class="article-deck">{escape(deck)}</p>' if deck else ""
+    enhancement = f'<script>{extra_script}</script>' if extra_script else ""
     return (
         '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
         'href="/ai-radar/feed.xml">'
         f'<title>{escape(titulo)}</title><style>{_CSS}</style></head><body>'
-        '<div id="fundo" aria-hidden="true"></div>'
+        '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
         f'<div class="envelope">{_nav(atual)}'
-        '<header class="static-masthead">'
-        f'<p class="hero-eyebrow">atualizado em {escape(dia)}</p>'
-        f'<h1>{escape(heading or titulo)}</h1></header>'
-        f'<main id="conteudo" class="pagina">{corpo}</main>'
+        f'<header class="{header_class}">{back}'
+        f'<p class="hero-eyebrow">{escape(kicker or f"atualizado em {dia}")}</p>'
+        f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
+        f'<main id="conteudo" class="{main_class}">{corpo}</main>'
         '<footer>Gerado pelo próprio pipeline. Sem framework, sem build, '
-        'sem requisição externa.</footer></div></body></html>'
+        f'sem requisição externa.</footer></div><script>{_BACKGROUND_JS}</script>'
+        f'{enhancement}</body></html>'
     )
 
 
@@ -637,45 +679,129 @@ def _lista_report(items: list[str], *, ordered: bool = False) -> str:
 
 def render_report(document: ReportDocument) -> str:
     r = document.report
-    evidence = "".join(
-        '<li><strong>' + escape(item.claim) + '</strong>'
-        + (f'<span>resultado: {escape(item.result)}</span>' if item.result else "")
-        + (f'<span>baseline: {escape(item.baseline)}</span>' if item.baseline else "")
-        + (f'<span>condições: {escape(item.conditions)}</span>' if item.conditions else "")
-        + "</li>"
-        for item in r.evidence
-    ) or '<li>Nenhuma evidência quantificada foi localizada.</li>'
+    evidence_items = []
+    for index, item in enumerate(r.evidence, 1):
+        if item.source_page is not None and item.source_excerpt:
+            source = (
+                f'<blockquote>{escape(item.source_excerpt)}</blockquote>'
+                f'<a class="evidence-link" href="{escape(document.source_url)}'
+                f'#page={item.source_page}" target="_blank" rel="noopener noreferrer" '
+                f'aria-label="Abrir página {item.source_page} do PDF">'
+                f'abrir página {item.source_page} no PDF</a>'
+            )
+        else:
+            source = (
+                '<span class="evidence-missing">fonte não localizada '
+                'automaticamente no PDF</span>'
+            )
+        facts = "".join((
+            (f'<div><dt>resultado</dt><dd>{escape(item.result)}</dd></div>'
+             if item.result else ""),
+            (f'<div><dt>baseline</dt><dd>{escape(item.baseline)}</dd></div>'
+             if item.baseline else ""),
+            (f'<div><dt>condições</dt><dd>{escape(item.conditions)}</dd></div>'
+             if item.conditions else ""),
+        ))
+        evidence_items.append(
+            f'<li class="evidence-exhibit" id="evidencia-{index}">'
+            f'<span class="exhibit-number">evidência {index:02d}</span>'
+            f'<h3>{escape(item.claim)}</h3>'
+            f'<dl class="evidence-facts">{facts}</dl>{source}</li>'
+        )
+    evidence = "".join(evidence_items) or (
+        '<li class="evidence-exhibit empty-evidence">'
+        'Nenhuma evidência quantificada foi localizada.</li>'
+    )
     setup = ", ".join(ROTULOS_SETUP[value] for value in r.software_setup)
+    setup = setup or "não informado"
+    toc_entries = (
+        ("infra", "Infra para testar"),
+        ("problema", "Problema"),
+        ("mecanismo", "Mecanismo"),
+        ("evidencia", "Evidência"),
+        ("teste", "Menor teste"),
+        ("matematica", "Matemática"),
+        ("riscos", "Riscos"),
+        ("perguntas", "Perguntas abertas"),
+    )
+    toc = "".join(
+        f'<a href="#{section_id}">{escape(label)}</a>'
+        for section_id, label in toc_entries
+    )
+
+    def section_heading(number: int, title: str, label: str) -> str:
+        return (
+            '<div class="report-section-head">'
+            f'<span>{number:02d}</span><div><p>{escape(label)}</p>'
+            f'<h2>{escape(title)}</h2></div></div>'
+        )
+
     corpo = (
+        '<div class="report-progress" aria-hidden="true">'
+        '<span data-report-progress></span></div>'
+        '<div class="report-layout">'
+        '<aside class="report-toc" aria-label="Nesta análise">'
+        '<p>nesta análise</p>'
+        f'<nav data-report-toc>{toc}</nav></aside>'
         '<article class="report">'
-        f'<p class="report-kicker">relatório sob demanda · arXiv '
-        f'{escape(document.arxiv_id)}</p>'
-        f'<p class="report-lead">{escape(r.one_sentence)}</p>'
+        '<div class="report-bar">'
+        '<div class="report-provenance">'
+        f'<span>análise gerada com {escape(document.model)}</span>'
+        f'<b>{escape(document.generated_at[:10])} · leitura de 5 min</b></div>'
+        '<div class="report-links">'
+        f'<a href="https://arxiv.org/abs/{escape(document.arxiv_id)}" '
+        'target="_blank" rel="noopener noreferrer">abrir página do paper ↗</a>'
+        f'<a href="{escape(document.source_url)}" target="_blank" '
+        'rel="noopener noreferrer">abrir PDF completo ↗</a></div></div>'
+        '<details class="report-toc-mobile" open><summary>nesta análise</summary>'
+        f'<nav data-report-toc>{toc}</nav></details>'
+        '<figure id="infra" class="report-section infra-exhibit">'
+        + section_heading(1, "O custo antes da leitura", "mapa de execução")
+        + '<p class="report-section-deck">O teste mínimo procura invalidar a '
+        'ideia no seu workload. A coluna do experimento descreve a infraestrutura '
+        'por trás da evidência publicada; ela não é uma recomendação.</p>'
         '<div class="infra-grid">'
         f'<div><span>teste mínimo</span><b>{escape(ROTULOS_INFRA[r.validation_tier])}</b></div>'
         f'<div><span>experimento do paper</span><b>{escape(ROTULOS_INFRA[r.evidence_tier])}</b></div>'
         f'<div><span>base da classificação</span><b>{escape(ROTULOS_BASE_INFRA[r.infrastructure_basis])}</b></div>'
         f'<div><span>treino</span><b>{escape(ROTULOS_TREINO[r.training_required])}</b></div>'
-        '</div>'
-        '<section><h2>Problema</h2>' + f'<p>{escape(r.problem)}</p></section>'
-        '<section><h2>Como funciona</h2>' + f'<p>{escape(r.mechanism)}</p>'
-        f'<p class="nota">Setup: {escape(setup)}</p></section>'
-        '<section><h2>Evidência relatada</h2>'
-        f'<ul class="evidence">{evidence}</ul></section>'
-        '<section><h2>Menor teste útil</h2>'
+        '</div><figcaption><span>exhibit 01</span> Infra do menor teste útil '
+        'comparada com a infra que sustenta as alegações do paper.</figcaption></figure>'
+        '<section id="problema" class="report-section">'
+        + section_heading(2, "O problema", "o que precisa mudar")
+        + f'<p>{escape(r.problem)}</p></section>'
+        '<section id="mecanismo" class="report-section">'
+        + section_heading(3, "Como funciona", "a troca técnica")
+        + f'<p>{escape(r.mechanism)}</p>'
+        f'<p class="setup-note"><span>setup</span>{escape(setup)}</p></section>'
+        '<section id="evidencia" class="report-section">'
+        + section_heading(4, "Evidência relatada", "o que o PDF sustenta")
+        + f'<ol class="evidence">{evidence}</ol></section>'
+        '<section id="teste" class="report-section">'
+        + section_heading(5, "Menor teste útil", "como tentar refutar")
         + _lista_report(r.minimum_test, ordered=True) + '</section>'
-        '<section><h2>Matemática que merece leitura</h2>'
+        '<section id="matematica" class="report-section">'
+        + section_heading(6, "Matemática que merece leitura", "conceitos que destravam o paper")
         + _lista_report(r.math_to_understand) + '</section>'
-        '<section><h2>Riscos</h2>' + _lista_report(r.main_risks) + '</section>'
-        '<section><h2>Antes de adotar, descubra</h2>'
+        '<section id="riscos" class="report-section">'
+        + section_heading(7, "Onde pode quebrar", "riscos do teste e da adoção")
+        + _lista_report(r.main_risks) + '</section>'
+        '<section id="perguntas" class="report-section">'
+        + section_heading(8, "Antes de adotar, descubra", "perguntas abertas")
         + _lista_report(r.unanswered_questions) + '</section>'
         '<p class="report-source">Gerado de '
         f'<a href="{escape(document.source_url)}">PDF do arXiv</a> com '
         f'{escape(document.model)} em {escape(document.generated_at[:10])}. '
         'Este relatório não reproduz o experimento.</p>'
-        '</article>'
+        '</article></div>'
+        '<a class="report-to-top" data-report-top href="#conteudo" '
+        'aria-label="Voltar ao início da análise">↑</a>'
     )
     return _pagina_estatica(
         f"{document.title} — relatório — ai-radar", "acervo",
         document.generated_at[:10], corpo, heading=document.title,
+        kicker=(f"deep report · arXiv {document.arxiv_id} · "
+                f"{document.generated_at[:10]}"),
+        deck=r.one_sentence, back_href="/ai-radar/#acervo",
+        extra_script=_REPORT_JS,
     )
