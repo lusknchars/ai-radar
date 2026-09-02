@@ -20,6 +20,21 @@ An explicit reader action asking the system to spend model tokens on a deep
 report for one paper.
 _Avoid_: Automatic report, background summary
 
+**Technical core**:
+The formula, algorithm, execution model, or evaluation protocol that most
+directly explains what a paper changes. It may explicitly have no formula.
+_Avoid_: Mathematics section, technical summary
+
+**Formula walkthrough**:
+A source-grounded explanation of one formula, its symbols, its role in the
+paper, and any calculation AI Radar derives from it.
+_Avoid_: Formula summary, generated formula
+
+**Worked example**:
+An illustrative calculation performed by AI Radar from a source formula. It is
+not a result measured or claimed by the paper.
+_Avoid_: Benchmark, paper result, reproduced result
+
 **Validation tier**:
 The smallest infrastructure needed to run a meaningful test of whether the
 technique helps the reader's workload.
