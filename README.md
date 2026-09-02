@@ -295,6 +295,11 @@ paper action --> owner GitHub issue --> report workflow --> official arXiv sourc
                                                  static report + republished index
 ```
 
+The source reader never extracts an archive to disk and never compiles TeX. It
+keeps only bounded `.tex` files in memory, rejects links and path traversal,
+and gives every display equation a stable candidate ID before any model sees
+the content.
+
 ### The main seams
 
 | Seam | Interface | Adapters or consumers | Invariant kept behind it |

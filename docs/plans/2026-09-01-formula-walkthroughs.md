@@ -141,12 +141,12 @@ low reasoning effort and records that fallback.
 
 ### 3. Source acquisition and candidates
 
-- [ ] Evolve full-text acquisition into a `PaperSource` value containing PDF
+- [x] Evolve full-text acquisition into a `PaperSource` value containing PDF
   pages and optional TeX files.
-- [ ] Download the arXiv source with byte and file-count limits.
-- [ ] Reject path traversal and never compile or execute TeX.
-- [ ] Extract equation environments with section and paragraph context.
-- [ ] Preserve exact source strings and stable candidate identifiers.
+- [x] Download the arXiv source with byte and file-count limits.
+- [x] Reject path traversal and never compile or execute TeX.
+- [x] Extract equation environments with section and paragraph context.
+- [x] Preserve exact source strings and stable candidate identifiers.
 - [ ] Fall back to explicit `extraction_failed` when PDF text damages notation.
 
 ### 4. Selection and grounding

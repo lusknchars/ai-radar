@@ -2,7 +2,8 @@ import pytest
 from pydantic import ValidationError
 
 from radar.formulas import (FormulaVariable, FormulaWalkthrough, TechnicalCore,
-                            WorkedExample, ground_technical_core)
+                            WorkedExample, extract_formula_candidates,
+                            ground_technical_core)
 
 
 def exact_formula(**overrides):
@@ -110,6 +111,42 @@ def test_grounding_keeps_formula_when_excerpt_exists_on_the_page():
     grounded = ground_technical_core(
         core, {4: f"Context before. {formula.source_excerpt} Context after."})
     assert grounded.walkthroughs == [formula]
+
+
+def test_equation_candidates_preserve_exact_tex_and_nearby_context():
+    tex = r"""
+\section{Method}
+We normalize attention before applying softmax.
+\begin{equation}
+S = \frac{QK^T}{\sqrt{d}}
+\end{equation}
+This keeps the logits in a useful range.
+"""
+    candidates = extract_formula_candidates({"main.tex": tex})
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    assert candidate.latex == r"S = \frac{QK^T}{\sqrt{d}}"
+    assert candidate.environment == "equation"
+    assert "normalize attention" in candidate.context_before
+    assert "useful range" in candidate.context_after
+    assert candidate.candidate_id.startswith("eq-")
+
+
+def test_equation_candidate_ids_are_stable_for_the_same_source():
+    files = {"main.tex": r"\[x^2 + y^2 = z^2\]"}
+    first = extract_formula_candidates(files)
+    second = extract_formula_candidates(files)
+    assert [item.candidate_id for item in first] == [
+        item.candidate_id for item in second]
+
+
+def test_commented_equations_do_not_become_candidates():
+    tex = "% \\begin{equation}invented = 1\\end{equation}\nPlain text."
+    assert extract_formula_candidates({"main.tex": tex}) == []
+
+
+def test_tex_without_display_equations_returns_no_candidates():
+    assert extract_formula_candidates({"main.tex": "Only prose and $x$ inline."}) == []
 
 
 def test_formula_technical_core_requires_a_walkthrough():

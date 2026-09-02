@@ -1,3 +1,6 @@
+import io
+import tarfile
+
 import pytest
 
 import radar.fulltext as fulltext
@@ -47,3 +50,77 @@ def test_fulltext_rejects_an_image_only_pdf(monkeypatch):
                         lambda stream: type("R", (), {"pages": [Page("")]})())
     with pytest.raises(ValueError, match="texto suficiente"):
         fulltext.fetch_full_text("2608.11111", get=lambda *a, **k: Response())
+
+
+def _tar_bytes(files):
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+        for name, content in files.items():
+            payload = content.encode("utf-8")
+            member = tarfile.TarInfo(name)
+            member.size = len(payload)
+            archive.addfile(member, io.BytesIO(payload))
+    return buffer.getvalue()
+
+
+def test_source_archive_reader_keeps_only_tex_files_in_memory():
+    files = fulltext.read_tex_source_archive(_tar_bytes({
+        "paper/main.tex": r"\begin{document}x\end{document}",
+        "paper/refs.bib": "@article{x}",
+        "paper/figure.png": "not really an image",
+    }))
+    assert [(item.path, item.content) for item in files] == [
+        ("paper/main.tex", r"\begin{document}x\end{document}"),
+    ]
+
+
+def test_source_archive_reader_rejects_path_traversal():
+    archive = _tar_bytes({"../outside.tex": r"x = 1"})
+    with pytest.raises(ValueError, match="caminho inseguro"):
+        fulltext.read_tex_source_archive(archive)
+
+
+def test_paper_source_exposes_pages_and_tex_without_duplicate_parsing():
+    source = fulltext.PaperSource(
+        arxiv_id="2608.11111",
+        pdf_pages=("first page", "second page"),
+        tex_files=(fulltext.TexFile(path="main.tex", content="x = 1"),),
+        tex_status="available",
+    )
+    assert source.pages == {1: "first page", 2: "second page"}
+    assert source.tex == {"main.tex": "x = 1"}
+    assert "[AI-RADAR PAGE 2]\nsecond page" in source.full_text
+
+
+def test_fetch_paper_source_marks_missing_tex_as_unavailable(monkeypatch):
+    monkeypatch.setattr(fulltext, "PdfReader",
+                        lambda stream: type("R", (), {
+                            "pages": [Page("A" * 600)]})())
+
+    class MissingSource(Response):
+        status_code = 404
+        content = b"not found"
+
+    def get(url, **kwargs):
+        return Response() if "/pdf/" in url else MissingSource()
+
+    source = fulltext.fetch_paper_source("2608.11111", get=get)
+    assert source.tex_status == "unavailable"
+    assert source.tex_files == ()
+
+
+def test_fetch_paper_source_marks_unsafe_tex_archive_as_rejected(monkeypatch):
+    monkeypatch.setattr(fulltext, "PdfReader",
+                        lambda stream: type("R", (), {
+                            "pages": [Page("A" * 600)]})())
+
+    class UnsafeSource(Response):
+        status_code = 200
+        content = _tar_bytes({"../outside.tex": r"x = 1"})
+
+    def get(url, **kwargs):
+        return Response() if "/pdf/" in url else UnsafeSource()
+
+    source = fulltext.fetch_paper_source("2608.11111", get=get)
+    assert source.tex_status == "rejected"
+    assert source.tex_files == ()

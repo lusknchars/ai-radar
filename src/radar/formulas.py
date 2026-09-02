@@ -6,6 +6,8 @@ nao precisa adivinhar se uma formula existe ou se uma conta veio do paper.
 """
 from __future__ import annotations
 
+import hashlib
+import re
 from collections.abc import Mapping
 from typing import Literal
 
@@ -22,6 +24,22 @@ TechnicalCoreKind = Literal[
 ]
 
 MIN_SOURCE_EXCERPT_CHARS = 24
+MAX_FORMULA_CANDIDATES = 100
+MAX_CANDIDATE_LATEX_CHARS = 6000
+CONTEXT_CHARS = 900
+
+_TEX_COMMENT = re.compile(r"(?<!\\)%[^\n]*")
+_EQUATION_ENV = re.compile(
+    r"\\begin\{(?P<environment>equation\*?|align\*?|gather\*?|"
+    r"multline\*?|eqnarray\*?|displaymath)\}"
+    r"(?P<body>.*?)"
+    r"\\end\{(?P=environment)\}",
+    re.DOTALL,
+)
+_DISPLAY_PATTERNS = (
+    ("display_brackets", re.compile(r"\\\[(?P<body>.*?)\\\]", re.DOTALL)),
+    ("display_dollars", re.compile(r"\$\$(?P<body>.*?)\$\$", re.DOTALL)),
+)
 
 
 class FormulaVariable(BaseModel):
@@ -30,6 +48,19 @@ class FormulaVariable(BaseModel):
     symbol: str = Field(min_length=1, max_length=80)
     meaning: str = Field(min_length=1, max_length=320)
     unit: str = Field(default="", max_length=80)
+
+
+class FormulaCandidate(BaseModel):
+    """Trecho TeX exato que o seletor pode escolher apenas pelo ID."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str = Field(pattern=r"^eq-[0-9a-f]{16}$")
+    path: str = Field(min_length=1, max_length=500)
+    environment: str = Field(min_length=1, max_length=40)
+    latex: str = Field(min_length=1, max_length=MAX_CANDIDATE_LATEX_CHARS)
+    context_before: str = Field(default="", max_length=CONTEXT_CHARS)
+    context_after: str = Field(default="", max_length=CONTEXT_CHARS)
 
 
 class WorkedExample(BaseModel):
@@ -115,6 +146,64 @@ class TechnicalCore(BaseModel):
 
 def _normalized_source(text: str) -> str:
     return " ".join(text.split()).casefold()
+
+
+def _mask_tex_comments(text: str) -> str:
+    return _TEX_COMMENT.sub(lambda match: " " * len(match.group(0)), text)
+
+
+def _candidate_context(text: str, start: int, end: int) -> tuple[str, str]:
+    before = " ".join(text[max(0, start - CONTEXT_CHARS):start].split())
+    after = " ".join(text[end:end + CONTEXT_CHARS].split())
+    return before[-CONTEXT_CHARS:], after[:CONTEXT_CHARS]
+
+
+def extract_formula_candidates(
+    tex_files: Mapping[str, str],
+) -> list[FormulaCandidate]:
+    """Extrai displays TeX sem corrigir, compilar ou interpretar a notacao."""
+    candidates: list[FormulaCandidate] = []
+    for path, text in sorted(tex_files.items()):
+        masked = _mask_tex_comments(text)
+        matches: list[tuple[int, int, str, str]] = []
+        for match in _EQUATION_ENV.finditer(masked):
+            body_start, body_end = match.span("body")
+            matches.append((
+                match.start(), match.end(), match.group("environment"),
+                text[body_start:body_end].strip(),
+            ))
+        for environment, pattern in _DISPLAY_PATTERNS:
+            for match in pattern.finditer(masked):
+                body_start, body_end = match.span("body")
+                matches.append((
+                    match.start(), match.end(), environment,
+                    text[body_start:body_end].strip(),
+                ))
+
+        previous_end = -1
+        occurrence = 0
+        for start, end, environment, latex in sorted(matches):
+            if start < previous_end:
+                continue
+            previous_end = end
+            if not latex or len(latex) > MAX_CANDIDATE_LATEX_CHARS:
+                continue
+            occurrence += 1
+            digest = hashlib.sha256(
+                f"{path}\0{occurrence}\0{environment}\0{latex}".encode("utf-8")
+            ).hexdigest()[:16]
+            before, after = _candidate_context(text, start, end)
+            candidates.append(FormulaCandidate(
+                candidate_id=f"eq-{digest}",
+                path=path,
+                environment=environment,
+                latex=latex,
+                context_before=before,
+                context_after=after,
+            ))
+            if len(candidates) >= MAX_FORMULA_CANDIDATES:
+                return candidates
+    return candidates
 
 
 def ground_technical_core(
