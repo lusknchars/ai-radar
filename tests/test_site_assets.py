@@ -26,6 +26,12 @@ def test_subtitulos_usam_a_fonte_display_selecionada():
     assert "font-family:var(--display)" in STYLES
 
 
+def test_barra_do_relatorio_afasta_conteudo_das_bordas():
+    """Texto e botoes nao podem encostar nas regras da barra sticky."""
+    assert ".report-bar{" in STYLES
+    assert "margin:0 0 24px;padding:11px 16px;" in STYLES
+
+
 def test_script_so_aprimora_o_html_ja_renderizado():
     assert "data-mostrar-todos" in SCRIPT
     assert "data-ordenar" in SCRIPT

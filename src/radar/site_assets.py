@@ -652,7 +652,7 @@ transition:color 180ms ease-out,border-color 180ms ease-out}
 .report-toc a:hover,.report-toc a[aria-current=true]{color:var(--texto);
 border-left-color:var(--acento)}.report{min-width:0;max-width:860px}
 .report-bar{position:sticky;top:0;z-index:12;display:flex;align-items:center;
-justify-content:space-between;gap:18px;margin:0 0 24px;padding:11px 0;
+justify-content:space-between;gap:18px;margin:0 0 24px;padding:11px 16px;
 border-top:1px solid var(--linha);border-bottom:1px solid var(--linha);
 background:rgba(238,238,238,.97)}.report-provenance{display:grid;gap:2px;min-width:0}
 .report-provenance span,.report-provenance b{overflow:hidden;text-overflow:ellipsis;
