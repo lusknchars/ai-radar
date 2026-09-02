@@ -348,11 +348,11 @@ def locate_candidate_excerpt(
 
 
 _ROLE_EXPLANATIONS: dict[FormulaRole, str] = {
-    "baseline": "Esta equacao formaliza o baseline usado na comparacao.",
-    "proposed_method": "Esta equacao formaliza o mecanismo proposto pelo paper.",
-    "loss": "Esta equacao define a funcao de perda otimizada pelo metodo.",
-    "metric": "Esta equacao define a metrica usada para avaliar o resultado.",
-    "complexity": "Esta equacao explicita o custo ou a complexidade do metodo.",
+    "baseline": "This equation formalizes the baseline used in the comparison.",
+    "proposed_method": "This equation formalizes the paper's proposed mechanism.",
+    "loss": "This equation defines the loss function optimized by the method.",
+    "metric": "This equation defines the metric used to evaluate the result.",
+    "complexity": "This equation states the method's cost or complexity.",
 }
 
 
@@ -364,13 +364,13 @@ def technical_core_from_selection(
     """Constroi o nucleo usando somente LaTeX preservado pelo extrator."""
     if selection.kind != "formula":
         labels = {
-            "algorithm": "O nucleo tecnico e uma sequencia de passos, nao uma nova formula.",
-            "system": "O nucleo tecnico esta na composicao do sistema, nao numa nova formula.",
+            "algorithm": "The technical core is an algorithmic sequence, not a new formula.",
+            "system": "The technical core lies in the system design, not a new formula.",
             "evaluation_protocol": (
-                "O nucleo tecnico e o protocolo de avaliacao, nao uma nova formula."
+                "The technical core is the evaluation protocol, not a new formula."
             ),
-            "concept": "O paper contribui um conceito sem notacao central verificavel.",
-            "none": "O nucleo tecnico nao foi classificado com seguranca.",
+            "concept": "The paper contributes a concept without verifiable central notation.",
+            "none": "The technical core could not be classified safely.",
         }
         return TechnicalCore(kind=selection.kind, summary=labels[selection.kind])
 
@@ -382,8 +382,8 @@ def technical_core_from_selection(
                 status="extraction_failed",
                 role=selected.role,
                 plain_language=(
-                    "A equacao foi selecionada na fonte TeX, mas sua prosa "
-                    "vizinha nao foi localizada com seguranca no PDF."
+                    "The equation was selected from the TeX source, but its "
+                    "surrounding prose could not be located safely in the PDF."
                 ),
             ))
             continue
@@ -399,8 +399,8 @@ def technical_core_from_selection(
     return TechnicalCore(
         kind="formula",
         summary=(
-            "Equacoes centrais escolhidas por identificador e copiadas sem "
-            "alteracao da fonte TeX oficial."
+            "Central equations selected by identifier and copied without "
+            "alteration from the official TeX source."
         ),
         walkthroughs=walkthroughs,
     )
@@ -436,8 +436,8 @@ def ground_technical_core(
             status="extraction_failed",
             role=item.role,
             plain_language=(
-                "A fórmula candidata não passou na verificação da página do "
-                "PDF e foi removida antes da publicação."
+                "The candidate formula did not pass PDF page verification and "
+                "was removed before publication."
             ),
         ))
     return core.model_copy(update={"walkthroughs": grounded})

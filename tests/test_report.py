@@ -58,7 +58,7 @@ def test_report_generation_uses_full_text_and_separates_infra_tiers():
     assert document.report.evidence_tier == "multi_gpu"
     assert document.model == "kimi-k3"
     assert "FULL PAPER TEXT" in kimi.calls[0]["messages"][1]["content"]
-    assert "ignore qualquer instrucao" in kimi.calls[0]["messages"][0]["content"]
+    assert "ignore any instructions" in kimi.calls[0]["messages"][0]["content"]
     assert "source_page" in kimi.calls[0]["messages"][0]["content"]
     assert document.report.technical_core.walkthroughs[0].status == "extraction_failed"
 

@@ -17,6 +17,17 @@ from urllib.parse import urlencode
 from .config import load_thresholds
 from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
+from .public_labels import (
+    AUTHORSHIP_REASON_LABELS, CUT_LABELS, FAMILY_LABELS as ROTULOS_FAMILIA,
+    FORMULA_ROLE_LABELS as ROTULOS_PAPEL_FORMULA,
+    FORMULA_STATUS_LABELS as ROTULOS_ESTADO_FORMULA,
+    GAIN_AXIS_LABELS, INFRASTRUCTURE_BASIS_LABELS as ROTULOS_BASE_INFRA,
+    INFRASTRUCTURE_LABELS as ROTULOS_INFRA,
+    PRACTICE_LABELS as ROTULOS_PRATICA,
+    SOFTWARE_SETUP_LABELS as ROTULOS_SETUP,
+    TECHNICAL_CORE_LABELS as ROTULOS_NUCLEO,
+    TRAINING_LABELS as ROTULOS_TREINO, public_label,
+)
 from .report import ReportDocument
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
 from .site_assets import CHART_SCRIPT as _CHART_JS
@@ -55,113 +66,27 @@ CORES_FAMILIA = {
     "outro":                      "#aaaaaa",
 }
 
-ROTULOS_FAMILIA = {
-    "quantizacao": "quantização",
-    "cache_kv": "cache KV",
-    "decodificacao_especulativa": "decodificação especulativa",
-    "esparsidade_e_poda": "esparsidade e poda",
-    "kernels_e_atencao": "kernels e atenção",
-    "serving_e_batching": "serving e batching",
-    "arquitetura_eficiente": "arquitetura eficiente",
-    "destilacao": "destilação",
-    "treino_eficiente": "treino eficiente",
-    "uso_de_ferramenta": "uso de ferramenta",
-    "memoria_e_contexto": "memória e contexto",
-    "planejamento_e_decomposicao": "planejamento e decomposição",
-    "orquestracao_multiagente": "orquestração multiagente",
-    "avaliacao_de_agente": "avaliação de agente",
-    "recuperacao_de_falha": "recuperação de falha",
-    "agentes_de_codigo": "agentes de código",
-    "seguranca_e_guardrails": "segurança e guardrails",
-    "recuperacao_e_rag": "recuperação e RAG",
-    "outro": "outro",
-}
-
-ROTULOS_PRATICA = {
-    "adotar": "adotar",
-    "testar": "testar",
-    "observar": "observar",
-    "nao_aplica": "não se aplica",
-}
-
-ROTULOS_INFRA = {
-    "api_or_cpu": "API ou CPU",
-    "single_gpu_24gb": "1 GPU, até 24 GB",
-    "single_gpu_48_80gb": "1 GPU, 48 a 80 GB",
-    "multi_gpu": "múltiplas GPUs",
-    "cluster": "cluster",
-    "custom_hardware": "hardware específico",
-    "unknown": "não informado",
-}
-
-ROTULOS_BASE_INFRA = {
-    "explicit": "declarada no paper",
-    "inferred": "inferida dos requisitos",
-    "unknown": "não informada",
-}
-
-ROTULOS_TREINO = {
-    "none": "nenhum",
-    "inference_only": "somente inferência",
-    "fine_tuning": "fine-tuning",
-    "train_from_scratch": "treino do zero",
-    "unknown": "não informado",
-}
-
-ROTULOS_NUCLEO = {
-    "formula": "núcleo formulado",
-    "algorithm": "núcleo de algoritmo",
-    "system": "núcleo de sistema",
-    "evaluation_protocol": "núcleo de protocolo de avaliação",
-    "concept": "núcleo conceitual",
-    "none": "núcleo ainda não classificado",
-}
-
-ROTULOS_PAPEL_FORMULA = {
-    "baseline": "baseline",
-    "proposed_method": "método proposto",
-    "loss": "função de perda",
-    "metric": "métrica",
-    "complexity": "complexidade",
-}
-
-ROTULOS_ESTADO_FORMULA = {
-    "concept_only": "conceito identificado, notação não verificada",
-    "not_applicable": "o núcleo técnico não depende de uma nova fórmula",
-    "extraction_failed": "notação não extraída com segurança",
-}
-
-ROTULOS_SETUP = {
-    "standard_python": "Python padrão",
-    "containerized": "container",
-    "custom_runtime": "runtime próprio",
-    "custom_cuda_kernel": "kernel CUDA próprio",
-    "distributed_stack": "stack distribuída",
-    "specialized_simulator": "simulador especializado",
-    "unknown": "não informado",
-}
-
 # Contrato com o leitor. Escrito a mao e versionado -- nao e gerado, e nao
 # muda com o dado do dia.
 _ENQUADRAMENTO = (
-    "<p>Este radar mede uma coisa só: quantas <strong>implementações "
-    "independentes</strong> um paper atraiu no GitHub, descontando os "
-    "repositórios dos próprios autores. A hipótese é que gente reimplementando "
-    "por conta própria diz mais sobre uma técnica do que citação ou estrela.</p>"
-    "<p>Ele <strong>não mede</strong> se a técnica funciona. Nada aqui foi "
-    "reproduzido, não há benchmark, e todo número de ganho que aparecer é "
-    "alegação dos autores extraída do resumo — nunca resultado verificado. "
-    "Papers que já estouraram em atenção são cortados de propósito: o radar "
-    "existe para achar o que ainda não foi olhado.</p>"
+    "<p>AI Radar tracks one signal: how many <strong>independent "
+    "implementations</strong> a paper attracts on GitHub after author-owned "
+    "repositories are removed. Independent implementation is a stronger sign "
+    "of engineering relevance than attention alone.</p>"
+    "<p>It <strong>does not claim</strong> that a method works. AI Radar runs "
+    "no reproduction benchmarks. Reported gains remain author claims until "
+    "independently tested. Papers above the attention threshold are excluded "
+    "because this publication is designed to identify research before "
+    "consensus forms.</p>"
 )
 
 
 def _nav(atual: str) -> str:
     itens = (
-        ("acervo", "/ai-radar/#acervo", "pesquisa"),
-        ("sinais", "/ai-radar/#sinais", "sinais"),
-        ("edicoes", "/ai-radar/edicoes/", "edições"),
-        ("about", "/ai-radar/about.html", "método"),
+        ("acervo", "/ai-radar/#acervo", "research"),
+        ("sinais", "/ai-radar/#sinais", "signals"),
+        ("edicoes", "/ai-radar/edicoes/", "editions"),
+        ("about", "/ai-radar/about.html", "methodology"),
         ("rss", "/ai-radar/feed.xml", "RSS"),
     )
     links = "".join(
@@ -169,7 +94,7 @@ def _nav(atual: str) -> str:
         f'{" aria-current=\"page\"" if chave == atual else ""}>{rotulo}</a>'
         for chave, href, rotulo in itens
     )
-    return f'<nav class="nav" aria-label="principal">{links}</nav>'
+    return f'<nav class="nav" aria-label="Primary navigation">{links}</nav>'
 
 
 def _sheen_content(label: str) -> str:
@@ -195,21 +120,25 @@ def _sheen_link(label: str, href: str, *, classes: str = "",
 
 def _cabecalho(d: SiteData, edicao: bool = False) -> str:
     impls = sum(p.independent_impls for p in d.pontos)
-    contexto = "edição preservada" if edicao else "caderno de pesquisa"
+    contexto = "archived edition" if edicao else "research intelligence"
     return (
         '<header class="masthead publication-head"><div class="hero-copy">'
         f'<p class="hero-eyebrow">{contexto} · {escape(d.dia)}</p>'
-        '<h1><span class="marca">ai-radar · research notes</span>'
-        'Pesquisa aplicada.<br><em>Antes do hype.</em></h1>'
-        '<p class="hero-deck">Uma publicação sobre papers de AI que podem '
-        'mudar o trabalho de engenharia. Cada nota separa a ideia, o sinal '
-        'independente e o custo real de testar.</p>'
-        f'{_sheen_link("abrir o índice", "#acervo")}</div>'
-        '<dl class="edition-ledger" aria-label="resumo desta edição">'
-        f'<div><dt>edição</dt><dd>{escape(d.dia)}</dd></div>'
-        f'<div><dt>briefs</dt><dd>{len(d.pontos)}</dd></div>'
-        f'<div><dt>famílias</dt><dd>{len(d.familias_presentes)}</dd></div>'
-        f'<div><dt>implementações independentes</dt><dd>{impls}</dd></div>'
+        '<h1><span class="marca">AI Radar · Research Intelligence</span>'
+        'Find the AI research<br><em>worth testing.</em></h1>'
+        '<p class="hero-deck">Evidence-led paper briefs for engineers deciding '
+        'where to spend compute, budget, and reading time. Each brief separates '
+        'the method, the independent adoption signal, and the practical cost '
+        'of validation.</p>'
+        f'{_sheen_link("Explore the research", "#acervo")}</div>'
+        '<dl class="edition-ledger" aria-label="Edition summary">'
+        f'<div><dt>edition</dt><dd>{escape(d.dia)}</dd></div>'
+        f'<div><dt>{"brief" if len(d.pontos) == 1 else "briefs"}</dt>'
+        f'<dd>{len(d.pontos)}</dd></div>'
+        f'<div><dt>{"research area" if len(d.familias_presentes) == 1 else "research areas"}</dt>'
+        f'<dd>{len(d.familias_presentes)}</dd></div>'
+        f'<div><dt>{"independent implementation" if impls == 1 else "independent implementations"}</dt>'
+        f'<dd>{impls}</dd></div>'
         '</dl></header>'
     )
 
@@ -273,7 +202,7 @@ def _point_chart_data(d: SiteData) -> list[dict]:
             "stars_total": p.stars_total,
             "idade_dias": p.idade_dias,
             "gain": p.ganho_fator,
-            "gain_axis": p.ganho_eixo,
+            "gain_axis": public_label(GAIN_AXIS_LABELS, p.ganho_eixo),
             "published": p.publicado,
             "month": p.publicado[:7],
             "url": f"https://arxiv.org/abs/{p.arxiv_id}",
@@ -296,15 +225,15 @@ def _secao_fronteira(d: SiteData) -> str:
                  + ("" if i == 0 else " hidden"))
         for i, m in enumerate(METRICAS_X)
     )
-    nota = (f'<p class="nota">Papers acima de {lim.broke_out_stars} estrelas ou '
-            f"{lim.broke_out_citations} citações não são pontuados: já "
-            f"estourou em atenção, e o radar existe para o que ainda não "
-            f"estourou.</p>")
+    nota = (f'<p class="nota">Papers above {lim.broke_out_stars} stars or '
+            f"{lim.broke_out_citations} citations are not scored. They have "
+            f"already broken through the attention threshold, while AI Radar "
+            f"is designed to identify earlier signals.</p>")
     return botoes and (
-        f'<div class="eixos chart-controls" aria-label="eixo horizontal">'
-        f'<span>comparar por</span>{botoes}</div>'
+        f'<div class="eixos chart-controls" aria-label="Horizontal axis">'
+        f'<span>compare by</span>{botoes}</div>'
         f'<div class="chart-scroll" data-plot-panel="frontier" tabindex="0" '
-        f'aria-label="gráfico da fronteira; role horizontalmente para explorar">'
+        f'aria-label="Research frontier chart; scroll horizontally to explore">'
         '<div class="plot-enhancement" data-plot-host="frontier" hidden></div>'
         f'<div class="plot-fallback">{graficos}</div></div>'
         f'{_chart_payload("frontier", _point_chart_data(d))}{nota}'
@@ -315,10 +244,9 @@ def _secao_fronteira(d: SiteData) -> str:
 # pior que grafico ausente. Ver spec do jornal, secao 3.4.
 COBERTURA_MINIMA = 0.35
 
-ROTULO_ALEGACAO = "alegado pelos autores, não verificado"
+ROTULO_ALEGACAO = "reported by the authors; not independently verified"
 BRIEF_INITIAL_LIMIT = 30
 REPORT_REPOSITORY = "lusknchars/ai-radar"
-
 
 def _secao_avanco(d: SiteData) -> str:
     """Devolve string vazia quando o dado nao sustenta o grafico.
@@ -329,16 +257,18 @@ def _secao_avanco(d: SiteData) -> str:
     if d.cobertura_de_ganho < COBERTURA_MINIMA:
         return ""
     com = sum(1 for p in d.pontos if p.ganho_fator is not None)
+    paper_label = "paper" if len(d.pontos) == 1 else "papers"
+    report_verb = "reports" if com == 1 else "report"
     return (
         '<div class="chart-scroll" data-plot-panel="gain" tabindex="0" '
-        'aria-label="gráfico de ganho alegado; role horizontalmente para explorar">'
+        'aria-label="Reported gain chart; scroll horizontally to explore">'
         '<div class="plot-enhancement" data-plot-host="gain" hidden></div>'
         f'<div class="plot-fallback">{render_avanco(d.pontos, CORES_FAMILIA)}</div>'
         '</div>'
         f'{_chart_payload("gain", _point_chart_data(d))}'
-        f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
-        f'quantificado. Escala logarítmica; a linha por família só aparece '
-        f'com pelo menos cinco papers no trimestre.</p>'
+        f'<p class="nota">{com} of {len(d.pontos)} {paper_label} {report_verb} a quantified '
+        f'gain. The scale is logarithmic; a research-area trend line appears '
+        f'only with at least five papers in the quarter.</p>'
     )
 
 
@@ -407,12 +337,12 @@ def _secao_familias(d: SiteData) -> str:
     ]
     return (
         '<div class="chart-scroll" data-plot-panel="families" tabindex="0" '
-        'aria-label="gráfico das famílias no tempo; role horizontalmente para explorar">'
+        'aria-label="Research areas over time; scroll horizontally to explore">'
         '<div class="plot-enhancement" data-plot-host="families" hidden></div>'
         f'<div class="plot-fallback">{grafico}</div></div>'
         f'{_chart_payload("families", values)}'
-        '<p class="nota">Todos os painéis compartilham o mesmo calendário e '
-        'a mesma escala vertical; uma coluna vazia significa zero papers.</p>'
+        '<p class="nota">Every panel uses the same calendar and vertical scale. '
+        'An empty column means no papers were recorded.</p>'
     )
 
 
@@ -420,33 +350,33 @@ def _secao_graficos(d: SiteData) -> str:
     """Um único caderno visual, com uma legenda e ordem de leitura explícita."""
     cartoes = [
         _cartao_grafico(
-            "01 · atenção × adoção", "A fronteira",
-            "Procure o alto à esquerda: implementação independente antes de atenção massiva.",
+            "01 · attention × adoption", "The research frontier",
+            "Look to the upper left for independent implementation before mass attention.",
             _secao_fronteira(d), classe="chart-card--frontier",
         ),
         _cartao_grafico(
-            "02 · cadência", "As famílias no tempo",
-            "Compare o volume mensal sem trocar a régua ou deslocar o calendário.",
+            "02 · cadence", "Research areas over time",
+            "Compare monthly publication volume on a shared scale and calendar.",
             _secao_familias(d), classe="chart-card--families",
         ),
     ]
     avanco = _secao_avanco(d)
     if avanco:
         cartoes.append(_cartao_grafico(
-            "03 · alegação", "O avanço alegado",
-            f"Ganho declarado no resumo — {ROTULO_ALEGACAO}.",
+            "03 · reported results", "Claimed performance gains",
+            f"Gains stated in the abstract: {ROTULO_ALEGACAO}.",
             avanco, classe="chart-card--gain",
         ))
     return (
         '<div class="chart-suite">'
-        '<div class="chart-shared-legend"><span>cor = família</span>'
+        '<div class="chart-shared-legend"><span>color = research area</span>'
         f'{_legenda(d)}</div>{"".join(cartoes)}</div>'
     )
 
 
 def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
     rotulos = rotulos or {}
-    return '<option value="">todas</option>' + "".join(
+    return '<option value="">all</option>' + "".join(
         f'<option value="{escape(v)}">{escape(rotulos.get(v, v))}</option>'
         for v in valores)
 
@@ -454,8 +384,8 @@ def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
 def _report_action(p, has_report: bool) -> str:
     if has_report:
         return _sheen_link(
-            "ler relatório", f"/ai-radar/reports/{p.arxiv_id}/",
-            classes="report-action", aria_label=f"ler relatório de {p.titulo}",
+            "Read deep report", f"/ai-radar/reports/{p.arxiv_id}/",
+            classes="report-action", aria_label=f"Read deep report for {p.titulo}",
         )
     query = urlencode({
         "title": f"[report] {p.arxiv_id}",
@@ -468,18 +398,18 @@ def _report_action(p, has_report: bool) -> str:
         ),
     })
     return _sheen_link(
-        "gerar relatório",
+        "Generate deep report",
         f"https://github.com/{REPORT_REPOSITORY}/issues/new?{query}",
         classes="report-action secondary",
-        aria_label=f"gerar relatório de {p.titulo}",
+        aria_label=f"Generate deep report for {p.titulo}",
         rel="nofollow",
     )
 
 
 MESES = {
-    "01": "jan", "02": "fev", "03": "mar", "04": "abr",
-    "05": "mai", "06": "jun", "07": "jul", "08": "ago",
-    "09": "set", "10": "out", "11": "nov", "12": "dez",
+    "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+    "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+    "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec",
 }
 
 
@@ -527,15 +457,15 @@ def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
         'target="_blank" rel="noopener noreferrer">'
         f'{escape(p.titulo)}</a></h3>'
         f'<p class="paper-brief">{escape(p.resumo)}</p></div>'
-        '<div class="evidence-fingerprint" aria-label="sinal de evidência">'
-        '<span class="fingerprint-label">sinal observado</span>'
+        '<div class="evidence-fingerprint" aria-label="Evidence signal">'
+        '<span class="fingerprint-label">observed signal</span>'
         f'<div><b>{p.independent_impls}</b><span>impl.</span></div>'
-        f'<div><b>{p.stars_total}</b><span>estrelas</span></div>'
-        f'<div><b>{cit}</b><span>citações</span></div>'
-        f'<div><b>{ganho}</b><span>ganho</span></div></div>'
+        f'<div><b>{p.stars_total}</b><span>stars</span></div>'
+        f'<div><b>{cit}</b><span>citations</span></div>'
+        f'<div><b>{ganho}</b><span>gain</span></div></div>'
         f'<div class="entry-action">{_report_action(p, has_report)}'
         f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
-        'target="_blank" rel="noopener noreferrer">paper original ↗</a></div>'
+        'target="_blank" rel="noopener noreferrer">Original paper ↗</a></div>'
         '</article>'
     )
 
@@ -557,35 +487,35 @@ def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
     inicial = min(len(d.pontos), BRIEF_INITIAL_LIMIT)
     mostrar = (
         '<button type="button" class="sheen-button secondary show-all" '
-        f'data-mostrar-todos>{_sheen_content(f"mostrar todos os {len(d.pontos)} papers")}'
+        f'data-mostrar-todos>{_sheen_content(f"Show all {len(d.pontos)} papers")}'
         '</button>'
         if len(d.pontos) > BRIEF_INITIAL_LIMIT else ""
     )
     return (
         '<div class="filtros">'
-        f'<div><label for="f-pratica">o que fazer</label>'
+        f'<div><label for="f-pratica">recommendation</label>'
         f'<select id="f-pratica" data-filtro="pratica">'
         f'{_opcoes(praticas, ROTULOS_PRATICA)}'
         f"</select></div>"
-        f'<div><label for="f-familia">família</label>'
+        f'<div><label for="f-familia">research area</label>'
         f'<select id="f-familia" data-filtro="familia">'
         f"{_opcoes(d.familias_presentes, ROTULOS_FAMILIA)}</select></div>"
-        '<div><label for="f-busca">buscar</label>'
+        '<div><label for="f-busca">search</label>'
         '<input id="f-busca" type="search" data-busca '
         'placeholder="quantization, agent, cache..."></div>'
-        f'<div class="contagem"><label>mostrando</label>'
-        f'<span id="contador">{inicial} de {len(d.pontos)}</span></div>'
+        f'<div class="contagem"><label>showing</label>'
+        f'<span id="contador">{inicial} of {len(d.pontos)}</span></div>'
         "</div>"
-        '<div class="index-sort" aria-label="ordenar índice">'
-        '<span>ordenar por</span>'
-        '<button type="button" data-ordenar="score">sinal</button>'
-        '<button type="button" data-ordenar="impls">implementações</button>'
-        '<button type="button" data-ordenar="estrelas">estrelas</button>'
-        '<button type="button" data-ordenar="citacoes">citações</button>'
-        '<button type="button" data-ordenar="ganho">ganho</button></div>'
+        '<div class="index-sort" aria-label="Sort research index">'
+        '<span>sort by</span>'
+        '<button type="button" data-ordenar="score">signal</button>'
+        '<button type="button" data-ordenar="impls">implementations</button>'
+        '<button type="button" data-ordenar="estrelas">stars</button>'
+        '<button type="button" data-ordenar="citacoes">citations</button>'
+        '<button type="button" data-ordenar="ganho">gain</button></div>'
         '<div class="research-index"><div class="index-head" aria-hidden="true">'
-        '<span>publicado</span><span>paper e brief</span>'
-        '<span>sinal</span><span>leitura</span></div>'
+        '<span>published</span><span>paper and brief</span>'
+        '<span>signal</span><span>analysis</span></div>'
         f'<div class="paper-list" data-paper-list>{linhas}</div></div>{mostrar}'
     )
 
@@ -599,39 +529,43 @@ def _secao_destaque(d: SiteData) -> str:
     """
     p = d.destaque
     if p is None:
-        return '<p class="vazio">Nada no acervo ainda.</p>'
+        return '<p class="vazio">No papers are available yet.</p>'
 
     if d.repos_do_destaque:
         itens = []
         for r in d.repos_do_destaque:
             if r["is_author"]:
-                quem = f'autor — {escape(r["is_author_reason"] or "regra não registrada")}'
+                reason = r["is_author_reason"] or "rule not recorded"
+                quem = f'author: {escape(public_label(AUTHORSHIP_REASON_LABELS, reason))}'
                 classe = "quem"
             else:
-                quem, classe = "independente", "indep"
+                quem, classe = "independent", "indep"
+            stars = "star" if r["stars"] == 1 else "stars"
             itens.append(
                 f'<li><a href="https://github.com/{escape(r["full_name"])}">'
                 f'{escape(r["full_name"])}</a>'
-                f'<span class="num">{r["stars"]} estrelas</span>'
+                f'<span class="num">{r["stars"]} {stars}</span>'
                 f'<span class="{classe}">{quem}</span></li>'
             )
         repos = f'<ul class="repos">{"".join(itens)}</ul>'
     else:
-        repos = ('<p class="nota">Nenhum repositório registrado para este '
-                 "paper.</p>")
+        repos = '<p class="nota">No repositories are recorded for this paper.</p>'
 
     ganho = ""
     if p.ganho_fator is not None:
-        ganho = (f' · ganho {p.ganho_fator:g}x em {escape(p.ganho_eixo)} '
+        gain_axis = public_label(GAIN_AXIS_LABELS, p.ganho_eixo)
+        ganho = (f' · {p.ganho_fator:g}x gain in {escape(gain_axis)} '
                  f"({ROTULO_ALEGACAO})")
+    implementations = "implementation" if p.total_impls == 1 else "implementations"
+    independent_verb = "is" if p.independent_impls == 1 else "are"
     return (
         f'<div class="destaque"><h3>'
         f'<a href="https://arxiv.org/abs/{escape(p.arxiv_id)}">'
         f"{escape(p.titulo)}</a></h3>"
         f'<div class="meta">{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))} · '
         f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))} · '
-        f"{p.independent_impls} de {p.total_impls} implementações "
-        f"independentes{ganho}</div>"
+        f"{p.independent_impls} of {p.total_impls} {implementations} {independent_verb} "
+        f"independent{ganho}</div>"
         f'<p class="resumo">{escape(p.resumo)}</p>{repos}</div>'
     )
 
@@ -643,19 +577,20 @@ def _secao_cortes(d: SiteData) -> str:
     faria parecer que a contabilidade nao foi feita.
     """
     if d.cortes is None:
-        lista = ('<p class="nota">A contagem de cortes não foi registrada '
-                 'para esta edição.</p>')
+        lista = '<p class="nota">Exclusion counts were not recorded for this edition.</p>'
     elif d.cortes:
         itens = "".join(
-            f"<li><span>{escape(motivo.replace('_', ' '))}</span>"
+            f"<li><span>{escape(public_label(CUT_LABELS, motivo))}</span>"
             f"<b>{n}</b></li>"
             for motivo, n in sorted(d.cortes.items(), key=lambda kv: -kv[1])
         )
         lista = f'<ul class="cortes">{itens}</ul>'
     else:
-        lista = '<p class="nota">Nenhum corte hoje.</p>'
-    return (lista + f'<p class="nota">{d.rechecked_total} papers antigos '
-                    f"foram re-consultados nesta execução.</p>")
+        lista = '<p class="nota">No papers were excluded today.</p>'
+    papers = "paper" if d.rechecked_total == 1 else "papers"
+    verb = "was" if d.rechecked_total == 1 else "were"
+    return (lista + f'<p class="nota">{d.rechecked_total} previously indexed {papers} '
+                    f"{verb} rechecked in this run.</p>")
 
 
 def _pendente(qual: str) -> str:
@@ -674,37 +609,37 @@ def render_site(
 ) -> str:
     report_ids = report_ids or set()
     if not dados.pontos:
-        corpo = '<p class="vazio">Nenhum paper no acervo ainda.</p>'
+        corpo = '<p class="vazio">No papers are available yet.</p>'
     else:
         corpo = "".join((
-            _secao("Índice de pesquisa",
-                   "Os 30 sinais mais fortes abrem esta edição. Cada entrada "
-                   "traz um brief, o paper original e o caminho para uma "
-                   "análise completa quando ela merecer o custo.",
+            _secao("Research index",
+                   "The 30 strongest signals lead this edition. Each entry "
+                   "provides a decision-ready brief, the original paper, and "
+                   "an on-demand deep report when the evidence justifies it.",
                    _secao_tabela(dados, report_ids), section_id="acervo"),
-            _secao("Sinais do acervo",
-                   "Três leituras do mesmo conjunto: adoção contra atenção, "
-                   "cadência por família e, quando a cobertura permite, o "
-                   "ganho que os próprios autores declaram.",
+            _secao("Research signals",
+                   "Three views of the same evidence: adoption against "
+                   "attention, publication cadence by research area, and "
+                   "reported gains when coverage is sufficient.",
                    _secao_graficos(dados), section_id="sinais"),
-            _secao("Uma técnica, de ponta a ponta",
-                   "O paper de maior score, aberto: os repositórios "
-                   "encontrados e a regra que classificou cada um.",
+            _secao("Method under scrutiny",
+                   "Inspect the highest-ranked paper, every repository behind "
+                   "its signal, and the rule used to classify each one.",
                    _secao_destaque(dados)),
-            _secao("O que ficou de fora",
-                   "Todo corte é contado e chega ao leitor.",
+            _secao("Exclusions and controls",
+                   "Every exclusion is counted and published.",
                    _secao_cortes(dados)),
         ))
 
     return (
-        "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">"
+        "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
         'href="/ai-radar/feed.xml">'
-        f"<title>ai-radar — {'edição ' if edicao else ''}{escape(dados.dia)}</title>"
+        f"<title>AI Radar · {'Edition ' if edicao else ''}{escape(dados.dia)}</title>"
         f"<style>{_CSS}</style></head><body>"
         '<canvas id="fundo" aria-hidden="true"></canvas>'
-        '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
+        '<a class="pular" href="#conteudo">Skip to content</a>'
         '<div class="envelope">'
         f"{_nav('edicoes' if edicao else 'acervo')}"
         f"{_cabecalho(dados, edicao=edicao)}"
@@ -713,8 +648,8 @@ def render_site(
         f"{corpo}"
         f'<section id="metodo" class="enquadramento">{_ENQUADRAMENTO}</section>'
         "</main>"
-        "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
-        "sem requisição externa.</footer>"
+        "<footer>Generated by the AI Radar pipeline. No framework, build step, "
+        "or remote asset request.</footer>"
         '</div><script src="/ai-radar/assets/d3-7.9.0.min.js"></script>'
         '<script src="/ai-radar/assets/observable-plot-0.6.17.min.js">'
         f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
@@ -734,7 +669,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     externa, para progresso de leitura e sumario ativo.
     """
     back = (
-        f'<a class="back-link" href="{escape(back_href)}">← voltar ao índice</a>'
+        f'<a class="back-link" href="{escape(back_href)}">← Back to research index</a>'
         if back_href else ""
     )
     header_class = "static-masthead article-masthead" if deck else "static-masthead"
@@ -742,20 +677,20 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     header_deck = f'<p class="article-deck">{escape(deck)}</p>' if deck else ""
     enhancement = f'<script>{extra_script}</script>' if extra_script else ""
     return (
-        '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
         'href="/ai-radar/feed.xml">'
         f'<title>{escape(titulo)}</title><style>{_CSS}</style></head><body>'
         '<canvas id="fundo" aria-hidden="true"></canvas>'
-        '<a class="pular" href="#conteudo">pular para o conteúdo</a>'
+        '<a class="pular" href="#conteudo">Skip to content</a>'
         f'<div class="envelope">{_nav(atual)}'
         f'<header class="{header_class}">{back}'
-        f'<p class="hero-eyebrow">{escape(kicker or f"atualizado em {dia}")}</p>'
+        f'<p class="hero-eyebrow">{escape(kicker or f"Updated {dia}")}</p>'
         f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
-        '<footer>Gerado pelo próprio pipeline. Sem framework, sem build, '
-        f'sem requisição externa.</footer></div><script>{_BACKGROUND_JS}</script>'
+        '<footer>Generated by the AI Radar pipeline. No framework, build step, '
+        f'or remote asset request.</footer></div><script>{_BACKGROUND_JS}</script>'
         f'{enhancement}</body></html>'
     )
 
@@ -769,40 +704,39 @@ def render_editions(dias: list[str], dia: str) -> str:
         )
         lista = f'<ol class="edicoes">{itens}</ol>'
     else:
-        lista = '<p class="vazio">Nenhuma edição publicada ainda.</p>'
+        lista = '<p class="vazio">No editions have been published yet.</p>'
     corpo = (
-        '<section><h2>Edições diárias</h2>'
-        '<p>Cada URL preserva o recorte de papers entregue naquele dia. O '
-        'acervo principal continua mostrando a observação mais recente.</p>'
+        '<section><h2>Daily editions</h2>'
+        '<p>Each permanent URL preserves the papers published on that date. '
+        'The main index always reflects the latest observation.</p>'
         f'{lista}</section>'
     )
-    return _pagina_estatica("edições — ai-radar", "edicoes", dia, corpo)
+    return _pagina_estatica("Editions · AI Radar", "edicoes", dia, corpo)
 
 
 def render_about(dia: str, *, papers: int, edicoes: int) -> str:
     corpo = (
-        '<section><h2>O que este radar mede</h2>'
-        '<p>O ai-radar procura papers de inferência eficiente e de agentes e '
-        'conta quantos repositórios independentes os implementam. Repositórios '
-        'dos autores são separados por uma heurística publicada junto do dado.</p>'
-        '<p>O score favorece implementação independente com pouca atenção. '
-        'Papers acima de 1000 estrelas ou 200 citações ficam fora porque já '
-        'deixaram de ser material de radar.</p></section>'
-        '<section><h2>O que ele não mede</h2>'
-        '<p>Nenhum resultado foi reproduzido. Ganhos vêm do resumo do paper e '
-        'aparecem rotulados como alegação dos autores. O radar também não '
-        'explica por que uma técnica recebeu implementações e não prevê quais '
-        'papers vão crescer.</p></section>'
-        '<section><h2>Estado do acervo</h2>'
-        f'<p>{papers} papers em {edicoes} edições. O banco, o código do score '
-        'e as regras de corte ficam versionados no mesmo repositório.</p></section>'
+        '<section><h2>What AI Radar measures</h2>'
+        '<p>AI Radar tracks research in efficient inference and AI agents, then '
+        'counts the independent repositories that implement each paper. '
+        'Author-owned repositories are separated using a published heuristic.</p>'
+        '<p>The score rewards independent implementation before mass attention. '
+        'Papers above 1,000 stars or 200 citations are excluded because they no '
+        'longer represent an early research signal.</p></section>'
+        '<section><h2>What it does not measure</h2>'
+        '<p>AI Radar does not reproduce experimental results. Performance gains '
+        'come from the paper and are labeled as author-reported. The system does '
+        'not explain why implementations appear or predict which papers will grow.</p>'
+        '</section><section><h2>Archive status</h2>'
+        f'<p>{papers} papers across {edicoes} editions. The database, scoring '
+        'code, and exclusion rules are versioned in the same repository.</p></section>'
     )
-    return _pagina_estatica("sobre — ai-radar", "about", dia, corpo)
+    return _pagina_estatica("Methodology · AI Radar", "about", dia, corpo)
 
 
 def _lista_report(items: list[str], *, ordered: bool = False) -> str:
     if not items:
-        return '<p class="nota">Não informado no paper.</p>'
+        return '<p class="nota">Not reported in the paper.</p>'
     tag = "ol" if ordered else "ul"
     return f'<{tag}>' + "".join(f'<li>{escape(item)}</li>' for item in items) + f'</{tag}>'
 
@@ -836,7 +770,7 @@ def _render_formula_walkthrough(
         if item.derivation_steps else ""
     )
     assumptions = (
-        '<div class="formula-assumptions"><span>hipóteses do exemplo</span>'
+        '<div class="formula-assumptions"><span>example assumptions</span>'
         + _lista_report(item.assumptions) + '</div>'
         if item.assumptions else ""
     )
@@ -847,7 +781,7 @@ def _render_formula_walkthrough(
         )
         worked = (
             '<figure class="worked-example">'
-            '<figcaption>cálculo ilustrativo do AI Radar</figcaption>'
+            '<figcaption>AI Radar worked example</figcaption>'
             + (f'<code>{escape(inputs)}</code>' if inputs else "")
             + f'<p>{escape(item.worked_example.explanation)}</p>'
             f'<samp>{escape(item.worked_example.expression)} = '
@@ -858,11 +792,11 @@ def _render_formula_walkthrough(
         f'{escape(item.source_excerpt)}</blockquote>'
         f'<a class="evidence-link" href="{escape(source_url)}#page={item.source_page}" '
         'target="_blank" rel="noopener noreferrer">'
-        f'abrir fórmula na página {item.source_page} do PDF</a>'
+        f'Open formula on page {item.source_page} of the PDF</a>'
     )
     return (
         f'<article class="formula-card" id="formula-{index}">'
-        f'<span class="exhibit-number">fórmula {index:02d} · {escape(role)}</span>'
+        f'<span class="exhibit-number">formula {index:02d} · {escape(role)}</span>'
         f'<pre class="formula-latex"><code>{escape(item.latex)}</code></pre>'
         f'<p class="formula-meaning">{escape(item.plain_language)}</p>'
         f'{glossary}{steps}{worked}{assumptions}{source}</article>'
@@ -891,43 +825,43 @@ def render_report(document: ReportDocument) -> str:
                 f'<blockquote>{escape(item.source_excerpt)}</blockquote>'
                 f'<a class="evidence-link" href="{escape(document.source_url)}'
                 f'#page={item.source_page}" target="_blank" rel="noopener noreferrer" '
-                f'aria-label="Abrir página {item.source_page} do PDF">'
-                f'abrir página {item.source_page} no PDF</a>'
+                f'aria-label="Open page {item.source_page} of the PDF">'
+                f'Open page {item.source_page} in the PDF</a>'
             )
         else:
             source = (
-                '<span class="evidence-missing">fonte não localizada '
-                'automaticamente no PDF</span>'
+                '<span class="evidence-missing">Source not located '
+                'automatically in the PDF</span>'
             )
         facts = "".join((
-            (f'<div><dt>resultado</dt><dd>{escape(item.result)}</dd></div>'
+            (f'<div><dt>result</dt><dd>{escape(item.result)}</dd></div>'
              if item.result else ""),
             (f'<div><dt>baseline</dt><dd>{escape(item.baseline)}</dd></div>'
              if item.baseline else ""),
-            (f'<div><dt>condições</dt><dd>{escape(item.conditions)}</dd></div>'
+            (f'<div><dt>conditions</dt><dd>{escape(item.conditions)}</dd></div>'
              if item.conditions else ""),
         ))
         evidence_items.append(
             f'<li class="evidence-exhibit" id="evidencia-{index}">'
-            f'<span class="exhibit-number">evidência {index:02d}</span>'
+            f'<span class="exhibit-number">evidence {index:02d}</span>'
             f'<h3>{escape(item.claim)}</h3>'
             f'<dl class="evidence-facts">{facts}</dl>{source}</li>'
         )
     evidence = "".join(evidence_items) or (
         '<li class="evidence-exhibit empty-evidence">'
-        'Nenhuma evidência quantificada foi localizada.</li>'
+        'No quantified evidence was located.</li>'
     )
     setup = ", ".join(ROTULOS_SETUP[value] for value in r.software_setup)
-    setup = setup or "não informado"
+    setup = setup or "not reported"
     toc_entries = (
-        ("infra", "Infra para testar"),
-        ("problema", "Problema"),
-        ("mecanismo", "Mecanismo"),
-        ("evidencia", "Evidência"),
-        ("teste", "Menor teste"),
-        ("nucleo", "Da equação ao teste"),
-        ("riscos", "Riscos"),
-        ("perguntas", "Perguntas abertas"),
+        ("infra", "Infrastructure"),
+        ("problema", "Problem"),
+        ("mecanismo", "Mechanism"),
+        ("evidencia", "Evidence"),
+        ("teste", "Minimum test"),
+        ("nucleo", "From equation to test"),
+        ("riscos", "Failure modes"),
+        ("perguntas", "Open questions"),
     )
     toc = "".join(
         f'<a href="#{section_id}">{escape(label)}</a>'
@@ -945,65 +879,66 @@ def render_report(document: ReportDocument) -> str:
         '<div class="report-progress" aria-hidden="true">'
         '<span data-report-progress></span></div>'
         '<div class="report-layout">'
-        '<aside class="report-toc" aria-label="Nesta análise">'
-        '<p>nesta análise</p>'
+        '<aside class="report-toc" aria-label="In this analysis">'
+        '<p>in this analysis</p>'
         f'<nav data-report-toc>{toc}</nav></aside>'
         '<article class="report">'
         '<div class="report-bar">'
         '<div class="report-provenance">'
-        f'<span>análise gerada com {escape(document.model)}</span>'
-        f'<b>{escape(document.generated_at[:10])} · leitura de 5 min</b></div>'
+        f'<span>analysis generated with {escape(document.model)}</span>'
+        f'<b>{escape(document.generated_at[:10])} · 5 min read</b></div>'
         '<div class="report-links">'
         f'<a href="https://arxiv.org/abs/{escape(document.arxiv_id)}" '
-        'target="_blank" rel="noopener noreferrer">abrir página do paper ↗</a>'
+        'target="_blank" rel="noopener noreferrer">Open paper page ↗</a>'
         f'<a href="{escape(document.source_url)}" target="_blank" '
-        'rel="noopener noreferrer">abrir PDF completo ↗</a></div></div>'
-        '<details class="report-toc-mobile" open><summary>nesta análise</summary>'
+        'rel="noopener noreferrer">Open full PDF ↗</a></div></div>'
+        '<details class="report-toc-mobile" open><summary>in this analysis</summary>'
         f'<nav data-report-toc>{toc}</nav></details>'
         '<figure id="infra" class="report-section infra-exhibit">'
-        + section_heading(1, "O custo antes da leitura", "mapa de execução")
-        + '<p class="report-section-deck">O teste mínimo procura invalidar a '
-        'ideia no seu workload. A coluna do experimento descreve a infraestrutura '
-        'por trás da evidência publicada; ela não é uma recomendação.</p>'
+        + section_heading(1, "Cost before commitment", "execution profile")
+        + '<p class="report-section-deck">The minimum test is designed to '
+        'disprove the method on your workload. The original experiment column '
+        'describes the infrastructure behind the published evidence, not a '
+        'recommendation.</p>'
         '<div class="infra-grid">'
-        f'<div><span>teste mínimo</span><b>{escape(ROTULOS_INFRA[r.validation_tier])}</b></div>'
-        f'<div><span>experimento do paper</span><b>{escape(ROTULOS_INFRA[r.evidence_tier])}</b></div>'
-        f'<div><span>base da classificação</span><b>{escape(ROTULOS_BASE_INFRA[r.infrastructure_basis])}</b></div>'
-        f'<div><span>treino</span><b>{escape(ROTULOS_TREINO[r.training_required])}</b></div>'
-        '</div><figcaption><span>exhibit 01</span> Infra do menor teste útil '
-        'comparada com a infra que sustenta as alegações do paper.</figcaption></figure>'
+        f'<div><span>minimum useful test</span><b>{escape(ROTULOS_INFRA[r.validation_tier])}</b></div>'
+        f'<div><span>original experiment</span><b>{escape(ROTULOS_INFRA[r.evidence_tier])}</b></div>'
+        f'<div><span>classification basis</span><b>{escape(ROTULOS_BASE_INFRA[r.infrastructure_basis])}</b></div>'
+        f'<div><span>training requirement</span><b>{escape(ROTULOS_TREINO[r.training_required])}</b></div>'
+        '</div><figcaption><span>exhibit 01</span> Validation tier compared with '
+        'the evidence tier supporting the paper\'s claims.</figcaption></figure>'
         '<section id="problema" class="report-section">'
-        + section_heading(2, "O problema", "o que precisa mudar")
+        + section_heading(2, "The problem", "what needs to change")
         + f'<p>{escape(r.problem)}</p></section>'
         '<section id="mecanismo" class="report-section">'
-        + section_heading(3, "Como funciona", "a troca técnica")
+        + section_heading(3, "How it works", "the technical change")
         + f'<p>{escape(r.mechanism)}</p>'
         f'<p class="setup-note"><span>setup</span>{escape(setup)}</p></section>'
         '<section id="evidencia" class="report-section">'
-        + section_heading(4, "Evidência relatada", "o que o PDF sustenta")
+        + section_heading(4, "Published evidence", "what the PDF supports")
         + f'<ol class="evidence">{evidence}</ol></section>'
         '<section id="teste" class="report-section">'
-        + section_heading(5, "Menor teste útil", "como tentar refutar")
+        + section_heading(5, "Minimum useful test", "how to try to disprove it")
         + _lista_report(r.minimum_test, ordered=True) + '</section>'
         '<section id="nucleo" class="report-section">'
-        + section_heading(6, "Da equação ao teste", "núcleo técnico verificável")
+        + section_heading(6, "From equation to test", "source-grounded technical core")
         + _render_technical_core(r.technical_core, document.source_url) + '</section>'
         '<section id="riscos" class="report-section">'
-        + section_heading(7, "Onde pode quebrar", "riscos do teste e da adoção")
+        + section_heading(7, "Failure modes", "adoption and validation risk")
         + _lista_report(r.main_risks) + '</section>'
         '<section id="perguntas" class="report-section">'
-        + section_heading(8, "Antes de adotar, descubra", "perguntas abertas")
+        + section_heading(8, "Questions before adoption", "what remains unresolved")
         + _lista_report(r.unanswered_questions) + '</section>'
-        '<p class="report-source">Gerado de '
-        f'<a href="{escape(document.source_url)}">PDF do arXiv</a> com '
-        f'{escape(document.model)} em {escape(document.generated_at[:10])}. '
-        'Este relatório não reproduz o experimento.</p>'
+        '<p class="report-source">Generated from the '
+        f'<a href="{escape(document.source_url)}">arXiv PDF</a> with '
+        f'{escape(document.model)} on {escape(document.generated_at[:10])}. '
+        'AI Radar did not reproduce this experiment.</p>'
         '</article></div>'
         '<a class="report-to-top" data-report-top href="#conteudo" '
-        'aria-label="Voltar ao início da análise">↑</a>'
+        'aria-label="Back to the start of the analysis">↑</a>'
     )
     return _pagina_estatica(
-        f"{document.title} — relatório — ai-radar", "acervo",
+        f"{document.title} · Deep report · AI Radar", "acervo",
         document.generated_at[:10], corpo, heading=document.title,
         kicker=(f"deep report · arXiv {document.arxiv_id} · "
                 f"{document.generated_at[:10]}"),

@@ -11,6 +11,7 @@ from __future__ import annotations
 from html import escape
 from math import ceil, floor, log10
 
+from .public_labels import GAIN_AXIS_LABELS, public_label
 from .site_data import Ponto
 
 LARGURA, ALTURA, PAD = 860, 480, 52
@@ -20,9 +21,15 @@ LARGURA, ALTURA, PAD = 860, 480, 52
 # citacao e o resto tem zero legitimo. Um eixo em que tudo empilha no zero nao
 # separa nada. Ver spec do jornal, secao 3.3.
 METRICAS_X = {
-    "stars_total": "estrelas no GitHub",
-    "idade_dias": "dias desde a publicação",
-    "total_impls": "implementações totais",
+    "stars_total": "GitHub stars",
+    "idade_dias": "days since publication",
+    "total_impls": "total implementations",
+}
+
+_METRIC_VALUE_LABELS = {
+    "stars_total": ("GitHub star", "GitHub stars"),
+    "idade_dias": ("day since publication", "days since publication"),
+    "total_impls": ("total implementation", "total implementations"),
 }
 
 
@@ -50,8 +57,8 @@ def _ticks_lineares(maximo: float, alvo: int = 4) -> tuple[float, list[float]]:
 
 
 def _rotulo_mes(mes: str) -> str:
-    nomes = ("jan", "fev", "mar", "abr", "mai", "jun",
-             "jul", "ago", "set", "out", "nov", "dez")
+    nomes = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     try:
         ano, numero = mes.split("-")
         return f"{nomes[int(numero) - 1]} {ano[2:]}"
@@ -92,10 +99,10 @@ def render_scatter(pontos: list[Ponto], x_metrica: str,
     partes = [
         f'<svg class="scatter" xmlns="http://www.w3.org/2000/svg" '
         f'viewBox="0 0 {LARGURA} {ALTURA}" '
-        f'role="img" aria-label="implementações independentes contra '
+        f'role="img" aria-label="independent implementations versus '
         f'{escape(rotulo_x)}">'
-        f'<desc>Cada ponto é um paper. Mais alto significa mais implementações '
-        f'independentes; mais à direita significa mais {escape(rotulo_x)}.</desc>',
+        f'<desc>Each point represents one paper. Higher means more independent '
+        f'implementations; farther right means more {escape(rotulo_x)}.</desc>',
         '<g class="chart-grid" aria-hidden="true">',
     ]
     for tick in ticks_y:
@@ -137,19 +144,25 @@ def render_scatter(pontos: list[Ponto], x_metrica: str,
     partes.append(
         f'<text x="14" y="{ALTURA / 2:.1f}" text-anchor="middle" '
         f'transform="rotate(-90 14 {ALTURA / 2:.1f})" font-size="11" '
-        f'fill="#333">implementações independentes</text></g>'
+        f'fill="#333">independent implementations</text></g>'
     )
     for p in pontos:
         valor_x = getattr(p, x_metrica)
         cx = projetar(valor_x, max_x, LARGURA, PAD)
         cy = projetar(p.independent_impls, max_y, ALTURA, PAD, inverter=True)
+        value_label = _METRIC_VALUE_LABELS[x_metrica][
+            0 if valor_x == 1 else 1
+        ]
+        implementations = (
+            "implementation" if p.independent_impls == 1 else "implementations"
+        )
         partes.append(
             f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="5" '
             f'fill="{cores.get(p.familia, "currentColor")}" opacity="0.86" '
             f'stroke="#eeeeee" stroke-width="2" vector-effect="non-scaling-stroke">'
-            f'<title>{escape(p.titulo)} — {_formatar_tick(valor_x)} '
-            f'{escape(rotulo_x)}; {p.independent_impls} implementações '
-            f'independentes</title></circle>'
+            f'<title>{escape(p.titulo)}: {_formatar_tick(valor_x)} '
+            f'{escape(value_label)}; {p.independent_impls} independent '
+            f'{implementations}</title></circle>'
         )
     partes.append("</svg>")
     return "".join(partes)
@@ -196,7 +209,7 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
 
     partes = [f'<svg class="multiplos" xmlns="http://www.w3.org/2000/svg" '
               f'viewBox="0 0 {largura} {altura}" '
-              f'role="img" aria-label="volume por família ao longo do tempo">']
+              f'role="img" aria-label="monthly paper volume by research area">']
 
     for i, familia in enumerate(familias):
         ox = (i % colunas) * PAINEL_L
@@ -207,7 +220,7 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
             f'<text x="{PAINEL_PAD}" y="18" font-size="11" fill="#222">'
             f'{escape(rotulos.get(familia, familia))}</text>'
             f'<text x="{PAINEL_L - 12}" y="18" text-anchor="end" '
-            f'font-size="9" fill="#777">máx. {maximo}</text>')
+            f'font-size="9" fill="#777">max {maximo}</text>')
 
         meses = series.get(familia, {})
         topo = 30
@@ -231,7 +244,8 @@ def render_pequenos_multiplos(series: dict[str, dict[str, int]],
                     f'data-value="{n}" x="{x:.1f}" y="{base - h:.1f}" '
                     f'width="{larg_barra:.1f}" height="{h:.1f}" fill="{cor}" '
                     f'opacity="{0.82 if n else 0.12}"><title>'
-                    f'{escape(_rotulo_mes(mes))}: {n} papers</title></rect>'
+                    f'{escape(_rotulo_mes(mes))}: {n} '
+                    f'{"paper" if n == 1 else "papers"}</title></rect>'
                 )
             primeiro = escape(_rotulo_mes(meses_globais[0]))
             ultimo = escape(_rotulo_mes(meses_globais[-1]))
@@ -278,9 +292,9 @@ def render_avanco(pontos: list[Ponto], cores: dict[str, str]) -> str:
 
     partes = [f'<svg class="avanco" xmlns="http://www.w3.org/2000/svg" '
               f'viewBox="0 0 {AVANCO_L} {AVANCO_A}" '
-              f'role="img" aria-label="ganho alegado ao longo do tempo, escala log">'
-              '<desc>Fatores declarados pelos autores, não verificados. '
-              'O eixo vertical usa escala logarítmica e a linha de base é 1x.</desc>']
+              f'role="img" aria-label="reported gain over time, logarithmic scale">'
+              '<desc>Factors reported by the authors and not independently verified. '
+              'The vertical axis uses a logarithmic scale; the baseline is 1x.</desc>']
     if com_fator:
         meses = sorted({p.publicado[:7] for p in com_fator})
         idx = {m: i for i, m in enumerate(meses)}
@@ -335,7 +349,7 @@ def render_avanco(pontos: list[Ponto], cores: dict[str, str]) -> str:
             f'stroke-width="1.5" opacity="0.55"/>'
             f'<text x="14" y="{AVANCO_A / 2:.1f}" text-anchor="middle" '
             f'transform="rotate(-90 14 {AVANCO_A / 2:.1f})" font-size="11" '
-            f'fill="#333">fator alegado · escala log</text>'
+            f'fill="#333">reported factor · log scale</text>'
         )
 
         for p in com_fator:
@@ -344,8 +358,9 @@ def render_avanco(pontos: list[Ponto], cores: dict[str, str]) -> str:
                 f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" '
                 f'fill="{cores.get(p.familia, "currentColor")}" opacity="0.86" '
                 f'stroke="#eeeeee" stroke-width="2" vector-effect="non-scaling-stroke">'
-                f"<title>{escape(p.titulo)}: {p.ganho_fator:g}x em "
-                f"{escape(p.ganho_eixo)} (alegado)</title></circle>"
+                f"<title>{escape(p.titulo)}: {p.ganho_fator:g}x in "
+                f"{escape(public_label(GAIN_AXIS_LABELS, p.ganho_eixo))} "
+                f"(author-reported)</title></circle>"
             )
 
         # Mediana por familia por trimestre, e SO onde houver massa: abaixo de

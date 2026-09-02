@@ -210,7 +210,7 @@ function aplicar(){
     tr.hidden = !(passa && dentroDoRecorte);
     if (passa && dentroDoRecorte) n++;
   });
-  if (contador) contador.textContent = n + ' de ' + linhas.length;
+  if (contador) contador.textContent = n + ' of ' + linhas.length;
 }
 
 var mostrar = document.querySelector('[data-mostrar-todos]');
@@ -309,10 +309,19 @@ CHART_SCRIPT = r"""
   }
 
   var labels = {
-    stars_total: 'estrelas no GitHub',
-    idade_dias: 'dias desde a publicação',
-    total_impls: 'implementações totais'
+    stars_total: 'GitHub stars',
+    idade_dias: 'days since publication',
+    total_impls: 'total implementations'
   };
+
+  function valueLabel(metric, value){
+    if (value !== 1) return labels[metric];
+    return {
+      stars_total: 'GitHub star',
+      idade_dias: 'day since publication',
+      total_impls: 'total implementation'
+    }[metric];
+  }
 
   function renderFrontier(metric){
     var host = document.querySelector('[data-plot-host="frontier"]');
@@ -324,10 +333,10 @@ CHART_SCRIPT = r"""
       marginLeft: 66, marginBottom: 56, marginRight: 24, marginTop: 22,
       style: {background: 'transparent', color: '#000',
         fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
-      ariaLabel: 'Implementações independentes contra ' + labels[metric],
-      ariaDescription: 'Cada ponto abre o paper original no arXiv.',
+      ariaLabel: 'Independent implementations versus ' + labels[metric],
+      ariaDescription: 'Each point opens the original paper on arXiv.',
       x: {label: labels[metric], grid: true, nice: true},
-      y: {label: 'implementações independentes', grid: true, nice: true},
+      y: {label: 'independent implementations', grid: true, nice: true},
       color: {type: 'identity'},
       marks: [
         Plot.ruleY([0], {stroke: '#000', strokeOpacity: .24}),
@@ -335,11 +344,13 @@ CHART_SCRIPT = r"""
           x: metric, y: 'independent_impls', fill: 'color', r: 6,
           stroke: '#eeeeee', strokeWidth: 2, href: 'url', tip: true,
           title: function(d){ return d.title + '\n' + d.family_label +
-            '\n' + d[metric] + ' ' + labels[metric] +
-            '\n' + d.independent_impls + ' implementações independentes'; },
+            '\n' + d[metric] + ' ' + valueLabel(metric, d[metric]) +
+            '\n' + d.independent_impls + ' independent ' +
+            (d.independent_impls === 1 ? 'implementation' : 'implementations'); },
           ariaLabel: function(d){ return d.title + ': ' +
-            d.independent_impls + ' implementações independentes e ' +
-            d[metric] + ' ' + labels[metric]; }
+            d.independent_impls + ' independent ' +
+            (d.independent_impls === 1 ? 'implementation' : 'implementations') + ' and ' +
+            d[metric] + ' ' + valueLabel(metric, d[metric]); }
         })
       ]
     }));
@@ -358,8 +369,8 @@ CHART_SCRIPT = r"""
       marginLeft: 150, marginBottom: 46, marginTop: 18, marginRight: 24,
       style: {background: 'transparent', color: '#000',
         fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
-      ariaLabel: 'Volume mensal de papers por família',
-      x: {label: 'mês', type: 'band', tickRotate: -25},
+      ariaLabel: 'Monthly paper volume by research area',
+      x: {label: 'month', type: 'band', tickRotate: -25},
       y: {label: 'papers', grid: true, nice: true},
       fy: {label: null, domain: families},
       color: {type: 'identity'},
@@ -368,9 +379,9 @@ CHART_SCRIPT = r"""
           x: 'month', y: 'count', fy: 'family_label', fill: 'color',
           inset: 2, tip: true,
           title: function(d){ return d.family_label + '\n' + d.month +
-            ': ' + d.count + ' papers'; },
+            ': ' + d.count + (d.count === 1 ? ' paper' : ' papers'); },
           ariaLabel: function(d){ return d.family_label + ', ' + d.month +
-            ': ' + d.count + ' papers'; }
+            ': ' + d.count + (d.count === 1 ? ' paper' : ' papers'); }
         }),
         Plot.ruleY([0], {stroke: '#000', strokeOpacity: .22})
       ]
@@ -390,20 +401,20 @@ CHART_SCRIPT = r"""
       marginLeft: 66, marginBottom: 52, marginTop: 20, marginRight: 24,
       style: {background: 'transparent', color: '#000',
         fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
-      ariaLabel: 'Ganho alegado ao longo do tempo em escala logarítmica',
-      ariaDescription: 'Valores declarados pelos autores e não verificados.',
-      x: {label: 'publicação', grid: true},
-      y: {label: 'fator alegado · escala log', type: 'log', grid: true},
+      ariaLabel: 'Reported gain over time on a logarithmic scale',
+      ariaDescription: 'Values reported by the authors and not independently verified.',
+      x: {label: 'publication date', grid: true},
+      y: {label: 'reported factor · log scale', type: 'log', grid: true},
       color: {type: 'identity'},
       marks: [
         Plot.ruleY([1], {stroke: '#000', strokeDasharray: '5,5'}),
         Plot.dot(data, {
           x: 'date', y: 'gain', fill: 'color', r: 6,
           stroke: '#eeeeee', strokeWidth: 2, href: 'url', tip: true,
-          title: function(d){ return d.title + '\n' + d.gain + 'x em ' +
-            d.gain_axis + '\nalegado, não verificado'; },
+          title: function(d){ return d.title + '\n' + d.gain + 'x in ' +
+            d.gain_axis + '\nreported, not independently verified'; },
           ariaLabel: function(d){ return d.title + ': ' + d.gain +
-            ' vezes em ' + d.gain_axis + ', alegado e não verificado'; }
+            ' times in ' + d.gain_axis + ', reported and not independently verified'; }
         })
       ]
     }));

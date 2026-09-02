@@ -21,12 +21,12 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Explicar proteção de créditos
+      - name: Explain credit protection
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "A geração automática usa créditos privados e só roda para pedidos abertos pelo proprietário do repositório."
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Automated report generation uses private API credits and only runs for requests opened by the repository owner."
           gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY"
 
   generate:
@@ -49,14 +49,14 @@ jobs:
       - name: Instalar
         run: pip install -e .
 
-      - name: Validar paper pedido
+      - name: Validate requested paper
         id: paper
         env:
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           python -c 'import os,re; value=os.environ["ISSUE_TITLE"].removeprefix("[report] ").strip(); assert re.fullmatch(r"\d{4}\.\d{4,5}", value), "invalid arXiv id"; open(os.environ["GITHUB_OUTPUT"], "a").write(f"arxiv_id={value}\n")'
 
-      - name: Gerar relatório e republicar site
+      - name: Generate report and republish site
         env:
           ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
           RADAR_LLM_PROVIDER: kimi
@@ -67,7 +67,7 @@ jobs:
           KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
         run: python scripts/gerar_relatorio.py --arxiv-id "$ARXIV_ID"
 
-      - name: Commitar relatório e site
+      - name: Commit report and site
         env:
           ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
         run: |
@@ -77,19 +77,19 @@ jobs:
           git diff --staged --quiet || git commit -m "report: arXiv $ARXIV_ID"
           git push
 
-      - name: Empacotar site
+      - name: Package site
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
-      - name: Registrar falha no pedido
+      - name: Report generation failure
         if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Não consegui gerar o relatório. Diagnóstico: $RUN_URL"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "The report could not be generated. Diagnostic run: $RUN_URL"
 
   publish:
     needs: generate
@@ -105,20 +105,20 @@ jobs:
       - id: deploy
         uses: actions/deploy-pages@v4
 
-      - name: Responder e fechar pedido
+      - name: Reply to and close request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ARXIV_ID: ${{ needs.generate.outputs.arxiv_id }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Relatório publicado: https://lusknchars.github.io/ai-radar/reports/$ARXIV_ID/"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Report published: https://lusknchars.github.io/ai-radar/reports/$ARXIV_ID/"
           gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY"
 
-      - name: Registrar falha no deploy
+      - name: Report deployment failure
         if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "O relatório foi gerado, mas o deploy falhou. Diagnóstico: $RUN_URL"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "The report was generated, but deployment failed. Diagnostic run: $RUN_URL"

@@ -13,11 +13,13 @@ from dataclasses import dataclass
 from datetime import date
 from xml.sax.saxutils import escape
 
+from .public_labels import FAMILY_LABELS, PRACTICE_LABELS, public_label
+
 TITULO = "ai-radar"
 DESCRICAO = (
-    "Papers de inferência eficiente e de harness de agentes, ordenados por "
-    "implementações independentes no GitHub em vez de citação ou estrela. "
-    "Papers que já estouraram em atenção são cortados de propósito."
+    "Research in efficient inference and AI agents, ranked by independent "
+    "GitHub implementations instead of citations or stars. Papers above the "
+    "attention threshold are deliberately excluded."
 )
 
 # O arquivo de edicoes preserva o historico inteiro. O RSS e a janela de
@@ -55,9 +57,15 @@ def rfc822(iso: str) -> str:
 
 
 def _item(i: ItemFeed) -> str:
-    corpo = (f"{i.resumo} — {i.independent_impls} implementações "
-             f"independentes, {i.stars_total} estrelas. "
-             f"Família: {i.familia}. O que fazer: {i.pratica.replace('_', ' ')}.")
+    family = public_label(FAMILY_LABELS, i.familia)
+    practice = public_label(PRACTICE_LABELS, i.pratica)
+    implementations = (
+        "implementation" if i.independent_impls == 1 else "implementations"
+    )
+    stars = "star" if i.stars_total == 1 else "stars"
+    corpo = (f"{i.resumo} {i.independent_impls} independent {implementations}, "
+             f"{i.stars_total} {stars}. Research area: {family}. "
+             f"Recommendation: {practice}.")
     return (
         "<item>"
         f"<title>{escape(i.titulo)}</title>"
@@ -67,7 +75,7 @@ def _item(i: ItemFeed) -> str:
         # muda faria o mesmo paper reaparecer como novo a cada execucao.
         f'<guid isPermaLink="false">arxiv:{escape(i.arxiv_id)}</guid>'
         f"<pubDate>{rfc822(i.entregue_em)}</pubDate>"
-        f"<category>{escape(i.familia)}</category>"
+        f"<category>{escape(family)}</category>"
         "</item>"
     )
 
@@ -79,7 +87,7 @@ def render_rss(itens: list[ItemFeed], dia: str) -> str:
         f"<title>{escape(TITULO)}</title>"
         "<link>https://lusknchars.github.io/ai-radar/</link>"
         f"<description>{escape(DESCRICAO)}</description>"
-        "<language>pt-BR</language>"
+        "<language>en</language>"
         f"<lastBuildDate>{rfc822(dia)}</lastBuildDate>"
         + "".join(_item(i) for i in itens)
         + "</channel></rss>"

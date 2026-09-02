@@ -65,9 +65,9 @@ def test_publish_site_links_and_renders_saved_reports(tmp_path):
     index = (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
     page = (tmp_path / "site" / "reports" / "2608.11111" / "index.html")
     assert '/ai-radar/reports/2608.11111/' in index
-    assert "ler relatório" in index
+    assert "Read deep report" in index
     assert page.exists()
-    assert "1 GPU, até 24 GB" in page.read_text(encoding="utf-8")
+    assert "1 GPU, up to 24 GB" in page.read_text(encoding="utf-8")
     plot_asset = tmp_path / "site" / "assets" / "observable-plot-0.6.17.min.js"
     d3_asset = tmp_path / "site" / "assets" / "d3-7.9.0.min.js"
     assert plot_asset.exists()

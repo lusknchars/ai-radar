@@ -84,115 +84,115 @@ def acervo_grande():
 
 
 def test_a_escassez_traz_contagem_e_denominador(acervo):
-    a = _so(afirmacoes(acervo), "não têm")
-    assert "3 de 5" in a.texto
+    a = _so(afirmacoes(acervo), "no independent implementation")
+    assert "3 of 5" in a.texto
     assert "60%" in a.texto
 
 
 def test_a_escassez_sai_mesmo_quando_e_cem_por_cento():
-    assert _so(afirmacoes(acervo_de([ponto()])), "não têm") is not None
+    assert _so(afirmacoes(acervo_de([ponto()])), "no independent implementation") is not None
 
 
 def test_a_escassez_sai_mesmo_quando_e_zero():
-    a = _so(afirmacoes(acervo_de([ponto(independent_impls=1)])), "não têm")
-    assert "0 de 1" in a.texto
+    a = _so(afirmacoes(acervo_de([ponto(independent_impls=1)])), "no independent implementation")
+    assert "0 of 1" in a.texto
 
 
 def test_a_escassez_vem_primeiro(acervo):
-    assert "não têm" in afirmacoes(acervo)[0].texto
+    assert "no independent implementation" in afirmacoes(acervo)[0].texto
 
 
 def test_a_fronteira_conta_quem_tem_impl_e_nao_tem_atencao():
     d = acervo_de([ponto(arxiv_id="a", independent_impls=3, stars_total=2),
                    ponto(arxiv_id="b", independent_impls=5, stars_total=9),
                    ponto(arxiv_id="c", independent_impls=3, stars_total=50)])
-    assert "2 papers" in _so(afirmacoes(d), "fronteira").texto
+    assert "2 papers" in _so(afirmacoes(d), "research frontier").texto
 
 
 def test_a_fronteira_e_omitida_quando_ninguem_qualifica(acervo):
     """Guarda que não passa OMITE. "0 papers estão na fronteira" é ruído;
     a ausência da frase já diz."""
-    assert _so(afirmacoes(acervo), "fronteira") is None
+    assert _so(afirmacoes(acervo), "research frontier") is None
 
 
 def test_a_fronteira_exclui_quem_ja_tem_estrelas():
     d = acervo_de([ponto(independent_impls=9, stars_total=500)])
-    assert _so(afirmacoes(d), "fronteira") is None
+    assert _so(afirmacoes(d), "research frontier") is None
 
 
 def test_a_fronteira_carrega_o_filtro_que_a_reproduz():
     d = acervo_de([ponto(independent_impls=3, stars_total=0)])
-    assert _so(afirmacoes(d), "fronteira").filtro == {"ordenar": "impls"}
+    assert _so(afirmacoes(d), "research frontier").filtro == {"ordenar": "impls"}
 
 
 def test_a_concentracao_nomeia_o_menor_conjunto_acima_de_metade(acervo_grande):
-    a = _so(afirmacoes(acervo_grande), "concentram")
-    assert "2 famílias" in a.texto
-    assert "cache_kv" in a.texto and "quantizacao" in a.texto
+    a = _so(afirmacoes(acervo_grande), "account for")
+    assert "2 research areas" in a.texto
+    assert "KV cache" in a.texto and "quantization" in a.texto
 
 
 def test_a_concentracao_e_omitida_em_acervo_pequeno():
     """99 papers com MUITA implementação: a guarda de tamanho reprova sozinha."""
     d = acervo_de([ponto(arxiv_id=f"p{i}", independent_impls=9)
                    for i in range(99)])
-    assert _so(afirmacoes(d), "concentram") is None
+    assert _so(afirmacoes(d), "account for") is None
 
 
 def test_a_concentracao_e_omitida_com_poucas_implementacoes():
     """200 papers e 49 implementações: as guardas são conjuntivas."""
     d = acervo_de([ponto(arxiv_id=f"p{i}") for i in range(199)]
                   + [ponto(arxiv_id="x", independent_impls=49)])
-    assert _so(afirmacoes(d), "concentram") is None
+    assert _so(afirmacoes(d), "account for") is None
 
 
 def test_a_concentracao_carrega_um_filtro_de_familia(acervo_grande):
-    a = _so(afirmacoes(acervo_grande), "concentram")
+    a = _so(afirmacoes(acervo_grande), "account for")
     assert a.filtro["familia"] in ("cache_kv", "quantizacao")
 
 
 def test_a_cobertura_traz_contagem_denominador_e_o_rotulo(acervo):
-    a = _so(afirmacoes(acervo), "ganho quantificado")
-    assert "1 de 5" in a.texto
-    assert "alegado" in a.texto.lower()
+    a = _so(afirmacoes(acervo), "quantified gain")
+    assert "1 of 5" in a.texto
+    assert "author-reported" in a.texto.lower()
 
 
 def test_a_cobertura_sai_mesmo_com_zero():
-    assert _so(afirmacoes(acervo_de([ponto()])), "ganho quantificado") is not None
+    assert _so(afirmacoes(acervo_de([ponto()])), "quantified gain") is not None
 
 
 def test_a_taxonomia_reporta_a_taxa_de_outro(acervo):
-    assert "1 de 5" in _so(afirmacoes(acervo), "'outro'").texto
+    assert "1 of 5" in _so(afirmacoes(acervo), "'other'").texto
 
 
 def test_a_taxonomia_traz_denominador_proprio_e_nao_por_acidente(acervo):
     """A redação do plano passava no teste de denominador pelo " das " de
     "nenhuma das dezoito famílias" — coincidência, não contrato."""
     import re
-    assert re.search(r"\d+ de \d+ papers", _so(afirmacoes(acervo), "'outro'").texto)
+    assert re.search(r"\d+ of \d+ papers", _so(afirmacoes(acervo), "'other'").texto)
 
 
 def test_a_taxonomia_sai_mesmo_sem_nenhum_outro():
     d = acervo_de([ponto(arxiv_id=f"p{i}") for i in range(5)])
-    assert "0 de 5 papers" in _so(afirmacoes(d), "'outro'").texto
+    assert "0 of 5 papers" in _so(afirmacoes(d), "'other'").texto
 
 
 def test_o_movimento_e_omitido_sem_historico(acervo_grande):
-    assert _so(afirmacoes(acervo_grande), "ganharam implementação") is None
+    assert _so(afirmacoes(acervo_grande), "gained an independent") is None
 
 
 def test_o_movimento_e_omitido_com_menos_de_trinta_dias():
     d = acervo_de([ponto()], dias_de_coleta=29, papers_que_moveram=5)
-    assert _so(afirmacoes(d), "ganharam implementação") is None
+    assert _so(afirmacoes(d), "gained an independent") is None
 
 
 def test_o_movimento_e_omitido_quando_ninguem_moveu():
     d = acervo_de([ponto()], dias_de_coleta=60, papers_que_moveram=0)
-    assert _so(afirmacoes(d), "ganharam implementação") is None
+    assert _so(afirmacoes(d), "gained an independent") is None
 
 
 def test_o_movimento_aparece_com_historico():
     d = acervo_de([ponto()], dias_de_coleta=30, papers_que_moveram=2)
-    assert "2 papers" in _so(afirmacoes(d), "ganharam implementação").texto
+    assert "2 papers" in _so(afirmacoes(d), "gained an independent").texto
 
 
 # --- Tarefa 7: as guardas de linguagem ---
@@ -242,7 +242,7 @@ def test_toda_afirmacao_com_numero_traz_denominador(acervo_completo):
     """Percentual sem denominador é a forma mais fácil de enganar sem mentir."""
     for a in afirmacoes(acervo_completo):
         if "%" in a.texto:
-            assert " de " in a.texto or " das " in a.texto, a.texto
+            assert " of " in a.texto, a.texto
 
 
 def test_todo_filtro_emitido_e_aplicavel(acervo_completo):

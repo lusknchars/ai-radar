@@ -58,8 +58,8 @@ def test_o_scatter_publica_eixos_grade_e_valores_de_referencia():
     assert 'class="chart-grid"' in svg
     assert 'class="x-axis"' in svg
     assert 'class="y-axis"' in svg
-    assert "estrelas no GitHub" in svg
-    assert "implementações independentes" in svg
+    assert "GitHub stars" in svg
+    assert "independent implementations" in svg
 
 
 def test_a_cor_do_circulo_vem_da_familia():
@@ -207,7 +207,7 @@ def test_avanco_mostra_baseline_e_escala_logaritmica():
     assert 'class="chart-grid"' in svg
     assert 'class="baseline"' in svg
     assert "1x" in svg
-    assert "escala log" in svg
+    assert "log scale" in svg
 
 
 def test_a_mediana_trimestral_exige_cinco_papers():

@@ -47,7 +47,7 @@ def test_a_data_e_rfc_822():
 def test_a_descricao_traz_os_numeros_que_justificam_a_entrada():
     it = ET.fromstring(render_rss([item()], dia="2026-08-30")).find(".//item")
     d = it.find("description").text
-    assert "3" in d and "quantizacao" in d and "adotar" in d
+    assert "3" in d and "quantization" in d and "adopt" in d
 
 
 def test_texto_com_caractere_de_marcacao_nao_quebra_o_xml():
@@ -65,4 +65,5 @@ def test_feed_vazio_ainda_e_xml_valido():
 
 def test_o_canal_declara_o_que_o_radar_e():
     ch = ET.fromstring(render_rss([], dia="2026-08-30")).find("channel")
-    assert "implementações independentes" in ch.find("description").text
+    assert "independent GitHub implementations" in ch.find("description").text
+    assert ch.find("language").text == "en"

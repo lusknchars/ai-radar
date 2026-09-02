@@ -51,7 +51,7 @@ def test_leitor_brief_descreve_a_restricao_que_importa():
     Ampere/24GB/FP8/936 -- fatos verdadeiros sobre uma maquina que o produto
     parou de considerar quando deixou de reproduzir papers.
     """
-    for fato in ("INFRA PEQUENA", "24 GB", "sem cluster", "adotar"):
+    for fato in ("CONSTRAINED INFRASTRUCTURE", "24 GB", "no cluster", "adopt"):
         assert fato in LEITOR_BRIEF
 
 
@@ -182,10 +182,10 @@ FORMULA = FormulaCandidate(
 def test_formula_prompt_includes_exact_candidates_and_forbids_authored_latex():
     prompt = build_formula_selection_prompt(PAPER, [FORMULA])
     assert FORMULA.candidate_id in prompt
-    payload = json.loads(prompt.split("Candidatos extraidos literalmente:\n", 1)[1])
+    payload = json.loads(prompt.split("Candidates extracted verbatim:\n", 1)[1])
     assert payload[0]["latex"] == FORMULA.latex
     assert PAPER.abstract in prompt
-    assert "Nunca copie, corrija ou gere LaTeX" in prompt
+    assert "Never copy, correct, or generate LaTeX" in prompt
 
 
 def test_k2_6_selector_returns_verified_ids_with_formula_request_shape():
@@ -488,7 +488,7 @@ def test_o_schema_nao_pergunta_mais_de_hardware():
 
 def test_o_prompt_descreve_o_leitor_e_nao_a_placa():
     texto = build_prompt(PAPER)
-    assert "infra pequena" in texto.lower()
+    assert "constrained infrastructure" in texto.lower()
     assert "3090" not in texto
     assert "RTX" not in texto
 
@@ -497,7 +497,7 @@ def test_o_prompt_pede_as_tres_perguntas_do_resumo():
     """Resumo que nao diz custo nem trade-off e propaganda, e propaganda e o
     que um radar anti-hype nao pode produzir."""
     texto = build_prompt(PAPER).lower()
-    for exigencia in ("substitui", "custa", "quebra"):
+    for exigencia in ("replaces", "costs", "fail"):
         assert exigencia in texto
 
 
@@ -505,7 +505,7 @@ def test_o_campo_de_pratica_diz_o_criterio_ao_modelo():
     """O Literal restringe o token; e a descricao que diz qual criterio usar.
     Este e o veredito que o leitor le."""
     campo = JudgmentSchema.model_json_schema()["properties"]["pratica"]
-    for criterio in ("adotar", "infra pequena", "validacao"):
+    for criterio in ("adotar", "constrained infrastructure", "validation"):
         assert criterio in campo["description"]
 
 

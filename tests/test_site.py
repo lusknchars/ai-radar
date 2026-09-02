@@ -8,11 +8,11 @@ from radar.site_data import Ponto, SiteData
 
 
 def ponto(**kw):
-    base = dict(arxiv_id="2608.11111", titulo="Kernel INT4 fundido",
+    base = dict(arxiv_id="2608.11111", titulo="Fused INT4 kernel",
                 familia="cache_kv", pratica="adotar", independent_impls=3,
                 total_impls=4, stars_total=10, citations=None, idade_dias=12,
                 ganho_eixo="velocidade", ganho_fator=2.3, ganho_texto="2.3x",
-                resumo="Troca o kernel FP16.", publicado="2026-08-01",
+                resumo="Replaces the FP16 kernel.", publicado="2026-08-01",
                 score=1.2, scope="inferencia")
     return Ponto(**{**base, **kw})
 
@@ -36,6 +36,21 @@ def test_a_pagina_e_html_completo(dados):
     assert "</html>" in html
 
 
+def test_publication_shell_uses_english_editorial_copy(dados):
+    html = render_site(dados)
+    assert '<html lang="en">' in html
+    for expected in (
+        "Find the AI research", "Research index", "Research signals",
+        "Generate deep report", "Exclusions and controls",
+    ):
+        assert expected in html
+    for legacy in (
+        "Pesquisa aplicada", "Índice de pesquisa", "Sinais do acervo",
+        "gerar relatório", "pular para o conteúdo",
+    ):
+        assert legacy not in html
+
+
 def test_a_navegacao_publica_liga_acervo_edicoes_about_e_rss(dados):
     html = render_site(dados)
     for caminho in ("/ai-radar/", "/ai-radar/edicoes/",
@@ -46,8 +61,8 @@ def test_a_navegacao_publica_liga_acervo_edicoes_about_e_rss(dados):
 
 def test_a_edicao_se_identifica_como_recorte_diario(dados):
     html = render_site(dados, edicao=True)
-    assert "edição preservada · 2026-08-30" in html
-    assert "<title>ai-radar — edição 2026-08-30</title>" in html
+    assert "archived edition · 2026-08-30" in html
+    assert "<title>AI Radar · Edition 2026-08-30</title>" in html
 
 
 def test_o_indice_de_edicoes_usa_urls_estaveis():
@@ -59,9 +74,9 @@ def test_o_indice_de_edicoes_usa_urls_estaveis():
 
 def test_about_declara_o_que_o_radar_nao_mede():
     html = render_about("2026-08-30", papers=12, edicoes=2)
-    assert "12 papers em 2 edições" in html
-    assert "Nenhum resultado foi reproduzido" in html
-    assert "requisição externa" in html
+    assert "12 papers across 2 editions" in html
+    assert "does not reproduce experimental results" in html
+    assert "remote asset request" in html
     assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
     assert "getContext('2d'" in html
 
@@ -110,15 +125,15 @@ def test_acervo_vazio_gera_pagina_valida(dados_vazio):
     """Nao excecao, nao HTML quebrado: a pagina diz que nao ha dado."""
     html = render_site(dados_vazio)
     assert "</html>" in html
-    assert "nenhum paper" in html.lower()
+    assert "no papers" in html.lower()
 
 
 def test_o_enquadramento_esta_presente_e_e_fixo(dados):
     """Contrato com o leitor: o que o radar mede e o que ele deliberadamente
     NAO mede. E escrito a mao e versionado, nao gerado."""
     html = render_site(dados)
-    assert "implementações independentes" in html
-    assert "não mede" in html
+    assert "independent implementations" in html
+    assert "does not claim" in html
 
 
 def test_o_cabecalho_traz_os_numeros_do_acervo(dados):
@@ -128,7 +143,7 @@ def test_o_cabecalho_traz_os_numeros_do_acervo(dados):
 
 
 def test_o_titulo_da_aba_nomeia_o_projeto_e_o_dia(dados):
-    assert "<title>ai-radar — 2026-08-30</title>" in render_site(dados)
+    assert "<title>AI Radar · 2026-08-30</title>" in render_site(dados)
 
 
 def test_o_site_nao_importa_io():
@@ -164,7 +179,7 @@ def test_os_graficos_formam_um_unico_caderno_de_sinais(dados):
     assert 'id="sinais"' in html
     assert 'class="chart-suite"' in html
     assert html.count('class="chart-card') >= 2
-    assert "cor = família" in html
+    assert "color = research area" in html
     assert 'class="chart-scroll"' in html
     assert '/ai-radar/assets/observable-plot-0.6.17.min.js' in html
     assert 'data-plot-host="frontier"' in html
@@ -194,8 +209,8 @@ def test_so_o_primeiro_scatter_comeca_visivel(dados):
 
 def test_ha_um_botao_por_metrica(dados):
     html = render_site(dados)
-    for rotulo in ("estrelas no GitHub", "dias desde a publicação",
-                   "implementações totais"):
+    for rotulo in ("GitHub stars", "days since publication",
+                   "total implementations"):
         assert rotulo in html
 
 
@@ -204,7 +219,7 @@ def test_o_portao_de_estouro_esta_rotulado(dados):
     sem ler documentacao."""
     html = render_site(dados)
     assert "1000" in html
-    assert "estourou" in html.lower()
+    assert "attention threshold" in html.lower()
 
 
 def test_a_legenda_lista_so_as_familias_presentes(dados):
@@ -240,13 +255,13 @@ def test_todo_ganho_visivel_carrega_o_rotulo(dados):
     """Inegociavel: numero de abstract apresentado como medicao e exatamente
     o hype de que este projeto existe para fugir. Se nao couber o rotulo,
     corta-se o grafico, nao o rotulo."""
-    assert "alegado pelos autores, não verificado" in render_site(dados)
+    assert "reported by the authors; not independently verified" in render_site(dados)
 
 
 def test_a_secao_some_com_cobertura_abaixo_de_35_por_cento(dados_ganho_ralo):
     """Grafico sobre dado ralo e pior que grafico ausente."""
     assert dados_ganho_ralo.cobertura_de_ganho < 0.35
-    assert "avanço alegado" not in render_site(dados_ganho_ralo).lower()
+    assert "claimed performance gains" not in render_site(dados_ganho_ralo).lower()
 
 
 def test_nenhum_ganho_aparece_sem_o_rotulo(dados_ganho_ralo):
@@ -262,14 +277,14 @@ def test_nenhum_ganho_aparece_sem_o_rotulo(dados_ganho_ralo):
     html = render_site(dados_ganho_ralo)
     # A secao de avanco nao existe (cobertura < 35%), mas o destaque pode
     # mostrar ganho -- e sempre que mostrar, o rotulo tem que estar junto.
-    ganhos = re.findall(r"ganho [\d.]+x em", html)
+    ganhos = re.findall(r"[\d.]+x gain in", html)
     if ganhos:
-        assert html.count("alegado pelos autores, não verificado") >= len(ganhos)
+        assert html.count("reported by the authors; not independently verified") >= len(ganhos)
 
 
 def test_com_cobertura_suficiente_a_secao_aparece(dados):
     assert dados.cobertura_de_ganho >= 0.35
-    assert "avanço alegado" in render_site(dados).lower()
+    assert "claimed performance gains" in render_site(dados).lower()
 
 
 # --- Tarefa 7: famílias no tempo, e o índice editorial ---
@@ -299,7 +314,7 @@ def test_citacao_zero_e_renderizada_como_zero():
     import re
     entrada = re.search(
         r'<article class="linha paper-entry".*?</article>', html, re.S).group(0)
-    assert "<b>0</b><span>citações</span>" in entrada
+    assert "<b>0</b><span>citations</span>" in entrada
 
 
 def test_cada_linha_tem_link_de_arxiv_resolvivel(dados):
@@ -359,7 +374,7 @@ def test_os_pequenos_multiplos_cobrem_so_as_familias_presentes(dados):
 
 REPOS = [
     {"full_name": "tridao/flash-attn", "owner": "tridao", "stars": 3200,
-     "is_author": 1, "is_author_reason": "sobrenome do autor no dono"},
+     "is_author": 1, "is_author_reason": "mais_antigo_e_mais_estrelado"},
     {"full_name": "acme/fa-triton", "owner": "acme", "stars": 41,
      "is_author": 0, "is_author_reason": None},
 ]
@@ -381,7 +396,7 @@ def test_o_destaque_mostra_a_regra_de_autoria_de_cada_repo():
     d = SiteData(pontos=[ponto()], dia="2026-08-30", cortes={},
                  rechecked_total=0, repos_do_destaque=REPOS)
     html = render_site(d)
-    assert "sobrenome do autor no dono" in html
+    assert "oldest and most-starred repository" in html
     assert "tridao/flash-attn" in html
     assert "acme/fa-triton" in html
 
@@ -390,13 +405,13 @@ def test_o_destaque_separa_autor_de_independente():
     d = SiteData(pontos=[ponto()], dia="2026-08-30", cortes={},
                  rechecked_total=0, repos_do_destaque=REPOS)
     html = render_site(d)
-    assert "independente" in html
-    assert "autor" in html
+    assert "independent" in html
+    assert "author" in html
 
 
 def test_destaque_sem_repos_diz_isso_em_vez_de_sumir():
     html = render_site(_acervo([ponto()]))
-    assert "nenhum repositório" in html.lower()
+    assert "no repositories" in html.lower()
 
 
 def test_todos_os_cortes_do_dia_aparecem_com_contagem(dados):
@@ -405,20 +420,20 @@ def test_todos_os_cortes_do_dia_aparecem_com_contagem(dados):
     for motivo, n in dados.cortes.items():
         # Renderizado legivel: `abaixo do piso`, nao `abaixo_do_piso`. O que a
         # restricao global exige e que o corte CHEGUE ao leitor, com contagem.
-        assert motivo.replace("_", " ") in html
+        assert "below the signal threshold" in html
         assert f"<b>{n}</b>" in html
 
 
 def test_dia_sem_corte_nenhum_ainda_mostra_a_secao():
     html = render_site(_acervo([ponto()]))
-    assert "ficou de fora" in html.lower()
-    assert "nenhum corte" in html.lower()
+    assert "exclusions and controls" in html.lower()
+    assert "no papers were excluded" in html.lower()
 
 
 def test_edicao_sem_contabilidade_nao_afirma_que_nao_houve_corte():
     html = render_site(_acervo([ponto()], cortes=None), edicao=True)
-    assert "não foi registrada" in html
-    assert "nenhum corte" not in html.lower()
+    assert "were not recorded" in html
+    assert "no papers were excluded" not in html.lower()
 
 
 def test_o_total_re_consultado_aparece(dados):
@@ -473,7 +488,7 @@ def test_ha_contador_vivo_de_linhas(dados):
     filtro quebrado."""
     html = render_site(dados)
     assert 'id="contador"' in html
-    assert f"de {len(dados.pontos)}" in html
+    assert f"of {len(dados.pontos)}" in html
 
 
 def test_a_legenda_e_clicavel_e_carrega_a_familia(dados):
@@ -504,7 +519,10 @@ def test_frase_sem_filtro_nao_vira_link(dados):
     """A de escassez não tem filtro: ela é o denominador, não um recorte."""
     import re
     html = render_site(dados)
-    frase = re.search(r'<p class="frase"[^>]*>.*?não têm.*?</p>', html, re.S)
+    frase = re.search(
+        r'<p class="frase"[^>]*>.*?no independent implementation.*?</p>',
+        html, re.S,
+    )
     assert frase and "data-aplicar" not in frase.group(0)
 
 
@@ -520,7 +538,7 @@ def test_os_numeros_do_bloco_ganham_destaque(dados):
 def test_destaque_numerico_nao_quebra_entidade_de_aspa(dados):
     html = render_site(dados)
     assert "&#x<b" not in html
-    assert "&#x27;outro&#x27;" in html
+    assert "&#x27;other&#x27;" in html
 
 
 # --- Identidade editorial ---
@@ -583,17 +601,17 @@ def test_o_cabecalho_tem_estrutura_de_masthead(dados):
     html = render_site(dados)
     assert 'class="masthead publication-head"' in html
     assert 'class="hero-eyebrow"' in html
-    assert "Pesquisa aplicada" in html
+    assert "Find the AI research" in html
 
 
 def test_o_indice_tem_hierarquia_de_publicacao_e_sinal_auditavel(dados):
     html = render_site(dados)
     assert 'class="research-index"' in html
-    assert "publicado" in html
-    assert "paper e brief" in html
+    assert "published" in html
+    assert "paper and brief" in html
     assert 'class="evidence-fingerprint"' in html
-    assert "sinal observado" in html
-    assert "paper original" in html
+    assert "observed signal" in html
+    assert "Original paper" in html
 
 
 def test_a_hierarquia_de_titulos_e_logica(dados):
@@ -620,9 +638,9 @@ def test_o_acervo_mostra_trinta_briefs_antes_de_pedir_expansao():
               for i in range(31)]
     html = render_site(_acervo(pontos))
     assert html.count('data-inicial="oculta" hidden') == 1
-    assert '<span id="contador">30 de 31</span>' in html
+    assert '<span id="contador">30 of 31</span>' in html
     assert 'data-mostrar-todos' in html
-    assert 'mostrar todos os 31 papers' in html
+    assert 'Show all 31 papers' in html
 
 
 def test_busca_e_filtro_podem_sair_do_recorte_inicial():
@@ -636,7 +654,7 @@ def test_cada_brief_tem_acao_segura_para_pedir_relatorio():
     assert 'class="paper-brief"' in html
     assert 'github.com/lusknchars/ai-radar/issues/new?' in html
     assert 'title=%5Breport%5D+2608.11111' in html
-    assert 'gerar relatório' in html
+    assert 'Generate deep report' in html
     assert 'min-height:44px' in html
 
 
@@ -656,7 +674,7 @@ def test_fila_de_papers_aparece_antes_dos_graficos(dados):
 def test_relatorio_existente_troca_a_acao_por_link_de_leitura():
     html = render_site(_acervo([ponto()]), report_ids={"2608.11111"})
     assert '/ai-radar/reports/2608.11111/' in html
-    assert 'ler relatório' in html
+    assert 'Read deep report' in html
     assert 'issues/new?' not in html
 
 
@@ -669,12 +687,12 @@ def _report_document() -> ReportDocument:
         model="kimi-k3", source_url="https://arxiv.org/pdf/2608.11111",
         source_sha256="a" * 64,
         report=DeepReport(
-            one_sentence="Troca atenção densa por blocos.",
-            problem="Contexto longo ocupa memória.",
-            mechanism="Seleciona blocos antes do kernel.",
+            one_sentence="Replaces dense attention with selected blocks.",
+            problem="Long contexts consume excessive memory.",
+            mechanism="Selects blocks before the attention kernel.",
             technical_core=TechnicalCore(
                 kind="formula",
-                summary="A escala estabiliza o produto entre consultas e chaves.",
+                summary="Scaling stabilizes the query-key product.",
                 walkthroughs=[FormulaWalkthrough(
                     status="exact", role="proposed_method",
                     latex=r"S = QK^T / \sqrt{d}", source_page=6,
@@ -683,40 +701,55 @@ def _report_document() -> ReportDocument:
                         "the head dimension."
                     ),
                     plain_language=(
-                        "Divide o produto por uma escala que cresce com a dimensão."
+                        "Divides the product by a scale that grows with dimension."
                     ),
                     variables=[FormulaVariable(
-                        symbol="d", meaning="dimensão da cabeça de atenção")],
-                    derivation_steps=["Calcule QK^T.", "Divida por sqrt(d)."],
+                        symbol="d", meaning="attention head dimension")],
+                    derivation_steps=["Compute QK^T.", "Divide by sqrt(d)."],
                     worked_example=WorkedExample(
                         inputs={"d": 64}, expression="sqrt(64)", result="8",
-                        explanation="Com d=64, o divisor ilustrativo é 8."),
-                    assumptions=["Q e K usam a mesma dimensão interna."],
+                        explanation="With d=64, the illustrative divisor is 8."),
+                    assumptions=["Q and K use the same internal dimension."],
                 )],
             ),
             evidence=[EvidenceClaim(
-                claim="Reduz memória", result="2x", baseline="atenção densa",
-                conditions="modelo 7B", source_page=7,
+                claim="Reduces memory", result="2x", baseline="dense attention",
+                conditions="7B model", source_page=7,
                 source_excerpt="Peak memory falls by half against dense attention.",
             )],
             validation_tier="single_gpu_24gb", evidence_tier="multi_gpu",
             infrastructure_basis="explicit",
             software_setup=["custom_cuda_kernel"],
             training_required="inference_only",
-            minimum_test=["Compare no mesmo workload"],
-            main_risks=["Kernel incompatível"],
-            unanswered_questions=["Qual a perda de qualidade?"],
+            minimum_test=["Compare on the same workload"],
+            main_risks=["Incompatible kernel"],
+            unanswered_questions=["What is the quality loss?"],
         ),
     )
 
 
 def test_pagina_de_relatorio_separa_teste_minimo_de_experimento():
     html = render_report(_report_document())
-    assert "1 GPU, até 24 GB" in html
-    assert "múltiplas GPUs" in html
-    assert "teste mínimo" in html
-    assert "experimento do paper" in html
-    assert "Este relatório não reproduz o experimento" in html
+    assert "1 GPU, up to 24 GB" in html
+    assert "multiple GPUs" in html
+    assert "minimum useful test" in html
+    assert "original experiment" in html
+    assert "AI Radar did not reproduce this experiment" in html
+
+
+def test_report_shell_uses_english_editorial_copy():
+    html = render_report(_report_document())
+    assert '<html lang="en">' in html
+    for expected in (
+        "Cost before commitment", "Published evidence",
+        "Minimum useful test", "Questions before adoption",
+    ):
+        assert expected in html
+    for legacy in (
+        "O custo antes da leitura", "Evidência relatada",
+        "Menor teste útil", "Perguntas abertas", "abrir PDF completo",
+    ):
+        assert legacy not in html
 
 
 def test_relatorio_tem_hierarquia_de_artigo_e_volta_ao_indice():
@@ -724,7 +757,7 @@ def test_relatorio_tem_hierarquia_de_artigo_e_volta_ao_indice():
     assert 'class="static-masthead article-masthead"' in html
     assert 'class="article-deck"' in html
     assert 'class="report-layout"' in html
-    assert 'class="report-toc" aria-label="Nesta análise"' in html
+    assert 'class="report-toc" aria-label="In this analysis"' in html
     assert 'href="#infra"' in html
     assert 'href="#evidencia"' in html
     assert 'data-report-progress' in html
@@ -736,27 +769,27 @@ def test_relatorio_tem_hierarquia_de_artigo_e_volta_ao_indice():
 def test_relatorio_abre_com_custo_e_origem_da_analise():
     html = render_report(_report_document())
     assert 'id="infra" class="report-section infra-exhibit"' in html
-    assert "O custo antes da leitura" in html
+    assert "Cost before commitment" in html
     assert "exhibit 01" in html
-    assert "análise gerada com kimi-k3" in html
-    assert "leitura de 5 min" in html
+    assert "analysis generated with kimi-k3" in html
+    assert "5 min read" in html
 
 
 def test_evidencia_liga_direto_para_a_pagina_do_pdf():
     html = render_report(_report_document())
     assert 'href="https://arxiv.org/pdf/2608.11111#page=7"' in html
-    assert "abrir página 7 no PDF" in html
+    assert "Open page 7 in the PDF" in html
     assert "Peak memory falls by half" in html
-    assert "abrir página do paper" in html
+    assert "Open paper page" in html
 
 
 def test_nucleo_tecnico_mostra_formula_explicacao_e_origem_da_conta():
     html = render_report(_report_document())
-    assert "Da equação ao teste" in html
+    assert "From equation to test" in html
     assert r"S = QK^T / \sqrt{d}" in html
-    assert "dimensão da cabeça de atenção" in html
-    assert "cálculo ilustrativo do AI Radar" in html
-    assert "Com d=64, o divisor ilustrativo é 8." in html
+    assert "attention head dimension" in html
+    assert "AI Radar worked example" in html
+    assert "With d=64, the illustrative divisor is 8." in html
     assert 'href="https://arxiv.org/pdf/2608.11111#page=6"' in html
 
 
@@ -766,19 +799,19 @@ def test_nucleo_sem_formula_explica_qual_mecanismo_importa():
     report = document.report.model_copy(update={
         "technical_core": TechnicalCore(
             kind="system",
-            summary="O ganho vem do escalonador, não de uma nova equação.",
+            summary="The gain comes from scheduling, not a new equation.",
             walkthroughs=[],
         )
     })
     html = render_report(document.model_copy(update={"report": report}))
-    assert "núcleo de sistema" in html
-    assert "O ganho vem do escalonador" in html
-    assert "cálculo ilustrativo" not in html
+    assert "system-level core" in html
+    assert "The gain comes from scheduling" in html
+    assert "AI Radar worked example" not in html
 
 
 def test_rotulos_publicos_nao_expoem_os_enums_internos(dados):
     html = render_site(dados)
-    assert "cache KV" in html
+    assert "KV cache" in html
     assert 'data-familia="cache_kv"' in html
     assert ">cache_kv<" not in html
 
