@@ -74,16 +74,20 @@ def test_toda_familia_tem_cor_propria():
 
 
 def test_a_pagina_nao_faz_requisicao_externa(dados):
-    """"Sem dependencia externa" e literal: nada de CDN, nada de fonte
-    remota, nenhuma requisicao saindo da pagina. Links para o arXiv sao
-    navegacao do leitor, nao carregamento de recurso."""
+    """O unico asset requisitado e versionado e publicado pelo proprio radar.
+
+    Links para arXiv e GitHub sao navegacao do leitor, nao recursos da pagina.
+    """
     html = (render_site(dados)
             .replace("https://arxiv.org", "")
             .replace("https://github.com", "")
             # Identificador de namespace, nao URL de recurso nem requisicao.
             .replace('xmlns="http://www.w3.org/2000/svg"', ""))
-    for proibido in ("https://", "http://", "//cdn", "@import", "<script src"):
+    for proibido in ("https://", "http://", "//cdn", "@import"):
         assert proibido not in html
+    assert html.count('<script src="') == 2
+    assert '<script src="/ai-radar/assets/d3-7.9.0.min.js">' in html
+    assert '<script src="/ai-radar/assets/observable-plot-0.6.17.min.js">' in html
 
 
 def test_a_pagina_usa_a_paleta_editorial_da_publicacao(dados):
@@ -162,6 +166,16 @@ def test_os_graficos_formam_um_unico_caderno_de_sinais(dados):
     assert html.count('class="chart-card') >= 2
     assert "cor = família" in html
     assert 'class="chart-scroll"' in html
+    assert '/ai-radar/assets/observable-plot-0.6.17.min.js' in html
+    assert 'data-plot-host="frontier"' in html
+    assert 'data-plot-host="families"' in html
+    assert 'data-chart-data="frontier"' in html
+
+
+def test_chart_json_cannot_be_closed_by_an_untrusted_paper_title():
+    html = render_site(_acervo([ponto(titulo="</script><script>alert(1)</script>")]))
+    assert "</script><script>alert(1)</script>" not in html
+    assert "\\u003c/script>" in html
 
 
 def test_so_o_primeiro_scatter_comeca_visivel(dados):
@@ -199,10 +213,11 @@ def test_a_legenda_lista_so_as_familias_presentes(dados):
     assert "destilacao" not in html      # ausente do acervo de teste
 
 
-def test_o_js_e_inline_e_nao_carrega_nada(dados):
+def test_o_js_do_produto_e_inline_e_a_biblioteca_e_local(dados):
     html = render_site(dados)
     assert "<script>" in html
-    assert "<script src" not in html
+    assert '<script src="/ai-radar/assets/d3-7.9.0.min.js">' in html
+    assert '<script src="/ai-radar/assets/observable-plot-0.6.17.min.js">' in html
 
 
 # --- Tarefa 6: a seção de avanço na página ---

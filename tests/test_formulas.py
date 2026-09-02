@@ -1,9 +1,13 @@
 import pytest
 from pydantic import ValidationError
 
-from radar.formulas import (FormulaVariable, FormulaWalkthrough, TechnicalCore,
-                            WorkedExample, extract_formula_candidates,
-                            ground_technical_core)
+from radar.formulas import (MAX_SELECTOR_CANDIDATE_CHARS, FormulaCandidate, FormulaSelection,
+                            FormulaSelectionItem, FormulaVariable,
+                            FormulaWalkthrough, TechnicalCore, WorkedExample,
+                            extract_formula_candidates, locate_candidate_excerpt,
+                            rank_formula_candidates,
+                            technical_core_from_selection,
+                            verify_formula_selection, ground_technical_core)
 
 
 def exact_formula(**overrides):
@@ -147,6 +151,114 @@ def test_commented_equations_do_not_become_candidates():
 
 def test_tex_without_display_equations_returns_no_candidates():
     assert extract_formula_candidates({"main.tex": "Only prose and $x$ inline."}) == []
+
+
+def _candidate(**overrides):
+    values = {
+        "candidate_id": "eq-0123456789abcdef",
+        "path": "main.tex",
+        "environment": "equation",
+        "latex": r"L = \\sum_i e_i",
+        "context_before": "We minimize the following objective over all tokens.",
+        "context_after": "This objective penalizes reconstruction error.",
+    }
+    return FormulaCandidate(**{**values, **overrides})
+
+
+def test_selection_contract_contains_ids_and_roles_but_no_latex_field():
+    schema = FormulaSelection.model_json_schema()
+    item = schema["$defs"]["FormulaSelectionItem"]
+    assert set(item["properties"]) == {"candidate_id", "role"}
+    assert item["additionalProperties"] is False
+
+
+def test_selection_rejects_duplicate_candidate_ids():
+    item = FormulaSelectionItem(
+        candidate_id="eq-0123456789abcdef", role="loss")
+    with pytest.raises(ValidationError, match="repetir"):
+        FormulaSelection(kind="formula", selected=[item, item])
+
+
+def test_selection_verifier_rejects_an_id_the_model_never_received():
+    selection = FormulaSelection(
+        kind="formula",
+        selected=[FormulaSelectionItem(
+            candidate_id="eq-fedcba9876543210", role="loss")],
+    )
+    with pytest.raises(ValueError, match="desconhecido"):
+        verify_formula_selection(selection, [_candidate()])
+
+
+def test_candidate_ranking_prefers_contribution_context_and_limits_tokens():
+    appendix = _candidate(
+        candidate_id="eq-1111111111111111",
+        context_before="Appendix proof of the lemma.")
+    method = _candidate(
+        candidate_id="eq-2222222222222222",
+        context_before="We propose our method and objective.")
+    assert rank_formula_candidates([appendix, method], limit=1) == [method]
+
+
+def test_candidate_ranking_has_a_total_character_budget():
+    candidates = [
+        _candidate(
+            candidate_id=f"eq-{index:016x}",
+            latex="x" * 5_000,
+            context_before="we propose an objective",
+        )
+        for index in range(10)
+    ]
+    selected = rank_formula_candidates(candidates)
+    used = sum(
+        len(item.latex + item.context_before + item.context_after + item.path)
+        for item in selected
+    )
+    assert used <= MAX_SELECTOR_CANDIDATE_CHARS
+    assert len(selected) < len(candidates)
+
+
+def test_candidate_is_located_by_neighboring_prose_not_damaged_notation():
+    candidate = _candidate()
+    pages = {
+        1: "Introduction and related work.",
+        2: (
+            "We minimize the following objective over all tokens. "
+            "L equals unreadable PDF glyphs."
+        ),
+    }
+    page, excerpt = locate_candidate_excerpt(candidate, pages)
+    assert page == 2
+    assert "following objective" in excerpt
+
+
+def test_technical_core_copies_exact_candidate_latex_after_page_grounding():
+    candidate = _candidate()
+    selection = FormulaSelection(
+        kind="formula",
+        selected=[FormulaSelectionItem(
+            candidate_id=candidate.candidate_id, role="loss")],
+    )
+    core = technical_core_from_selection(
+        selection, [candidate],
+        {3: "We minimize the following objective over all tokens in the batch."},
+    )
+    item = core.walkthroughs[0]
+    assert item.status == "exact"
+    assert item.latex == candidate.latex
+    assert item.source_page == 3
+
+
+def test_technical_core_downgrades_selected_formula_without_pdf_context():
+    candidate = _candidate()
+    selection = FormulaSelection(
+        kind="formula",
+        selected=[FormulaSelectionItem(
+            candidate_id=candidate.candidate_id, role="loss")],
+    )
+    item = technical_core_from_selection(
+        selection, [candidate], {1: "Unrelated page."}).walkthroughs[0]
+    assert item.status == "extraction_failed"
+    assert item.latex == ""
 
 
 def test_formula_technical_core_requires_a_walkthrough():

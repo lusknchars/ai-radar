@@ -61,6 +61,8 @@ jobs:
           ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
           RADAR_LLM_PROVIDER: kimi
           RADAR_MODEL: ${{ vars.RADAR_MODEL }}
+          RADAR_FORMULA_MODEL: ${{ vars.RADAR_FORMULA_MODEL }}
+          RADAR_FORMULA_THINKING: ${{ vars.RADAR_FORMULA_THINKING }}
           RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
           KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
         run: python scripts/gerar_relatorio.py --arxiv-id "$ARXIV_ID"

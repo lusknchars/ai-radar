@@ -68,3 +68,9 @@ def test_publish_site_links_and_renders_saved_reports(tmp_path):
     assert "ler relatório" in index
     assert page.exists()
     assert "1 GPU, até 24 GB" in page.read_text(encoding="utf-8")
+    plot_asset = tmp_path / "site" / "assets" / "observable-plot-0.6.17.min.js"
+    d3_asset = tmp_path / "site" / "assets" / "d3-7.9.0.min.js"
+    assert plot_asset.exists()
+    assert plot_asset.stat().st_size == 209_183
+    assert d3_asset.exists()
+    assert d3_asset.stat().st_size == 279_706

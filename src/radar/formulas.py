@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import re
 from collections.abc import Mapping
-from typing import Literal
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -26,6 +26,7 @@ TechnicalCoreKind = Literal[
 MIN_SOURCE_EXCERPT_CHARS = 24
 MAX_FORMULA_CANDIDATES = 100
 MAX_CANDIDATE_LATEX_CHARS = 6000
+MAX_SELECTOR_CANDIDATE_CHARS = 24_000
 CONTEXT_CHARS = 900
 
 _TEX_COMMENT = re.compile(r"(?<!\\)%[^\n]*")
@@ -61,6 +62,41 @@ class FormulaCandidate(BaseModel):
     latex: str = Field(min_length=1, max_length=MAX_CANDIDATE_LATEX_CHARS)
     context_before: str = Field(default="", max_length=CONTEXT_CHARS)
     context_after: str = Field(default="", max_length=CONTEXT_CHARS)
+
+
+class FormulaSelectionItem(BaseModel):
+    """A decisao barata do seletor; nenhuma notacao pode ser reescrita aqui."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str = Field(pattern=r"^eq-[0-9a-f]{16}$")
+    role: FormulaRole
+
+
+class FormulaSelection(BaseModel):
+    """Saida fechada do K2.6: tipo do nucleo e IDs, sem prosa ou LaTeX."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: TechnicalCoreKind
+    selected: list[FormulaSelectionItem] = Field(default_factory=list, max_length=3)
+
+    @model_validator(mode="after")
+    def validate_selection_shape(self) -> "FormulaSelection":
+        ids = [item.candidate_id for item in self.selected]
+        if len(ids) != len(set(ids)):
+            raise ValueError("o seletor nao pode repetir candidate_id")
+        if self.kind == "formula" and not self.selected:
+            raise ValueError("kind='formula' exige ao menos um candidate_id")
+        if self.kind != "formula" and self.selected:
+            raise ValueError("candidate_id so e permitido para kind='formula'")
+        return self
+
+
+class FormulaSelector(Protocol):
+    def select(
+        self, paper, candidates: list[FormulaCandidate],
+    ) -> FormulaSelection: ...
 
 
 class WorkedExample(BaseModel):
@@ -204,6 +240,177 @@ def extract_formula_candidates(
             if len(candidates) >= MAX_FORMULA_CANDIDATES:
                 return candidates
     return candidates
+
+
+_CONTRIBUTION_TERMS = (
+    "we propose", "our method", "objective", "loss", "complexity",
+    "algorithm", "latency", "throughput", "memory", "metric",
+)
+_AUXILIARY_TERMS = ("appendix", "proof", "lemma", "theorem")
+
+
+def rank_formula_candidates(
+    candidates: list[FormulaCandidate], *, limit: int = 30,
+) -> list[FormulaCandidate]:
+    """Reduz custo sem deixar o modelo alterar ou fabricar candidatos.
+
+    O teto por quantidade sozinho nao basta: trinta ambientes ``align`` no
+    limite de tamanho excederiam com folga a janela de custo planejada.
+    """
+    if limit < 1:
+        raise ValueError("limit precisa ser >= 1")
+
+    def score(item: FormulaCandidate) -> int:
+        context = (
+            f"{item.context_before} {item.context_after} {item.latex}"
+        ).casefold()
+        return (
+            sum(3 for term in _CONTRIBUTION_TERMS if term in context)
+            - sum(2 for term in _AUXILIARY_TERMS if term in context)
+        )
+
+    indexed = list(enumerate(candidates))
+    indexed.sort(key=lambda pair: (-score(pair[1]), pair[0]))
+    selected: list[FormulaCandidate] = []
+    used_chars = 0
+    for _, item in indexed:
+        item_chars = len(
+            item.latex + item.context_before + item.context_after + item.path
+        )
+        if used_chars + item_chars > MAX_SELECTOR_CANDIDATE_CHARS:
+            continue
+        selected.append(item)
+        used_chars += item_chars
+        if len(selected) == limit:
+            break
+    return selected
+
+
+def verify_formula_selection(
+    selection: FormulaSelection,
+    candidates: list[FormulaCandidate],
+) -> list[tuple[FormulaSelectionItem, FormulaCandidate]]:
+    """Resolve apenas IDs presentes no conjunto exato enviado ao modelo."""
+    available = {item.candidate_id: item for item in candidates}
+    resolved: list[tuple[FormulaSelectionItem, FormulaCandidate]] = []
+    for item in selection.selected:
+        candidate = available.get(item.candidate_id)
+        if candidate is None:
+            raise ValueError(
+                f"seletor devolveu candidate_id desconhecido: {item.candidate_id}"
+            )
+        resolved.append((item, candidate))
+    return resolved
+
+
+_SOURCE_WORD = re.compile(r"[^\W_]+", re.UNICODE)
+
+
+def locate_candidate_excerpt(
+    candidate: FormulaCandidate, pages: Mapping[int, str],
+) -> tuple[int, str] | None:
+    """Localiza uma frase vizinha do TeX no PDF sem comparar a formula.
+
+    A extracao de PDF costuma destruir a notacao, mas preserva a prosa ao
+    redor. Casar uma sequencia de palavras dessa prosa fornece pagina e trecho
+    auditavel sem alegar que o texto extraido do PDF preservou a equacao.
+    """
+    context_words = [
+        match.group(0).casefold()
+        for match in _SOURCE_WORD.finditer(
+            f"{candidate.context_before} {candidate.context_after}"
+        )
+    ]
+    if len(context_words) < 6:
+        return None
+    page_tokens: dict[int, tuple[list[str], list[tuple[int, int]]]] = {}
+    for number, text in pages.items():
+        matches = list(_SOURCE_WORD.finditer(text))
+        page_tokens[number] = (
+            [match.group(0).casefold() for match in matches],
+            [match.span() for match in matches],
+        )
+
+    for window in range(min(14, len(context_words)), 5, -1):
+        for start in range(len(context_words) - window + 1):
+            needle = context_words[start:start + window]
+            for page_number, text in pages.items():
+                words, spans = page_tokens[page_number]
+                for offset in range(len(words) - window + 1):
+                    if words[offset:offset + window] != needle:
+                        continue
+                    excerpt_start = spans[offset][0]
+                    excerpt_end = spans[offset + window - 1][1]
+                    excerpt = " ".join(text[excerpt_start:excerpt_end].split())
+                    if len(excerpt) >= MIN_SOURCE_EXCERPT_CHARS:
+                        return page_number, excerpt[:640]
+    return None
+
+
+_ROLE_EXPLANATIONS: dict[FormulaRole, str] = {
+    "baseline": "Esta equacao formaliza o baseline usado na comparacao.",
+    "proposed_method": "Esta equacao formaliza o mecanismo proposto pelo paper.",
+    "loss": "Esta equacao define a funcao de perda otimizada pelo metodo.",
+    "metric": "Esta equacao define a metrica usada para avaliar o resultado.",
+    "complexity": "Esta equacao explicita o custo ou a complexidade do metodo.",
+}
+
+
+def technical_core_from_selection(
+    selection: FormulaSelection,
+    candidates: list[FormulaCandidate],
+    pages: Mapping[int, str],
+) -> TechnicalCore:
+    """Constroi o nucleo usando somente LaTeX preservado pelo extrator."""
+    if selection.kind != "formula":
+        labels = {
+            "algorithm": "O nucleo tecnico e uma sequencia de passos, nao uma nova formula.",
+            "system": "O nucleo tecnico esta na composicao do sistema, nao numa nova formula.",
+            "evaluation_protocol": (
+                "O nucleo tecnico e o protocolo de avaliacao, nao uma nova formula."
+            ),
+            "concept": "O paper contribui um conceito sem notacao central verificavel.",
+            "none": "O nucleo tecnico nao foi classificado com seguranca.",
+        }
+        return TechnicalCore(kind=selection.kind, summary=labels[selection.kind])
+
+    walkthroughs: list[FormulaWalkthrough] = []
+    for selected, candidate in verify_formula_selection(selection, candidates):
+        location = locate_candidate_excerpt(candidate, pages)
+        if location is None:
+            walkthroughs.append(FormulaWalkthrough(
+                status="extraction_failed",
+                role=selected.role,
+                plain_language=(
+                    "A equacao foi selecionada na fonte TeX, mas sua prosa "
+                    "vizinha nao foi localizada com seguranca no PDF."
+                ),
+            ))
+            continue
+        page, excerpt = location
+        walkthroughs.append(FormulaWalkthrough(
+            status="exact",
+            role=selected.role,
+            latex=candidate.latex,
+            source_page=page,
+            source_excerpt=excerpt,
+            plain_language=_ROLE_EXPLANATIONS[selected.role],
+        ))
+    return TechnicalCore(
+        kind="formula",
+        summary=(
+            "Equacoes centrais escolhidas por identificador e copiadas sem "
+            "alteracao da fonte TeX oficial."
+        ),
+        walkthroughs=walkthroughs,
+    )
+
+
+def extract_technical_core(source, paper, selector: FormulaSelector) -> TechnicalCore:
+    """Orquestra extracao, selecao barata e verificacao deterministica."""
+    candidates = rank_formula_candidates(extract_formula_candidates(source.tex))
+    selection = selector.select(paper, candidates)
+    return technical_core_from_selection(selection, candidates, source.pages)
 
 
 def ground_technical_core(

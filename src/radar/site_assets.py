@@ -282,6 +282,156 @@ document.querySelectorAll('[data-eixo]').forEach(function(b){
 });
 """
 
+CHART_SCRIPT = r"""
+// Observable Plot melhora exploracao e links, mas nunca e o primeiro render.
+// Se o asset local falhar, cada SVG auditado no servidor continua visivel.
+(function(){
+  if (!window.Plot) return;
+
+  function readData(kind){
+    var node = document.querySelector('[data-chart-data="' + kind + '"]');
+    if (!node) return [];
+    try { return JSON.parse(node.textContent); }
+    catch (_) { return []; }
+  }
+
+  function widthFor(host){
+    return Math.max(680, Math.round(host.parentElement.clientWidth || 680));
+  }
+
+  function mount(kind, plot){
+    var host = document.querySelector('[data-plot-host="' + kind + '"]');
+    if (!host || !plot) return;
+    host.replaceChildren(plot);
+    host.hidden = false;
+    var fallback = host.parentElement.querySelector('.plot-fallback');
+    if (fallback) fallback.hidden = true;
+  }
+
+  var labels = {
+    stars_total: 'estrelas no GitHub',
+    idade_dias: 'dias desde a publicação',
+    total_impls: 'implementações totais'
+  };
+
+  function renderFrontier(metric){
+    var host = document.querySelector('[data-plot-host="frontier"]');
+    var data = readData('frontier');
+    if (!host || !data.length) return;
+    mount('frontier', Plot.plot({
+      className: 'observable-plot',
+      width: widthFor(host), height: 470,
+      marginLeft: 66, marginBottom: 56, marginRight: 24, marginTop: 22,
+      style: {background: 'transparent', color: '#000',
+        fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
+      ariaLabel: 'Implementações independentes contra ' + labels[metric],
+      ariaDescription: 'Cada ponto abre o paper original no arXiv.',
+      x: {label: labels[metric], grid: true, nice: true},
+      y: {label: 'implementações independentes', grid: true, nice: true},
+      color: {type: 'identity'},
+      marks: [
+        Plot.ruleY([0], {stroke: '#000', strokeOpacity: .24}),
+        Plot.dot(data, {
+          x: metric, y: 'independent_impls', fill: 'color', r: 6,
+          stroke: '#eeeeee', strokeWidth: 2, href: 'url', tip: true,
+          title: function(d){ return d.title + '\n' + d.family_label +
+            '\n' + d[metric] + ' ' + labels[metric] +
+            '\n' + d.independent_impls + ' implementações independentes'; },
+          ariaLabel: function(d){ return d.title + ': ' +
+            d.independent_impls + ' implementações independentes e ' +
+            d[metric] + ' ' + labels[metric]; }
+        })
+      ]
+    }));
+  }
+
+  function renderFamilies(){
+    var host = document.querySelector('[data-plot-host="families"]');
+    var data = readData('families');
+    if (!host || !data.length) return;
+    var families = Array.from(new Set(data.map(function(d){
+      return d.family_label;
+    })));
+    mount('families', Plot.plot({
+      className: 'observable-plot',
+      width: widthFor(host), height: Math.max(300, families.length * 125),
+      marginLeft: 150, marginBottom: 46, marginTop: 18, marginRight: 24,
+      style: {background: 'transparent', color: '#000',
+        fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
+      ariaLabel: 'Volume mensal de papers por família',
+      x: {label: 'mês', type: 'band', tickRotate: -25},
+      y: {label: 'papers', grid: true, nice: true},
+      fy: {label: null, domain: families},
+      color: {type: 'identity'},
+      marks: [
+        Plot.barY(data, {
+          x: 'month', y: 'count', fy: 'family_label', fill: 'color',
+          inset: 2, tip: true,
+          title: function(d){ return d.family_label + '\n' + d.month +
+            ': ' + d.count + ' papers'; },
+          ariaLabel: function(d){ return d.family_label + ', ' + d.month +
+            ': ' + d.count + ' papers'; }
+        }),
+        Plot.ruleY([0], {stroke: '#000', strokeOpacity: .22})
+      ]
+    }));
+  }
+
+  function renderGain(){
+    var host = document.querySelector('[data-plot-host="gain"]');
+    var data = readData('gain').filter(function(d){ return d.gain > 0; });
+    if (!host || !data.length) return;
+    data.forEach(function(d){
+      d.date = new Date(d.month + '-01T00:00:00Z');
+    });
+    mount('gain', Plot.plot({
+      className: 'observable-plot',
+      width: widthFor(host), height: 400,
+      marginLeft: 66, marginBottom: 52, marginTop: 20, marginRight: 24,
+      style: {background: 'transparent', color: '#000',
+        fontFamily: 'Electrolize, ui-monospace, monospace', fontSize: '11px'},
+      ariaLabel: 'Ganho alegado ao longo do tempo em escala logarítmica',
+      ariaDescription: 'Valores declarados pelos autores e não verificados.',
+      x: {label: 'publicação', grid: true},
+      y: {label: 'fator alegado · escala log', type: 'log', grid: true},
+      color: {type: 'identity'},
+      marks: [
+        Plot.ruleY([1], {stroke: '#000', strokeDasharray: '5,5'}),
+        Plot.dot(data, {
+          x: 'date', y: 'gain', fill: 'color', r: 6,
+          stroke: '#eeeeee', strokeWidth: 2, href: 'url', tip: true,
+          title: function(d){ return d.title + '\n' + d.gain + 'x em ' +
+            d.gain_axis + '\nalegado, não verificado'; },
+          ariaLabel: function(d){ return d.title + ': ' + d.gain +
+            ' vezes em ' + d.gain_axis + ', alegado e não verificado'; }
+        })
+      ]
+    }));
+  }
+
+  renderFrontier('stars_total');
+  renderFamilies();
+  renderGain();
+
+  document.querySelectorAll('.eixos button[data-eixo]').forEach(function(button){
+    button.addEventListener('click', function(){
+      renderFrontier(button.getAttribute('data-eixo'));
+    });
+  });
+
+  var resizeTimer = 0;
+  window.addEventListener('resize', function(){
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function(){
+      var selected = document.querySelector('.eixos button[aria-pressed="true"]');
+      renderFrontier(selected ? selected.getAttribute('data-eixo') : 'stars_total');
+      renderFamilies();
+      renderGain();
+    }, 160);
+  });
+})();
+"""
+
 STYLES = _FONT_FACE + r"""
 :root{--fundo:#eeeeee;--texto:#000000;--cinza:#dddddd;--acento:#cb2957;
 --superficie:color-mix(in srgb,var(--fundo) 68%,var(--cinza));
@@ -409,6 +559,9 @@ overscroll-behavior-inline:contain;scrollbar-width:thin;scrollbar-color:var(--li
 .chart-scroll .avanco{min-width:680px}.chart-scroll .multiplos{min-width:760px}
 .chart-card svg text{font-family:var(--mono)}.chart-card circle{transition:opacity 160ms ease-out}
 .chart-card circle:hover{opacity:1}.chart-card .baseline{stroke-dasharray:5 5}
+.plot-enhancement{min-width:680px}.plot-enhancement figure{margin:0}
+.plot-enhancement svg{overflow:visible}.plot-enhancement [aria-label=tip]{font-family:var(--sans)}
+.plot-fallback[hidden]{display:none}
 .eixos{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .eixos>span{margin-right:4px;color:var(--apagado);font:500 9px var(--mono);
 text-transform:uppercase;letter-spacing:.11em}

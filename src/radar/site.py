@@ -9,6 +9,7 @@ nao sabe de onde o dado veio. CSS e comportamento do navegador pertencem a
 """
 from __future__ import annotations
 
+import json
 import re
 from html import escape
 from urllib.parse import urlencode
@@ -18,6 +19,7 @@ from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
 from .report import ReportDocument
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
+from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
 from .site_data import SiteData
@@ -248,6 +250,38 @@ def _cartao_grafico(numero: str, titulo: str, descricao: str, corpo: str,
     )
 
 
+def _chart_payload(kind: str, values: list[dict]) -> str:
+    """Serializa dado inerte sem permitir que um titulo feche a tag script."""
+    payload = json.dumps(values, ensure_ascii=False, separators=(",", ":"))
+    payload = payload.replace("<", "\\u003c").replace("&", "\\u0026")
+    return (
+        f'<script type="application/json" data-chart-data="{escape(kind)}">'
+        f'{payload}</script>'
+    )
+
+
+def _point_chart_data(d: SiteData) -> list[dict]:
+    return [
+        {
+            "arxiv_id": p.arxiv_id,
+            "title": p.titulo,
+            "family": p.familia,
+            "family_label": ROTULOS_FAMILIA[p.familia],
+            "color": CORES_FAMILIA[p.familia],
+            "independent_impls": p.independent_impls,
+            "total_impls": p.total_impls,
+            "stars_total": p.stars_total,
+            "idade_dias": p.idade_dias,
+            "gain": p.ganho_fator,
+            "gain_axis": p.ganho_eixo,
+            "published": p.publicado,
+            "month": p.publicado[:7],
+            "url": f"https://arxiv.org/abs/{p.arxiv_id}",
+        }
+        for p in d.pontos
+    ]
+
+
 def _secao_fronteira(d: SiteData) -> str:
     lim = load_thresholds()
     botoes = "".join(
@@ -269,9 +303,11 @@ def _secao_fronteira(d: SiteData) -> str:
     return botoes and (
         f'<div class="eixos chart-controls" aria-label="eixo horizontal">'
         f'<span>comparar por</span>{botoes}</div>'
-        f'<div class="chart-scroll" tabindex="0" '
+        f'<div class="chart-scroll" data-plot-panel="frontier" tabindex="0" '
         f'aria-label="gráfico da fronteira; role horizontalmente para explorar">'
-        f'{graficos}</div>{nota}'
+        '<div class="plot-enhancement" data-plot-host="frontier" hidden></div>'
+        f'<div class="plot-fallback">{graficos}</div></div>'
+        f'{_chart_payload("frontier", _point_chart_data(d))}{nota}'
     )
 
 
@@ -294,9 +330,12 @@ def _secao_avanco(d: SiteData) -> str:
         return ""
     com = sum(1 for p in d.pontos if p.ganho_fator is not None)
     return (
-        '<div class="chart-scroll" tabindex="0" '
+        '<div class="chart-scroll" data-plot-panel="gain" tabindex="0" '
         'aria-label="gráfico de ganho alegado; role horizontalmente para explorar">'
-        f'{render_avanco(d.pontos, CORES_FAMILIA)}</div>'
+        '<div class="plot-enhancement" data-plot-host="gain" hidden></div>'
+        f'<div class="plot-fallback">{render_avanco(d.pontos, CORES_FAMILIA)}</div>'
+        '</div>'
+        f'{_chart_payload("gain", _point_chart_data(d))}'
         f'<p class="nota">{com} de {len(d.pontos)} papers declaram ganho '
         f'quantificado. Escala logarítmica; a linha por família só aparece '
         f'com pelo menos cinco papers no trimestre.</p>'
@@ -354,10 +393,24 @@ def _secao_familias(d: SiteData) -> str:
         series[p.familia][p.publicado[:7]] += 1
     grafico = render_pequenos_multiplos(
         series, d.familias_presentes, CORES_FAMILIA, ROTULOS_FAMILIA)
+    months = sorted({month for values in series.values() for month in values})
+    values = [
+        {
+            "family": family,
+            "family_label": ROTULOS_FAMILIA[family],
+            "color": CORES_FAMILIA[family],
+            "month": month,
+            "count": series.get(family, {}).get(month, 0),
+        }
+        for family in d.familias_presentes
+        for month in months
+    ]
     return (
-        '<div class="chart-scroll" tabindex="0" '
+        '<div class="chart-scroll" data-plot-panel="families" tabindex="0" '
         'aria-label="gráfico das famílias no tempo; role horizontalmente para explorar">'
-        f'{grafico}</div>'
+        '<div class="plot-enhancement" data-plot-host="families" hidden></div>'
+        f'<div class="plot-fallback">{grafico}</div></div>'
+        f'{_chart_payload("families", values)}'
         '<p class="nota">Todos os painéis compartilham o mesmo calendário e '
         'a mesma escala vertical; uma coluna vazia significa zero papers.</p>'
     )
@@ -662,7 +715,10 @@ def render_site(
         "</main>"
         "<footer>Gerado pelo próprio pipeline. Sem framework, sem build, "
         "sem requisição externa.</footer>"
-        f"</div><script>{_BACKGROUND_JS}</script><script>{_JS}</script></body></html>"
+        '</div><script src="/ai-radar/assets/d3-7.9.0.min.js"></script>'
+        '<script src="/ai-radar/assets/observable-plot-0.6.17.min.js">'
+        f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
+        f'<script>{_CHART_JS}</script></body></html>'
     )
 
 

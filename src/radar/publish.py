@@ -4,11 +4,17 @@ from __future__ import annotations
 from dataclasses import replace
 from datetime import date
 from pathlib import Path
+from shutil import copyfile
 
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .report import load_report
 from .site import render_about, render_editions, render_report, render_site
 from .store import Store
+
+VENDOR_ASSETS = tuple(
+    Path(__file__).resolve().parents[2] / "assets" / "vendor" / name
+    for name in ("d3-7.9.0.min.js", "observable-plot-0.6.17.min.js")
+)
 
 
 def publish_site(
@@ -25,6 +31,10 @@ def publish_site(
     acervo existente sem acionar o pipeline diario ou gastar outro lote.
     """
     root.mkdir(parents=True, exist_ok=True)
+    assets_root = root / "assets"
+    assets_root.mkdir(parents=True, exist_ok=True)
+    for asset in VENDOR_ASSETS:
+        copyfile(asset, assets_root / asset.name)
     reports_root = reports_root or root.parent / "reports"
     reports = [load_report(path) for path in sorted(reports_root.glob("*.json"))]
     available_reports = {document.arxiv_id for document in reports}

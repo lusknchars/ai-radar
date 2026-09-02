@@ -7,10 +7,12 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from radar.config import (load_kimi_base_url, load_kimi_request_interval,
+from radar.config import (load_formula_model, load_formula_thinking,
+                          load_kimi_base_url, load_kimi_request_interval,
                           load_llm_provider, load_model)
-from radar.fulltext import fetch_full_text
-from radar.judge import KimiJudge
+from radar.formulas import extract_technical_core
+from radar.fulltext import fetch_paper_source
+from radar.judge import KimiFormulaSelector, KimiJudge
 from radar.publish import publish_site
 from radar.report import generate_report, save_report
 from radar.store import Store
@@ -42,16 +44,26 @@ def main(argv: list[str] | None = None) -> int:
     if load_llm_provider() != "kimi":
         raise SystemExit("relatorios sob demanda usam RADAR_LLM_PROVIDER=kimi")
     model = load_model()
+    api_key = os.environ.get("KIMI_API_KEY", "")
+    common = {
+        "request_interval": load_kimi_request_interval(),
+        "base_url": load_kimi_base_url(),
+    }
     judge = KimiJudge(
-        os.environ.get("KIMI_API_KEY", ""), model,
-        request_interval=load_kimi_request_interval(),
-        base_url=load_kimi_base_url(),
+        api_key, model, **common,
+    )
+    selector = KimiFormulaSelector(
+        api_key, load_formula_model(),
+        thinking=load_formula_thinking(), **common,
     )
     try:
-        full_text = fetch_full_text(paper.arxiv_id)
+        source = fetch_paper_source(paper.arxiv_id)
+        technical_core = extract_technical_core(source, paper, selector)
         document = generate_report(
-            paper, full_text, judge, provider="kimi", model=model)
+            paper, source.full_text, judge,
+            technical_core=technical_core, provider="kimi", model=model)
     finally:
+        selector.close()
         judge.close()
 
     save_report(document, args.reports_dir)

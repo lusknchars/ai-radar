@@ -1,6 +1,12 @@
+import json
+
 import pytest
 
-from radar.judge import (LEITOR_BRIEF, Judge, JudgmentSchema, KimiJudge,
+from radar.formulas import (FormulaCandidate, FormulaSelection,
+                            FormulaSelectionItem)
+from radar.judge import (LEITOR_BRIEF, Judge, JudgmentSchema,
+                         KimiFormulaSelector, KimiJudge,
+                         build_formula_selection_prompt,
                          build_kimi_formula_request, build_kimi_request,
                          build_prompt)
 from radar.models import Judgment, Paper
@@ -163,6 +169,59 @@ def test_formula_request_rejects_an_unknown_k2_6_thinking_mode():
             messages=[], model="kimi-k2.6", thinking="adaptive",
             output_type=JudgmentSchema, schema_name="formula_selection",
         )
+
+
+FORMULA = FormulaCandidate(
+    candidate_id="eq-0123456789abcdef", path="main.tex",
+    environment="equation", latex=r"L = \\sum_i e_i",
+    context_before="We propose the following objective.",
+    context_after="It penalizes reconstruction error.",
+)
+
+
+def test_formula_prompt_includes_exact_candidates_and_forbids_authored_latex():
+    prompt = build_formula_selection_prompt(PAPER, [FORMULA])
+    assert FORMULA.candidate_id in prompt
+    payload = json.loads(prompt.split("Candidatos extraidos literalmente:\n", 1)[1])
+    assert payload[0]["latex"] == FORMULA.latex
+    assert PAPER.abstract in prompt
+    assert "Nunca copie, corrija ou gere LaTeX" in prompt
+
+
+def test_k2_6_selector_returns_verified_ids_with_formula_request_shape():
+    calls = []
+    selection = FormulaSelection(
+        kind="formula",
+        selected=[FormulaSelectionItem(
+            candidate_id=FORMULA.candidate_id, role="loss")],
+    )
+
+    def post(*args, **kwargs):
+        calls.append(kwargs["json"])
+        return FakeKimiResponse(_kimi_payload(selection))
+
+    result = KimiFormulaSelector(
+        "secret", post=post, sleep=lambda _: None, request_interval=0,
+    ).select(PAPER, [FORMULA])
+    assert result == selection
+    assert calls[0]["model"] == "kimi-k2.6"
+    assert calls[0]["thinking"] == {"type": "disabled"}
+    assert "reasoning_effort" not in calls[0]
+
+
+def test_k2_6_selector_rejects_an_unknown_returned_id():
+    selection = FormulaSelection(
+        kind="formula",
+        selected=[FormulaSelectionItem(
+            candidate_id="eq-fedcba9876543210", role="loss")],
+    )
+    selector = KimiFormulaSelector(
+        "secret",
+        post=lambda *a, **k: FakeKimiResponse(_kimi_payload(selection)),
+        sleep=lambda _: None, request_interval=0,
+    )
+    with pytest.raises(ValueError, match="desconhecido"):
+        selector.select(PAPER, [FORMULA])
 
 
 def test_kimi_judge_parses_only_the_structured_message_content():

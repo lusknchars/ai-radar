@@ -48,7 +48,7 @@ def test_existing_report_is_republished_without_another_paid_call(tmp_path, monk
 
 def test_unknown_paper_stops_before_downloading(tmp_path, monkeypatch):
     monkeypatch.setattr(gerar_relatorio, "Store", FakeStore)
-    monkeypatch.setattr(gerar_relatorio, "fetch_full_text",
+    monkeypatch.setattr(gerar_relatorio, "fetch_paper_source",
                         lambda *a, **k: pytest.fail("download nao deveria ocorrer"))
     with pytest.raises(SystemExit, match="nao existe no acervo"):
         gerar_relatorio.main([
@@ -65,13 +65,26 @@ def test_new_report_reads_pdf_saves_json_and_republishes(tmp_path, monkeypatch):
         def close(self):
             calls.append(("close",))
 
+    class FakeSelector(FakeJudge):
+        pass
+
+    source = type("Source", (), {"full_text": "text"})()
+    technical_core = object()
+
     document = object()
     monkeypatch.setattr(gerar_relatorio, "Store", FakeStore)
     monkeypatch.setattr(gerar_relatorio, "load_llm_provider", lambda: "kimi")
     monkeypatch.setattr(gerar_relatorio, "load_model", lambda: "kimi-k3")
+    monkeypatch.setattr(gerar_relatorio, "load_formula_model", lambda: "kimi-k2.6")
+    monkeypatch.setattr(gerar_relatorio, "load_formula_thinking", lambda: "disabled")
     monkeypatch.setattr(gerar_relatorio, "KimiJudge", FakeJudge)
-    monkeypatch.setattr(gerar_relatorio, "fetch_full_text",
-                        lambda arxiv_id: calls.append(("pdf", arxiv_id)) or "text")
+    monkeypatch.setattr(gerar_relatorio, "KimiFormulaSelector", FakeSelector)
+    monkeypatch.setattr(gerar_relatorio, "fetch_paper_source",
+                        lambda arxiv_id: calls.append(("source", arxiv_id)) or source)
+    monkeypatch.setattr(
+        gerar_relatorio, "extract_technical_core",
+        lambda *a: calls.append(("core", a)) or technical_core,
+    )
     monkeypatch.setattr(gerar_relatorio, "generate_report",
                         lambda *a, **k: calls.append(("generate", a, k)) or document)
     monkeypatch.setattr(gerar_relatorio, "save_report",
@@ -80,8 +93,10 @@ def test_new_report_reads_pdf_saves_json_and_republishes(tmp_path, monkeypatch):
                         lambda *a, **k: calls.append(("publish", a, k)))
 
     assert gerar_relatorio.main(_args(tmp_path)) == 0
-    assert ("pdf", PAPER.arxiv_id) in calls
+    assert ("source", PAPER.arxiv_id) in calls
     assert any(call[0] == "generate" for call in calls)
+    generate = next(call for call in calls if call[0] == "generate")
+    assert generate[2]["technical_core"] is technical_core
     assert any(call[0] == "save" for call in calls)
     assert any(call[0] == "publish" for call in calls)
-    assert ("close",) in calls
+    assert calls.count(("close",)) == 2

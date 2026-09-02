@@ -5,7 +5,7 @@ reports without manufacturing mathematics for papers whose technical core is
 an algorithm, system design, or evaluation protocol.
 
 **Architecture:** a deep `formulas.py` module exposes one interface,
-`extract_formula_walkthroughs(source, selector)`. Its implementation owns
+`extract_technical_core(source, paper, selector)`. Its implementation owns
 candidate extraction, model selection, source validation, failure states, and
 worked-example verification. `report.py` receives validated walkthroughs;
 `site.py` only renders them.
@@ -14,7 +14,7 @@ worked-example verification. `report.py` receives validated walkthroughs;
 Kimi K2.6 with thinking disabled selects and classifies candidates. Kimi K3 at
 low reasoning effort remains responsible for final report synthesis and
 ambiguous cases. A live canary must prove K2.6 satisfies the required structured
-output before it becomes the default formula selector.
+output before broad report generation is enabled.
 
 **Stack:** Python 3.12, Pydantic, `pytest`, existing Kimi Chat Completions
 adapter. No remote browser asset and no client-side formula dependency.
@@ -147,15 +147,15 @@ low reasoning effort and records that fallback.
 - [x] Reject path traversal and never compile or execute TeX.
 - [x] Extract equation environments with section and paragraph context.
 - [x] Preserve exact source strings and stable candidate identifiers.
-- [ ] Fall back to explicit `extraction_failed` when PDF text damages notation.
+- [x] Fall back to explicit `extraction_failed` when PDF text damages notation.
 
 ### 4. Selection and grounding
 
-- [ ] Give K2.6 candidate identifiers, context, and contribution type.
-- [ ] Require strict structured output containing only selected identifiers.
-- [ ] Verify every identifier and exact LaTeX string after the model call.
-- [ ] Locate the supporting PDF page and excerpt.
-- [ ] Reject the whole candidate rather than repair unsupported output.
+- [x] Give K2.6 candidate identifiers, context, and contribution type.
+- [x] Require strict structured output containing only selected identifiers.
+- [x] Verify every identifier and exact LaTeX string after the model call.
+- [x] Locate the supporting PDF page and excerpt.
+- [x] Reject the whole candidate rather than repair unsupported output.
 
 ### 5. Worked examples
 
