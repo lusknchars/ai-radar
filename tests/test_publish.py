@@ -1,5 +1,6 @@
 from datetime import date
 
+from radar.formulas import TechnicalCore
 from radar.models import Judgment, Paper, Signal
 from radar.publish import publish_site
 from radar.report import DeepReport, ReportDocument, save_report
@@ -14,7 +15,11 @@ def _document() -> ReportDocument:
         source_sha256="a" * 64,
         report=DeepReport(
             one_sentence="Troca atenção densa por blocos.", problem="Memória.",
-            mechanism="Seleciona blocos.", math_to_understand=[], evidence=[],
+            mechanism="Seleciona blocos.",
+            technical_core=TechnicalCore(
+                kind="system", summary="Seleciona blocos antes do kernel.",
+                walkthroughs=[]),
+            evidence=[],
             validation_tier="single_gpu_24gb", evidence_tier="multi_gpu",
             infrastructure_basis="explicit", software_setup=["standard_python"],
             training_required="inference_only", minimum_test=["Compare latência"],

@@ -127,8 +127,8 @@ low reasoning effort and records that fallback.
 
 - [x] Add formula domain types in `formulas.py`.
 - [x] Enforce cross-field invariants with Pydantic validators.
-- [ ] Add schema-version-2 compatibility at the report-loading seam.
-- [ ] Replace the fixed mathematics list with a technical-core result.
+- [x] Add schema-version-2 compatibility at the report-loading seam.
+- [x] Replace the fixed mathematics list with a technical-core result.
 - [x] Test exact, concept-only, not-applicable, and extraction-failed states.
 
 ### 2. Role-specific model routing
@@ -167,12 +167,13 @@ low reasoning effort and records that fallback.
 
 ### 6. Article rendering
 
-- [ ] Rename the section to "Da equação ao teste".
-- [ ] Render formula, plain-language meaning, symbol glossary, derivation,
+- [x] Rename the section to "Da equação ao teste".
+- [x] Render formula, plain-language meaning, symbol glossary, derivation,
   worked example, assumptions, and source link.
-- [ ] Render technical-core alternatives for algorithms, systems, and protocols.
+- [x] Render technical-core alternatives for algorithms, systems, and protocols.
 - [ ] Generate safe MathML at publication time with a raw-LaTeX fallback.
-- [ ] Add mobile overflow and copyable formula text without a CDN.
+- [x] Add mobile overflow for formula text without a CDN.
+- [ ] Add a copy action for raw formula text.
 
 ### 7. Evaluation and rollout
 

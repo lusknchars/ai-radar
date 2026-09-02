@@ -283,16 +283,16 @@ read credentials.
 The on-demand path is separate from `run_day(...)`:
 
 ```text
-paper action --> owner GitHub issue --> report workflow --> official arXiv PDF
-                                                           |
-                                                           v
-                                                     Kimi structured report
-                                                           |
-                                                           v
-                                               reports/<arxiv-id>.json
-                                                           |
-                                                           v
-                                               static report + republished index
+paper action --> owner GitHub issue --> report workflow --> official arXiv source
+                                                           |             |
+                                                           v             v
+                                                verified technical core  K3 narrative
+                                                           \             /
+                                                            v           v
+                                                    reports/<arxiv-id>.json
+                                                             |
+                                                             v
+                                                 static report + republished index
 ```
 
 ### The main seams
@@ -305,7 +305,7 @@ paper action --> owner GitHub issue --> report workflow --> official arXiv PDF
 | citations | `fetch_citations(ids) -> int or None` | OpenAlex adapter | unknown citations remain `None`, never a false zero |
 | archive read model | `Store.site_data(day) -> SiteData` | HTML, SVG, RSS renderers | presentation code never queries SQLite |
 | frontend rendering | `render_site(SiteData, ...) -> str` | publisher and archived editions | `site.py` owns semantic HTML; `site_assets.py` owns the inlined CSS and progressive enhancement |
-| deep report | `generate_report(paper, full_text, judge, provider=..., model=...) -> ReportDocument` | Kimi structured output | evidence infra and minimum-test infra remain separate |
+| deep report | `generate_report(paper, full_text, judge, technical_core=..., provider=..., model=...) -> ReportDocument` | verified formula extraction and K3 narrative | K3 cannot author source formulas; evidence infra and minimum-test infra remain separate |
 | publishing | `publish_site(store, root, day, reports_root=...)` | daily CLI, report workflow | rendering never starts collection or another paid judgment |
 
 The judgment seam is now real rather than hypothetical. Kimi and Anthropic have

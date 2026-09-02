@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from radar.formulas import (FormulaVariable, FormulaWalkthrough, TechnicalCore,
-                            WorkedExample)
+                            WorkedExample, ground_technical_core)
 
 
 def exact_formula(**overrides):
@@ -78,6 +78,38 @@ def test_non_exact_state_cannot_claim_a_worked_example():
                 explanation="Exemplo ilustrativo.",
             ),
         )
+
+
+def test_non_exact_state_cannot_claim_derived_formula_details():
+    with pytest.raises(ValidationError, match="detalhes derivados"):
+        FormulaWalkthrough(
+            status="extraction_failed",
+            plain_language="A notação não foi recuperada.",
+            derivation_steps=["Divida por oito."],
+        )
+
+
+def test_grounding_downgrades_formula_absent_from_its_claimed_page():
+    core = TechnicalCore(
+        kind="formula", summary="Escala o produto.",
+        walkthroughs=[exact_formula()],
+    )
+    grounded = ground_technical_core(
+        core, {4: "This page discusses another equation entirely."})
+    item = grounded.walkthroughs[0]
+    assert item.status == "extraction_failed"
+    assert item.latex == ""
+    assert item.source_page is None
+    assert item.worked_example is None
+
+
+def test_grounding_keeps_formula_when_excerpt_exists_on_the_page():
+    formula = exact_formula()
+    core = TechnicalCore(
+        kind="formula", summary="Escala o produto.", walkthroughs=[formula])
+    grounded = ground_technical_core(
+        core, {4: f"Context before. {formula.source_excerpt} Context after."})
+    assert grounded.walkthroughs == [formula]
 
 
 def test_formula_technical_core_requires_a_walkthrough():

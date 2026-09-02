@@ -6,6 +6,7 @@ nao precisa adivinhar se uma formula existe ou se uma conta veio do paper.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -82,6 +83,11 @@ class FormulaWalkthrough(BaseModel):
             )
         if self.worked_example is not None:
             raise ValueError("worked_example exige uma formula exact")
+        if self.variables or self.derivation_steps or self.assumptions:
+            raise ValueError(
+                f"status={self.status!r} nao pode carregar detalhes derivados "
+                "de uma formula nao verificada"
+            )
         return self
 
 
@@ -105,3 +111,37 @@ class TechnicalCore(BaseModel):
         ):
             raise ValueError("formula exact exige TechnicalCore kind='formula'")
         return self
+
+
+def _normalized_source(text: str) -> str:
+    return " ".join(text.split()).casefold()
+
+
+def ground_technical_core(
+    core: TechnicalCore, pages: Mapping[int, str],
+) -> TechnicalCore:
+    """Remove detalhes exatos cuja citacao nao existe na pagina indicada.
+
+    O modulo de extracao ainda precisa provar a notacao contra a fonte TeX.
+    Esta segunda trava impede que uma citacao de pagina incorreta chegue ao
+    artigo mesmo quando um adaptador anterior falha.
+    """
+    grounded: list[FormulaWalkthrough] = []
+    for item in core.walkthroughs:
+        if item.status != "exact":
+            grounded.append(item)
+            continue
+        excerpt = _normalized_source(item.source_excerpt)
+        page = _normalized_source(pages.get(item.source_page, ""))
+        if excerpt and excerpt in page:
+            grounded.append(item)
+            continue
+        grounded.append(FormulaWalkthrough(
+            status="extraction_failed",
+            role=item.role,
+            plain_language=(
+                "A fórmula candidata não passou na verificação da página do "
+                "PDF e foi removida antes da publicação."
+            ),
+        ))
+    return core.model_copy(update={"walkthroughs": grounded})

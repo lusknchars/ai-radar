@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,9 +10,11 @@ from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from .formulas import (FormulaWalkthrough, TechnicalCore,
+                       ground_technical_core)
 from .models import Paper
 
-REPORT_SCHEMA_VERSION = 2
+REPORT_SCHEMA_VERSION = 3
 _PAGE_MARKER = re.compile(r"^\[AI-RADAR PAGE (\d+)\]$", re.MULTILINE)
 _WHITESPACE = re.compile(r"\s+")
 MIN_SOURCE_EXCERPT_CHARS = 24
@@ -46,7 +49,7 @@ class EvidenceClaim(BaseModel):
         description="Trecho literal e curto copiado da pagina; vazio se nao localizado")
 
 
-class DeepReport(BaseModel):
+class _ReportNarrative(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     one_sentence: str = Field(
@@ -54,8 +57,6 @@ class DeepReport(BaseModel):
     problem: str = Field(description="Qual gargalo ou falha o paper tenta resolver")
     mechanism: str = Field(
         description="Como a tecnica funciona e o que substitui, em linguagem de engenheiro")
-    math_to_understand: list[str] = Field(
-        description="Ate cinco formulas ou conceitos matematicos que merecem leitura")
     evidence: list[EvidenceClaim] = Field(
         description="Ate cinco alegacoes centrais com baseline e condicoes")
     validation_tier: InfrastructureTier = Field(
@@ -75,10 +76,19 @@ class DeepReport(BaseModel):
         description="O que ainda precisa ser lido ou medido antes da adocao")
 
 
+class DeepReport(_ReportNarrative):
+    technical_core: TechnicalCore = Field(
+        description=(
+            "Nucleo tecnico verificado fora da sintese: formula, algoritmo, "
+            "sistema, protocolo, conceito ou ausencia explicita"
+        )
+    )
+
+
 class ReportDocument(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: int = REPORT_SCHEMA_VERSION
+    schema_version: Literal[REPORT_SCHEMA_VERSION] = REPORT_SCHEMA_VERSION
     arxiv_id: str
     title: str
     generated_at: str
@@ -93,9 +103,9 @@ class ReportJudge(Protocol):
     """Porta minima exigida pelo dominio de relatorio."""
 
     def parse_structured(
-        self, *, messages: list[dict], output_type: type[DeepReport],
+        self, *, messages: list[dict], output_type: type[BaseModel],
         schema_name: str, subject: str,
-    ) -> DeepReport: ...
+    ) -> BaseModel: ...
 
 
 SYSTEM_PROMPT = (
@@ -105,7 +115,9 @@ SYSTEM_PROMPT = (
     "Quando o paper nao informa a infraestrutura, use unknown. Diferencie a "
     "infra do experimento original da menor infra para um teste util. Um teste "
     "util tenta invalidar a tecnica no workload do leitor; nao promete reproduzir "
-    "o resultado publicado. Para cada evidencia, informe source_page e copie em "
+    "o resultado publicado. O nucleo tecnico e tratado por outro modulo: nao "
+    "escreva, reconstrua nem resuma formulas. Para cada evidencia, informe "
+    "source_page e copie em "
     "source_excerpt um trecho literal curto daquela pagina. Use os marcadores "
     "[AI-RADAR PAGE N] para localizar a pagina. Nunca parafraseie o trecho. Se "
     "nao localizar apoio textual direto, use source_page null e source_excerpt "
@@ -144,7 +156,9 @@ def _normalized_source(text: str) -> str:
     return _WHITESPACE.sub(" ", text).strip().casefold()
 
 
-def _ground_evidence(report: DeepReport, full_text: str) -> DeepReport:
+def _ground_evidence(
+    report: _ReportNarrative, full_text: str,
+) -> _ReportNarrative:
     """Mantem a citacao somente quando o trecho existe na pagina indicada."""
     pages = _source_pages(full_text)
     grounded: list[EvidenceClaim] = []
@@ -166,18 +180,39 @@ def _ground_evidence(report: DeepReport, full_text: str) -> DeepReport:
 def generate_report(
     paper: Paper, full_text: str, judge: ReportJudge, *, provider: str,
     model: str,
+    technical_core: TechnicalCore | None = None,
     generated_at: str | None = None,
 ) -> ReportDocument:
-    report = judge.parse_structured(
+    narrative = judge.parse_structured(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_report_prompt(paper, full_text)},
         ],
-        output_type=DeepReport,
+        output_type=_ReportNarrative,
         schema_name="deep_paper_report",
         subject=paper.arxiv_id,
     )
-    report = _ground_evidence(report, full_text)
+    if not isinstance(narrative, _ReportNarrative):
+        narrative = _ReportNarrative.model_validate(narrative)
+    narrative = _ground_evidence(narrative, full_text)
+    if technical_core is None:
+        technical_core = TechnicalCore(
+            kind="none",
+            summary="O núcleo técnico ainda não foi extraído com segurança.",
+            walkthroughs=[FormulaWalkthrough(
+                status="extraction_failed",
+                plain_language=(
+                    "A análise narrativa está disponível, mas o extrator não "
+                    "forneceu uma fórmula ou alternativa técnica verificável."
+                ),
+            )],
+        )
+    technical_core = ground_technical_core(
+        technical_core, _source_pages(full_text))
+    report = DeepReport(
+        **narrative.model_dump(),
+        technical_core=technical_core,
+    )
     return ReportDocument(
         arxiv_id=paper.arxiv_id,
         title=paper.title,
@@ -200,7 +235,34 @@ def save_report(document: ReportDocument, root: Path) -> Path:
 
 
 def load_report(path: Path) -> ReportDocument:
-    return ReportDocument.model_validate_json(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    version = payload.get("schema_version")
+    if version == 2:
+        report = payload["report"]
+        notes = report.pop("math_to_understand", [])
+        if notes:
+            core = TechnicalCore(
+                kind="concept",
+                summary=(
+                    "Conceitos preservados de um relatório anterior; a notação "
+                    "não foi verificada contra a fonte."
+                ),
+                walkthroughs=[FormulaWalkthrough(
+                    status="concept_only",
+                    plain_language=str(note),
+                ) for note in notes],
+            )
+        else:
+            core = TechnicalCore(
+                kind="none",
+                summary="O relatório anterior não registrou um núcleo matemático.",
+                walkthroughs=[],
+            )
+        report["technical_core"] = core.model_dump(mode="json")
+        payload["schema_version"] = REPORT_SCHEMA_VERSION
+    elif version != REPORT_SCHEMA_VERSION:
+        raise ValueError(f"schema de relatório não suportado: {version!r}")
+    return ReportDocument.model_validate(payload)
 
 
 def report_ids(root: Path) -> set[str]:

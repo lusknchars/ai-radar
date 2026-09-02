@@ -646,6 +646,8 @@ def test_relatorio_existente_troca_a_acao_por_link_de_leitura():
 
 
 def _report_document() -> ReportDocument:
+    from radar.formulas import (FormulaVariable, FormulaWalkthrough,
+                                TechnicalCore, WorkedExample)
     return ReportDocument(
         arxiv_id="2608.11111", title="Fast <Attention>",
         generated_at="2026-08-31T18:00:00+00:00", provider="kimi",
@@ -655,7 +657,28 @@ def _report_document() -> ReportDocument:
             one_sentence="Troca atenção densa por blocos.",
             problem="Contexto longo ocupa memória.",
             mechanism="Seleciona blocos antes do kernel.",
-            math_to_understand=["O(n log n)"],
+            technical_core=TechnicalCore(
+                kind="formula",
+                summary="A escala estabiliza o produto entre consultas e chaves.",
+                walkthroughs=[FormulaWalkthrough(
+                    status="exact", role="proposed_method",
+                    latex=r"S = QK^T / \sqrt{d}", source_page=6,
+                    source_excerpt=(
+                        "We divide the query key product by the square root of "
+                        "the head dimension."
+                    ),
+                    plain_language=(
+                        "Divide o produto por uma escala que cresce com a dimensão."
+                    ),
+                    variables=[FormulaVariable(
+                        symbol="d", meaning="dimensão da cabeça de atenção")],
+                    derivation_steps=["Calcule QK^T.", "Divida por sqrt(d)."],
+                    worked_example=WorkedExample(
+                        inputs={"d": 64}, expression="sqrt(64)", result="8",
+                        explanation="Com d=64, o divisor ilustrativo é 8."),
+                    assumptions=["Q e K usam a mesma dimensão interna."],
+                )],
+            ),
             evidence=[EvidenceClaim(
                 claim="Reduz memória", result="2x", baseline="atenção densa",
                 conditions="modelo 7B", source_page=7,
@@ -710,6 +733,32 @@ def test_evidencia_liga_direto_para_a_pagina_do_pdf():
     assert "abrir página 7 no PDF" in html
     assert "Peak memory falls by half" in html
     assert "abrir página do paper" in html
+
+
+def test_nucleo_tecnico_mostra_formula_explicacao_e_origem_da_conta():
+    html = render_report(_report_document())
+    assert "Da equação ao teste" in html
+    assert r"S = QK^T / \sqrt{d}" in html
+    assert "dimensão da cabeça de atenção" in html
+    assert "cálculo ilustrativo do AI Radar" in html
+    assert "Com d=64, o divisor ilustrativo é 8." in html
+    assert 'href="https://arxiv.org/pdf/2608.11111#page=6"' in html
+
+
+def test_nucleo_sem_formula_explica_qual_mecanismo_importa():
+    from radar.formulas import TechnicalCore
+    document = _report_document()
+    report = document.report.model_copy(update={
+        "technical_core": TechnicalCore(
+            kind="system",
+            summary="O ganho vem do escalonador, não de uma nova equação.",
+            walkthroughs=[],
+        )
+    })
+    html = render_report(document.model_copy(update={"report": report}))
+    assert "núcleo de sistema" in html
+    assert "O ganho vem do escalonador" in html
+    assert "cálculo ilustrativo" not in html
 
 
 def test_rotulos_publicos_nao_expoem_os_enums_internos(dados):

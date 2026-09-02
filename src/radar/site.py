@@ -14,6 +14,7 @@ from html import escape
 from urllib.parse import urlencode
 
 from .config import load_thresholds
+from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
 from .report import ReportDocument
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
@@ -103,6 +104,29 @@ ROTULOS_TREINO = {
     "fine_tuning": "fine-tuning",
     "train_from_scratch": "treino do zero",
     "unknown": "não informado",
+}
+
+ROTULOS_NUCLEO = {
+    "formula": "núcleo formulado",
+    "algorithm": "núcleo de algoritmo",
+    "system": "núcleo de sistema",
+    "evaluation_protocol": "núcleo de protocolo de avaliação",
+    "concept": "núcleo conceitual",
+    "none": "núcleo ainda não classificado",
+}
+
+ROTULOS_PAPEL_FORMULA = {
+    "baseline": "baseline",
+    "proposed_method": "método proposto",
+    "loss": "função de perda",
+    "metric": "métrica",
+    "complexity": "complexidade",
+}
+
+ROTULOS_ESTADO_FORMULA = {
+    "concept_only": "conceito identificado, notação não verificada",
+    "not_applicable": "o núcleo técnico não depende de uma nova fórmula",
+    "extraction_failed": "notação não extraída com segurança",
 }
 
 ROTULOS_SETUP = {
@@ -727,6 +751,81 @@ def _lista_report(items: list[str], *, ordered: bool = False) -> str:
     return f'<{tag}>' + "".join(f'<li>{escape(item)}</li>' for item in items) + f'</{tag}>'
 
 
+def _render_formula_walkthrough(
+    item: FormulaWalkthrough, source_url: str, index: int,
+) -> str:
+    if item.status != "exact":
+        return (
+            '<article class="formula-state">'
+            f'<span>{escape(ROTULOS_ESTADO_FORMULA[item.status])}</span>'
+            f'<p>{escape(item.plain_language)}</p></article>'
+        )
+
+    role = ROTULOS_PAPEL_FORMULA[item.role]
+    variables = "".join(
+        '<div>'
+        f'<dt><code>{escape(variable.symbol)}</code></dt>'
+        f'<dd>{escape(variable.meaning)}'
+        + (f' <span>{escape(variable.unit)}</span>' if variable.unit else "")
+        + '</dd></div>'
+        for variable in item.variables
+    )
+    glossary = (
+        f'<dl class="formula-variables">{variables}</dl>' if variables else ""
+    )
+    steps = (
+        '<ol class="formula-steps">'
+        + "".join(f'<li>{escape(step)}</li>' for step in item.derivation_steps)
+        + '</ol>'
+        if item.derivation_steps else ""
+    )
+    assumptions = (
+        '<div class="formula-assumptions"><span>hipóteses do exemplo</span>'
+        + _lista_report(item.assumptions) + '</div>'
+        if item.assumptions else ""
+    )
+    worked = ""
+    if item.worked_example is not None:
+        inputs = ", ".join(
+            f"{name}={value:g}" for name, value in item.worked_example.inputs.items()
+        )
+        worked = (
+            '<figure class="worked-example">'
+            '<figcaption>cálculo ilustrativo do AI Radar</figcaption>'
+            + (f'<code>{escape(inputs)}</code>' if inputs else "")
+            + f'<p>{escape(item.worked_example.explanation)}</p>'
+            f'<samp>{escape(item.worked_example.expression)} = '
+            f'{escape(item.worked_example.result)}</samp></figure>'
+        )
+    source = (
+        '<blockquote class="formula-source">'
+        f'{escape(item.source_excerpt)}</blockquote>'
+        f'<a class="evidence-link" href="{escape(source_url)}#page={item.source_page}" '
+        'target="_blank" rel="noopener noreferrer">'
+        f'abrir fórmula na página {item.source_page} do PDF</a>'
+    )
+    return (
+        f'<article class="formula-card" id="formula-{index}">'
+        f'<span class="exhibit-number">fórmula {index:02d} · {escape(role)}</span>'
+        f'<pre class="formula-latex"><code>{escape(item.latex)}</code></pre>'
+        f'<p class="formula-meaning">{escape(item.plain_language)}</p>'
+        f'{glossary}{steps}{worked}{assumptions}{source}</article>'
+    )
+
+
+def _render_technical_core(core: TechnicalCore, source_url: str) -> str:
+    walkthroughs = "".join(
+        _render_formula_walkthrough(item, source_url, index)
+        for index, item in enumerate(core.walkthroughs, 1)
+    )
+    return (
+        '<div class="technical-core-summary">'
+        f'<span>{escape(ROTULOS_NUCLEO[core.kind])}</span>'
+        f'<p>{escape(core.summary)}</p></div>'
+        f'<div class="formula-stack">{walkthroughs}</div>'
+    )
+
+
 def render_report(document: ReportDocument) -> str:
     r = document.report
     evidence_items = []
@@ -770,7 +869,7 @@ def render_report(document: ReportDocument) -> str:
         ("mecanismo", "Mecanismo"),
         ("evidencia", "Evidência"),
         ("teste", "Menor teste"),
-        ("matematica", "Matemática"),
+        ("nucleo", "Da equação ao teste"),
         ("riscos", "Riscos"),
         ("perguntas", "Perguntas abertas"),
     )
@@ -830,9 +929,9 @@ def render_report(document: ReportDocument) -> str:
         '<section id="teste" class="report-section">'
         + section_heading(5, "Menor teste útil", "como tentar refutar")
         + _lista_report(r.minimum_test, ordered=True) + '</section>'
-        '<section id="matematica" class="report-section">'
-        + section_heading(6, "Matemática que merece leitura", "conceitos que destravam o paper")
-        + _lista_report(r.math_to_understand) + '</section>'
+        '<section id="nucleo" class="report-section">'
+        + section_heading(6, "Da equação ao teste", "núcleo técnico verificável")
+        + _render_technical_core(r.technical_core, document.source_url) + '</section>'
         '<section id="riscos" class="report-section">'
         + section_heading(7, "Onde pode quebrar", "riscos do teste e da adoção")
         + _lista_report(r.main_risks) + '</section>'

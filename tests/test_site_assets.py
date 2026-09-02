@@ -52,3 +52,9 @@ def test_relatorio_marca_progresso_sem_buscar_codigo_externo():
     assert "aria-current" in REPORT_SCRIPT
     assert "fetch(" not in REPORT_SCRIPT
     assert "XMLHttpRequest" not in REPORT_SCRIPT
+
+
+def test_formula_longa_rola_no_mobile_sem_quebrar_o_artigo():
+    assert ".formula-latex" in STYLES
+    assert "overflow-x:auto" in STYLES
+    assert ".technical-core-summary{grid-template-columns:1fr" in STYLES
