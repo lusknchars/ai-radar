@@ -115,6 +115,22 @@ def load_model() -> str:
     return os.environ.get("RADAR_MODEL") or default
 
 
+def load_formula_model() -> str:
+    """Modelo estreito para selecionar candidatos, sem rebaixar o relatorio."""
+    return os.environ.get("RADAR_FORMULA_MODEL") or "kimi-k2.6"
+
+
+def load_formula_thinking() -> str:
+    """Modo de raciocinio aceito pelo request nativo do K2.6."""
+    mode = (os.environ.get("RADAR_FORMULA_THINKING") or "disabled").strip().lower()
+    if mode not in {"enabled", "disabled"}:
+        raise ValueError(
+            f"RADAR_FORMULA_THINKING={mode!r} invalido; "
+            "use 'enabled' ou 'disabled'"
+        )
+    return mode
+
+
 def load_llm_provider() -> str:
     """Escolhe o adaptador sem confundir nome de modelo com protocolo.
 

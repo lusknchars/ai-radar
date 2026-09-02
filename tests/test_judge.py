@@ -1,7 +1,8 @@
 import pytest
 
 from radar.judge import (LEITOR_BRIEF, Judge, JudgmentSchema, KimiJudge,
-                         build_kimi_request, build_prompt)
+                         build_kimi_formula_request, build_kimi_request,
+                         build_prompt)
 from radar.models import Judgment, Paper
 
 PAPER = Paper(arxiv_id="2508.11111", title="Fused INT4 Kernels",
@@ -140,6 +141,28 @@ def test_kimi_request_uses_strict_json_schema_and_low_reasoning():
     assert body["response_format"]["json_schema"]["strict"] is True
     assert body["response_format"]["json_schema"]["schema"][
         "additionalProperties"] is False
+
+
+def test_k2_6_formula_request_disables_thinking_without_k3_effort():
+    body = build_kimi_formula_request(
+        messages=[{"role": "user", "content": "Select candidate eq-1."}],
+        model="kimi-k2.6",
+        thinking="disabled",
+        output_type=JudgmentSchema,
+        schema_name="formula_selection",
+    )
+    assert body["model"] == "kimi-k2.6"
+    assert body["thinking"] == {"type": "disabled"}
+    assert "reasoning_effort" not in body
+    assert body["response_format"]["json_schema"]["strict"] is True
+
+
+def test_formula_request_rejects_an_unknown_k2_6_thinking_mode():
+    with pytest.raises(ValueError, match="thinking"):
+        build_kimi_formula_request(
+            messages=[], model="kimi-k2.6", thinking="adaptive",
+            output_type=JudgmentSchema, schema_name="formula_selection",
+        )
 
 
 def test_kimi_judge_parses_only_the_structured_message_content():

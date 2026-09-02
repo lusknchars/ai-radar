@@ -179,6 +179,32 @@ def build_kimi_structured_request(
     }
 
 
+def build_kimi_formula_request(
+    *, messages: list[dict], model: str, thinking: str,
+    output_type: type[BaseModel], schema_name: str,
+) -> dict:
+    """Monta o request estreito do seletor K2.6.
+
+    K3 usa ``reasoning_effort`` e sempre raciocina. K2.6 controla o modo pelo
+    objeto ``thinking``. Manter construtores distintos impede que uma opcao de
+    um protocolo vaze para o outro quando os papeis usam modelos diferentes.
+    """
+    if thinking not in {"enabled", "disabled"}:
+        raise ValueError(
+            f"thinking={thinking!r} invalido para K2.6; "
+            "use 'enabled' ou 'disabled'"
+        )
+    body = build_kimi_structured_request(
+        messages=messages,
+        model=model,
+        output_type=output_type,
+        schema_name=schema_name,
+    )
+    body.pop("reasoning_effort")
+    body["thinking"] = {"type": thinking}
+    return body
+
+
 class KimiJudge:
     """Julgador Kimi K3 com saida estrita e repeticao limitada.
 

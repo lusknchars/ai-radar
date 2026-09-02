@@ -125,17 +125,17 @@ low reasoning effort and records that fallback.
 
 ### 1. Contract and explicit absence
 
-- [ ] Add formula domain types in `formulas.py`.
-- [ ] Enforce cross-field invariants with Pydantic validators.
+- [x] Add formula domain types in `formulas.py`.
+- [x] Enforce cross-field invariants with Pydantic validators.
 - [ ] Add schema-version-2 compatibility at the report-loading seam.
 - [ ] Replace the fixed mathematics list with a technical-core result.
-- [ ] Test exact, concept-only, not-applicable, and extraction-failed states.
+- [x] Test exact, concept-only, not-applicable, and extraction-failed states.
 
 ### 2. Role-specific model routing
 
-- [ ] Add `load_formula_model()` and `load_formula_thinking()`.
-- [ ] Build K2.6 requests without K3-only `reasoning_effort`.
-- [ ] Keep the existing K3 request shape unchanged.
+- [x] Add `load_formula_model()` and `load_formula_thinking()`.
+- [x] Build K2.6 requests without K3-only `reasoning_effort`.
+- [x] Keep the existing K3 request shape unchanged.
 - [ ] Record token usage, selector model, retry count, and fallback reason.
 - [ ] Add a paid, opt-in live canary that never runs in the normal test suite.
 

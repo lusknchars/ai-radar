@@ -200,6 +200,7 @@ error object.
 | Provider | Daily judgment path | Structured output | Operational behavior |
 |---|---|---|---|
 | Kimi K3 | Chat Completions, one paper per request | strict JSON Schema; only final `message.content` is parsed | low reasoning effort, bounded retries, account-tier throttle |
+| Kimi K2.6 | formula candidate selection only | strict JSON Schema over source candidate IDs | thinking disabled by default; cannot author source formulas or final report prose |
 | Anthropic | Message Batches | Pydantic schema through `output_config.format` | results may arrive out of order and are joined by `custom_id` |
 
 The exact provider and model are stored with every judgment. Changing models
@@ -244,6 +245,8 @@ Most of that hour is GitHub, not the LLM. The batch itself takes minutes.
 | `KIMI_API_KEY` | with Kimi | judgment and summary |
 | `ANTHROPIC_API_KEY` | with Anthropic | judgment and summary |
 | `RADAR_MODEL` | no | overrides the provider default model |
+| `RADAR_FORMULA_MODEL` | no | formula selector; defaults to `kimi-k2.6` without changing the final report model |
+| `RADAR_FORMULA_THINKING` | no | `enabled` or `disabled`; defaults to `disabled` |
 | `RADAR_KIMI_BASE_URL` | no | use `https://api.moonshot.cn/v1` for keys created on the China platform |
 | `RADAR_KIMI_REQUEST_INTERVAL` | no | seconds between Kimi calls; defaults to 20 for the initial tier |
 | `TELEGRAM_BOT_TOKEN` | for push | daily digest |
@@ -365,7 +368,7 @@ The composition root also owns failure policy:
 Pre-1.0, and honest about it.
 
 - The scheduled workflow is installed on the default branch, but it cannot complete until the committed database is migrated.
-- GitHub Pages still needs to be enabled with GitHub Actions as its source.
+- GitHub Pages uses GitHub Actions on `main`; the first artifact waits for the database migration below.
 - The committed database is still on the pre-migration schema.
 - The 20-paper Kimi connectivity canary completed; the full archive re-judgment remains pending.
 - RSS, stable daily-edition URLs, the about page, the reading block, the editorial redesign, and the two-scope pipeline are done and tested.

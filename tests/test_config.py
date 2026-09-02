@@ -114,6 +114,34 @@ def test_kimi_is_selected_when_it_is_the_only_configured_provider(monkeypatch):
     assert load_model() == "kimi-k3"
 
 
+def test_formula_selector_defaults_to_kimi_k2_6(monkeypatch):
+    monkeypatch.delenv("RADAR_FORMULA_MODEL", raising=False)
+    from radar.config import load_formula_model
+    assert load_formula_model() == "kimi-k2.6"
+
+
+def test_formula_selector_model_does_not_change_the_report_model(monkeypatch):
+    monkeypatch.setenv("RADAR_LLM_PROVIDER", "kimi")
+    monkeypatch.setenv("RADAR_MODEL", "kimi-k3")
+    monkeypatch.setenv("RADAR_FORMULA_MODEL", "kimi-k2.6")
+    from radar.config import load_formula_model, load_model
+    assert load_formula_model() == "kimi-k2.6"
+    assert load_model() == "kimi-k3"
+
+
+def test_formula_selector_disables_thinking_by_default(monkeypatch):
+    monkeypatch.delenv("RADAR_FORMULA_THINKING", raising=False)
+    from radar.config import load_formula_thinking
+    assert load_formula_thinking() == "disabled"
+
+
+def test_formula_selector_rejects_unknown_thinking_mode(monkeypatch):
+    monkeypatch.setenv("RADAR_FORMULA_THINKING", "sometimes")
+    from radar.config import load_formula_thinking
+    with pytest.raises(ValueError, match="RADAR_FORMULA_THINKING"):
+        load_formula_thinking()
+
+
 def test_an_unknown_llm_provider_is_rejected(monkeypatch):
     monkeypatch.setenv("RADAR_LLM_PROVIDER", "misterioso")
     from radar.config import load_llm_provider
