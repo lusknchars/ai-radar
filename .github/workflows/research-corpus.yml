@@ -1,0 +1,181 @@
+name: research corpus
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Generate one canary first, or resume every missing report'
+        required: true
+        default: canary
+        type: choice
+        options:
+          - canary
+          - remaining-corpus
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  # This workflow, the daily radar, and issue reports write the same site.
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    outputs:
+      site_ready: ${{ steps.site_status.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        env:
+          RADAR_PDF_EXTRACTOR: ${{ vars.RADAR_PDF_EXTRACTOR }}
+        run: |
+          if [ "${RADAR_PDF_EXTRACTOR:-pypdf}" = "docling" ]; then
+            pip install -e '.[documents]'
+          else
+            pip install -e .
+          fi
+
+      - name: Check paid-path credential
+        id: credential
+        env:
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: |
+          if [ -z "$KIMI_API_KEY" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Add KIMI_API_KEY as a repository Actions secret before running this workflow."
+            exit 2
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare fixed 20-paper corpus
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        run: python scripts/prepare_public_research_eval.py --force
+
+      - name: Generate evidence reports
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        env:
+          RUN_MODE: ${{ inputs.mode }}
+          RADAR_LLM_PROVIDER: kimi
+          RADAR_MODEL: ${{ vars.RADAR_MODEL }}
+          RADAR_FORMULA_MODEL: ${{ vars.RADAR_FORMULA_MODEL }}
+          RADAR_FORMULA_THINKING: ${{ vars.RADAR_FORMULA_THINKING }}
+          RADAR_PDF_EXTRACTOR: ${{ vars.RADAR_PDF_EXTRACTOR }}
+          RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
+          RADAR_KIMI_REQUEST_INTERVAL: ${{ vars.RADAR_KIMI_REQUEST_INTERVAL }}
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: |
+          if [ "$RUN_MODE" = "canary" ]; then
+            python scripts/gerar_relatorio.py \
+              --manifest eval/public-research-corpus.json \
+              --db data/public-research-eval.db \
+              --limit 1
+          elif [ "$RUN_MODE" = "remaining-corpus" ]; then
+            python scripts/gerar_relatorio.py \
+              --manifest eval/public-research-corpus.json \
+              --db data/public-research-eval.db
+          else
+            echo "::error::Unsupported run mode: $RUN_MODE"
+            exit 2
+          fi
+
+      - name: Publish every completed report
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        run: |
+          python scripts/publish_public_research.py \
+            --db data/public-research-eval.db \
+            --as-of 2026-09-03
+
+      - name: Record evaluation progress
+        id: evaluation
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        run: |
+          set +e
+          python scripts/evaluate_public_research.py \
+            --allow-incomplete \
+            --markdown eval/results/public-research-latest.md \
+            --json eval/results/public-research-latest.json
+          evaluation_exit=$?
+          set -e
+          cat eval/results/public-research-latest.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$evaluation_exit" -eq 0 ]; then
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit "$evaluation_exit"
+
+      - name: Preserve paid report output
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-report-checkpoint-${{ github.run_id }}
+          path: reports/
+          if-no-files-found: ignore
+
+      - name: Commit completed reports and public pages
+        if: >-
+          ${{ !cancelled() && steps.credential.outputs.ready == 'true' &&
+              steps.evaluation.outputs.valid == 'true' }}
+        env:
+          RUN_MODE: ${{ inputs.mode }}
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A -- site
+          if test -d reports; then git add -A -- reports; fi
+          git diff --staged --quiet || git commit -m "research: $RUN_MODE evidence reports"
+          git push
+
+      - name: Upload evaluation record
+        if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-research-evaluation-${{ github.run_id }}
+          path: eval/results/
+          if-no-files-found: error
+
+      - name: Check public artifact
+        id: site_status
+        if: >-
+          ${{ !cancelled() && steps.credential.outputs.ready == 'true' &&
+              steps.evaluation.outputs.valid == 'true' }}
+        run: |
+          if test -f site/index.html; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+      - name: Package public site
+        if: >-
+          ${{ !cancelled() && steps.credential.outputs.ready == 'true' &&
+              steps.evaluation.outputs.valid == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publish:
+    needs: generate
+    if: ${{ always() && !cancelled() && needs.generate.outputs.site_ready == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -290,4 +290,5 @@ say "Initialize local state, validate configuration, and run the offline test su
 finish
 say "Activate the environment: source .venv/bin/activate"
 say "Run a paid rehearsal when ready: ai-radar --dry-run"
+say "Run one corpus report in Actions: gh workflow run research-corpus.yml -f mode=canary"
 warn "The pipeline rehearsal calls the configured LLM and can spend API credits."

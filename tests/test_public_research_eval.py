@@ -13,6 +13,7 @@ from radar.public_research_eval import (
     evaluate_reader_study,
     load_evaluation_manifest,
     load_reader_study,
+    research_progress_passed,
     render_evaluation_markdown,
 )
 from radar.report import (
@@ -240,6 +241,34 @@ def test_release_gate_requires_reader_results_even_when_reports_pass(tmp_path):
 
     assert evaluation.gate_passed is False
     assert "reader study results are missing" in evaluation.failures
+    assert research_progress_passed(
+        evaluation, minimum_reports=manifest.minimum_reports,
+    ) is True
+
+
+def test_progress_check_allows_only_expected_incomplete_work(tmp_path):
+    manifest = _manifest()
+    reports = tmp_path / "reports"
+    for case in manifest.cases:
+        _write_page(tmp_path, reports, case.arxiv_id)
+
+    evaluation = evaluate_public_research(
+        manifest, tmp_path, reports_root=reports,
+    )
+    partial = evaluation.model_copy(update={
+        "gate_passed": False,
+        "reports_evaluated": 1,
+        "failures": (
+            "only 1 of 20 required reports exist",
+            "reader study results are missing",
+        ),
+    })
+    broken = partial.model_copy(update={
+        "failures": partial.failures + ("1 public pages are invalid",),
+    })
+
+    assert research_progress_passed(partial, minimum_reports=20) is True
+    assert research_progress_passed(broken, minimum_reports=20) is False
 
 
 def test_release_gate_rejects_a_public_claim_changed_after_generation(tmp_path):

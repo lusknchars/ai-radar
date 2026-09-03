@@ -476,6 +476,27 @@ def evaluate_public_research(
     )
 
 
+def research_progress_passed(
+    evaluation: ResearchEvaluation,
+    *, minimum_reports: int,
+) -> bool:
+    """Accept a sound partial corpus without pretending the release gate passed.
+
+    Corpus generation is resumable and may intentionally stop after one paid
+    report. During that stage, only the missing report count and the absent
+    reader study are expected. Invalid pages, weak completed reports, and a
+    failed reader study must still stop automation.
+    """
+    allowed = {"reader study results are missing"}
+    if evaluation.reports_evaluated < minimum_reports:
+        allowed.add(
+            "only "
+            f"{evaluation.reports_evaluated} of {minimum_reports} "
+            "required reports exist"
+        )
+    return set(evaluation.failures) <= allowed
+
+
 def render_evaluation_markdown(evaluation: ResearchEvaluation) -> str:
     result = "PASS" if evaluation.gate_passed else "FAIL"
     lines = [

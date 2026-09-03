@@ -82,6 +82,10 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("relatorios sob demanda usam RADAR_LLM_PROVIDER=kimi")
     model = load_model()
     api_key = os.environ.get("KIMI_API_KEY", "")
+    if not api_key:
+        raise SystemExit(
+            "KIMI_API_KEY is required to generate a new deep report"
+        )
     common = {
         "request_interval": load_kimi_request_interval(),
         "base_url": load_kimi_base_url(),

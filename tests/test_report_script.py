@@ -115,6 +115,7 @@ def test_unknown_paper_stops_before_downloading(tmp_path, monkeypatch):
 
 def test_new_report_reads_pdf_saves_json_and_republishes(tmp_path, monkeypatch):
     calls = []
+    monkeypatch.setenv("KIMI_API_KEY", "test-key")
 
     class FakeJudge:
         def __init__(self, *args, **kwargs):
@@ -175,3 +176,14 @@ def test_new_report_reads_pdf_saves_json_and_republishes(tmp_path, monkeypatch):
     assert any(call[0] == "save" for call in calls)
     assert any(call[0] == "publish" for call in calls)
     assert calls.count(("close",)) == 2
+
+
+def test_new_report_requires_key_before_creating_clients(tmp_path, monkeypatch):
+    monkeypatch.delenv("KIMI_API_KEY", raising=False)
+    monkeypatch.setattr(gerar_relatorio, "Store", FakeStore)
+    monkeypatch.setattr(gerar_relatorio, "load_llm_provider", lambda: "kimi")
+    monkeypatch.setattr(gerar_relatorio, "KimiJudge",
+                        lambda *a, **k: pytest.fail("client must not be created"))
+
+    with pytest.raises(SystemExit, match="KIMI_API_KEY is required"):
+        gerar_relatorio.main(_args(tmp_path))

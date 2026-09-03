@@ -278,6 +278,28 @@ python scripts/gerar_relatorio.py \
   --db data/public-research-eval.db
 ```
 
+The same progression is available as a manual GitHub Actions workflow. The
+`canary` mode generates only the first report. Review its evidence links,
+infrastructure labels, risks, and minimum test before starting the remaining
+19. Each completed report that passes the progress check is committed before
+the next run, so a retry skips work that already consumed credits. A rejected
+report is kept as a workflow artifact for diagnosis and never reaches Pages.
+
+```bash
+gh secret set KIMI_API_KEY
+gh workflow run research-corpus.yml -f mode=canary
+
+# After reviewing the canary on GitHub Pages:
+gh workflow run research-corpus.yml -f mode=remaining-corpus
+```
+
+The workflow reconstructs its evaluation database from tracked fixtures. It
+then publishes every completed report, stores the current evaluation as a run
+artifact, and deploys the static site. The progress check allows only two
+unfinished conditions: fewer than 20 reports and no reader study. A malformed
+page or a completed report without linked evidence, exposure analysis, risk,
+or minimum test still fails the run.
+
 The release gate reads the same public JSON served to readers and compares each
 source-mapped page with its versioned report. It requires 20 valid reports, at
 least one page-linked claim, one exposure finding, one risk, and one minimum
@@ -423,6 +445,10 @@ paper action --> owner GitHub issue --> report workflow --> official arXiv sourc
                     public research release gate
 ```
 
+The fixed-corpus workflow uses the same report generator and publisher. Its
+manual `canary` and `remaining-corpus` modes add cost control and resumability;
+they do not introduce a second report format.
+
 The source reader never extracts an archive to disk and never compiles TeX. It
 keeps only bounded `.tex` files in memory, rejects links and path traversal,
 and gives every display equation a stable candidate ID before any model sees
@@ -516,6 +542,10 @@ Pre-1.0, and honest about it.
 - The same 20 papers now form a reproducible public-research corpus. All 20
   indexed pages pass structural validation; the release gate remains red until
   deep reports and the five-reader study exist.
+- A manual corpus workflow now runs one paid canary before the remaining
+  reports, republishes partial progress, and rejects weak completed reports.
+  The upstream repository still needs its `KIMI_API_KEY` Actions secret before
+  that paid path can run.
 - RSS, permanent paper URLs and JSON, stable daily-edition URLs, the exposure map, the editorial redesign, and the two-scope pipeline are done and tested.
 - The 30-brief archive and owner-only, full-text report path are implemented but remain unproven in the default-branch Actions environment.
 
