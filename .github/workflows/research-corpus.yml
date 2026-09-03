@@ -28,9 +28,9 @@ jobs:
     outputs:
       site_ready: ${{ steps.site_status.outputs.ready }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
@@ -117,7 +117,7 @@ jobs:
 
       - name: Preserve paid report output
         if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: research-report-checkpoint-${{ github.run_id }}
           path: reports/
@@ -139,7 +139,7 @@ jobs:
 
       - name: Upload evaluation record
         if: ${{ !cancelled() && steps.credential.outputs.ready == 'true' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: public-research-evaluation-${{ github.run_id }}
           path: eval/results/
@@ -162,7 +162,7 @@ jobs:
         if: >-
           ${{ !cancelled() && steps.credential.outputs.ready == 'true' &&
               steps.evaluation.outputs.valid == 'true' }}
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
@@ -178,4 +178,4 @@ jobs:
       id-token: write
     steps:
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
