@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2601.12164",
+  "title": "The Language You Ask In: Language-Conditioned Ideological Divergence in LLM Analysis of Contested Political Documents",
+  "summary": "Substitui a avaliação de neutralidade feita em um único idioma por uma sondagem do mesmo conteúdo sob prompts semanticamente equivalentes em idiomas diferentes. Custa apenas a construção de prompts pareados e chamadas extras de API, sem infra adicional, mas exige julgamento humano para classificar as leituras, pois não há gabarito em questão contestada. Quebra se o leitor assumir que o modelo é neutro ou consistente entre idiomas: o paper mostra que ChatGPT 5.2 e Claude Opus 4.5 adotam silenciosamente o enquadramento dominante do idioma do prompt, e o estudo cobre um único documento ucraniano, então a generalização para outros pares de idiomas e temas não está demonstrada.",
+  "rationale": "É um protocolo de avaliação barato e replicável via API que qualquer produto multilíngue com conteúdo sensível deveria rodar, mas o achado vem de um único documento e precisa ser validado no domínio concreto do leitor.",
+  "technique": "Avaliação de viés ideológico condicionado ao idioma do prompt",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-01-17",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2601.12164",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a avaliação de neutralidade feita em um único idioma por uma sondagem do mesmo conteúdo sob prompts semanticamente equivalentes em idiomas diferentes. Custa apenas a construção de prompts pareados e chamadas extras de API, sem infra adicional, mas exige julgamento humano para classificar as leituras, pois não há gabarito em questão contestada. Quebra se o leitor assumir que o modelo é neutro ou consistente entre idiomas: o paper mostra que ChatGPT 5.2 e Claude Opus 4.5 adotam silenciosamente o enquadramento dominante do idioma do prompt, e o estudo cobre um único documento ucraniano, então a generalização para outros pares de idiomas e temas não está demonstrada.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2601.12164",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

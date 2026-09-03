@@ -20,7 +20,7 @@ concurrency:
   # Serializa execucoes: duas em paralelo (por exemplo um dispatch manual
   # durante o run agendado) brigariam no `git push` sobre os mesmos arquivos.
   # NAO e para preservar estado parcial -- o runner e efemero, e nada em
-  # data/radar.db sobrevive a ele ate ser commitado e empurrado. Um run
+  # o banco configurado sobrevive a ele ate ser commitado e empurrado. Um run
   # cancelado nao perde nada duravel.
   cancel-in-progress: false
 
@@ -41,16 +41,17 @@ jobs:
 
       - name: Rodar o radar
         env:
-          RADAR_LLM_PROVIDER:  ${{ vars.RADAR_LLM_PROVIDER }}
+          RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+          RADAR_LLM_PROVIDER:  ${{ vars.RADAR_LLM_PROVIDER || 'kimi' }}
           RADAR_MODEL:         ${{ vars.RADAR_MODEL }}
           RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
           KIMI_API_KEY:        ${{ secrets.KIMI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
-          GH_TOKEN:           ${{ secrets.GH_TOKEN }}
+          GH_TOKEN:           ${{ github.token }}
         run: |
-          python -m radar.cli ${{ inputs.dry_run && '--dry-run' || '' }}
+          python scripts/run_workflow.py ${{ inputs.dry_run && '--dry-run' || '' }}
 
       - name: Commitar estado e digest
         # `always()` de proposito: quando o passo anterior falha, o markdown do

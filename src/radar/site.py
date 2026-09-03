@@ -14,11 +14,14 @@ import re
 from html import escape
 from urllib.parse import urlencode
 
-from .config import load_thresholds
+from .config import DEFAULT_PUBLIC_CONFIG, PublicConfig, load_thresholds
 from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
+from .public_research import ResearchPage
 from .public_labels import (
     AUTHORSHIP_REASON_LABELS, CUT_LABELS, FAMILY_LABELS as ROTULOS_FAMILIA,
+    EDITORIAL_STATUS_LABELS, EVIDENCE_BASIS_LABELS,
+    EXPOSURE_DIMENSION_LABELS,
     FORMULA_ROLE_LABELS as ROTULOS_PAPEL_FORMULA,
     FORMULA_STATUS_LABELS as ROTULOS_ESTADO_FORMULA,
     GAIN_AXIS_LABELS, INFRASTRUCTURE_BASIS_LABELS as ROTULOS_BASE_INFRA,
@@ -81,13 +84,13 @@ _ENQUADRAMENTO = (
 )
 
 
-def _nav(atual: str) -> str:
+def _nav(atual: str, public_config: PublicConfig) -> str:
     itens = (
-        ("acervo", "/ai-radar/#acervo", "research"),
-        ("sinais", "/ai-radar/#sinais", "signals"),
-        ("edicoes", "/ai-radar/edicoes/", "editions"),
-        ("about", "/ai-radar/about.html", "methodology"),
-        ("rss", "/ai-radar/feed.xml", "RSS"),
+        ("acervo", public_config.path("#acervo"), "research"),
+        ("sinais", public_config.path("#sinais"), "signals"),
+        ("edicoes", public_config.path("edicoes/"), "editions"),
+        ("about", public_config.path("about.html"), "methodology"),
+        ("rss", public_config.path("feed.xml"), "RSS"),
     )
     links = "".join(
         f'<a href="{href}"'
@@ -246,7 +249,6 @@ COBERTURA_MINIMA = 0.35
 
 ROTULO_ALEGACAO = "reported by the authors; not independently verified"
 BRIEF_INITIAL_LIMIT = 30
-REPORT_REPOSITORY = "lusknchars/ai-radar"
 
 def _secao_avanco(d: SiteData) -> str:
     """Devolve string vazia quando o dado nao sustenta o grafico.
@@ -381,29 +383,38 @@ def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
         for v in valores)
 
 
-def _report_action(p, has_report: bool) -> str:
+def _report_action(
+    p, has_report: bool, public_config: PublicConfig,
+) -> str:
     if has_report:
         return _sheen_link(
-            "Read deep report", f"/ai-radar/reports/{p.arxiv_id}/",
+            "Read deep report",
+            public_config.path(f"reports/{p.arxiv_id}/"),
             classes="report-action", aria_label=f"Read deep report for {p.titulo}",
         )
+    href = _report_request_href(p.arxiv_id, p.titulo, public_config)
+    return _sheen_link(
+        "Generate deep report", href,
+        classes="report-action secondary",
+        aria_label=f"Generate deep report for {p.titulo}",
+        rel="nofollow",
+    )
+
+
+def _report_request_href(
+    arxiv_id: str, title: str, public_config: PublicConfig,
+) -> str:
     query = urlencode({
-        "title": f"[report] {p.arxiv_id}",
+        "title": f"[report] {arxiv_id}",
         "body": (
-            f"Generate a deep report for arXiv {p.arxiv_id}.\n\n"
-            f"Paper: {p.titulo}\n\n"
+            f"Generate a deep report for arXiv {arxiv_id}.\n\n"
+            f"Paper: {title}\n\n"
             "Requested from the ai-radar archive.\n\n"
             "Credit protection: generation runs only when the repository "
             "owner opens this issue."
         ),
     })
-    return _sheen_link(
-        "Generate deep report",
-        f"https://github.com/{REPORT_REPOSITORY}/issues/new?{query}",
-        classes="report-action secondary",
-        aria_label=f"Generate deep report for {p.titulo}",
-        rel="nofollow",
-    )
+    return f"https://github.com/{public_config.repository}/issues/new?{query}"
 
 
 MESES = {
@@ -418,7 +429,10 @@ def _data_editorial(publicado: str) -> str:
     return f"{MESES.get(mes, mes)} {ano}"
 
 
-def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
+def _linha(
+    p, *, public_config: PublicConfig, has_report: bool = False,
+    initial_hidden: bool = False,
+) -> str:
     cor = CORES_FAMILIA.get(p.familia, "currentColor")
     # `None` e desconhecido e vira travessao. Renderizar 0 aqui reintroduziria,
     # pela camada de apresentacao, o mesmo defeito que o pipeline consertou.
@@ -453,8 +467,7 @@ def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
         f'{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))}</span>'
         f'<span class="tag {escape(p.pratica)}">'
         f'{escape(ROTULOS_PRATICA.get(p.pratica, p.pratica))}</span></div>'
-        f'<h3><a href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
-        'target="_blank" rel="noopener noreferrer">'
+        f'<h3><a href="{escape(public_config.path(f"papers/{p.arxiv_id}/"))}">'
         f'{escape(p.titulo)}</a></h3>'
         f'<p class="paper-brief">{escape(p.resumo)}</p></div>'
         '<div class="evidence-fingerprint" aria-label="Evidence signal">'
@@ -463,14 +476,16 @@ def _linha(p, *, has_report: bool = False, initial_hidden: bool = False) -> str:
         f'<div><b>{p.stars_total}</b><span>stars</span></div>'
         f'<div><b>{cit}</b><span>citations</span></div>'
         f'<div><b>{ganho}</b><span>gain</span></div></div>'
-        f'<div class="entry-action">{_report_action(p, has_report)}'
+        f'<div class="entry-action">{_report_action(p, has_report, public_config)}'
         f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
         'target="_blank" rel="noopener noreferrer">Original paper ↗</a></div>'
         '</article>'
     )
 
 
-def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
+def _secao_tabela(
+    d: SiteData, report_ids: set[str], public_config: PublicConfig,
+) -> str:
     """Indice editorial com filtro por pratica e por familia.
 
     O de PRATICA e o primario: e ele que responde "o que eu adoto", que e a
@@ -480,7 +495,8 @@ def _secao_tabela(d: SiteData, report_ids: set[str]) -> str:
     praticas = sorted({p.pratica for p in d.pontos})
     ordenados = sorted(d.pontos, key=lambda p: -p.score)
     linhas = "".join(
-        _linha(p, has_report=p.arxiv_id in report_ids,
+        _linha(p, public_config=public_config,
+               has_report=p.arxiv_id in report_ids,
                initial_hidden=index >= BRIEF_INITIAL_LIMIT)
         for index, p in enumerate(ordenados)
     )
@@ -606,6 +622,7 @@ def _pendente(qual: str) -> str:
 def render_site(
     dados: SiteData, *, edicao: bool = False,
     report_ids: set[str] | None = None,
+    public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
 ) -> str:
     report_ids = report_ids or set()
     if not dados.pontos:
@@ -616,7 +633,8 @@ def render_site(
                    "The 30 strongest signals lead this edition. Each entry "
                    "provides a decision-ready brief, the original paper, and "
                    "an on-demand deep report when the evidence justifies it.",
-                   _secao_tabela(dados, report_ids), section_id="acervo"),
+                   _secao_tabela(dados, report_ids, public_config),
+                   section_id="acervo"),
             _secao("Research signals",
                    "Three views of the same evidence: adoption against "
                    "attention, publication cadence by research area, and "
@@ -635,13 +653,13 @@ def render_site(
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
-        'href="/ai-radar/feed.xml">'
+        f'href="{escape(public_config.path("feed.xml"))}">'
         f"<title>AI Radar · {'Edition ' if edicao else ''}{escape(dados.dia)}</title>"
         f"<style>{_CSS}</style></head><body>"
         '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">Skip to content</a>'
         '<div class="envelope">'
-        f"{_nav('edicoes' if edicao else 'acervo')}"
+        f"{_nav('edicoes' if edicao else 'acervo', public_config)}"
         f"{_cabecalho(dados, edicao=edicao)}"
         f'<main id="conteudo">'
         f"{_secao_leitura(dados)}"
@@ -650,8 +668,8 @@ def render_site(
         "</main>"
         "<footer>Generated by the AI Radar pipeline. No framework, build step, "
         "or remote asset request.</footer>"
-        '</div><script src="/ai-radar/assets/d3-7.9.0.min.js"></script>'
-        '<script src="/ai-radar/assets/observable-plot-0.6.17.min.js">'
+        f'</div><script src="{escape(public_config.path("assets/d3-7.9.0.min.js"))}"></script>'
+        f'<script src="{escape(public_config.path("assets/observable-plot-0.6.17.min.js"))}">'
         f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
         f'<script>{_CHART_JS}</script></body></html>'
     )
@@ -660,7 +678,11 @@ def render_site(
 def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
                      *, heading: str | None = None, kicker: str | None = None,
                      deck: str | None = None, back_href: str | None = None,
-                     extra_script: str = "") -> str:
+                     extra_script: str = "",
+                     description: str | None = None,
+                     canonical_url: str | None = None,
+                     shared_assets: bool = False,
+                     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG) -> str:
     """Casca das paginas de distribuicao.
 
     Compartilha a tipografia e a navegacao do acervo, mas nao carrega o JS da
@@ -676,29 +698,57 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     main_class = "pagina article-page" if deck else "pagina"
     header_deck = f'<p class="article-deck">{escape(deck)}</p>' if deck else ""
     enhancement = f'<script>{extra_script}</script>' if extra_script else ""
+    if shared_assets:
+        styles = (
+            f'<link rel="stylesheet" '
+            f'href="{escape(public_config.path("assets/site.css"))}">'
+        )
+        background = (
+            f'<script src="{escape(public_config.path("assets/background.js"))}">'
+            '</script>'
+        )
+    else:
+        styles = f'<style>{_CSS}</style>'
+        background = f'<script>{_BACKGROUND_JS}</script>'
+    metadata = ""
+    if description:
+        metadata += (
+            f'<meta name="description" content="{escape(description)}">'
+            f'<meta property="og:title" content="{escape(titulo)}">'
+            f'<meta property="og:description" content="{escape(description)}">'
+            '<meta property="og:type" content="article">'
+        )
+    if canonical_url:
+        metadata += (
+            f'<link rel="canonical" href="{escape(canonical_url)}">'
+            f'<meta property="og:url" content="{escape(canonical_url)}">'
+        )
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
-        'href="/ai-radar/feed.xml">'
-        f'<title>{escape(titulo)}</title><style>{_CSS}</style></head><body>'
+        f'href="{escape(public_config.path("feed.xml"))}">'
+        f'{metadata}<title>{escape(titulo)}</title>{styles}</head><body>'
         '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">Skip to content</a>'
-        f'<div class="envelope">{_nav(atual)}'
+        f'<div class="envelope">{_nav(atual, public_config)}'
         f'<header class="{header_class}">{back}'
         f'<p class="hero-eyebrow">{escape(kicker or f"Updated {dia}")}</p>'
         f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
         '<footer>Generated by the AI Radar pipeline. No framework, build step, '
-        f'or remote asset request.</footer></div><script>{_BACKGROUND_JS}</script>'
+        f'or remote asset request.</footer></div>{background}'
         f'{enhancement}</body></html>'
     )
 
 
-def render_editions(dias: list[str], dia: str) -> str:
+def render_editions(
+    dias: list[str], dia: str,
+    public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
+) -> str:
     if dias:
         itens = "".join(
-            f'<li><a href="/ai-radar/edicoes/{escape(d)}/">'
+            f'<li><a href="{escape(public_config.path(f"edicoes/{d}/"))}">'
             f'<time datetime="{escape(d)}">{escape(d)}</time></a></li>'
             for d in sorted(dias, reverse=True)
         )
@@ -711,10 +761,16 @@ def render_editions(dias: list[str], dia: str) -> str:
         'The main index always reflects the latest observation.</p>'
         f'{lista}</section>'
     )
-    return _pagina_estatica("Editions · AI Radar", "edicoes", dia, corpo)
+    return _pagina_estatica(
+        "Editions · AI Radar", "edicoes", dia, corpo,
+        public_config=public_config,
+    )
 
 
-def render_about(dia: str, *, papers: int, edicoes: int) -> str:
+def render_about(
+    dia: str, *, papers: int, edicoes: int,
+    public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
+) -> str:
     corpo = (
         '<section><h2>What AI Radar measures</h2>'
         '<p>AI Radar tracks research in efficient inference and AI agents, then '
@@ -731,7 +787,240 @@ def render_about(dia: str, *, papers: int, edicoes: int) -> str:
         f'<p>{papers} papers across {edicoes} editions. The database, scoring '
         'code, and exclusion rules are versioned in the same repository.</p></section>'
     )
-    return _pagina_estatica("Methodology · AI Radar", "about", dia, corpo)
+    return _pagina_estatica(
+        "Methodology · AI Radar", "about", dia, corpo,
+        public_config=public_config,
+    )
+
+
+_EDITORIAL_STATUS_NOTES = {
+    "indexed": (
+        "Abstract-level screening only. Risks and infrastructure may not have "
+        "been evaluated."
+    ),
+    "source_mapped": (
+        "The pipeline analyzed the full text and links exact excerpts when "
+        "they were located. No result was reproduced."
+    ),
+    "independently_tested": (
+        "A linked independent test is available. Compare its conditions with "
+        "the original experiment before adopting the method."
+    ),
+}
+
+
+def _research_page_action(
+    page: ResearchPage, public_config: PublicConfig,
+) -> str:
+    if page.report_available:
+        return _sheen_link(
+            "Read deep report",
+            public_config.path(f"reports/{page.arxiv_id}/"),
+            classes="research-primary-action",
+        )
+    return _sheen_link(
+        "Generate deep report",
+        _report_request_href(page.arxiv_id, page.title, public_config),
+        classes="secondary research-primary-action", rel="nofollow",
+    )
+
+
+def _render_research_claims(page: ResearchPage) -> str:
+    if not page.claims:
+        return (
+            '<p class="research-empty">No central claim has been linked to a '
+            'specific source passage yet.</p>'
+        )
+    items = []
+    for index, claim in enumerate(page.claims, 1):
+        facts = "".join((
+            (f'<div><dt>result</dt><dd>{escape(claim.result)}</dd></div>'
+             if claim.result else ""),
+            (f'<div><dt>baseline</dt><dd>{escape(claim.baseline)}</dd></div>'
+             if claim.baseline else ""),
+            (f'<div><dt>conditions</dt><dd>{escape(claim.conditions)}</dd></div>'
+             if claim.conditions else ""),
+        ))
+        detail = f'<dl class="research-claim-facts">{facts}</dl>' if facts else ""
+        if claim.basis == "source_linked":
+            source = (
+                f'<blockquote>{escape(claim.source_excerpt)}</blockquote>'
+                f'<a class="evidence-link" href="{escape(claim.source_url)}'
+                f'#page={claim.source_page}" target="_blank" '
+                'rel="noopener noreferrer">'
+                f'Open supporting passage on PDF page {claim.source_page}</a>'
+            )
+        else:
+            source = (
+                '<p class="research-inference">This is an AI Radar inference. '
+                'It is not pinned to a verified PDF passage.</p>'
+                f'<a class="evidence-link" href="{escape(claim.source_url)}" '
+                'target="_blank" rel="noopener noreferrer">Inspect the source</a>'
+            )
+        items.append(
+            f'<li id="{escape(claim.claim_id)}">'
+            '<div class="research-item-head">'
+            f'<a href="#{escape(claim.claim_id)}">claim {index:02d}</a>'
+            f'<span data-basis="{escape(claim.basis)}">'
+            f'{escape(EVIDENCE_BASIS_LABELS[claim.basis])}</span></div>'
+            f'<h3>{escape(claim.statement)}</h3>{detail}{source}</li>'
+        )
+    return f'<ol class="research-claims">{"".join(items)}</ol>'
+
+
+def _render_exposure_map(page: ResearchPage) -> str:
+    items = "".join(
+        '<article class="exposure-item" '
+        f'id="exposure-{escape(item.dimension)}">'
+        '<div class="research-item-head">'
+        f'<h3>{escape(EXPOSURE_DIMENSION_LABELS[item.dimension])}</h3>'
+        f'<span data-basis="{escape(item.basis)}">'
+        f'{escape(EVIDENCE_BASIS_LABELS[item.basis])}</span></div>'
+        + (
+            f'<p>{escape(item.finding)}</p>'
+            if item.finding else
+            '<p>Not evaluated. This is an open question, not evidence of safety.</p>'
+        )
+        + '</article>'
+        for item in page.exposure_map
+    )
+    return f'<div class="exposure-grid">{items}</div>'
+
+
+def _render_risk_notes(page: ResearchPage) -> str:
+    if not page.risks:
+        return (
+            '<p class="research-empty">No risks have been source-mapped yet. '
+            'This is absence of analysis, not evidence that the method is safe.</p>'
+        )
+    return (
+        '<ol class="research-risks">'
+        + "".join(
+            f'<li id="{escape(risk.risk_id)}"><div class="research-item-head">'
+            f'<a href="#{escape(risk.risk_id)}">risk {index:02d}</a>'
+            f'<span data-basis="{escape(risk.basis)}">'
+            f'{escape(EVIDENCE_BASIS_LABELS[risk.basis])}</span></div>'
+            f'<p>{escape(risk.statement)}</p></li>'
+            for index, risk in enumerate(page.risks, 1)
+        )
+        + '</ol>'
+    )
+
+
+def render_research_page(
+    page: ResearchPage,
+    public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
+) -> str:
+    """Render one permanent, linkable research assessment."""
+    citations = "not resolved" if page.citations is None else str(page.citations)
+    status = EDITORIAL_STATUS_LABELS[page.editorial_status]
+    status_note = _EDITORIAL_STATUS_NOTES[page.editorial_status]
+    technique = (
+        f'<div><dt>technical change</dt><dd>{escape(page.technique)}</dd></div>'
+        if page.technique else ""
+    )
+    rationale = (
+        f'<p class="research-rationale">{escape(page.rationale)}</p>'
+        if page.rationale else ""
+    )
+    minimum_test = (
+        '<ol class="research-test">'
+        + "".join(f'<li>{escape(step)}</li>' for step in page.minimum_test)
+        + '</ol>'
+        if page.minimum_test else
+        '<p class="research-empty">A minimum falsification test has not been '
+        'generated yet. Request the deep report before allocating compute.</p>'
+    )
+    questions = (
+        '<ul class="research-questions">'
+        + "".join(f'<li>{escape(item)}</li>' for item in page.open_questions)
+        + '</ul>'
+        if page.open_questions else
+        '<p class="research-empty">Open questions have not been mapped yet.</p>'
+    )
+    independent_tests = ""
+    if page.independent_tests:
+        items = "".join(
+            '<li><h3>'
+            f'<a href="{escape(item.source_url)}" target="_blank" '
+            f'rel="noopener noreferrer">{escape(item.title)} ↗</a></h3>'
+            f'<p>{escape(item.summary)}</p></li>'
+            for item in page.independent_tests
+        )
+        independent_tests = (
+            '<section id="independent-tests" class="research-section">'
+            '<div class="section-head"><h2>Independent tests</h2>'
+            '<p class="sub">External work evaluated under its own published '
+            'conditions.</p></div>'
+            f'<ul class="research-independent-tests">{items}</ul></section>'
+        )
+    json_href = public_config.path(f"papers/{page.arxiv_id}/index.json")
+    canonical = (
+        f'{public_config.site_url.rstrip("/")}/papers/{page.arxiv_id}/'
+    )
+    corpo = (
+        '<article class="research-page">'
+        '<div class="research-status" aria-label="Editorial status">'
+        f'<div><span>editorial status</span><b>{escape(status)}</b></div>'
+        f'<p>{escape(status_note)}</p></div>'
+        '<div class="research-actions">'
+        f'{_research_page_action(page, public_config)}'
+        f'<a href="{escape(page.source_url)}" target="_blank" '
+        'rel="noopener noreferrer">Open original paper ↗</a>'
+        f'<a href="{escape(json_href)}">Structured JSON</a></div>'
+        '<section id="decision" class="research-section">'
+        '<div class="section-head"><h2>Decision brief</h2>'
+        '<p class="sub">What the technique changes and why it entered the archive.</p>'
+        '</div><dl class="research-decision">'
+        f'<div><dt>recommendation</dt><dd>{escape(ROTULOS_PRATICA.get(page.recommendation, page.recommendation))}</dd></div>'
+        f'<div><dt>research area</dt><dd>{escape(ROTULOS_FAMILIA.get(page.family, page.family))}</dd></div>'
+        f'{technique}'
+        f'<div><dt>published</dt><dd>{escape(page.published)}</dd></div>'
+        f'</dl>{rationale}</section>'
+        '<section id="signal" class="research-section">'
+        '<div class="section-head"><h2>Observed signal</h2>'
+        '<p class="sub">Repository adoption and public attention measured by AI Radar.</p>'
+        '</div><dl class="research-signal">'
+        f'<div><dt>independent implementations</dt><dd>{page.independent_implementations}</dd></div>'
+        f'<div><dt>all implementations</dt><dd>{page.total_implementations}</dd></div>'
+        f'<div><dt>stars</dt><dd>{page.stars}</dd></div>'
+        f'<div><dt>citations</dt><dd>{escape(citations)}</dd></div>'
+        '</dl></section>'
+        '<section id="claims" class="research-section">'
+        '<div class="section-head"><h2>Claims and evidence</h2>'
+        '<p class="sub">A claim is source-linked only when the PDF page and '
+        'matching excerpt are available.</p></div>'
+        f'{_render_research_claims(page)}</section>'
+        '<section id="exposure" class="research-section">'
+        '<div class="section-head"><h2>Exposure map</h2>'
+        '<p class="sub">Unknown areas remain visible. Missing analysis never '
+        'counts as evidence of safety.</p></div>'
+        f'{_render_exposure_map(page)}</section>'
+        '<section id="risks" class="research-section">'
+        '<div class="section-head"><h2>Risk notes</h2>'
+        '<p class="sub">Conditions that may negate the gain or block adoption.</p>'
+        f'</div>{_render_risk_notes(page)}</section>'
+        '<section id="minimum-test" class="research-section">'
+        '<div class="section-head"><h2>Minimum useful test</h2>'
+        '<p class="sub">The smallest test intended to disprove the technique '
+        'on a local workload.</p></div>'
+        f'{minimum_test}</section>'
+        '<section id="open-questions" class="research-section">'
+        '<div class="section-head"><h2>Questions before adoption</h2>'
+        '<p class="sub">What still needs reading or measurement.</p></div>'
+        f'{questions}</section>{independent_tests}'
+        '<p class="research-provenance">Provisional research brief updated '
+        f'{escape(page.as_of)}. AI Radar has not reproduced this experiment.</p>'
+        '</article>'
+    )
+    return _pagina_estatica(
+        f"{page.title} · Research brief · AI Radar", "acervo", page.as_of,
+        corpo, heading=page.title,
+        kicker=f"{status} · arXiv {page.arxiv_id} · updated {page.as_of}",
+        deck=page.summary, back_href=public_config.path("#acervo"),
+        description=page.summary, canonical_url=canonical,
+        shared_assets=True, public_config=public_config,
+    )
 
 
 def _lista_report(items: list[str], *, ordered: bool = False) -> str:
@@ -816,8 +1105,25 @@ def _render_technical_core(core: TechnicalCore, source_url: str) -> str:
     )
 
 
-def render_report(document: ReportDocument) -> str:
+def render_report(
+    document: ReportDocument,
+    public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
+) -> str:
     r = document.report
+    extractor = {
+        "docling": "Docling",
+        "pypdf": "pypdf",
+        "unknown": "legacy parser",
+    }[document.source.extractor]
+    page_count = (
+        f" · {document.source.pages} PDF pages"
+        if document.source.pages is not None else ""
+    )
+    fallback = (
+        f" Docling fell back to pypdf after "
+        f"{document.source.fallback_reason or 'an extraction error'}."
+        if document.source.fallback_from == "docling" else ""
+    )
     evidence_items = []
     for index, item in enumerate(r.evidence, 1):
         if item.source_page is not None and item.source_excerpt:
@@ -886,7 +1192,8 @@ def render_report(document: ReportDocument) -> str:
         '<div class="report-bar">'
         '<div class="report-provenance">'
         f'<span>analysis generated with {escape(document.model)}</span>'
-        f'<b>{escape(document.generated_at[:10])} · 5 min read</b></div>'
+        f'<b>{escape(document.generated_at[:10])} · 5 min read · '
+        f'{escape(extractor)}{escape(page_count)}</b></div>'
         '<div class="report-links">'
         f'<a href="https://arxiv.org/abs/{escape(document.arxiv_id)}" '
         'target="_blank" rel="noopener noreferrer">Open paper page ↗</a>'
@@ -932,6 +1239,7 @@ def render_report(document: ReportDocument) -> str:
         '<p class="report-source">Generated from the '
         f'<a href="{escape(document.source_url)}">arXiv PDF</a> with '
         f'{escape(document.model)} on {escape(document.generated_at[:10])}. '
+        f'The PDF text was extracted with {escape(extractor)}.{escape(fallback)} '
         'AI Radar did not reproduce this experiment.</p>'
         '</article></div>'
         '<a class="report-to-top" data-report-top href="#conteudo" '
@@ -942,6 +1250,6 @@ def render_report(document: ReportDocument) -> str:
         document.generated_at[:10], corpo, heading=document.title,
         kicker=(f"deep report · arXiv {document.arxiv_id} · "
                 f"{document.generated_at[:10]}"),
-        deck=r.one_sentence, back_href="/ai-radar/#acervo",
-        extra_script=_REPORT_JS,
+        deck=r.one_sentence, back_href=public_config.path("#acervo"),
+        extra_script=_REPORT_JS, public_config=public_config,
     )

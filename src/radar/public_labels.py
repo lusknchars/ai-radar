@@ -120,6 +120,29 @@ AUTHORSHIP_REASON_LABELS = {
     "sobrenome": "author surname matched the repository owner",
 }
 
+EDITORIAL_STATUS_LABELS = {
+    "indexed": "abstract indexed",
+    "source_mapped": "source mapped",
+    "independently_tested": "independently tested",
+}
+
+EVIDENCE_BASIS_LABELS = {
+    "source_linked": "source-linked",
+    "inferred": "AI Radar inference",
+    "not_evaluated": "not evaluated",
+}
+
+EXPOSURE_DIMENSION_LABELS = {
+    "quality": "quality",
+    "compute": "compute and memory",
+    "latency": "latency",
+    "operations": "operations",
+    "compatibility": "software compatibility",
+    "security": "security",
+    "data_and_training": "data and training",
+    "reproducibility": "reproducibility",
+}
+
 
 def public_label(labels: dict[str, str], value: str) -> str:
     """Resolve a stable key without leaking underscore-separated labels."""

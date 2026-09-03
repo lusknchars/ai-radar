@@ -88,6 +88,9 @@ class Store:
         self._conn = sqlite3.connect(self.path)
         self._conn.row_factory = sqlite3.Row
 
+    def close(self) -> None:
+        self._conn.close()
+
     def init_schema(self) -> None:
         existing = {
             row["name"] for row in self._conn.execute("PRAGMA table_info(judgments)")
@@ -311,7 +314,7 @@ class Store:
         linhas = self._conn.execute(f"""
             SELECT p.arxiv_id, p.title, p.published, p.scope,
                    j.familia, j.pratica, j.ganho_eixo, j.ganho_fator,
-                   j.ganho_texto, j.resumo,
+                   j.ganho_texto, j.resumo, j.technique, j.porque,
                    s.independent_impls, s.total_impls, s.stars_total,
                    s.citations, s.score
               FROM papers p
@@ -342,6 +345,7 @@ class Store:
                 ganho_texto=r["ganho_texto"], resumo=r["resumo"],
                 publicado=r["published"], score=r["score"] or 0.0,
                 scope=r["scope"],
+                technique=r["technique"], porque=r["porque"],
             ))
         dia = delivered_on or hoje.isoformat()
         destaque = max(pontos, key=lambda p: p.score, default=None)

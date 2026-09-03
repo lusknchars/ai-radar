@@ -2,7 +2,7 @@
 
 [![tests](https://github.com/lusknchars/ai-radar/actions/workflows/tests.yml/badge.svg)](https://github.com/lusknchars/ai-radar/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.12+-3572A5)
-![deps](https://img.shields.io/badge/runtime_deps-4-8957e5)
+![deps](https://img.shields.io/badge/runtime_deps-5-8957e5)
 ![frontend](https://img.shields.io/badge/frontend-no_framework,_no_build-1f6feb)
 ![llm](https://img.shields.io/badge/judge-Kimi_K3_or_Claude-d4a373)
 ![status](https://img.shields.io/badge/status-pre--1.0-db6d28)
@@ -80,18 +80,26 @@ them **claimed by the authors, not verified** everywhere they appear. Kimi K3
 and Claude both write this contract. Neither writes the ranking or editorial
 conclusions.
 
-## Two reading levels
+## Two reading depths, three evidence states
 
 The archive is meant to reduce reading time without pretending that an abstract
 is evidence.
 
 1. A **paper brief** is generated for every shortlisted paper from its title and
-   abstract. It says what the technique replaces, what it costs, and what is
-   likely to break. The archive shows the 30 highest-scoring briefs first; search
-   and filters still inspect the complete archive.
+   abstract. It says what the technique replaces and why it deserves attention.
+   Every brief has a permanent `/papers/<arxiv-id>/` research page and a public
+   `index.json`. The page keeps eight exposure dimensions visible even when the
+   honest answer is "not evaluated." The archive shows the 30 highest-scoring
+   briefs first; search and filters still inspect the complete archive.
 2. A **deep report** is generated only after the reader asks for one. It reads
    the official arXiv PDF, extracts the mechanism, central claims, baselines,
    mathematics worth reading, failure modes, and the smallest useful test.
+
+A research page moves through three explicit states: `indexed` for abstract-level
+screening, `source_mapped` after full-text analysis, and `independently_tested`
+only when an external test can be linked. A finding is `source_linked` only when
+the PDF page and matching excerpt are present. Everything else remains labeled
+as an AI Radar inference or not evaluated.
 
 Every deep report separates two infrastructure questions:
 
@@ -117,6 +125,13 @@ verbatim excerpt. The pipeline checks that the excerpt exists on that exact
 extracted page before publishing a page-level link. A failed check produces an
 explicit “source not located” label instead of a citation that only looks
 precise. Reports also link to the paper's arXiv page and complete PDF.
+
+The report path has two PDF adapters. `pypdf` is the small default. Docling is
+an opt-in deep parser for reading order, tables, and scanned pages. If Docling
+fails, the report falls back to `pypdf` and records that fallback in the
+versioned report JSON and the published page. Reports store separate SHA-256
+hashes for the downloaded PDF and the extracted text. Official arXiv TeX
+remains the source of exact formulas.
 
 ### Visual system
 
@@ -154,15 +169,38 @@ audited server SVG remains visible if JavaScript or either asset is unavailable.
 
 ## Install
 
-Requires Python 3.12+.
+Requires Python 3.12+. For a publishable fork, the shortest path is:
 
 ```bash
-git clone https://github.com/lusknchars/ai-radar
+gh repo fork lusknchars/ai-radar --clone --default-branch-only
 cd ai-radar
-pip install -e ".[dev]"
+./scripts/setup.sh
+source .venv/bin/activate
 ```
 
-Four Python runtime dependencies: `httpx`, `anthropic`, `pydantic`, and `pypdf`.
+The setup wizard creates `.venv`, installs the project, stores the Kimi key in
+an ignored `.env`, creates an ignored `data/local.db`, derives the site URLs
+from your fork, and optionally configures GitHub Actions. Its final check is
+offline and does not spend LLM credits. Re-running it is safe.
+
+If a fork enables Actions before adding an LLM key, the scheduled workflow
+publishes the fixed 20-paper baseline instead of failing or calling a provider.
+Adding the configured provider key switches later runs to the paid daily radar.
+
+For a manual local-only setup:
+
+```bash
+git clone https://github.com/lusknchars/ai-radar.git
+cd ai-radar
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env                 # then add your key and GitHub username
+ai-radar-doctor --init
+```
+
+Five Python runtime dependencies: `httpx`, `anthropic`, `pydantic`, `pypdf`,
+and `python-dotenv`.
 The frontend has no install or build step. Publication copies pinned local
 Observable Plot 0.6.17 and D3 7.9 assets into the site. Charts first render as
 Python SVG so geometry stays inside the tested boundary; Plot then adds linked
@@ -170,20 +208,31 @@ points, tooltips, responsive axes, and faceted views without replacing that
 fallback contract. The library choice is documented in
 [`docs/research/2026-09-02-chart-library.md`](docs/research/2026-09-02-chart-library.md).
 
+Docling is optional because its document models and PyTorch dependencies are
+too heavy for the daily metadata pipeline. Install it only on machines that
+generate deep reports:
+
+```bash
+pip install -e ".[documents]"
+export RADAR_PDF_EXTRACTOR=docling
+```
+
+The optional release is pinned to Docling 2.124.0. Its rollout and promotion
+gate are recorded in
+[`docs/plans/2026-09-02-evidence-pipeline.md`](docs/plans/2026-09-02-evidence-pipeline.md).
+
 ### Run
 
 ```bash
-export RADAR_LLM_PROVIDER=kimi
-export KIMI_API_KEY=...
-# Keys from platform.kimi.com use https://api.moonshot.cn/v1 instead.
-export RADAR_KIMI_BASE_URL=https://api.moonshot.ai/v1
-export GH_TOKEN="$(gh auth token)"     # optional; 10 → 30 req/min
-
-python -m radar.cli --dry-run          # reads real state, writes nothing durable
-python -m radar.cli                    # the real thing
+ai-radar-doctor                 # configuration check; no network
+ai-radar --dry-run              # paid rehearsal; no durable state
+ai-radar                        # paid daily run
 ```
 
-`--dry-run` copies the database to a temp directory, so a rehearsal never consumes the papers of the first real run.
+`--dry-run` calls the configured LLM and can spend credits. It copies the
+database to a temporary directory, so the rehearsal never consumes papers from
+the first real run. Telegram is optional; when both Telegram variables are
+absent, the archive is still generated and the command succeeds.
 
 To generate one deep report locally after the paper is in the migrated archive:
 
@@ -194,6 +243,64 @@ python scripts/gerar_relatorio.py --arxiv-id 2608.11111
 
 This is a paid call. If `reports/2608.11111.json` already exists, the command
 only republishes it and spends no additional credits.
+
+### Validate the public research format
+
+The repository includes a fixed corpus of 20 real papers selected from the Kimi
+canary. It covers inference, agents, and adjacent research that should be
+rejected as out of scope. Ten taxonomy families and all four recommendation
+states are represented.
+
+Prepare a current-schema database from the historical paper metadata and the
+existing Kimi judgments. This step makes no network or model calls:
+
+```bash
+python scripts/verify_public_research_baseline.py
+python scripts/prepare_public_research_eval.py
+```
+
+The first command performs the complete no-cost check inside a temporary
+directory. CI runs it on every push. The second keeps the evaluation database
+locally so the paid report commands can resume across sessions.
+
+Start with one paid report, inspect it, then resume the full corpus. Existing
+report JSON is skipped, so rerunning either command does not pay for completed
+papers again.
+
+```bash
+python scripts/gerar_relatorio.py \
+  --manifest eval/public-research-corpus.json \
+  --db data/public-research-eval.db \
+  --limit 1
+
+python scripts/gerar_relatorio.py \
+  --manifest eval/public-research-corpus.json \
+  --db data/public-research-eval.db
+```
+
+The release gate reads the same public JSON served to readers and compares each
+source-mapped page with its versioned report. It requires 20 valid reports, at
+least one page-linked claim, one exposure finding, one risk, and one minimum
+test per report. It also detects silent family or recommendation changes.
+
+Generate the ignored `eval/reader-study.csv` with the balanced assignment
+script. Each of five target readers receives four abstracts and four research
+pages, with no repeated paper. Across the study, every paper appears once in
+each condition. Record `reject`, `read`, or `test`, elapsed seconds, and the
+reason for the decision. A reviewer then marks whether that reason invented a
+risk or experimental condition.
+
+```bash
+python scripts/prepare_reader_study.py
+python scripts/evaluate_public_research.py \
+  --markdown eval/results/public-research-latest.md \
+  --json eval/results/public-research-latest.json
+```
+
+The gate passes only when the research-page median is at most half the abstract
+baseline and readers invent no risks or conditions. A failing report is useful:
+it names the missing pages and weak report fields instead of hiding them behind
+an aggregate score.
 
 Anthropic remains available by setting `RADAR_LLM_PROVIDER=anthropic` and
 `ANTHROPIC_API_KEY`. With no explicit provider, a lone Kimi key selects Kimi.
@@ -236,34 +343,35 @@ paying for completed papers again. It does not alter `data/radar.db` until all
 1,088 judgments exist. It also keeps a verified backup and restores it if the
 distribution quality gate fails.
 
-### Seed an empty archive
-
-```bash
-python scripts/seed.py inferencia      # ~1090 papers, ~US$4.40, ~1h
-python scripts/seed.py agentes         # ~1425 papers, ~US$5.70, ~1h
-```
-
-Most of that hour is GitHub, not the LLM. The batch itself takes minutes.
-
 ### Secrets
 
 | Variable | Required | Purpose |
 |---|---|---|
+| `RADAR_DB` | no | database path; the wizard uses ignored `data/local.db` locally and `data/radar-state.db` in Actions |
 | `RADAR_LLM_PROVIDER` | no | `kimi` or `anthropic` |
 | `KIMI_API_KEY` | with Kimi | judgment and summary |
 | `ANTHROPIC_API_KEY` | with Anthropic | judgment and summary |
 | `RADAR_MODEL` | no | overrides the provider default model |
 | `RADAR_FORMULA_MODEL` | no | formula selector; defaults to `kimi-k2.6` without changing the final report model |
 | `RADAR_FORMULA_THINKING` | no | `enabled` or `disabled`; defaults to `disabled` |
+| `RADAR_PDF_EXTRACTOR` | no | `pypdf` or optional `docling`; defaults to `pypdf` |
 | `RADAR_KIMI_BASE_URL` | no | use `https://api.moonshot.cn/v1` for keys created on the China platform |
 | `RADAR_KIMI_REQUEST_INTERVAL` | no | seconds between Kimi calls; defaults to 20 for the initial tier |
+| `RADAR_REPOSITORY` | for a fork | GitHub `owner/repository`; Actions derives it automatically |
+| `RADAR_SITE_BASE_PATH` | no | root-relative Pages path, such as `/ai-radar` |
+| `RADAR_SITE_URL` | no | absolute public URL used by RSS |
 | `TELEGRAM_BOT_TOKEN` | for push | daily digest |
 | `TELEGRAM_CHAT_ID` | for push | digest destination |
-| `GH_TOKEN` | no | raises GitHub search limit from 10 to 30 req/min |
+| `GH_TOKEN` | no | raises the local GitHub search limit from 10 to 30 req/min; Actions provides it |
 
-For report generation in GitHub Actions, add `KIMI_API_KEY` as a repository
-secret and optionally set `RADAR_MODEL`, `RADAR_FORMULA_MODEL`,
-`RADAR_FORMULA_THINKING`, and `RADAR_KIMI_BASE_URL` as repository variables.
+The setup wizard can perform the GitHub configuration. Manually, add
+`KIMI_API_KEY` as a repository secret, select **GitHub Actions** as the Pages
+source, and set the repository variable `RADAR_DB=data/radar-state.db` so your
+fork starts with a current, independently persisted archive. You may also set
+`RADAR_MODEL`, `RADAR_FORMULA_MODEL`,
+`RADAR_FORMULA_THINKING`, `RADAR_PDF_EXTRACTOR`, and `RADAR_KIMI_BASE_URL` as
+repository variables. Selecting `docling` makes the report workflow install
+the optional document dependencies before generation.
 `report.yml` fixes the provider to Kimi for this paid path;
 `RADAR_LLM_PROVIDER` continues to select the daily brief adapter.
 
@@ -286,7 +394,10 @@ read credentials.
                                       Store
                                         |
                                         v
-                                     SiteData --> HTML / RSS / daily editions
+                                     SiteData --> public research model
+                                        |              |
+                                        v              v
+                              HTML / RSS / editions   paper HTML + JSON
 ```
 
 The on-demand path is separate from `run_day(...)`:
@@ -294,14 +405,22 @@ The on-demand path is separate from `run_day(...)`:
 ```text
 paper action --> owner GitHub issue --> report workflow --> official arXiv source
                                                            |             |
-                                                           v             v
-                                                verified technical core  K3 narrative
+                                               PDF adapter + TeX          |
+                                                  |        |              |
+                                                  v        v              v
+                                            page evidence  technical core K3 narrative
                                                            \             /
                                                             v           v
                                                     reports/<arxiv-id>.json
                                                              |
-                                                             v
-                                                 static report + republished index
+                                                   +---------+---------+
+                                                   v                   v
+                                             static report     source-mapped page
+                                                                    |
+ corpus manifest + reader study ------------------------------------+
+                              |
+                              v
+                    public research release gate
 ```
 
 The source reader never extracts an archive to disk and never compiles TeX. It
@@ -317,7 +436,10 @@ the content.
 | judgment | `judge_all(papers) -> dict[arxiv_id, Judgment]` | Kimi K3, Anthropic | provider output must satisfy the same closed schema |
 | implementation signal | `fetch_signal(paper, day) -> Signal, repos` | GitHub adapter | author-owned repositories never count as independent |
 | citations | `fetch_citations(ids) -> int or None` | OpenAlex adapter | unknown citations remain `None`, never a false zero |
+| PDF extraction | `extract(pdf_bytes, arxiv_id) -> PdfExtraction` | pypdf, Docling with pypdf fallback | page markers, parser identity, and fallback reason travel together |
 | archive read model | `Store.site_data(day) -> SiteData` | HTML, SVG, RSS renderers | presentation code never queries SQLite |
+| public research | `build_research_page(paper, as_of, report=None) -> ResearchPage` | permanent paper HTML and JSON | source-linked requires a PDF page and excerpt; all eight exposure dimensions remain visible |
+| research evaluation | `evaluate_public_research(manifest, site_root, reader_study_path=...) -> ResearchEvaluation` | fixed 20-paper corpus and reader study | a release cannot pass with missing reports, untraceable claims, empty risk/test fields, or unmeasured reader value |
 | technical-core selection | `extract_technical_core(source, paper, selector) -> TechnicalCore` | K2.6 selector, report action | the model returns only candidate IDs and roles; exact LaTeX is copied from arXiv TeX and grounded to PDF prose |
 | frontend rendering | `render_site(SiteData, ...) -> str` | publisher and archived editions | `site.py` owns semantic HTML and inert chart data; `site_assets.py` owns CSS and Plot enhancement; Python SVG remains the fallback |
 | deep report | `generate_report(paper, full_text, judge, technical_core=..., provider=..., model=...) -> ReportDocument` | verified formula extraction and K3 narrative | K3 cannot author source formulas; evidence infra and minimum-test infra remain separate |
@@ -330,7 +452,8 @@ provider changes local and lets the same pipeline tests exercise both paths
 without network access.
 
 `scoring.py`, `authorship.py`, `render.py`, `svg.py`, `site.py`, `site_assets.py`,
-`leitura.py`, and `site_data.py` import no `httpx`, `anthropic`, or `sqlite3`. A
+`leitura.py`, `site_data.py`, and `public_research.py` import no `httpx`,
+`anthropic`, or `sqlite3`. A
 test enforces that rule. Each page plus two pinned local chart assets form the
 publication artifact. Renderers own semantic HTML and inert data; the asset
 module owns design tokens, responsive CSS, and browser behavior.
@@ -344,16 +467,19 @@ into the background. Display headings use the official Electrolize Regular 400 L
 WOFF2 build from Google Fonts. The publisher embeds it as a data URI, so the
 single-file pages still make no font request. Its OFL 1.1 license is kept in
 `assets/fonts/Electrolize-OFL.txt`.
-PDF retrieval is isolated in `fulltext.py`; report JSON and page rendering stay
-deterministic and offline-testable. Network adapters accept their transports by
-injection, so the test suite runs without secrets.
+PDF retrieval and extraction are isolated in `fulltext.py`. The report JSON
+stores the PDF hash, extracted-text hash, parser, page count, and any parser
+fallback. Page rendering stays deterministic and offline-testable. Network
+adapters accept their transports by injection, so the test suite runs without
+secrets.
 
 ### State and failure handling
 
 `Store` owns SQLite writes and historical queries. Signals are append-only
 because resurrection is a difference between observations, not a mutable field
-on a paper. `data/radar.db` is committed because each GitHub Actions runner is
-ephemeral. Without the committed state, every run would rejudge old papers and
+on a paper. The upstream archive uses `data/radar.db`; configured forks use
+`data/radar-state.db`. The selected Actions database is committed because each
+runner is ephemeral. Without that state, every run would rejudge old papers and
 deliver duplicates.
 
 The composition root also owns failure policy:
@@ -382,11 +508,15 @@ The composition root also owns failure policy:
 
 Pre-1.0, and honest about it.
 
-- The scheduled workflow is installed on the default branch, but it cannot complete until the committed database is migrated.
-- GitHub Pages uses GitHub Actions on `main`; the first artifact waits for the database migration below.
-- The committed database is still on the pre-migration schema.
+- The upstream scheduled workflow cannot complete until its historical database is migrated.
+- GitHub Pages uses GitHub Actions on `main`; a configured fork publishes from its own `data/radar-state.db`.
+- The historical `data/radar.db` committed upstream is still on the pre-migration schema.
+- Fresh clones use an ignored, current-schema `data/local.db`; forks configured by the wizard persist their own current-schema `data/radar-state.db`. Neither needs to migrate or pay to rejudge the original archive.
 - The 20-paper Kimi connectivity canary completed; the full archive re-judgment remains pending.
-- RSS, stable daily-edition URLs, the about page, the reading block, the editorial redesign, and the two-scope pipeline are done and tested.
+- The same 20 papers now form a reproducible public-research corpus. All 20
+  indexed pages pass structural validation; the release gate remains red until
+  deep reports and the five-reader study exist.
+- RSS, permanent paper URLs and JSON, stable daily-edition URLs, the exposure map, the editorial redesign, and the two-scope pipeline are done and tested.
 - The 30-brief archive and owner-only, full-text report path are implemented but remain unproven in the default-branch Actions environment.
 
 The test suite runs offline and completes in about one second on the current development machine.

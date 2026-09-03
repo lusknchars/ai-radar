@@ -34,7 +34,8 @@ RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "src"))
 
 from radar.arxiv import USER_AGENT, ArxivClient                    # noqa: E402
-from radar.config import AGENT_SCOPE, DEFAULT_SCOPE, load_model, load_thresholds  # noqa: E402
+from radar.config import (AGENT_SCOPE, DEFAULT_SCOPE, load_database_path,       # noqa: E402
+                          load_llm_provider, load_model, load_thresholds)
 from radar.github import GitHubClient                              # noqa: E402
 from radar.judge import (collect_batch_results, submit_batch,      # noqa: E402
                          wait_for_batch)
@@ -77,12 +78,20 @@ def main() -> int:
     args = ap.parse_args()
     escopo = ESCOPOS[args.escopo]
 
+    if load_llm_provider() != "anthropic":
+        print(
+            "[seed] historical backfill uses the Anthropic Batch API; "
+            "use the daily pipeline for a Kimi-powered local archive",
+            flush=True,
+        )
+        return 2
+
     t0 = time.monotonic()
     hoje = datetime.now(timezone.utc).date()
     intervalo = 2.5 if os.environ.get("GH_TOKEN") else 6.0
     print(f"[seed] {escopo.name} | {hoje} | intervalo GitHub {intervalo}s", flush=True)
 
-    store = Store(RAIZ / "data" / "radar.db")
+    store = Store(load_database_path())
     store.init_schema()
     github = GitHubClient(fetch=_github_fetch)
     cliente = anthropic.Anthropic()

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.27428",
+  "title": "Stochastic Estimation of Transduced Language Models",
+  "summary": "Substitui poda por limiar com beam summing (que da limitante inferior com erro desconhecido) por amostragem sem reposicao com repesagem, dando estimador nao enviesado de probabilidade de prefixo em modelos de linguagem transduzidos. Custa implementacao de amostragem recursiva com probabilidades de inclusao e pressupoe uma arquitetura TLM, que nao faz parte do stack comum de quem usa LLMs via API ou modelos abertos. Quebra nada para o leitor porque ele nao opera TLMs: a tecnica serve a psicolinguistica computacional, bioinformatica e teoria formal de linguagens, nao ao dia a dia de engenharia de ML com GPUs pequenas.",
+  "rationale": "Aplicacao de nicho (TLMs com transdutores de estados finitos), sem conexao com inferencia, treino ou agentes em infra pequena.",
+  "technique": "Estimador nao enviesado para probabilidades em TLMs",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-08-27",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.27428",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 114,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui poda por limiar com beam summing (que da limitante inferior com erro desconhecido) por amostragem sem reposicao com repesagem, dando estimador nao enviesado de probabilidade de prefixo em modelos de linguagem transduzidos. Custa implementacao de amostragem recursiva com probabilidades de inclusao e pressupoe uma arquitetura TLM, que nao faz parte do stack comum de quem usa LLMs via API ou modelos abertos. Quebra nada para o leitor porque ele nao opera TLMs: a tecnica serve a psicolinguistica computacional, bioinformatica e teoria formal de linguagens, nao ao dia a dia de engenharia de ML com GPUs pequenas.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.27428",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

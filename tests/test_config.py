@@ -142,6 +142,25 @@ def test_formula_selector_rejects_unknown_thinking_mode(monkeypatch):
         load_formula_thinking()
 
 
+def test_pdf_extractor_defaults_to_pypdf(monkeypatch):
+    monkeypatch.delenv("RADAR_PDF_EXTRACTOR", raising=False)
+    from radar.config import load_pdf_extractor
+    assert load_pdf_extractor() == "pypdf"
+
+
+def test_pdf_extractor_accepts_docling(monkeypatch):
+    monkeypatch.setenv("RADAR_PDF_EXTRACTOR", "docling")
+    from radar.config import load_pdf_extractor
+    assert load_pdf_extractor() == "docling"
+
+
+def test_pdf_extractor_rejects_unknown_adapter(monkeypatch):
+    monkeypatch.setenv("RADAR_PDF_EXTRACTOR", "magic")
+    from radar.config import load_pdf_extractor
+    with pytest.raises(ValueError, match="RADAR_PDF_EXTRACTOR"):
+        load_pdf_extractor()
+
+
 def test_an_unknown_llm_provider_is_rejected(monkeypatch):
     monkeypatch.setenv("RADAR_LLM_PROVIDER", "misterioso")
     from radar.config import load_llm_provider
@@ -173,6 +192,38 @@ def test_recheck_limit_is_configurable_unlike_the_push_cap(monkeypatch):
     monkeypatch.setenv("RADAR_RECHECK_LIMIT", "5")
     from radar.config import load_recheck_limit
     assert load_recheck_limit() == 5
+
+
+def test_public_config_is_derived_from_a_github_fork(monkeypatch):
+    monkeypatch.setenv("GITHUB_REPOSITORY", "researcher/my-radar")
+    monkeypatch.delenv("RADAR_REPOSITORY", raising=False)
+    monkeypatch.delenv("RADAR_SITE_BASE_PATH", raising=False)
+    monkeypatch.delenv("RADAR_SITE_URL", raising=False)
+    from radar.config import load_public_config
+    config = load_public_config()
+    assert config.repository == "researcher/my-radar"
+    assert config.base_path == "/my-radar"
+    assert config.site_url == "https://researcher.github.io/my-radar"
+    assert config.path("reports/1234.56789/") == "/my-radar/reports/1234.56789/"
+
+
+def test_public_config_supports_a_root_pages_repository(monkeypatch):
+    monkeypatch.setenv("RADAR_REPOSITORY", "researcher/researcher.github.io")
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.delenv("RADAR_SITE_BASE_PATH", raising=False)
+    monkeypatch.delenv("RADAR_SITE_URL", raising=False)
+    from radar.config import load_public_config
+    config = load_public_config()
+    assert config.base_path == ""
+    assert config.site_url == "https://researcher.github.io"
+    assert config.path("feed.xml") == "/feed.xml"
+
+
+def test_database_path_can_be_kept_out_of_the_committed_archive(monkeypatch, tmp_path):
+    path = tmp_path / "local.db"
+    monkeypatch.setenv("RADAR_DB", str(path))
+    from radar.config import load_database_path
+    assert load_database_path() == path
 
 
 # --- Tarefa 1 do plano do segundo escopo ---

@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from datetime import date
 from xml.sax.saxutils import escape
 
+from .config import DEFAULT_PUBLIC_CONFIG
 from .public_labels import FAMILY_LABELS, PRACTICE_LABELS, public_label
 
 TITULO = "ai-radar"
@@ -80,12 +81,16 @@ def _item(i: ItemFeed) -> str:
     )
 
 
-def render_rss(itens: list[ItemFeed], dia: str) -> str:
+def render_rss(
+    itens: list[ItemFeed], dia: str,
+    site_url: str = DEFAULT_PUBLIC_CONFIG.site_url,
+) -> str:
+    home = site_url.rstrip("/") + "/"
     return (
         '<?xml version="1.0" encoding="UTF-8"?>'
         '<rss version="2.0"><channel>'
         f"<title>{escape(TITULO)}</title>"
-        "<link>https://lusknchars.github.io/ai-radar/</link>"
+        f"<link>{escape(home)}</link>"
         f"<description>{escape(DESCRICAO)}</description>"
         "<language>en</language>"
         f"<lastBuildDate>{rfc822(dia)}</lastBuildDate>"

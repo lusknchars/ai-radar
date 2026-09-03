@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.21223",
+  "title": "Event-triggered Implicit Perturbation for Zeroth-Order Fine-Tuning of Spiking Transformers",
+  "summary": "Substitui a perturbacao explicita de pesos (read-modify-write) por somas de perturbacao geradas por uma unidade de hardware dedicada acoplada ao array IMC, para fine-tuning zeroth-order de redes neurais de spikes. Custa 40-46% a mais de area de silicio e 15-49% a mais de energia por operacao em relacao a variante simplificada, e exige fabricar ou sintetizar hardware custom em CMOS 16nm. Quebra totalmente para o leitor: nao existe caminho de adocao em GPU de 24 GB ou API de terceiros, pois a tecnica e um circuito, nao um algoritmo de software, e aplica-se apenas a SNNs, que ele nao treina.",
+  "rationale": "E projeto de circuito para aceleradores IMC de SNNs; sem software, sem modelo de linguagem convencional e sem GPU envolvidos, nao ha nada adotavel para a infra do leitor.",
+  "technique": "Perturbacao implicita ZO para SNNs em hardware IMC",
+  "family": "treino_eficiente",
+  "recommendation": "nao_aplica",
+  "published": "2026-08-21",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.21223",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 1,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a perturbacao explicita de pesos (read-modify-write) por somas de perturbacao geradas por uma unidade de hardware dedicada acoplada ao array IMC, para fine-tuning zeroth-order de redes neurais de spikes. Custa 40-46% a mais de area de silicio e 15-49% a mais de energia por operacao em relacao a variante simplificada, e exige fabricar ou sintetizar hardware custom em CMOS 16nm. Quebra totalmente para o leitor: nao existe caminho de adocao em GPU de 24 GB ou API de terceiros, pois a tecnica e um circuito, nao um algoritmo de software, e aplica-se apenas a SNNs, que ele nao treina.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.21223",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "IPZO reduz a energia de perturbacao para 0.46x-0.83x da perturbacao explicita de pesos; PGU-XOR iguala acuracia do RNG de software (76.41% vs 76.53% no CIFAR-10) enquanto PGU-Reuse perde 9.56 pontos.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.21223",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

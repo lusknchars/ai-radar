@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.01184",
+  "title": "SAFE-Merge: Data-Free Continual Model Merging with General Knowledge Preservation",
+  "summary": "Substitui metodos de merging de tarefas que so suprimem interferencia entre tarefas, adicionando protecao explicita ao conhecimento pre-treinado via mascara esparsa sensivel a risco e recuperacao low-rank. Custa apenas o calculo do merging offline; o modelo final nao tem custo extra de inferencia. Quebra se o leitor nao trabalha com fusao de modelos especializados (cenario comum em visao/CLIP), e depende de validar no proprio conjunto de modelos, pois os ganhos sao relativos a baselines de merging.",
+  "rationale": "Tecnica leve e sem custo de inferencia, mas so relevante para quem faz merging continuo de modelos, um fluxo ainda de nicho.",
+  "technique": "Merging continuo sem dados com mascara de risco",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-08-02",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.01184",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui metodos de merging de tarefas que so suprimem interferencia entre tarefas, adicionando protecao explicita ao conhecimento pre-treinado via mascara esparsa sensivel a risco e recuperacao low-rank. Custa apenas o calculo do merging offline; o modelo final nao tem custo extra de inferencia. Quebra se o leitor nao trabalha com fusao de modelos especializados (cenario comum em visao/CLIP), e depende de validar no proprio conjunto de modelos, pois os ganhos sao relativos a baselines de merging.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.01184",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Melhor H-score consistente em benchmarks de visao e linguagem; em sequencias longas de tarefas CLIP, melhora substancial o H-score sobre NUFILT com a maior acuracia (sem fator numerico no resumo).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.01184",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

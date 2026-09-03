@@ -7,10 +7,21 @@ requires-python = ">=3.12"
 # `MessageCreateParamsNonStreaming`. Um piso de 0.40 documentava uma
 # compatibilidade que nao existe -- a instalacao passaria e a primeira
 # chamada quebraria.
-dependencies = ["httpx>=0.27", "anthropic>=1.0,<2", "pydantic>=2.7", "pypdf>=5,<7"]
+dependencies = [
+    "httpx>=0.27",
+    "anthropic>=1.0,<2",
+    "pydantic>=2.7",
+    "pypdf>=5,<7",
+    "python-dotenv>=1,<2",
+]
+
+[project.scripts]
+ai-radar = "radar.cli:main"
+ai-radar-doctor = "radar.doctor:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+documents = ["docling==2.124.0"]
 
 [build-system]
 requires = ["setuptools>=68"]

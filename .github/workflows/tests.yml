@@ -23,3 +23,6 @@ jobs:
 
       - name: Rodar a suite
         run: pytest -q
+
+      - name: Verificar baseline publico de 20 papers
+        run: python scripts/verify_public_research_baseline.py

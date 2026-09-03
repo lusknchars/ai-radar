@@ -6,7 +6,17 @@ facil de matar o projeto -- ver spec secao 1, nao-objetivos.
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
+from pathlib import Path
+from urllib.parse import urlsplit
+
+from dotenv import load_dotenv
+
+# Local commands and scripts share one configuration file. Environment
+# variables still win, which keeps GitHub Actions and explicit shell exports
+# predictable.
+load_dotenv(override=False)
 
 # Rigido por decisao de produto, e por isso mora AQUI e em lugar nenhum mais:
 # nao e campo de Thresholds, nao sai do ambiente, nao entra por argumento. O
@@ -18,6 +28,94 @@ PUSH_CAP = 3
 # legibilidade do digest; este e orcamento operacional, que muda com o tamanho
 # do banco e com a presenca de GH_TOKEN.
 RECHECK_LIMIT = 30
+
+DEFAULT_REPOSITORY = "lusknchars/ai-radar"
+_GITHUB_NAME = re.compile(r"^[A-Za-z0-9_.-]+$")
+
+
+@dataclass(frozen=True)
+class PublicConfig:
+    """Public links used by the static archive.
+
+    Keeping these values together prevents a fork from publishing links that
+    still point to the original repository.
+    """
+
+    repository: str
+    base_path: str
+    site_url: str
+
+    def __post_init__(self) -> None:
+        parts = self.repository.split("/")
+        if len(parts) != 2 or not all(_GITHUB_NAME.fullmatch(part) for part in parts):
+            raise ValueError(
+                "RADAR_REPOSITORY must use the GitHub owner/repository format"
+            )
+        if self.base_path and (
+            not self.base_path.startswith("/") or self.base_path.endswith("/")
+        ):
+            raise ValueError(
+                "RADAR_SITE_BASE_PATH must be empty or look like /repository"
+            )
+        parsed = urlsplit(self.site_url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError("RADAR_SITE_URL must be an absolute HTTP(S) URL")
+
+    def path(self, resource: str = "") -> str:
+        """Return a root-relative URL below the configured Pages base path."""
+        resource = resource.lstrip("/")
+        if not resource:
+            return f"{self.base_path}/" if self.base_path else "/"
+        prefix = self.base_path or ""
+        return f"{prefix}/{resource}"
+
+
+DEFAULT_PUBLIC_CONFIG = PublicConfig(
+    repository=DEFAULT_REPOSITORY,
+    base_path="/ai-radar",
+    site_url="https://lusknchars.github.io/ai-radar",
+)
+
+
+def _normalise_base_path(value: str) -> str:
+    value = value.strip()
+    if value in {"", "/"}:
+        return ""
+    return "/" + value.strip("/")
+
+
+def load_public_config() -> PublicConfig:
+    """Load URLs for this fork, deriving conventional GitHub Pages defaults."""
+    repository = (
+        os.environ.get("RADAR_REPOSITORY")
+        or os.environ.get("GITHUB_REPOSITORY")
+        or DEFAULT_REPOSITORY
+    ).strip()
+    parts = repository.split("/")
+    if len(parts) != 2 or not all(_GITHUB_NAME.fullmatch(part) for part in parts):
+        raise ValueError(
+            "RADAR_REPOSITORY must use the GitHub owner/repository format"
+        )
+    owner, name = parts
+    default_base = "" if name.lower() == f"{owner.lower()}.github.io" else f"/{name}"
+    configured_base = os.environ.get("RADAR_SITE_BASE_PATH")
+    base_path = _normalise_base_path(
+        default_base if configured_base is None else configured_base
+    )
+    site_url = (
+        os.environ.get("RADAR_SITE_URL")
+        or f"https://{owner}.github.io{base_path}"
+    ).strip().rstrip("/")
+    return PublicConfig(
+        repository=repository,
+        base_path=base_path,
+        site_url=site_url,
+    )
+
+
+def load_database_path() -> Path:
+    """Database selected for local commands; Actions keeps the legacy default."""
+    return Path(os.environ.get("RADAR_DB") or "data/radar.db")
 
 
 @dataclass(frozen=True)
@@ -129,6 +227,16 @@ def load_formula_thinking() -> str:
             "use 'enabled' ou 'disabled'"
         )
     return mode
+
+
+def load_pdf_extractor() -> str:
+    """Parser do relatorio profundo; o radar diario nunca baixa o PDF."""
+    name = (os.environ.get("RADAR_PDF_EXTRACTOR") or "pypdf").strip().lower()
+    if name not in {"pypdf", "docling"}:
+        raise ValueError(
+            f"RADAR_PDF_EXTRACTOR={name!r} invalido; use 'pypdf' ou 'docling'"
+        )
+    return name
 
 
 def load_llm_provider() -> str:

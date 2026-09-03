@@ -1,9 +1,12 @@
 import json
 
+import pytest
+
 from radar.formulas import FormulaWalkthrough, TechnicalCore
 from radar.models import Paper
 from radar.report import (DeepReport, EvidenceClaim, generate_report,
-                          load_report, report_ids, save_report)
+                          load_report, report_ids, save_report,
+                          SourceProvenance)
 
 PAPER = Paper(arxiv_id="2608.11111", title="Fast Attention", abstract="A",
               authors=["A"], categories=["cs.LG"], published="2026-08-01")
@@ -99,7 +102,9 @@ def test_report_document_round_trips_as_versioned_json(tmp_path):
     path = save_report(document, tmp_path)
     assert load_report(path) == document
     assert report_ids(tmp_path) == {PAPER.arxiv_id}
-    assert document.schema_version == 3
+    assert document.schema_version == 4
+    assert document.source.extractor == "unknown"
+    assert document.source.pdf_sha256 is None
 
 
 def test_schema_v2_report_loads_as_unverified_concept_notes(tmp_path):
@@ -108,6 +113,7 @@ def test_schema_v2_report_loads_as_unverified_concept_notes(tmp_path):
         generated_at="2026-08-31T18:00:00+00:00",
     ).model_dump()
     payload["schema_version"] = 2
+    payload["source_sha256"] = payload.pop("source")["extracted_text_sha256"]
     payload["report"].pop("technical_core")
     payload["report"]["math_to_understand"] = [
         "complexidade O(n log n)", "erro de quantização por bloco",
@@ -117,12 +123,65 @@ def test_schema_v2_report_loads_as_unverified_concept_notes(tmp_path):
 
     document = load_report(path)
 
-    assert document.schema_version == 3
+    assert document.schema_version == 4
     assert document.report.technical_core.kind == "concept"
     assert [item.status for item in document.report.technical_core.walkthroughs] == [
         "concept_only", "concept_only",
     ]
     assert all(not item.latex for item in document.report.technical_core.walkthroughs)
+
+
+def test_schema_v3_report_preserves_its_extracted_text_hash(tmp_path):
+    document = generate_report(
+        PAPER, "FULL PAPER TEXT", FakeKimi(), provider="kimi", model="kimi-k3",
+    )
+    payload = document.model_dump()
+    text_hash = payload.pop("source")["extracted_text_sha256"]
+    payload["source_sha256"] = text_hash
+    payload["schema_version"] = 3
+    path = tmp_path / "2608.11111.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    loaded = load_report(path)
+
+    assert loaded.schema_version == 4
+    assert loaded.source.extracted_text_sha256 == text_hash
+    assert loaded.source.pdf_sha256 is None
+    assert loaded.source.extractor == "unknown"
+
+
+def test_report_rejects_provenance_for_different_extracted_text():
+    provenance = SourceProvenance(
+        pdf_sha256="a" * 64,
+        extracted_text_sha256="b" * 64,
+        extractor="docling",
+        pages=2,
+    )
+    with pytest.raises(ValueError, match="does not match"):
+        generate_report(
+            PAPER, "FULL PAPER TEXT", FakeKimi(), provider="kimi", model="kimi-k3",
+            source_provenance=provenance,
+        )
+
+
+def test_source_provenance_rejects_a_claimed_parser_without_pdf_identity():
+    with pytest.raises(ValueError, match="PDF hash"):
+        SourceProvenance(
+            extracted_text_sha256="b" * 64,
+            extractor="docling",
+            pages=2,
+        )
+
+
+def test_source_provenance_rejects_an_unexplained_fallback():
+    with pytest.raises(ValueError, match="fallback_reason"):
+        SourceProvenance(
+            pdf_sha256="a" * 64,
+            extracted_text_sha256="b" * 64,
+            extractor="pypdf",
+            pages=2,
+            fallback_from="docling",
+        )
 
 
 def test_report_keeps_a_source_link_only_when_excerpt_matches_the_page():

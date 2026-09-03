@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2603.16925",
+  "title": "Gaussian Process Regression-based Knowledge Distillation Framework for Simultaneous Prediction of Physical and Mechanical Properties of Epoxy Polymers",
+  "summary": "Substitui pipelines de ML separados por propriedade (GPR individual ou simulação molecular) por um estudante neural único destilado de professores GPR, usando descritores RDKit. Custa treinar um professor GPR por propriedade mais o estudante, e exige dataset experimental curado de literatura (9 resinas, 40 endurecedores) que o leitor provavelmente não tem. Quebra fora do domínio: a técnica é específica de ciência de materiais, os descritores são moleculares (SMILES/RDKit) e não há ganho transferível para workloads de LLM ou inferência.",
+  "rationale": "É aplicação de destilação em ciência de materiais, sem relação com o dia a dia de engenharia de AI/ML com LLMs ou serving.",
+  "technique": "GPR knowledge distillation para propriedades de polímeros",
+  "family": "destilacao",
+  "recommendation": "nao_aplica",
+  "published": "2026-03-12",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2603.16925",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui pipelines de ML separados por propriedade (GPR individual ou simulação molecular) por um estudante neural único destilado de professores GPR, usando descritores RDKit. Custa treinar um professor GPR por propriedade mais o estudante, e exige dataset experimental curado de literatura (9 resinas, 40 endurecedores) que o leitor provavelmente não tem. Quebra fora do domínio: a técnica é específica de ciência de materiais, os descritores são moleculares (SMILES/RDKit) e não há ganho transferível para workloads de LLM ou inferência.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2603.16925",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Acurácia superior a modelos de ML convencionais, sem números no resumo; predição multi-propriedade simultânea melhora acurácia por compartilhamento de informação.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2603.16925",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

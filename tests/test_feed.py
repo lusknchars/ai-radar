@@ -67,3 +67,10 @@ def test_o_canal_declara_o_que_o_radar_e():
     ch = ET.fromstring(render_rss([], dia="2026-08-30")).find("channel")
     assert "independent GitHub implementations" in ch.find("description").text
     assert ch.find("language").text == "en"
+
+
+def test_feed_home_can_follow_a_fork():
+    channel = ET.fromstring(render_rss(
+        [], dia="2026-08-30", site_url="https://reader.github.io/research",
+    )).find("channel")
+    assert channel.find("link").text == "https://reader.github.io/research/"

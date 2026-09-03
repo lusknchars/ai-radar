@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2605.13790",
+  "title": "Di-BiLPS: Denoising induced Bidirectional Latent-PDE-Solver under Sparse Observations",
+  "summary": "Substitui solvers numericos classicos e abordagens neurais de PDE quando ha menos de 3% de observacoes, usando VAE mais difusao latente. O custo e treinar um framework completo (VAE, modulo de difusao, contrastivo) com dados de simulacao do dominio especifico. Para quem nao trabalha com simulacao fisica ou PDEs, nada disso se aplica; e exige dados e validacao de dominio que o leitor nao tem.",
+  "rationale": "E um metodo de modelagem cientifica (PDEs, observacoes esparsas, super-resolucao de campos fisicos), fora do escopo de engenharia de AI/ML com LLMs ou APIs do dia a dia do leitor.",
+  "technique": "PDE-solver neural em espaco latente com difusao",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-05-13",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2605.13790",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 45,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui solvers numericos classicos e abordagens neurais de PDE quando ha menos de 3% de observacoes, usando VAE mais difusao latente. O custo e treinar um framework completo (VAE, modulo de difusao, contrastivo) com dados de simulacao do dominio especifico. Para quem nao trabalha com simulacao fisica ou PDEs, nada disso se aplica; e exige dados e validacao de dominio que o leitor nao tem.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2605.13790",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "SOTA sob observacoes extremamente esparsas (ate 3%), com custo computacional reduzido, sem numero absoluto",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2605.13790",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

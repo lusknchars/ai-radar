@@ -8,13 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Protocol
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .formulas import (FormulaWalkthrough, TechnicalCore,
                        ground_technical_core)
 from .models import Paper
 
-REPORT_SCHEMA_VERSION = 3
+REPORT_SCHEMA_VERSION = 4
 _PAGE_MARKER = re.compile(r"^\[AI-RADAR PAGE (\d+)\]$", re.MULTILINE)
 _WHITESPACE = re.compile(r"\s+")
 MIN_SOURCE_EXCERPT_CHARS = 24
@@ -31,6 +31,35 @@ SoftwareSetup = Literal[
     "standard_python", "containerized", "custom_runtime", "custom_cuda_kernel",
     "distributed_stack", "specialized_simulator", "unknown",
 ]
+PdfExtractionMethod = Literal["pypdf", "docling", "unknown"]
+
+
+class SourceProvenance(BaseModel):
+    """Hashes e parser usados para que um relatorio possa ser auditado."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    pdf_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    extracted_text_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    extractor: PdfExtractionMethod = "unknown"
+    pages: int | None = Field(default=None, ge=1)
+    fallback_from: PdfExtractionMethod | None = None
+    fallback_reason: str | None = Field(default=None, max_length=80)
+
+    @model_validator(mode="after")
+    def validate_provenance(self) -> SourceProvenance:
+        if self.extractor != "unknown" and (
+                self.pdf_sha256 is None or self.pages is None):
+            raise ValueError(
+                "a known PDF extractor requires the PDF hash and page count")
+        if self.fallback_from is None and self.fallback_reason is not None:
+            raise ValueError("fallback_reason requires fallback_from")
+        if self.fallback_from is not None:
+            if self.fallback_from == self.extractor:
+                raise ValueError("fallback extractor must differ from the parser used")
+            if self.fallback_reason is None:
+                raise ValueError("fallback_from requires fallback_reason")
+        return self
 
 
 class EvidenceClaim(BaseModel):
@@ -95,7 +124,7 @@ class ReportDocument(BaseModel):
     provider: str
     model: str
     source_url: str
-    source_sha256: str
+    source: SourceProvenance
     report: DeepReport
 
 
@@ -183,6 +212,7 @@ def generate_report(
     paper: Paper, full_text: str, judge: ReportJudge, *, provider: str,
     model: str,
     technical_core: TechnicalCore | None = None,
+    source_provenance: SourceProvenance | None = None,
     generated_at: str | None = None,
 ) -> ReportDocument:
     narrative = judge.parse_structured(
@@ -215,6 +245,14 @@ def generate_report(
         **narrative.model_dump(),
         technical_core=technical_core,
     )
+    text_sha256 = hashlib.sha256(full_text.encode("utf-8")).hexdigest()
+    if source_provenance is None:
+        source_provenance = SourceProvenance(
+            extracted_text_sha256=text_sha256,
+            pages=len(_source_pages(full_text)) or None,
+        )
+    elif source_provenance.extracted_text_sha256 != text_sha256:
+        raise ValueError("source provenance does not match extracted report text")
     return ReportDocument(
         arxiv_id=paper.arxiv_id,
         title=paper.title,
@@ -222,7 +260,7 @@ def generate_report(
         provider=provider,
         model=model,
         source_url=f"https://arxiv.org/pdf/{paper.arxiv_id}",
-        source_sha256=hashlib.sha256(full_text.encode("utf-8")).hexdigest(),
+        source=source_provenance,
         report=report,
     )
 
@@ -261,6 +299,18 @@ def load_report(path: Path) -> ReportDocument:
                 walkthroughs=[],
             )
         report["technical_core"] = core.model_dump(mode="json")
+    if version in {2, 3}:
+        text_sha256 = payload.pop("source_sha256", None)
+        if not text_sha256:
+            raise ValueError("legacy report has no extracted-text hash")
+        payload["source"] = {
+            "pdf_sha256": None,
+            "extracted_text_sha256": text_sha256,
+            "extractor": "unknown",
+            "pages": None,
+            "fallback_from": None,
+            "fallback_reason": None,
+        }
         payload["schema_version"] = REPORT_SCHEMA_VERSION
     elif version != REPORT_SCHEMA_VERSION:
         raise ValueError(f"unsupported report schema: {version!r}")

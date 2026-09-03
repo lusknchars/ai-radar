@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2604.23146",
+  "title": "Maximizing Memory-Level Parallelism via Integrated Stochastic Logic-in-Memory Architectures",
+  "summary": "Substitui a separacao memoria-processador da arquitetura von Neumann por unidades aritmeticas estocasticas integradas em arrays de memoria MTJ. Custa hardware novo e inexistente no mercado, precisao limitada por bit-streams probabilisticos, e um pipeline de compilacao que nao existe para ML convencional. Quebra tudo para o leitor: nao roda em GPU nem em API, exige fabricacao de dispositivo magnetico.",
+  "rationale": "E pesquisa de dispositivo de hardware, sem relacao com software de inferencia que o leitor possa adotar ou testar.",
+  "technique": "Computacao estocastica em memoria MTJ logic-in-memory",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-04-25",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2604.23146",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a separacao memoria-processador da arquitetura von Neumann por unidades aritmeticas estocasticas integradas em arrays de memoria MTJ. Custa hardware novo e inexistente no mercado, precisao limitada por bit-streams probabilisticos, e um pipeline de compilacao que nao existe para ML convencional. Quebra tudo para o leitor: nao roda em GPU nem em API, exige fabricacao de dispositivo magnetico.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2604.23146",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "minimum_reports": 20,
+  "minimum_readers": 5,
+  "required_tracks": ["inference", "agents", "adjacent"],
+  "cases": [
+    {"arxiv_id": "2304.09131", "track": "adjacent", "expected_family": "outro", "expected_recommendation": "nao_aplica"},
+    {"arxiv_id": "2509.00579", "track": "inference", "expected_family": "cache_kv", "expected_recommendation": "testar"},
+    {"arxiv_id": "2601.12164", "track": "agents", "expected_family": "avaliacao_de_agente", "expected_recommendation": "testar"},
+    {"arxiv_id": "2603.16925", "track": "adjacent", "expected_family": "destilacao", "expected_recommendation": "nao_aplica"},
+    {"arxiv_id": "2604.23146", "track": "adjacent", "expected_family": "outro", "expected_recommendation": "nao_aplica"},
+    {"arxiv_id": "2605.13790", "track": "adjacent", "expected_family": "outro", "expected_recommendation": "nao_aplica"},
+    {"arxiv_id": "2606.01774", "track": "inference", "expected_family": "arquitetura_eficiente", "expected_recommendation": "observar"},
+    {"arxiv_id": "2606.14353", "track": "adjacent", "expected_family": "outro", "expected_recommendation": "observar"},
+    {"arxiv_id": "2606.30265", "track": "inference", "expected_family": "decodificacao_especulativa", "expected_recommendation": "observar"},
+    {"arxiv_id": "2607.12599", "track": "adjacent", "expected_family": "arquitetura_eficiente", "expected_recommendation": "testar"},
+    {"arxiv_id": "2607.25852", "track": "inference", "expected_family": "decodificacao_especulativa", "expected_recommendation": "observar"},
+    {"arxiv_id": "2608.01184", "track": "inference", "expected_family": "treino_eficiente", "expected_recommendation": "testar"},
+    {"arxiv_id": "2608.04234", "track": "agents", "expected_family": "recuperacao_e_rag", "expected_recommendation": "testar"},
+    {"arxiv_id": "2608.07855", "track": "agents", "expected_family": "cache_kv", "expected_recommendation": "testar"},
+    {"arxiv_id": "2608.10823", "track": "inference", "expected_family": "esparsidade_e_poda", "expected_recommendation": "observar"},
+    {"arxiv_id": "2608.14787", "track": "inference", "expected_family": "decodificacao_especulativa", "expected_recommendation": "observar"},
+    {"arxiv_id": "2608.18182", "track": "inference", "expected_family": "quantizacao", "expected_recommendation": "adotar"},
+    {"arxiv_id": "2608.21223", "track": "adjacent", "expected_family": "treino_eficiente", "expected_recommendation": "nao_aplica"},
+    {"arxiv_id": "2608.24070", "track": "inference", "expected_family": "esparsidade_e_poda", "expected_recommendation": "observar"},
+    {"arxiv_id": "2608.27428", "track": "adjacent", "expected_family": "outro", "expected_recommendation": "nao_aplica"}
+  ]
+}

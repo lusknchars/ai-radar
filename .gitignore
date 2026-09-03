@@ -4,8 +4,20 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+.env
+.env.*
+!.env.example
+data/local.db
+data/local.db-*
+data/public-research-eval.db
+data/public-research-eval.db-*
 data/*.bak-*
 data/rejudge-*.jsonl
 
 # workspace do subagent-driven-development (scratch, nao versionado)
 .superpowers/
+
+# local evaluation corpus and generated comparisons
+eval/pdfs/
+eval/results/
+eval/reader-study.csv

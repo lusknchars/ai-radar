@@ -61,8 +61,11 @@ def test_o_site_data_nao_faz_io():
     `authorship` e `render`. Nao existia -- verificado em 2026-08-30. Este e
     o primeiro, e cobre os modulos novos e os antigos.
     """
-    import radar.authorship, radar.render, radar.scoring, radar.site_data
-    for modulo in (radar.site_data, radar.scoring, radar.authorship, radar.render):
+    import radar.authorship, radar.public_research, radar.render, radar.scoring, radar.site_data
+    for modulo in (
+        radar.site_data, radar.scoring, radar.authorship, radar.render,
+        radar.public_research,
+    ):
         fonte = open(modulo.__file__, encoding="utf-8").read()
         for proibido in ("import sqlite3", "import httpx", "import anthropic"):
             assert proibido not in fonte, f"{modulo.__name__} importa {proibido}"

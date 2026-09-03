@@ -1,4 +1,5 @@
 import io
+import hashlib
 import tarfile
 
 import pytest
@@ -38,6 +39,18 @@ def test_fulltext_downloads_the_official_pdf_and_extracts_pages(monkeypatch):
     assert text.index("[AI-RADAR PAGE 1]") < text.index("[AI-RADAR PAGE 2]")
     assert calls[0][0] == "https://arxiv.org/pdf/2608.11111"
     assert calls[0][1]["follow_redirects"] is True
+
+
+def test_paper_source_records_the_exact_pdf_hash(monkeypatch):
+    monkeypatch.setattr(fulltext, "PdfReader",
+                        lambda stream: type("R", (), {
+                            "pages": [Page("A" * 600)]})())
+
+    source = fulltext.fetch_paper_source(
+        "2608.11111", get=lambda *a, **k: Response())
+
+    assert source.pdf_sha256 == hashlib.sha256(Response.content).hexdigest()
+    assert source.pdf_extraction_method == "pypdf"
 
 
 def test_fulltext_rejects_an_id_before_building_a_url():
@@ -90,6 +103,55 @@ def test_paper_source_exposes_pages_and_tex_without_duplicate_parsing():
     assert source.pages == {1: "first page", 2: "second page"}
     assert source.tex == {"main.tex": "x = 1"}
     assert "[AI-RADAR PAGE 2]\nsecond page" in source.full_text
+
+
+def test_docling_extractor_keeps_page_provenance_without_the_real_dependency():
+    calls = []
+
+    class Document:
+        pages = {1: object(), 2: object()}
+
+        def export_to_text(self, **kwargs):
+            calls.append(("export", kwargs))
+            return f"page {kwargs['page_no']} " + "x" * 300
+
+    class Converter:
+        def convert(self, stream, **kwargs):
+            calls.append(("convert", stream, kwargs))
+            return type("Result", (), {"document": Document()})()
+
+    extractor = fulltext.DoclingPdfExtractor(
+        converter=Converter(),
+        stream_factory=lambda **kwargs: type("Stream", (), kwargs)(),
+    )
+    extracted = extractor.extract(b"pdf", "2608.11111")
+
+    assert extracted.method == "docling"
+    assert extracted.pages[0].startswith("page 1")
+    exports = [call for call in calls if call[0] == "export"]
+    assert [call[1]["page_no"] for call in exports] == [1, 2]
+    assert all(call[1]["traverse_pictures"] is True for call in exports)
+
+
+def test_docling_configuration_falls_back_to_pypdf_and_records_why():
+    class Broken:
+        name = "docling"
+
+        def extract(self, content, arxiv_id):
+            raise RuntimeError("model unavailable")
+
+    class Working:
+        name = "pypdf"
+
+        def extract(self, content, arxiv_id):
+            return fulltext.PdfExtraction(("x" * 600,), method="pypdf")
+
+    extracted = fulltext.FallbackPdfExtractor(Broken(), Working()).extract(
+        b"pdf", "2608.11111")
+
+    assert extracted.method == "pypdf"
+    assert extracted.fallback_from == "docling"
+    assert extracted.fallback_reason == "RuntimeError"
 
 
 def test_fetch_paper_source_marks_missing_tex_as_unavailable(monkeypatch):

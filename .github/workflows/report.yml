@@ -45,9 +45,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: Instalar
-        run: pip install -e .
+        env:
+          RADAR_PDF_EXTRACTOR: ${{ vars.RADAR_PDF_EXTRACTOR }}
+        run: |
+          if [ "${RADAR_PDF_EXTRACTOR:-pypdf}" = "docling" ]; then
+            pip install -e '.[documents]'
+          else
+            pip install -e .
+          fi
 
       - name: Validate requested paper
         id: paper
@@ -59,10 +68,12 @@ jobs:
       - name: Generate report and republish site
         env:
           ARXIV_ID: ${{ steps.paper.outputs.arxiv_id }}
+          RADAR_DB: ${{ vars.RADAR_DB }}
           RADAR_LLM_PROVIDER: kimi
           RADAR_MODEL: ${{ vars.RADAR_MODEL }}
           RADAR_FORMULA_MODEL: ${{ vars.RADAR_FORMULA_MODEL }}
           RADAR_FORMULA_THINKING: ${{ vars.RADAR_FORMULA_THINKING }}
+          RADAR_PDF_EXTRACTOR: ${{ vars.RADAR_PDF_EXTRACTOR }}
           RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
           KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
         run: python scripts/gerar_relatorio.py --arxiv-id "$ARXIV_ID"
@@ -110,8 +121,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ARXIV_ID: ${{ needs.generate.outputs.arxiv_id }}
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Report published: https://lusknchars.github.io/ai-radar/reports/$ARXIV_ID/"
+          REPORT_URL="${PAGE_URL%/}/reports/$ARXIV_ID/"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Report published: $REPORT_URL"
           gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY"
 
       - name: Report deployment failure

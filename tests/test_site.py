@@ -1,9 +1,11 @@
 import pytest
 
 from radar.models import FAMILIAS
-from radar.report import DeepReport, EvidenceClaim, ReportDocument
+from radar.public_research import build_research_page
+from radar.report import (DeepReport, EvidenceClaim, ReportDocument,
+                          SourceProvenance)
 from radar.site import (CORES_FAMILIA, render_about, render_editions,
-                        render_report, render_site)
+                        render_report, render_research_page, render_site)
 from radar.site_data import Ponto, SiteData
 
 
@@ -678,6 +680,12 @@ def test_relatorio_existente_troca_a_acao_por_link_de_leitura():
     assert 'issues/new?' not in html
 
 
+def test_o_titulo_do_indice_abre_a_pagina_publica_do_paper():
+    html = render_site(_acervo([ponto()]))
+    assert '<h3><a href="/ai-radar/papers/2608.11111/">' in html
+    assert "Original paper" in html
+
+
 def _report_document() -> ReportDocument:
     from radar.formulas import (FormulaVariable, FormulaWalkthrough,
                                 TechnicalCore, WorkedExample)
@@ -685,7 +693,10 @@ def _report_document() -> ReportDocument:
         arxiv_id="2608.11111", title="Fast <Attention>",
         generated_at="2026-08-31T18:00:00+00:00", provider="kimi",
         model="kimi-k3", source_url="https://arxiv.org/pdf/2608.11111",
-        source_sha256="a" * 64,
+        source=SourceProvenance(
+            pdf_sha256="a" * 64, extracted_text_sha256="b" * 64,
+            extractor="docling", pages=12,
+        ),
         report=DeepReport(
             one_sentence="Replaces dense attention with selected blocks.",
             problem="Long contexts consume excessive memory.",
@@ -737,6 +748,42 @@ def test_pagina_de_relatorio_separa_teste_minimo_de_experimento():
     assert "AI Radar did not reproduce this experiment" in html
 
 
+def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
+    page = build_research_page(ponto(), as_of="2026-09-03")
+    html = render_research_page(page)
+
+    assert "abstract indexed" in html
+    assert html.count("not evaluated") >= 8
+    assert "not evidence of safety" in html
+    assert "Provisional research brief" in html
+    assert 'href="/ai-radar/papers/2608.11111/index.json"' in html
+    assert '<link rel="canonical" href="https://lusknchars.github.io/ai-radar/papers/2608.11111/">' in html
+
+
+def test_pagina_source_mapped_liga_afirmacao_ao_pdf():
+    page = build_research_page(
+        ponto(technique="Block selection", porque="Test it locally."),
+        as_of="2026-09-03", report=_report_document(),
+    )
+    html = render_research_page(page)
+
+    assert "source mapped" in html
+    assert 'id="claim-01"' in html
+    assert 'data-basis="source_linked"' in html
+    assert 'href="https://arxiv.org/pdf/2608.11111#page=7"' in html
+    assert 'id="exposure-compute"' in html
+    assert "multiple GPUs" in html
+    assert 'id="risk-01"' in html
+
+
+def test_pagina_publica_usa_assets_locais_compartilhados():
+    page = build_research_page(ponto(), as_of="2026-09-03")
+    html = render_research_page(page)
+    assert '<link rel="stylesheet" href="/ai-radar/assets/site.css">' in html
+    assert '<script src="/ai-radar/assets/background.js"></script>' in html
+    assert "<style>" not in html
+
+
 def test_report_shell_uses_english_editorial_copy():
     html = render_report(_report_document())
     assert '<html lang="en">' in html
@@ -773,6 +820,7 @@ def test_relatorio_abre_com_custo_e_origem_da_analise():
     assert "exhibit 01" in html
     assert "analysis generated with kimi-k3" in html
     assert "5 min read" in html
+    assert "Docling · 12 PDF pages" in html
 
 
 def test_evidencia_liga_direto_para_a_pagina_do_pdf():

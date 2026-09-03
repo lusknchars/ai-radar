@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2304.09131",
+  "title": "Variational Relational Point Completion Network for Robust 3D Classification",
+  "summary": "Substitui pipelines deterministicos de completamento parcial-para-completo por um VAE de duas vias com modulos de atencao relacional para detalhes locais. Custa treinar a rede do zero (duas rotas, perda de alinhamento de distribuicoes) e, idealmente, usar os datasets MVP proprios ou dados equivalentes de scans multi-vista. Quebra se o leitor nao trabalha com percepcao 3D/LiDAR: e um metodo de visao computacional para nuvens de pontos, nao um componente de LLM.",
+  "rationale": "E tecnica de visao 3D (completamento de point clouds), fora do escopo de LLMs, agentes, RAG ou inferencia que o leitor opera no dia a dia.",
+  "technique": "VRCNet: completamento variacional de nuvens de pontos 3D",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2023-04-18",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2304.09131",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui pipelines deterministicos de completamento parcial-para-completo por um VAE de duas vias com modulos de atencao relacional para detalhes locais. Custa treinar a rede do zero (duas rotas, perda de alinhamento de distribuicoes) e, idealmente, usar os datasets MVP proprios ou dados equivalentes de scans multi-vista. Quebra se o leitor nao trabalha com percepcao 3D/LiDAR: e um metodo de visao computacional para nuvens de pontos, nao um componente de LLM.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2304.09131",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Supera metodos estado da arte em benchmarks de completamento de nuvens de pontos e aumenta acuracia de classificacao 3D em nuvens parciais, sem numeros no resumo",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2304.09131",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

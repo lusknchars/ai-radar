@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2606.14353",
+  "title": "Can Deep Neural Networks Improve Compression of Very Large Scientific Data?",
+  "summary": "Substitui o preditor tradicional de compressores com limite de erro (como SZ3.1) por modelos de fundacao climaticos pre-treinados (GraphCast, Aurora, CRA5). Custa a complexidade de integrar inferencia de modelos grandes no pipeline de compressao e exige modelos de fundacao ja existentes no dominio. Quebra na etapa final: apesar de predicoes mais precisas, a estrutura espacial dos residuos prejudica a codificacao entropica e a taxa de compressao agregada do dataset nao melhora.",
+  "rationale": "Resultado negativo util como licao (acuracia de predicao nao implica compressao), mas exige dados cientificos em escala de TB e modelos de fundacao de dominio, fora do dia a dia do leitor.",
+  "technique": "Modelos de fundacao climaticos como preditores em compressao",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-06-12",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2606.14353",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui o preditor tradicional de compressores com limite de erro (como SZ3.1) por modelos de fundacao climaticos pre-treinados (GraphCast, Aurora, CRA5). Custa a complexidade de integrar inferencia de modelos grandes no pipeline de compressao e exige modelos de fundacao ja existentes no dominio. Quebra na etapa final: apesar de predicoes mais precisas, a estrutura espacial dos residuos prejudica a codificacao entropica e a taxa de compressao agregada do dataset nao melhora.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2606.14353",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Ate 91% de melhora na qualidade de reconstrucao e ate 9.6x maior taxa de compressao em variaveis altamente previsiveis, mas sem ganho na taxa de compressao no nivel do dataset.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2606.14353",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

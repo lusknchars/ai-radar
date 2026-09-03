@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2509.00579",
+  "title": "KVComp: A High-Performance, LLM-Aware, Lossy Compression Framework for KV Cache",
+  "summary": "Substitui o KV cache em precisao plena (ou metodos de compressao lossless/quantizacao simples) por compressao lossy co-projetada com o kernel de atencao. Custa integracao de um framework novo no stack de inferencia, risco residual de perda de qualidade pelo carater lossy, e dependencia de kernels customizados. Quebra se o leitor depender de serving padrao (vLLM/TGI sem o patch), se o workload for de contexto curto onde o KV cache nao e gargalo, ou se a tarefa for sensivel a erros pequenos de atencao.",
+  "rationale": "Ganho de memoria plausivel e relevante para GPU de 24 GB com contexto longo, mas exige validacao de acuracia no caso concreto e disponibilidade do codigo/kernels antes de adocao.",
+  "technique": "Compressao lossy de KV cache (KVComp)",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2025-08-30",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2509.00579",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui o KV cache em precisao plena (ou metodos de compressao lossless/quantizacao simples) por compressao lossy co-projetada com o kernel de atencao. Custa integracao de um framework novo no stack de inferencia, risco residual de perda de qualidade pelo carater lossy, e dependencia de kernels customizados. Quebra se o leitor depender de serving padrao (vLLM/TGI sem o patch), se o workload for de contexto curto onde o KV cache nao e gargalo, ou se a tarefa for sensivel a erros pequenos de atencao.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2509.00579",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Em media 47% e ate 83% maior taxa de reducao de memoria comparado a metodos existentes, com pouca ou nenhuma degradacao de acuracia; em alguns casos supera kernels de atencao baseados em cuBLAS",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2509.00579",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

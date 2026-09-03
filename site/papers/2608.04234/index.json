@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.04234",
+  "title": "Multimodal Alignment Through Joint Kernel Entropic Gromov--Wasserstein Optimal Transport",
+  "summary": "Substitui fine-tuning cross-modal com pares rotulados (tipo CLIP contrastivo) por um alinhamento post-hoc dos embeddings ja extraidos de encoders pre-treinados, usando transporte otimo quadratico. Custa resolver um problema de OT com aproximacao de kernel de baixo posto e um esquema variacional alternado, o que adiciona complexidade de implementacao e tempo de computo em cima dos embeddings, embora rode em CPU/GPU pequena por operar sobre embeddings e nao sobre o modelo. Quebra se os encoders unimodais forem fracos ou se as estruturas de similaridade interna das modalidades nao forem comparaveis, pois o metodo so preserva geometria que ja existe nos embeddings.",
+  "rationale": "Util apenas se o leitor tem caso de retrieval cross-modal com poucos pares; exige implementar ou portar solver de OT nao trivial, entao vale um teste delimitado, nao adocao direta.",
+  "technique": "Alinhamento multimodal via Gromov-Wasserstein com kernel (JK-EGW)",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-08-04",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.04234",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui fine-tuning cross-modal com pares rotulados (tipo CLIP contrastivo) por um alinhamento post-hoc dos embeddings ja extraidos de encoders pre-treinados, usando transporte otimo quadratico. Custa resolver um problema de OT com aproximacao de kernel de baixo posto e um esquema variacional alternado, o que adiciona complexidade de implementacao e tempo de computo em cima dos embeddings, embora rode em CPU/GPU pequena por operar sobre embeddings e nao sobre o modelo. Quebra se os encoders unimodais forem fracos ou se as estruturas de similaridade interna das modalidades nao forem comparaveis, pois o metodo so preserva geometria que ja existe nos embeddings.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.04234",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "melhora de desempenho em retrieval multimodal em regime de poucos dados pareados, comparado a baselines de alinhamento; sem numero quantificado no resumo",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.04234",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.14787",
+  "title": "From Positionwise Confidence to Prefix Scheduling: Verifier Skipping in Speculative Decoding",
+  "summary": "Substitui a verificacao do modelo grande em todo bloco do rascunho por uma politica com perdas que aceita prefixos contiguos de alta confianca sem chamar o verificador. Custa aceitar um modo lossy de geracao e exige um pipeline de decodificacao especulativa por difusao (drafter de difusao como DiffuCoder-7B mais alvo de 32B), que nao cabe em uma GPU de 24 GB nem e suportado pelos frameworks de serving comuns. Quebra se o leitor nao ja roda SDD: nao ha implementacao pronta nos servidores populares, e o proprio paper mostra que o sinal de agendamento e fragil, pois skips curtos induzem rodadas extras de rascunho.",
+  "rationale": "Ganho modesto preso a um stack de difusao especulativa que infra pequena nao opera; vale acompanhar, nao adotar.",
+  "technique": "Pular verificador em decodificacao especulativa por difusao",
+  "family": "decodificacao_especulativa",
+  "recommendation": "observar",
+  "published": "2026-08-14",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.14787",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 5,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a verificacao do modelo grande em todo bloco do rascunho por uma politica com perdas que aceita prefixos contiguos de alta confianca sem chamar o verificador. Custa aceitar um modo lossy de geracao e exige um pipeline de decodificacao especulativa por difusao (drafter de difusao como DiffuCoder-7B mais alvo de 32B), que nao cabe em uma GPU de 24 GB nem e suportado pelos frameworks de serving comuns. Quebra se o leitor nao ja roda SDD: nao ha implementacao pronta nos servidores populares, e o proprio paper mostra que o sinal de agendamento e fragil, pois skips curtos induzem rodadas extras de rascunho.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.14787",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Economia de 9,6% a 13,5% das chamadas ao verificador com o mesmo pass@1 observado no HumanEval, comparado ao Strict SDD; confianca crua foi o sinal que mais economizou.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.14787",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

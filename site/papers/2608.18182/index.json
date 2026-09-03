@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.18182",
+  "title": "Efficient INT8 Inference of Small NLP Models on Server CPUs with PyTorch Native Stack",
+  "summary": "Substitui inferencia FP32 de encoders BERT-family em CPU por um caminho INT8 com SmoothQuant integrado ao TorchAO e fusao de grafo no TorchInductor, com kernels oneDNN/AVX512_VNNI/AMX. Custa o trabalho de calibracao do SmoothQuant e dependencia de versoes recentes do PyTorch/TorchAO, com perda de acuracia reportada como desprezivel. Quebra se o hardware nao for Xeon com VNNI/AMX, se o workload for de LLMs generativos em vez de encoders pequenos, ou se a calibracao falhar em dados fora de distribuicao.",
+  "rationale": "Esta upstream no PyTorch/TorchAO, roda em CPU comum, nao exige GPU nem treino, e o ganho de throughput e direto para workloads industriais de classificacao e retrieval que o leitor provavelmente ja tem.",
+  "technique": "SmoothQuant INT8 em encoders BERT via TorchAO no CPU",
+  "family": "quantizacao",
+  "recommendation": "adotar",
+  "published": "2026-08-18",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.18182",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui inferencia FP32 de encoders BERT-family em CPU por um caminho INT8 com SmoothQuant integrado ao TorchAO e fusao de grafo no TorchInductor, com kernels oneDNN/AVX512_VNNI/AMX. Custa o trabalho de calibracao do SmoothQuant e dependencia de versoes recentes do PyTorch/TorchAO, com perda de acuracia reportada como desprezivel. Quebra se o hardware nao for Xeon com VNNI/AMX, se o workload for de LLMs generativos em vez de encoders pequenos, ou se a calibracao falhar em dados fora de distribuicao.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.18182",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "up to 5.8x end-to-end throughput speedup with negligible accuracy loss relative to the FP32 baseline",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.18182",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

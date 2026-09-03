@@ -199,17 +199,21 @@ def test_legacy_database_stops_before_any_network_work(ambiente, monkeypatch, ca
     assert "migrar_e_rejulgar.py" in output
 
 
-def test_a_missing_telegram_secret_does_not_throw_away_the_digest(ambiente, capsys):
-    """O markdown ja esta escrito e o lote ja foi pago quando a entrega falha.
-    Deixar o ValueError subir matava o processo antes do passo de commit, e os
-    dois iam embora com o runner efemero."""
+def test_telegram_is_optional_when_both_credentials_are_absent(ambiente, capsys):
+    """A local clone can run without configuring a delivery channel."""
     codigo = cli.main(argv(ambiente))          # sem TELEGRAM_BOT_TOKEN
-    assert codigo == 1                         # falha reportada, nao mascarada
-    assert "push nao enviado" in capsys.readouterr().out
+    assert codigo == 0
+    assert "Telegram is not configured" in capsys.readouterr().out
     digests = list((ambiente / "radar").glob("*.md"))
     assert len(digests) == 1                   # o digest do dia sobreviveu
     assert "## Radar" in digests[0].read_text(encoding="utf-8")
     assert PAPER.arxiv_id in digests[0].read_text(encoding="utf-8")
+
+
+def test_partial_telegram_configuration_is_an_error(ambiente, monkeypatch, capsys):
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "token-without-chat")
+    assert cli.main(argv(ambiente)) == 1
+    assert "push nao enviado" in capsys.readouterr().out
 
 
 def test_the_cli_passes_the_configured_recheck_limit(monkeypatch, tmp_path):

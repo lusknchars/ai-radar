@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.07855",
+  "title": "CommitKV: Lifecycle-Aware KV Cache Compression via Commit Transitions for Multi-Turn Agents",
+  "summary": "Substitui a eviccao de KV cache baseada em scores de atencao instantaneos (tipo H2O/SnapKV) por uma politica que mede o efeito da delecao de cada pagina antes e depois de um commit de tool-call, aposentando so paginas cujo papel observado terminou. Custa passadas extras de medicao de efeito de delecao por pagina em cada commit, mais a logica de paginacao, teste guloso conjunto e checkpoints, ou seja, overhead de computacao e complexidade de implementacao no loop de inferencia. Quebra se o workload nao for agente ReAct multi-turno com tool calls bem delimitados (sem transicoes de commit nao ha sinal), e depende de acesso ao KV cache e ao pipeline de inferencia, o que exclui APIs fechadas de terceiros.",
+  "rationale": "Ganho plausivel e relevante para agentes longos self-hosted em 24 GB, mas exige integracao no loop de inferencia e validacao no caso concreto, alem de nao haver numeros no resumo para confirmar a magnitude.",
+  "technique": "CommitKV: compressao de KV cache por transicoes de commit",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-08-08",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.07855",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a eviccao de KV cache baseada em scores de atencao instantaneos (tipo H2O/SnapKV) por uma politica que mede o efeito da delecao de cada pagina antes e depois de um commit de tool-call, aposentando so paginas cujo papel observado terminou. Custa passadas extras de medicao de efeito de delecao por pagina em cada commit, mais a logica de paginacao, teste guloso conjunto e checkpoints, ou seja, overhead de computacao e complexidade de implementacao no loop de inferencia. Quebra se o workload nao for agente ReAct multi-turno com tool calls bem delimitados (sem transicoes de commit nao ha sinal), e depende de acesso ao KV cache e ao pipeline de inferencia, o que exclui APIs fechadas de terceiros.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.07855",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "O resumo alega reducao de memoria, aceleracao de inferencia fim a fim e maior acuracia que metodos existentes, sem numeros quantificados.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.07855",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2608.10823",
+  "title": "MoE Proxy Models for Low-Cost Failure Reproduction and Diagnosis in LLM RL Post-Training",
+  "summary": "Substitui a reproducao de falhas de RL pos-treino (overflow de gradiente, divergencia de perda) diretamente no modelo MoE grande por um proxy menor, construido por poda de especialistas via clustering que preserva backbone, roteamento e capacidade basica. Custa o trabalho de construir e validar o proxy e o risco de ele nao reproduzir falhas que dependem da escala ou de especialistas removidos. Para quem nao faz RL pos-treino em cluster, quebra na premissa: a tecnica inteira existe para depurar pipelines de treino em plataforma Ascend com dezenas de NPUs.",
+  "rationale": "O ganho so se materializa para quem opera RL pos-treino de MoEs grandes em cluster, cenario fora da infra e do orcamento do leitor.",
+  "technique": "Modelos proxy MoE podados para reproduzir falhas de RL",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-08-11",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2608.10823",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 26,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a reproducao de falhas de RL pos-treino (overflow de gradiente, divergencia de perda) diretamente no modelo MoE grande por um proxy menor, construido por poda de especialistas via clustering que preserva backbone, roteamento e capacidade basica. Custa o trabalho de construir e validar o proxy e o risco de ele nao reproduzir falhas que dependem da escala ou de especialistas removidos. Para quem nao faz RL pos-treino em cluster, quebra na premissa: a tecnica inteira existe para depurar pipelines de treino em plataforma Ascend com dezenas de NPUs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.10823",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "reducao de 50%-87.5% em aceleradores e ate 33.3x de reducao no custo por passo em NPU-hora, preservando dinamicas de treino e reproduzindo falhas do modelo original",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2608.10823",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}

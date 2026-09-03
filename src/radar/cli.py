@@ -15,8 +15,9 @@ import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
 from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
-                     load_kimi_request_interval, load_llm_provider, load_model,
-                     load_recheck_limit, load_thresholds)
+                     load_database_path, load_kimi_request_interval,
+                     load_llm_provider, load_model, load_recheck_limit,
+                     load_thresholds)
 from .github import GitHubClient
 from .judge import KimiJudge, collect_batch_results, submit_batch, wait_for_batch
 from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
@@ -148,10 +149,16 @@ def _executar(args, db_path: Path, today) -> int:
         print("dry-run: push nao enviado, nada gravado no banco de verdade")
         return 0
 
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    telegram_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not telegram_token and not telegram_chat:
+        print("push skipped: Telegram is not configured", flush=True)
+        return 0
+
     try:
         sent = send(push,
-                    token=os.environ.get("TELEGRAM_BOT_TOKEN", ""),
-                    chat_id=os.environ.get("TELEGRAM_CHAT_ID", ""),
+                    token=telegram_token,
+                    chat_id=telegram_chat,
                     post=_telegram_post)
     except ValueError as exc:
         # Segredo faltando nao pode custar o dia inteiro. Quando isto acontece o
@@ -167,8 +174,8 @@ def _executar(args, db_path: Path, today) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="radar")
-    parser.add_argument("--db", type=Path, default=Path("data/radar.db"))
+    parser = argparse.ArgumentParser(prog="ai-radar")
+    parser.add_argument("--db", type=Path, default=load_database_path())
     parser.add_argument("--out", type=Path, default=Path("radar"))
     parser.add_argument("--dry-run", action="store_true",
                         help="escreve o markdown do dia, mas nao envia o push "

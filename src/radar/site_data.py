@@ -28,6 +28,8 @@ class Ponto:
     publicado: str              # ISO date
     score: float
     scope: str
+    technique: str = ""
+    porque: str = ""
 
 
 @dataclass(frozen=True)

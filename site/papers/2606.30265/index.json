@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2606.30265",
+  "title": "When Is a Draft Accepted? A Theory of Acceptance in Speculative Decoding",
+  "summary": "Substitui a análise estocástica clássica de decodificação especulativa por uma teoria de aceitação para os regimes práticos: greedy, aceitação relaxada e árvores de candidatos. Custa apenas trabalho teórico, sem exigir nova infra, mas é uma estrutura de certificação, não um método novo de aceleração. Não quebra nada se adotado como referência, porém não entrega por si só um sistema mais rápido: apenas caracteriza quando tokens do drafter são aceitos, avaliado em modelos Qwen3.",
+  "rationale": "Paper de teoria que explica critérios de aceitação existentes, sem técnica nova nem ganho quantificado de velocidade para adotar em infra pequena.",
+  "technique": "Certificados de aceitação para decodificação especulativa",
+  "family": "decodificacao_especulativa",
+  "recommendation": "observar",
+  "published": "2026-06-29",
+  "as_of": "2026-09-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2606.30265",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Substitui a análise estocástica clássica de decodificação especulativa por uma teoria de aceitação para os regimes práticos: greedy, aceitação relaxada e árvores de candidatos. Custa apenas trabalho teórico, sem exigir nova infra, mas é uma estrutura de certificação, não um método novo de aceleração. Não quebra nada se adotado como referência, porém não entrega por si só um sistema mais rápido: apenas caracteriza quando tokens do drafter são aceitos, avaliado em modelos Qwen3.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2606.30265",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false
+}
