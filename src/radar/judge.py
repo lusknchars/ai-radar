@@ -27,15 +27,27 @@ _log = logging.getLogger(__name__)
 BATCH_POLL_SECONDS = 30
 BATCH_TIMEOUT_SECONDS = 45 * 60   # um cron diario que espera mais que isso ja falhou
 
-# Substitui o HARDWARE_BRIEF. O produto deixou de ser bancada de reproducao e
-# virou jornal: o que importa nao e se a tecnica roda numa placa especifica, e
-# se o leitor deve adotar, testar, observar ou ignorar.
+# Versionado porque uma mudanca aqui altera o significado de `pratica` mesmo
+# quando o modelo permanece igual.
+JUDGMENT_PROMPT_VERSION = "observatory-v1"
+
+# O leitor agora e uma sonda externa concreta, nao um engenheiro generico. Isso
+# impede o modelo de promover um paper apenas porque a tecnica e interessante.
 LEITOR_BRIEF = (
-    "The reader is an AI/ML engineer with CONSTRAINED INFRASTRUCTURE: one 24 GB "
-    "GPU or third-party APIs, no cluster, no foundation-model training, a "
-    "limited cloud budget, and a small team. The reader is deciding what to "
-    "adopt in production practice, not what to study academically."
+    "The reader operates Inference Observatory, an external black-box probe of "
+    "PUBLIC LLM API endpoints. It measures time to first token, decode latency, "
+    "streaming behavior, availability, route and provider identity, estimated "
+    "cost, and behavioral or silent-version drift. The reader has no provider "
+    "internals, model weights, training access, cluster, or custom hardware. A "
+    "paper is useful only when it changes a probe, metric, normalization rule, "
+    "or interpretation that can be tested through a public endpoint."
 )
+
+OBSERVATORY_FEW_SHOTS = """Examples:
+- Cross-language framing divergence in a hosted LLM: testar, because the probe can send semantically equivalent prompts in two languages and compare output stability.
+- A custom CMOS accelerator for spiking-transformer training: nao_aplica, because a public endpoint cannot expose or control that hardware.
+- A faster speculative decoder: testar only when the abstract implies an externally measurable TTFT, decode, streaming, or multi-turn signature; otherwise nao_aplica.
+"""
 
 # Tupla literal, nao `tuple(FAMILIAS)`: frozenset nao tem ordem estavel, e um
 # schema JSON que muda de ordem entre execucoes invalida cache de prompt. O
@@ -82,12 +94,13 @@ class JudgmentSchema(BaseModel):
                     "the eighteen defined areas genuinely fit; forced matching "
                     "damages the aggregation this field supports.")
     pratica: Literal["adotar", "testar", "observar", "nao_aplica"] = Field(
-        description="Internal recommendation key. 'adotar': usable now with "
-                    "constrained infrastructure, a clear gain, and no unusual "
-                    "prerequisite. 'testar': plausible at small scale, but the "
-                    "gain requires workload-specific validation. 'observar': "
-                    "relevant but requires unavailable scale, hardware, or data. "
-                    "'nao_aplica': outside the reader's work.")
+        description="Internal recommendation key for Inference Observatory. "
+                    "'adotar': directly improves an existing public-endpoint "
+                    "probe or metric. 'testar': supports a bounded new public-"
+                    "endpoint experiment. 'observar': relevant evidence but not "
+                    "yet a stable measurement. 'nao_aplica': requires weights, "
+                    "training, server internals, custom hardware, or has no "
+                    "externally observable endpoint effect.")
     ganho_eixo: Literal["velocidade", "memoria", "custo", "qualidade", "nenhum"] = Field(
         description="Internal key for the claimed improvement dimension. Use "
                     "'nenhum' when the paper makes no quantified claim; this is "
@@ -106,17 +119,23 @@ class JudgmentSchema(BaseModel):
         description="Up to THREE professional English sentences, in order: what "
                     "the technique replaces; what it costs in memory, latency, "
                     "complexity, or quality; and what can fail after adoption.")
-    porque: str = Field(description="One English sentence justifying the recommendation")
+    porque: str = Field(
+        description="One English sentence naming the exact public-endpoint "
+                    "probe to run, or why no such probe is possible.")
 
 
 def build_prompt(paper: Paper) -> str:
     return (
+        f"Prompt version: {JUDGMENT_PROMPT_VERSION}\n\n"
         f"{LEITOR_BRIEF}\n\n"
+        f"{OBSERVATORY_FEW_SHOTS}\n"
         f"Paper (arXiv {paper.arxiv_id}):\n"
         f"Title: {paper.title}\n"
         f"Abstract: {paper.abstract}\n\n"
-        f"Classify the technique into one research area, recommend what the "
-        f"reader should do, and extract a performance claim when one exists. "
+        f"First decide whether a black-box public-API experiment is possible. "
+        f"If it is not, set pratica to nao_aplica even when the paper reports a "
+        f"large gain. Then classify the technique, recommend what the reader "
+        f"should do, and extract a performance claim when one exists. "
         f"The brief must state what the method replaces, what it costs, and "
         f"what can fail. Write in precise professional English without emoji, "
         f"promotional adjectives, or unsupported conclusions."

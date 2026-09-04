@@ -123,9 +123,13 @@ class ScopeConfig:
     # `name` vem primeiro e nao tem default: e o que impede escopo anonimo de
     # chegar ao banco. A coluna `papers.scope` existe para fatiar o acervo, e
     # um default aqui deixaria um chamador novo gravar linha sem escopo calado.
-    name: str                      # 'inferencia' | 'agentes'
+    name: str                      # 'observatorio' | 'inferencia' | 'agentes'
     categories: tuple[str, ...]
     terms: tuple[str, ...]
+    # Cada grupo e um OR; todos os grupos precisam casar no titulo ou abstract.
+    # O arXiv continua responsavel pelo recall. Este filtro local impede que um
+    # termo amplo, como "latency", admita um paper sem relacao com LLMs.
+    required_term_groups: tuple[tuple[str, ...], ...] = ()
 
 
 DEFAULT_SCOPE = ScopeConfig(
@@ -177,6 +181,102 @@ AGENT_SCOPE = ScopeConfig(
         "agent orchestration",
     ),
 )
+
+
+# Escopo padrao do produto. A pergunta nao e "este paper melhora inferencia?",
+# que ainda admite treino, hardware custom e compressao de outros dominios. A
+# pergunta e "este paper muda algo que uma sonda externa consegue medir em um
+# endpoint publico de LLM?". Os termos de consulta favorecem recall; os dois
+# grupos obrigatorios recuperam precisao antes de qualquer chamada paga.
+OBSERVATORY_SCOPE = ScopeConfig(
+    name="observatorio",
+    categories=("cs.LG", "cs.CL", "cs.DC", "cs.PF", "cs.AI"),
+    terms=(
+        "time to first token",
+        "inter-token latency",
+        "inference latency",
+        "tail latency",
+        "streaming inference",
+        "model serving",
+        "continuous batching",
+        "KV cache",
+        "prefix caching",
+        "speculative decoding",
+        "model routing",
+        "API reliability",
+        "behavioral drift",
+        "model drift",
+        "output stability",
+    ),
+    required_term_groups=(
+        (
+            "large language model",
+            "language model",
+            "llm",
+            "foundation model",
+            "generative model",
+            "model api",
+            "inference server",
+            "model serving",
+            "chatbot",
+        ),
+        (
+            "time to first token",
+            "ttft",
+            "inter token latency",
+            "decode latency",
+            "inference latency",
+            "tail latency",
+            "tokens per second",
+            "streaming inference",
+            "streaming response",
+            "streaming api",
+            "availability",
+            "api reliability",
+            "service level objective",
+            "model routing",
+            "inference routing",
+            "behavioral drift",
+            "model drift",
+            "version drift",
+            "silent model update",
+            "output stability",
+            "prompt sensitivity",
+            "cross linguistic",
+            "multilingual consistency",
+            "speculative decoding",
+            "kv cache",
+            "prefix cache",
+            "continuous batching",
+            "inference cost",
+            "api cost",
+        ),
+    ),
+)
+
+
+_SCOPES = {
+    OBSERVATORY_SCOPE.name: OBSERVATORY_SCOPE,
+    DEFAULT_SCOPE.name: DEFAULT_SCOPE,
+    AGENT_SCOPE.name: AGENT_SCOPE,
+}
+
+
+def load_scopes() -> tuple[ScopeConfig, ...]:
+    """Select daily lanes. Production defaults to the Observatory lane only."""
+    configured = os.environ.get("RADAR_SCOPES") or OBSERVATORY_SCOPE.name
+    names = [name.strip().lower() for name in configured.split(",") if name.strip()]
+    if not names:
+        raise ValueError("RADAR_SCOPES must name at least one scope")
+    unknown = [name for name in names if name not in _SCOPES]
+    if unknown:
+        raise ValueError(
+            f"RADAR_SCOPES contains unknown scopes: {', '.join(unknown)}; "
+            f"use one or more of {', '.join(_SCOPES)}"
+        )
+    # A primeira ocorrencia decide a ordem e, portanto, qual escopo recebe um
+    # paper que duas consultas encontram.
+    return tuple(_SCOPES[name] for name in dict.fromkeys(names))
 
 
 @dataclass(frozen=True)
