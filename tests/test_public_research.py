@@ -67,6 +67,8 @@ def test_indexed_page_makes_absent_analysis_visible():
     assert tuple(item.dimension for item in page.exposure_map) == EXPOSURE_DIMENSIONS
     assert {item.basis for item in page.exposure_map} == {"not_evaluated"}
     assert page.claims[0].basis == "inferred"
+    assert page.validation_tier == "unknown"
+    assert page.evidence_tier == "unknown"
 
 
 def test_deep_report_promotes_page_to_source_mapped():
@@ -83,6 +85,9 @@ def test_deep_report_promotes_page_to_source_mapped():
     )
     assert page.exposure_map[1].dimension == "compute"
     assert "multiple GPUs" in page.exposure_map[1].finding
+    assert page.validation_tier == "single_gpu_24gb"
+    assert page.evidence_tier == "multi_gpu"
+    assert page.infrastructure_basis == "explicit"
 
 
 def test_unlocated_report_claim_stays_an_inference():
@@ -131,4 +136,13 @@ def test_source_mapped_status_requires_a_deep_report():
         ResearchPage.model_validate({
             **page.model_dump(),
             "editorial_status": "source_mapped",
+        })
+
+
+def test_indexed_page_cannot_claim_evaluated_infrastructure():
+    page = build_research_page(_paper(), as_of="2026-09-03")
+    with pytest.raises(ValidationError, match="evaluated infrastructure"):
+        ResearchPage.model_validate({
+            **page.model_dump(),
+            "validation_tier": "single_gpu_24gb",
         })

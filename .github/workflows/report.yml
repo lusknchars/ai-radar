@@ -2,7 +2,7 @@ name: paper report
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions: {}
 
@@ -13,9 +13,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  acknowledge-request:
+    if: >-
+      github.event.action == 'opened' &&
+      startsWith(github.event.issue.title, '[report request] ')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Record request without spending credits
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Request recorded. No API credits were spent. A maintainer can approve generation by changing the title prefix from [report request] to [report]."
+
   reject-untrusted:
     if: >-
-      github.event.issue.user.login != github.repository_owner &&
+      github.event.sender.login != github.repository_owner &&
       startsWith(github.event.issue.title, '[report] ')
     runs-on: ubuntu-latest
     permissions:
@@ -31,8 +46,10 @@ jobs:
 
   generate:
     if: >-
-      github.event.issue.user.login == github.repository_owner &&
-      startsWith(github.event.issue.title, '[report] ')
+      github.event.sender.login == github.repository_owner &&
+      startsWith(github.event.issue.title, '[report] ') &&
+      (github.event.action == 'opened' ||
+       startsWith(github.event.changes.title.from, '[report request] '))
     runs-on: ubuntu-latest
     permissions:
       contents: write

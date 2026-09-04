@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .public_labels import (INFRASTRUCTURE_LABELS, SOFTWARE_SETUP_LABELS,
                             TRAINING_LABELS)
-from .report import ReportDocument
+from .report import InfrastructureBasis, InfrastructureTier, ReportDocument
 from .site_data import Ponto
 
 EditorialStatus = Literal["indexed", "source_mapped", "independently_tested"]
@@ -110,6 +110,9 @@ class ResearchPage(BaseModel):
     open_questions: tuple[str, ...]
     independent_tests: tuple[IndependentTest, ...] = ()
     report_available: bool
+    validation_tier: InfrastructureTier = "unknown"
+    evidence_tier: InfrastructureTier = "unknown"
+    infrastructure_basis: InfrastructureBasis = "unknown"
 
     @model_validator(mode="after")
     def exposure_map_is_complete(self) -> ResearchPage:
@@ -120,6 +123,14 @@ class ResearchPage(BaseModel):
             )
         if self.editorial_status == "indexed" and self.report_available:
             raise ValueError("indexed page cannot claim that a deep report exists")
+        if self.editorial_status == "indexed" and (
+            self.validation_tier != "unknown"
+            or self.evidence_tier != "unknown"
+            or self.infrastructure_basis != "unknown"
+        ):
+            raise ValueError(
+                "indexed page cannot claim evaluated infrastructure"
+            )
         has_independent_test = bool(self.independent_tests)
         if (self.editorial_status == "independently_tested") != has_independent_test:
             raise ValueError(
@@ -239,6 +250,9 @@ def build_research_page(
         minimum_test: tuple[str, ...] = ()
         open_questions: tuple[str, ...] = ()
         status: EditorialStatus = "indexed"
+        validation_tier: InfrastructureTier = "unknown"
+        evidence_tier: InfrastructureTier = "unknown"
+        infrastructure_basis: InfrastructureBasis = "unknown"
     else:
         claims = _claims_from_report(report)
         exposures = _report_exposures(report)
@@ -252,6 +266,9 @@ def build_research_page(
         minimum_test = tuple(report.report.minimum_test)
         open_questions = tuple(report.report.unanswered_questions)
         status = "source_mapped"
+        validation_tier = report.report.validation_tier
+        evidence_tier = report.report.evidence_tier
+        infrastructure_basis = report.report.infrastructure_basis
 
     return ResearchPage(
         arxiv_id=paper.arxiv_id,
@@ -276,4 +293,7 @@ def build_research_page(
         open_questions=open_questions,
         independent_tests=(),
         report_available=report is not None,
+        validation_tier=validation_tier,
+        evidence_tier=evidence_tier,
+        infrastructure_basis=infrastructure_basis,
     )

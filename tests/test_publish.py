@@ -75,13 +75,15 @@ def test_publish_site_links_and_renders_saved_reports(tmp_path):
     research_json = (
         tmp_path / "site" / "papers" / "2608.11111" / "index.json"
     )
-    assert '/ai-radar/reports/2608.11111/' in index
     assert '/ai-radar/papers/2608.11111/' in index
-    assert "Read deep report" in index
+    assert "Review evidence" in index
     assert page.exists()
     assert research_page.exists()
     assert research_json.exists()
     assert json.loads(research_json.read_text())["editorial_status"] == "source_mapped"
+    research = research_page.read_text(encoding="utf-8")
+    assert '/ai-radar/reports/2608.11111/' in research
+    assert "Read deep report" in research
     assert "1 GPU, up to 24 GB" in page.read_text(encoding="utf-8")
     plot_asset = tmp_path / "site" / "assets" / "observable-plot-0.6.17.min.js"
     d3_asset = tmp_path / "site" / "assets" / "d3-7.9.0.min.js"
@@ -113,9 +115,15 @@ def test_publish_site_uses_the_forks_public_urls(tmp_path):
     )
 
     index = (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+    research_path = (
+        tmp_path / "site" / "papers" / "2608.11111" / "index.html"
+    )
+    research = research_path.read_text(encoding="utf-8")
     feed = (tmp_path / "site" / "feed.xml").read_text(encoding="utf-8")
     assert "/research-radar/assets/d3-7.9.0.min.js" in index
-    assert "github.com/reader/research-radar/issues/new?" in index
+    assert "/research-radar/papers/2608.11111/" in index
+    assert "github.com/reader/research-radar/issues/new?" in research
+    assert "title=%5Breport+request%5D+2608.11111" in research
     assert "lusknchars" not in index
     assert "https://reader.github.io/research-radar/" in feed
     robots = (tmp_path / "site" / "robots.txt").read_text(encoding="utf-8")

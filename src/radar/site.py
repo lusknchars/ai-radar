@@ -386,18 +386,12 @@ def _opcoes(valores: list[str], rotulos: dict[str, str] | None = None) -> str:
 def _report_action(
     p, has_report: bool, public_config: PublicConfig,
 ) -> str:
-    if has_report:
-        return _sheen_link(
-            "Read deep report",
-            public_config.path(f"reports/{p.arxiv_id}/"),
-            classes="report-action", aria_label=f"Read deep report for {p.titulo}",
-        )
-    href = _report_request_href(p.arxiv_id, p.titulo, public_config)
+    label = "Review evidence" if has_report else "Review decision"
     return _sheen_link(
-        "Generate deep report", href,
-        classes="report-action secondary",
-        aria_label=f"Generate deep report for {p.titulo}",
-        rel="nofollow",
+        label,
+        public_config.path(f"papers/{p.arxiv_id}/"),
+        classes="report-action" if has_report else "report-action secondary",
+        aria_label=f"{label} for {p.titulo}",
     )
 
 
@@ -405,13 +399,13 @@ def _report_request_href(
     arxiv_id: str, title: str, public_config: PublicConfig,
 ) -> str:
     query = urlencode({
-        "title": f"[report] {arxiv_id}",
+        "title": f"[report request] {arxiv_id}",
         "body": (
-            f"Generate a deep report for arXiv {arxiv_id}.\n\n"
+            f"Please review arXiv {arxiv_id} for a deep report.\n\n"
             f"Paper: {title}\n\n"
-            "Requested from the ai-radar archive.\n\n"
-            "Credit protection: generation runs only when the repository "
-            "owner opens this issue."
+            "Requested from the AI Radar archive.\n\n"
+            "No API credits are spent when this request is opened. A "
+            "maintainer must approve it before generation starts."
         ),
     })
     return f"https://github.com/{public_config.repository}/issues/new?{query}"
@@ -447,6 +441,7 @@ def _linha(
     # confusao que o pipeline inteiro existe para evitar.
     ord_cit = -1 if p.citations is None else p.citations
     ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
+    evidence_stage = "source mapped" if has_report else "abstract only"
     texto = (
         f"{p.titulo} {p.resumo} {p.familia} {p.pratica} {p.arxiv_id}"
     ).lower()
@@ -476,7 +471,9 @@ def _linha(
         f'<div><b>{p.stars_total}</b><span>stars</span></div>'
         f'<div><b>{cit}</b><span>citations</span></div>'
         f'<div><b>{ganho}</b><span>gain</span></div></div>'
-        f'<div class="entry-action">{_report_action(p, has_report, public_config)}'
+        '<div class="entry-action">'
+        f'<span class="entry-stage">{evidence_stage}</span>'
+        f'{_report_action(p, has_report, public_config)}'
         f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
         'target="_blank" rel="noopener noreferrer">Original paper ↗</a></div>'
         '</article>'
@@ -808,6 +805,94 @@ _EDITORIAL_STATUS_NOTES = {
     ),
 }
 
+_REPORT_DECISION_GUIDANCE = {
+    "adotar": (
+        "Candidate for controlled validation.",
+        "Check that the linked evidence matches your model, workload, and "
+        "hardware before changing production.",
+    ),
+    "testar": (
+        "Run the minimum useful test.",
+        "Use the test below to try to disprove the reported gain on your own "
+        "workload.",
+    ),
+    "observar": (
+        "Wait for stronger evidence.",
+        "Track independent tests before spending engineering time or compute.",
+    ),
+    "nao_aplica": (
+        "Skip for now.",
+        "The current analysis found no practical fit within AI Radar's scope.",
+    ),
+}
+
+
+def _decision_guidance(page: ResearchPage) -> tuple[str, str]:
+    if page.editorial_status == "indexed":
+        return (
+            "Do not allocate compute yet.",
+            "This page uses the abstract and public adoption signal only. "
+            "Request the deep report before relying on its recommendation.",
+        )
+    return _REPORT_DECISION_GUIDANCE.get(
+        page.recommendation,
+        (
+            "Review the evidence before deciding.",
+            "Compare the paper's conditions with your workload and budget.",
+        ),
+    )
+
+
+def _render_decision_snapshot(page: ResearchPage) -> str:
+    heading, explanation = _decision_guidance(page)
+    linked_claims = sum(
+        claim.basis == "source_linked" for claim in page.claims
+    )
+    checked_exposures = sum(
+        item.basis != "not_evaluated" for item in page.exposure_map
+    )
+    return (
+        '<section class="decision-snapshot" aria-labelledby="decision-outcome">'
+        '<div class="decision-copy"><p class="decision-eyebrow">'
+        f'<span>{escape(EDITORIAL_STATUS_LABELS[page.editorial_status])}</span>'
+        'AI Radar next step</p>'
+        f'<h2 id="decision-outcome">{escape(heading)}</h2>'
+        f'<p>{escape(explanation)}</p>'
+        f'<span>{escape(_EDITORIAL_STATUS_NOTES[page.editorial_status])} '
+        'This recommendation is not a reproduced result.</span></div>'
+        '<dl class="decision-facts">'
+        '<div><dt>minimum test setup</dt>'
+        f'<dd>{escape(ROTULOS_INFRA[page.validation_tier])}</dd></div>'
+        '<div><dt>published evidence setup</dt>'
+        f'<dd>{escape(ROTULOS_INFRA[page.evidence_tier])}</dd></div>'
+        '<div><dt>source-linked claims</dt>'
+        f'<dd>{linked_claims} of {len(page.claims)}</dd></div>'
+        '<div><dt>exposure checks</dt>'
+        f'<dd>{checked_exposures} of {len(page.exposure_map)}</dd></div>'
+        '</dl></section>'
+    )
+
+
+def _render_research_jumps(page: ResearchPage) -> str:
+    links = [
+        ("decision", "shortlist reason"),
+        ("claims", "evidence"),
+        ("exposure", "constraints"),
+        ("risks", "risks"),
+        ("minimum-test", "test plan"),
+    ]
+    if page.independent_tests:
+        links.append(("independent-tests", "independent tests"))
+    return (
+        '<nav class="research-jumps" aria-label="Research brief sections">'
+        '<span>Jump to</span>'
+        + "".join(
+            f'<a href="#{escape(anchor)}">{escape(label)}</a>'
+            for anchor, label in links
+        )
+        + '</nav>'
+    )
+
 
 def _research_page_action(
     page: ResearchPage, public_config: PublicConfig,
@@ -819,7 +904,7 @@ def _research_page_action(
             classes="research-primary-action",
         )
     return _sheen_link(
-        "Generate deep report",
+        "Request deep report",
         _report_request_href(page.arxiv_id, page.title, public_config),
         classes="secondary research-primary-action", rel="nofollow",
     )
@@ -912,9 +997,8 @@ def render_research_page(
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
 ) -> str:
     """Render one permanent, linkable research assessment."""
-    citations = "not resolved" if page.citations is None else str(page.citations)
     status = EDITORIAL_STATUS_LABELS[page.editorial_status]
-    status_note = _EDITORIAL_STATUS_NOTES[page.editorial_status]
+    citations = "not resolved" if page.citations is None else str(page.citations)
     technique = (
         f'<div><dt>technical change</dt><dd>{escape(page.technique)}</dd></div>'
         if page.technique else ""
@@ -960,17 +1044,17 @@ def render_research_page(
     )
     corpo = (
         '<article class="research-page">'
-        '<div class="research-status" aria-label="Editorial status">'
-        f'<div><span>editorial status</span><b>{escape(status)}</b></div>'
-        f'<p>{escape(status_note)}</p></div>'
+        f'{_render_decision_snapshot(page)}'
         '<div class="research-actions">'
         f'{_research_page_action(page, public_config)}'
         f'<a href="{escape(page.source_url)}" target="_blank" '
-        'rel="noopener noreferrer">Open original paper ↗</a>'
-        f'<a href="{escape(json_href)}">Structured JSON</a></div>'
+        'rel="noopener noreferrer">Read original paper ↗</a>'
+        f'<a href="{escape(json_href)}">View page data (JSON)</a></div>'
+        f'{_render_research_jumps(page)}'
         '<section id="decision" class="research-section">'
-        '<div class="section-head"><h2>Decision brief</h2>'
-        '<p class="sub">What the technique changes and why it entered the archive.</p>'
+        '<div class="section-head"><h2>Why it was shortlisted</h2>'
+        '<p class="sub">The technical change, research area, and reason it '
+        'entered the archive.</p>'
         '</div><dl class="research-decision">'
         f'<div><dt>recommendation</dt><dd>{escape(ROTULOS_PRATICA.get(page.recommendation, page.recommendation))}</dd></div>'
         f'<div><dt>research area</dt><dd>{escape(ROTULOS_FAMILIA.get(page.family, page.family))}</dd></div>'

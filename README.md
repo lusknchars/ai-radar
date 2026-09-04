@@ -113,12 +113,14 @@ The tiers are closed and visible: API/CPU, one 24 GB GPU, one 48–80 GB GPU,
 multiple GPUs, cluster, custom hardware, or unknown. “Try it on one GPU” never
 means “reproduce a cluster result.”
 
-The static site never receives an API key. “Generate report” opens a prefilled
-GitHub issue; an owner-only workflow validates the arXiv ID, downloads the PDF,
-uses Kimi, commits the versioned JSON and rendered page, deploys the site, and
-comments with the permanent URL. Requests from other accounts are closed
-without spending credits. Reopening or duplicating a request is idempotent: an
-existing report is republished, not regenerated.
+The static site never receives an API key. "Request deep report" opens a
+prefilled GitHub issue and records public interest without spending credits. A
+maintainer approves generation by changing the title prefix from
+`[report request]` to `[report]`. The workflow checks who made that change,
+validates the arXiv ID, downloads the PDF, uses Kimi, commits the versioned JSON
+and rendered page, deploys the site, and comments with the permanent URL.
+Reopening or duplicating an approved request is idempotent. An existing report
+is republished, not regenerated.
 
 Every evidence claim in a deep report asks Kimi for a PDF page and a short
 verbatim excerpt. The pipeline checks that the excerpt exists on that exact
@@ -425,7 +427,9 @@ read credentials.
 The on-demand path is separate from `run_day(...)`:
 
 ```text
-paper action --> owner GitHub issue --> report workflow --> official arXiv source
+paper action --> public request --> maintainer approval --> report workflow
+                                                               |
+                                                    official arXiv source
                                                            |             |
                                                PDF adapter + TeX          |
                                                   |        |              |
@@ -516,7 +520,8 @@ The composition root also owns failure policy:
 - Missing or invalid provider results become named `sem_julgamento` cuts
   instead of disappearing.
 - The Kimi archive migration checkpoints each paid result before continuing.
-- Report requests are owner-only, validate a modern arXiv ID, and do not expose
+- Public report requests spend no credits. Only a maintainer title change can
+  start generation. The workflow validates a modern arXiv ID and never exposes
   the Kimi key to browser code.
 - Site deployment only runs when `site/index.html` exists.
 
@@ -547,7 +552,8 @@ Pre-1.0, and honest about it.
   The upstream repository still needs its `KIMI_API_KEY` Actions secret before
   that paid path can run.
 - RSS, permanent paper URLs and JSON, stable daily-edition URLs, the exposure map, the editorial redesign, and the two-scope pipeline are done and tested.
-- The 30-brief archive and owner-only, full-text report path are implemented but remain unproven in the default-branch Actions environment.
+- The 30-brief archive and maintainer-approved, full-text report path are
+  implemented but remain unproven in the default-branch Actions environment.
 
 The test suite runs offline and completes in about one second on the current development machine.
 

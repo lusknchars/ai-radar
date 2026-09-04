@@ -43,7 +43,7 @@ def test_publication_shell_uses_english_editorial_copy(dados):
     assert '<html lang="en">' in html
     for expected in (
         "Find the AI research", "Research index", "Research signals",
-        "Generate deep report", "Exclusions and controls",
+        "Review decision", "Exclusions and controls",
     ):
         assert expected in html
     for legacy in (
@@ -651,12 +651,13 @@ def test_busca_e_filtro_podem_sair_do_recorte_inicial():
     assert "mostrarTodos" in html
 
 
-def test_cada_brief_tem_acao_segura_para_pedir_relatorio():
+def test_cada_brief_leva_a_decisao_antes_de_pedir_relatorio():
     html = render_site(_acervo([ponto()]))
     assert 'class="paper-brief"' in html
-    assert 'github.com/lusknchars/ai-radar/issues/new?' in html
-    assert 'title=%5Breport%5D+2608.11111' in html
-    assert 'Generate deep report' in html
+    assert 'href="/ai-radar/papers/2608.11111/"' in html
+    assert 'class="entry-stage">abstract only' in html
+    assert 'Review decision' in html
+    assert 'issues/new?' not in html
     assert 'min-height:44px' in html
 
 
@@ -675,8 +676,9 @@ def test_fila_de_papers_aparece_antes_dos_graficos(dados):
 
 def test_relatorio_existente_troca_a_acao_por_link_de_leitura():
     html = render_site(_acervo([ponto()]), report_ids={"2608.11111"})
-    assert '/ai-radar/reports/2608.11111/' in html
-    assert 'Read deep report' in html
+    assert '/ai-radar/papers/2608.11111/' in html
+    assert 'class="entry-stage">source mapped' in html
+    assert 'Review evidence' in html
     assert 'issues/new?' not in html
 
 
@@ -755,9 +757,36 @@ def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
     assert "abstract indexed" in html
     assert html.count("not evaluated") >= 8
     assert "not evidence of safety" in html
+    assert "Do not allocate compute yet." in html
+    assert "0 of 8" in html
+    assert html.count("not reported") >= 2
+    assert 'class="research-jumps"' in html
     assert "Provisional research brief" in html
     assert 'href="/ai-radar/papers/2608.11111/index.json"' in html
     assert '<link rel="canonical" href="https://lusknchars.github.io/ai-radar/papers/2608.11111/">' in html
+
+
+def test_resumo_de_decisao_aparece_antes_da_analise_detalhada():
+    page = build_research_page(ponto(), as_of="2026-09-03")
+    html = render_research_page(page)
+
+    assert html.index('class="decision-snapshot"') < html.index(
+        'id="decision" class="research-section"'
+    )
+    assert 'aria-labelledby="decision-outcome"' in html
+    for label in (
+        "minimum test setup", "published evidence setup",
+        "source-linked claims", "exposure checks",
+    ):
+        assert label in html
+
+
+def test_resumo_de_decisao_cabe_no_mobile_e_mantem_alvos_de_toque(dados):
+    html = render_site(dados)
+
+    assert ".decision-snapshot{grid-template-columns:1fr}" in html
+    assert ".research-jumps a{display:inline-flex" in html
+    assert "min-height:44px" in html
 
 
 def test_pagina_source_mapped_liga_afirmacao_ao_pdf():
@@ -772,8 +801,21 @@ def test_pagina_source_mapped_liga_afirmacao_ao_pdf():
     assert 'data-basis="source_linked"' in html
     assert 'href="https://arxiv.org/pdf/2608.11111#page=7"' in html
     assert 'id="exposure-compute"' in html
+    assert "Candidate for controlled validation." in html
+    assert "1 GPU, up to 24 GB" in html
     assert "multiple GPUs" in html
     assert 'id="risk-01"' in html
+
+
+def test_pedido_publico_de_relatorio_exige_aprovacao_sem_gastar_creditos():
+    page = build_research_page(ponto(), as_of="2026-09-03")
+    html = render_research_page(page)
+
+    assert "Request deep report" in html
+    assert 'title=%5Breport+request%5D+2608.11111' in html
+    assert "No+API+credits+are+spent" in html
+    assert "Read original paper" in html
+    assert "View page data (JSON)" in html
 
 
 def test_pagina_publica_usa_assets_locais_compartilhados():
