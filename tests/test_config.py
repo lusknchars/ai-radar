@@ -1,7 +1,8 @@
 import pytest
 
-from radar.config import (AGENT_SCOPE, DEFAULT_SCOPE, PUSH_CAP, ScopeConfig,
-                          Thresholds, load_thresholds)
+from radar.config import (AGENT_SCOPE, DEFAULT_SCOPE, OBSERVATORY_SCOPE,
+                          PUSH_CAP, ScopeConfig, Thresholds, load_scopes,
+                          load_thresholds)
 from radar.models import (FAMILIAS, GANHO_EIXOS, PRATICAS, Judgment,
                           Paper, Signal)
 
@@ -249,6 +250,32 @@ def test_o_escopo_de_agentes_nao_carrega_termo_morto():
 
 def test_os_dois_escopos_nao_compartilham_termo():
     assert not (set(AGENT_SCOPE.terms) & set(DEFAULT_SCOPE.terms))
+
+
+def test_observatory_is_the_only_default_scope(monkeypatch):
+    monkeypatch.delenv("RADAR_SCOPES", raising=False)
+    assert load_scopes() == (OBSERVATORY_SCOPE,)
+
+
+def test_broad_scopes_remain_available_by_explicit_configuration(monkeypatch):
+    monkeypatch.setenv("RADAR_SCOPES", "observatorio,inferencia,agentes")
+    assert load_scopes() == (OBSERVATORY_SCOPE, DEFAULT_SCOPE, AGENT_SCOPE)
+
+
+def test_unknown_scope_is_rejected(monkeypatch):
+    monkeypatch.setenv("RADAR_SCOPES", "observatorio,astrologia")
+    with pytest.raises(ValueError, match="astrologia"):
+        load_scopes()
+
+
+def test_observatory_scope_requires_domain_and_measurement_groups():
+    assert OBSERVATORY_SCOPE.name == "observatorio"
+    assert len(OBSERVATORY_SCOPE.required_term_groups) == 2
+    domain, measurement = OBSERVATORY_SCOPE.required_term_groups
+    assert "large language model" in domain
+    assert "time to first token" in measurement
+    assert "quantization" not in OBSERVATORY_SCOPE.terms
+    assert "pruning" not in OBSERVATORY_SCOPE.terms
 
 
 def test_escopo_nao_pode_ser_construido_anonimo():

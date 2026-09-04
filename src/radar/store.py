@@ -78,6 +78,16 @@ CREATE TABLE IF NOT EXISTS deliveries (
     rank         INTEGER,
     PRIMARY KEY (arxiv_id, delivered_at, channel)
 );
+CREATE TABLE IF NOT EXISTS scope_exclusions (
+    arxiv_id   TEXT NOT NULL,
+    scope      TEXT NOT NULL,
+    excluded_at TEXT NOT NULL,
+    reason     TEXT NOT NULL,
+    detail     TEXT NOT NULL,
+    model      TEXT NOT NULL,
+    title      TEXT NOT NULL,
+    PRIMARY KEY (arxiv_id, scope)
+);
 """
 
 
@@ -136,12 +146,50 @@ class Store:
         )
         self._conn.commit()
 
-    def known_ids(self) -> set[str]:
+    def known_ids(self, scope: str | None = None) -> set[str]:
         """So os ids. O filtro de "ja conhecido" roda todo dia sobre a tabela
         inteira; `all_papers()` traria titulo e abstract de cada paper ja visto
-        para montar um conjunto de chaves."""
-        return {row["arxiv_id"] for row in
-                self._conn.execute("SELECT arxiv_id FROM papers")}
+        para montar um conjunto de chaves.
+
+        Exclusoes do julgamento sao especificas do escopo. Persisti-las evita
+        pagar pelo mesmo paper fora de foco em toda execucao diaria.
+        """
+        ids = {row["arxiv_id"] for row in
+               self._conn.execute("SELECT arxiv_id FROM papers")}
+        if scope is not None:
+            ids.update(
+                row["arxiv_id"] for row in self._conn.execute(
+                    "SELECT arxiv_id FROM scope_exclusions WHERE scope=?",
+                    (scope,),
+                )
+            )
+        return ids
+
+    def record_scope_exclusion(
+        self, paper: Paper, *, scope: str, excluded_at: str,
+        reason: str, detail: str, model: str,
+    ) -> None:
+        """Remember a paid scope rejection without adding it to the archive."""
+        self._conn.execute(
+            """INSERT OR REPLACE INTO scope_exclusions
+                 (arxiv_id, scope, excluded_at, reason, detail, model, title)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (paper.arxiv_id, scope, excluded_at, reason, detail, model, paper.title),
+        )
+        self._conn.commit()
+
+    def scope_exclusions(self, scope: str | None = None) -> list[dict]:
+        if scope is None:
+            rows = self._conn.execute(
+                "SELECT * FROM scope_exclusions ORDER BY excluded_at, arxiv_id"
+            )
+        else:
+            rows = self._conn.execute(
+                "SELECT * FROM scope_exclusions WHERE scope=? "
+                "ORDER BY excluded_at, arxiv_id",
+                (scope,),
+            )
+        return [dict(row) for row in rows]
 
     def all_papers(self) -> list[dict]:
         return [dict(r) for r in self._conn.execute("SELECT * FROM papers")]
@@ -169,7 +217,9 @@ class Store:
         )
         return [dict(r) for r in rows]
 
-    def papers_to_recheck(self, limit: int) -> list[Paper]:
+    def papers_to_recheck(
+        self, limit: int, *, scope: str | None = None,
+    ) -> list[Paper]:
         """Os papers da vez na rotacao de re-consulta, ja como objetos.
 
         `authors` e `categories` viajam como JSON nesta tabela; quem codificou
@@ -183,6 +233,14 @@ class Store:
         """
         if limit <= 0:
             return []
+        if scope is None:
+            rows = self.stalest_papers(limit)
+        else:
+            rows = [dict(row) for row in self._conn.execute(
+                "SELECT * FROM papers WHERE scope=? "
+                "ORDER BY last_checked IS NOT NULL, last_checked ASC LIMIT ?",
+                (scope, limit),
+            )]
         return [
             Paper(
                 arxiv_id=row["arxiv_id"],
@@ -192,7 +250,7 @@ class Store:
                 categories=json.loads(row["categories"]),
                 published=row["published"],
             )
-            for row in self.stalest_papers(limit)
+            for row in rows
         ]
 
     # ---------- signals ----------

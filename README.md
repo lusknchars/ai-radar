@@ -7,7 +7,7 @@
 ![llm](https://img.shields.io/badge/judge-Kimi_K3_or_Claude-d4a373)
 ![status](https://img.shields.io/badge/status-pre--1.0-db6d28)
 
-ai-radar collects arXiv papers on efficient inference and agent harnesses, counts how many **independent** GitHub repositories implement each one, and publishes a daily digest plus a self-contained web archive. The archive opens with 30 concise paper briefs; a paper worth more attention can be expanded into a full-text report on demand. Papers that already broke out in attention are cut on purpose — the point is to find what nobody has looked at yet.
+ai-radar collects papers that can improve the Inference Observatory, a black-box probe of public LLM endpoints. It looks for work that changes a latency, reliability, streaming, routing, cost, or behavioral-drift measurement. It then counts how many **independent** GitHub repositories implement each paper and publishes a daily digest plus a self-contained web archive. Papers that already broke out in attention are cut on purpose — the point is to find what nobody has looked at yet.
 
 ![ai-radar](assets/banner.svg)
 
@@ -52,25 +52,40 @@ This number is published on the site itself. A radar that hides evidence against
 ## How it works
 
 ```
-arXiv API ──► scope filter ──► known-ID filter ──► Batch API (Claude) ──► judgment
-                                                                            │
-GitHub search ──► authorship heuristic ──► signal ◄── OpenAlex citations   │
-                                                │                           │
-                                                └──► gate → ratio → score ◄─┘
+arXiv API ──► Observatory term-pair filter ──► known-ID filter ──► judgment
+                                                                      │
+                                                public-API fit gate ◄──┘
+                                                         │
+GitHub search ──► authorship heuristic ──► signal ◄──────┘
+                                                │
+OpenAlex citations ─────────────────────────────┴──► gate → ratio → score
                                                               │
                                     ┌─────────────────────────┼──────────────┐
                                     ▼                         ▼              ▼
                               Telegram (3/scope)      Markdown archive   Static site
 ```
 
-Two scopes run in sequence, each with its own term list, measured before being written into the spec:
+The default scope is `observatorio`. A paper must contain both an LLM or serving
+term and an externally observable measurement term before it reaches a paid
+judgment. Kimi or Claude then rejects work that requires weights, training,
+server internals, or custom hardware and offers no black-box endpoint test.
 
-| scope | categories | papers/day (measured) |
+The two broader legacy scopes remain available for research outside the
+Observatory. Enable them explicitly with `RADAR_SCOPES`:
+
+| scope | default | focus |
 |---|---|---|
-| `inferencia` | cs.LG, cs.CL, cs.DC, cs.AR, cs.PF | ~15 |
-| `agentes` | cs.AI, cs.CL, cs.SE, cs.MA | ~25 |
+| `observatorio` | yes | public-endpoint latency, reliability, routing, cost, streaming, and drift |
+| `inferencia` | no | general efficient inference research |
+| `agentes` | no | general agent engineering research |
 
-The first scope to discover a paper keeps it. Overlap measured at **1%** — the two literatures are effectively disjoint.
+```bash
+export RADAR_SCOPES=observatorio
+# Optional broad run:
+export RADAR_SCOPES=observatorio,inferencia,agentes
+```
+
+The first enabled scope to discover a paper keeps it.
 
 Every paper gets the same structured judgment regardless of provider: a closed
 taxonomy family with 19 values, an actionable verdict (`adotar`, `testar`,
@@ -372,6 +387,7 @@ distribution quality gate fails.
 | Variable | Required | Purpose |
 |---|---|---|
 | `RADAR_DB` | no | database path; the wizard uses ignored `data/local.db` locally and `data/radar-state.db` in Actions |
+| `RADAR_SCOPES` | no | comma-separated lanes; defaults to `observatorio` |
 | `RADAR_LLM_PROVIDER` | no | `kimi` or `anthropic` |
 | `KIMI_API_KEY` | with Kimi | judgment and summary |
 | `ANTHROPIC_API_KEY` | with Anthropic | judgment and summary |

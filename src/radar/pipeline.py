@@ -72,7 +72,7 @@ def run_day(
     # 1: custo do lote multiplicado e o mesmo feed republicado todo dia.
     # (A re-consulta de sinal desses papers e outra funcionalidade, construida
     # logo abaixo -- ver spec da re-consulta, secao 3.)
-    conhecidos = store.known_ids()
+    conhecidos = store.known_ids(scope.name)
     papers = [p for p in discovered if p.arxiv_id not in conhecidos]
     if len(discovered) != len(papers):
         cuts["ja_conhecido"] += len(discovered) - len(papers)
@@ -92,7 +92,9 @@ def run_day(
     # orcamento acaba. Julgamento vem do banco -- re-consulta nao gasta token.
     if recheck_limit > 0:
         novos_ids = {p.arxiv_id for p in papers}
-        for antigo in store.papers_to_recheck(limit=recheck_limit):
+        for antigo in store.papers_to_recheck(
+            limit=recheck_limit, scope=scope.name,
+        ):
             # HOJE ESTA GUARDA E INALCANCAVEL, e isso e proposital documentar.
             # `known_ids()` acima ja removeu de `papers` tudo que esta no banco,
             # e `papers_to_recheck` le exatamente o banco -- os dois conjuntos
@@ -138,6 +140,26 @@ def run_day(
                 # fila todos os dias, para sempre, consumindo a vaga e travando
                 # a rotacao antes que ela alcance qualquer paper saudavel. Nao
                 # se cura sozinho: o unico caminho que destravaria era este.
+                store.touch_checked(paper.arxiv_id, at=day)
+            continue
+
+        # Um escopo com grupos obrigatorios tem um segundo portao, semantico.
+        # O filtro local remove falsos positivos obvios; o modelo decide os
+        # casos que dependem de acesso interno, pesos ou hardware. Fazer isso
+        # antes do GitHub economiza rate limit. A exclusao paga fica guardada
+        # fora de `papers`, entao nao aparece no acervo e nao e paga de novo.
+        if scope.required_term_groups and judgment.pratica == "nao_aplica":
+            cuts[_motivo("fora_do_foco", e_novo)] += 1
+            if e_novo:
+                store.record_scope_exclusion(
+                    paper,
+                    scope=scope.name,
+                    excluded_at=day,
+                    reason="julgamento_nao_aplica",
+                    detail=judgment.porque,
+                    model=model,
+                )
+            else:
                 store.touch_checked(paper.arxiv_id, at=day)
             continue
 

@@ -106,6 +106,18 @@ def test_client_unions_terms_and_deduplicates_by_id():
     assert achado.cuts["fora_de_escopo"] == 1
 
 
+def test_client_counts_a_paper_that_fails_the_local_focus_gate():
+    scope = ScopeConfig(
+        name="observatorio",
+        categories=("cs.LG",),
+        terms=("memory bandwidth",),
+        required_term_groups=(("large language model", "llm"), ("ttft",)),
+    )
+    achado = ArxivClient(fetch=lambda url: FIXTURE, sleep=lambda s: None).recent(scope)
+    assert achado.papers == []
+    assert achado.cuts == {"fora_de_escopo": 1, "fora_do_foco": 1}
+
+
 def test_client_sleeps_between_calls_for_arxiv_etiquette():
     naps = []
     scope = ScopeConfig(name="teste", categories=("cs.LG",), terms=("a", "b", "c"))

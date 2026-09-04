@@ -4,7 +4,7 @@ import pytest
 
 from radar.formulas import (FormulaCandidate, FormulaSelection,
                             FormulaSelectionItem)
-from radar.judge import (LEITOR_BRIEF, Judge, JudgmentSchema,
+from radar.judge import (JUDGMENT_PROMPT_VERSION, LEITOR_BRIEF, Judge, JudgmentSchema,
                          KimiFormulaSelector, KimiJudge,
                          build_formula_selection_prompt,
                          build_kimi_formula_request, build_kimi_request,
@@ -45,13 +45,8 @@ def valid_schema():
 
 
 def test_leitor_brief_descreve_a_restricao_que_importa():
-    """O briefing deixou de ser sobre a placa e passou a ser sobre o leitor.
-
-    Substituiu `test_hardware_brief_names_the_real_constraints`, que checava
-    Ampere/24GB/FP8/936 -- fatos verdadeiros sobre uma maquina que o produto
-    parou de considerar quando deixou de reproduzir papers.
-    """
-    for fato in ("CONSTRAINED INFRASTRUCTURE", "24 GB", "no cluster", "adopt"):
+    for fato in ("Inference Observatory", "PUBLIC LLM API", "time to first token",
+                 "behavioral", "no provider internals"):
         assert fato in LEITOR_BRIEF
 
 
@@ -60,6 +55,14 @@ def test_prompt_includes_the_paper_and_the_reader_brief():
     assert PAPER.title in prompt
     assert PAPER.abstract in prompt
     assert LEITOR_BRIEF in prompt
+
+
+def test_prompt_versions_and_defines_the_public_api_relevance_gate():
+    prompt = build_prompt(PAPER)
+    assert JUDGMENT_PROMPT_VERSION in prompt
+    assert "set pratica to nao_aplica" in prompt
+    assert "custom CMOS accelerator" in prompt
+    assert "public endpoint" in prompt
 
 
 def test_schema_forbids_additional_properties():
@@ -488,7 +491,8 @@ def test_o_schema_nao_pergunta_mais_de_hardware():
 
 def test_o_prompt_descreve_o_leitor_e_nao_a_placa():
     texto = build_prompt(PAPER)
-    assert "constrained infrastructure" in texto.lower()
+    assert "public llm api" in texto.lower()
+    assert "no provider internals" in texto.lower()
     assert "3090" not in texto
     assert "RTX" not in texto
 
@@ -505,7 +509,7 @@ def test_o_campo_de_pratica_diz_o_criterio_ao_modelo():
     """O Literal restringe o token; e a descricao que diz qual criterio usar.
     Este e o veredito que o leitor le."""
     campo = JudgmentSchema.model_json_schema()["properties"]["pratica"]
-    for criterio in ("adotar", "constrained infrastructure", "validation"):
+    for criterio in ("adotar", "public-endpoint", "custom hardware"):
         assert criterio in campo["description"]
 
 
