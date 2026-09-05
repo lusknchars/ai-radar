@@ -493,10 +493,11 @@ field. Its three wave colors match the visual settings chosen in Frontend Lab:
 `#B92D5D`, `#FF8C82`, and `#FFE2D6`. It does not publish or reproduce the
 private React Bits Pro source used as a visual reference. Motion stops when the
 reader requests reduced motion, leaves the opening viewport, or moves the tab
-into the background. Display headings use the official Electrolize Regular 400 Latin
-WOFF2 build from Google Fonts. The publisher embeds it as a data URI, so the
-single-file pages still make no font request. Its OFL 1.1 license is kept in
-`assets/fonts/Electrolize-OFL.txt`.
+into the background. Typography uses the official Be Vietnam Pro Light 300 and
+Medium 500 Latin WOFF2 builds from Google Fonts: Light carries reading text and
+display headings, Medium carries emphasis, controls, and labels. The publisher
+embeds both as data URIs, so the single-file pages still make no font request.
+Its OFL 1.1 license is kept in `assets/fonts/BeVietnamPro-OFL.txt`.
 PDF retrieval and extraction are isolated in `fulltext.py`. The report JSON
 stores the PDF hash, extracted-text hash, parser, page count, and any parser
 fallback. Page rendering stays deterministic and offline-testable. Network

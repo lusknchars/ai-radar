@@ -545,12 +545,13 @@ def test_destaque_numerico_nao_quebra_entidade_de_aspa(dados):
 
 # --- Identidade editorial ---
 
-def test_a_tipografia_usa_electrolize_embutida_sem_fonte_remota(dados):
-    """Display usa Electrolize; texto e dados conservam fallbacks locais."""
+def test_a_tipografia_usa_be_vietnam_pro_embutida_sem_fonte_remota(dados):
+    """Display e texto usam Be Vietnam Pro Light e Medium; dados conservam
+    fallbacks locais."""
     html = render_site(dados)
-    assert "Electrolize" in html
-    assert "data:font/woff2;base64" in html
-    assert "Switzer" in html
+    assert "Be Vietnam Pro" in html
+    assert html.count("data:font/woff2;base64") == 2
+    assert "Electrolize" not in html
     assert "system-ui" in html
     assert "ui-monospace" in html
     assert "fonts.gstatic.com" not in html
