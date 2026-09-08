@@ -13,6 +13,7 @@ de depurar.
 from __future__ import annotations
 
 import logging
+import re
 import time
 import xml.etree.ElementTree as ET
 from typing import Callable
@@ -28,6 +29,26 @@ USER_AGENT = "ai-radar/0.1 (personal research digest)"
 ETIQUETTE_SLEEP_SECONDS = 3
 
 _ATOM = {"a": "http://www.w3.org/2005/Atom"}
+
+
+def _normalise_for_match(value: str) -> str:
+    """Normalize punctuation without turning short terms into substrings."""
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", value.casefold()).split())
+
+
+def matches_scope_focus(paper: Paper, scope: ScopeConfig) -> bool:
+    """Require one title or abstract match from every configured focus group.
+
+    arXiv queries are intentionally broad and independent. This local AND gate
+    is cheap, deterministic, and runs before any paid judgment or GitHub call.
+    """
+    if not scope.required_term_groups:
+        return True
+    text = f" {_normalise_for_match(f'{paper.title} {paper.abstract}')} "
+    return all(
+        any(f" {_normalise_for_match(term)} " in text for term in group)
+        for group in scope.required_term_groups
+    )
 
 
 def build_query(term: str, scope: ScopeConfig) -> str:
@@ -91,6 +112,7 @@ class ArxivClient:
         # Guardado por id, e nao contado na hora: um paper que aparece fora de
         # escopo em dois termos diferentes e um corte so.
         fora_de_escopo: set[str] = set()
+        fora_do_foco: set[str] = set()
         termos_falhos = 0
         for index, term in enumerate(scope.terms):
             if index:
@@ -114,14 +136,19 @@ class ArxivClient:
             for paper in parsed:
                 if paper.arxiv_id in seen:
                     continue
-                if allowed.intersection(paper.categories):
-                    seen[paper.arxiv_id] = paper
-                else:
+                if not allowed.intersection(paper.categories):
                     fora_de_escopo.add(paper.arxiv_id)
+                    continue
+                if not matches_scope_focus(paper, scope):
+                    fora_do_foco.add(paper.arxiv_id)
+                    continue
+                seen[paper.arxiv_id] = paper
 
         cuts: dict[str, int] = {}
         if fora_de_escopo:
             cuts["fora_de_escopo"] = len(fora_de_escopo)
+        if fora_do_foco:
+            cuts["fora_do_foco"] = len(fora_do_foco)
         if termos_falhos:
             cuts["termo_falhou"] = termos_falhos
         return Discovery(papers=list(seen.values()), cuts=cuts)

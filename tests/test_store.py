@@ -179,6 +179,20 @@ def test_init_schema_is_idempotent(tmp_path):
     assert s.all_papers() == []
 
 
+def test_scope_exclusion_is_known_only_inside_the_rejected_scope(store):
+    store.record_scope_exclusion(
+        P,
+        scope="observatorio",
+        excluded_at="2026-09-03",
+        reason="julgamento_nao_aplica",
+        detail="Requires custom hardware.",
+        model="kimi-k3",
+    )
+    assert P.arxiv_id in store.known_ids("observatorio")
+    assert P.arxiv_id not in store.known_ids("agentes")
+    assert store.all_papers() == []
+
+
 def test_init_schema_rejects_the_legacy_judgment_schema_before_the_pipeline(tmp_path):
     import sqlite3
 
@@ -234,6 +248,16 @@ def test_papers_to_recheck_respects_the_limit(store):
                   categories=["cs.LG"], published="2026-08-01"),
             seen_at="2026-08-01", scope="teste")
     assert len(store.papers_to_recheck(limit=3)) == 3
+
+
+def test_papers_to_recheck_can_be_restricted_to_the_active_scope(store):
+    store.upsert_paper(P, seen_at="2026-08-27", scope="observatorio")
+    other = Paper(arxiv_id="2508.99999", title="T", abstract="A", authors=[],
+                  categories=["cs.LG"], published="2026-08-01")
+    store.upsert_paper(other, seen_at="2026-08-27", scope="inferencia")
+    assert [p.arxiv_id for p in store.papers_to_recheck(
+        limit=10, scope="observatorio"
+    )] == [P.arxiv_id]
 
 
 def test_papers_to_recheck_is_empty_on_a_fresh_database(store):

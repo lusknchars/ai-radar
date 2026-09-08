@@ -431,6 +431,69 @@ def test_a_failing_signal_does_not_reach_the_feed_either(store):
     assert result.cuts["sinal_indisponivel"] == 1
 
 
+def test_focused_scope_rejects_non_testable_work_before_signal_lookup(store):
+    focused = ScopeConfig(
+        name="observatorio",
+        categories=("cs.LG",),
+        terms=("inference latency",),
+        required_term_groups=(("llm",), ("inference latency",)),
+    )
+    p = Paper(
+        arxiv_id="2608.90909",
+        title="Custom LLM Accelerator",
+        abstract="Custom hardware reports lower inference latency.",
+        authors=[], categories=["cs.LG"], published="2026-08-20",
+    )
+    rejected = julg("Custom accelerator", pratica="nao_aplica")
+
+    result = run_day(
+        store=store, scope=focused, thresholds=T, today=TODAY,
+        model="kimi-k3",
+        fetch_papers=lambda scope: Discovery(papers=[p]),
+        fetch_signal=lambda paper, today: (_ for _ in ()).throw(
+            AssertionError("a rejected paper must not spend GitHub rate limit")
+        ),
+        judge_all=lambda papers: {p.arxiv_id: rejected},
+    )
+
+    assert result.radar == []
+    assert result.feed == []
+    assert result.cuts["fora_do_foco"] == 1
+    assert store.all_papers() == []
+    assert store.scope_exclusions("observatorio")[0]["model"] == "kimi-k3"
+
+
+def test_paid_scope_rejection_is_not_judged_again_next_day(store):
+    focused = ScopeConfig(
+        name="observatorio",
+        categories=("cs.LG",),
+        terms=("inference latency",),
+        required_term_groups=(("llm",), ("inference latency",)),
+    )
+    p = Paper(
+        arxiv_id="2608.90909",
+        title="Custom LLM Accelerator",
+        abstract="Custom hardware reports lower inference latency.",
+        authors=[], categories=["cs.LG"], published="2026-08-20",
+    )
+    rejected = julg("Custom accelerator", pratica="nao_aplica")
+    run_day(
+        store=store, scope=focused, thresholds=T, today=TODAY,
+        model="kimi-k3", fetch_papers=lambda scope: Discovery(papers=[p]),
+        fetch_signal=lambda paper, today: (fake_signal(1, 1), []),
+        judge_all=lambda papers: {p.arxiv_id: rejected},
+    )
+    judged = []
+    second = run_day(
+        store=store, scope=focused, thresholds=T, today=date(2026, 8, 28),
+        model="kimi-k3", fetch_papers=lambda scope: Discovery(papers=[p]),
+        fetch_signal=lambda paper, today: (fake_signal(1, 1), []),
+        judge_all=lambda papers: judged.extend(papers) or {},
+    )
+    assert judged == []
+    assert second.cuts["ja_conhecido"] == 1
+
+
 def test_markdown_carries_the_authorship_audit_trail_from_the_store(store):
     """Trava o contrato implicito entre store e render.
 

@@ -145,11 +145,15 @@ def render_markdown(
     return "\n".join(out)
 
 
-# Rotulo legivel por escopo, e a ordem em que aparecem no arquivo do dia.
-# `inferencia` primeiro por decisao travada: e o primeiro escopo a descobrir,
-# e o que fica com o paper quando os dois o encontram.
-ROTULO_ESCOPO = {"inferencia": "Inferência", "agentes": "Agentes"}
-ORDEM_ESCOPO = ("inferencia", "agentes")
+# Rotulo legivel por escopo, e a ordem em que aparecem no arquivo do dia. O
+# Observatory vem primeiro porque e o produto padrao; os escopos gerais so
+# aparecem quando RADAR_SCOPES os habilita explicitamente.
+ROTULO_ESCOPO = {
+    "observatorio": "Inference Observatory",
+    "inferencia": "Inferência",
+    "agentes": "Agentes",
+}
+ORDEM_ESCOPO = ("observatorio", "inferencia", "agentes")
 
 
 def _rebaixa_titulos(linha: str) -> str:

@@ -69,7 +69,7 @@ def ambiente(monkeypatch, tmp_path):
         raising=False)
     for chave in ("GH_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID",
                   "RADAR_MODEL", "RADAR_SCORE_FLOOR", "RADAR_LLM_PROVIDER",
-                  "KIMI_API_KEY", "RADAR_KIMI_BASE_URL"):
+                  "KIMI_API_KEY", "RADAR_KIMI_BASE_URL", "RADAR_SCOPES"):
         monkeypatch.delenv(chave, raising=False)
     return tmp_path
 
@@ -255,22 +255,28 @@ def _espiar_run_day(monkeypatch):
     return vistos
 
 
-def test_a_cli_roda_os_dois_escopos_na_ordem(ambiente, monkeypatch):
-    """Inferencia primeiro: decisao travada da spec. O primeiro escopo a
-    descobrir um paper fica com ele; o segundo o corta por `ja_conhecido`."""
+def test_a_cli_roda_so_o_observatorio_por_padrao(ambiente, monkeypatch):
     vistos = _espiar_run_day(monkeypatch)
     cli.main(argv(ambiente))
-    assert [kw["scope"].name for kw in vistos] == ["inferencia", "agentes"]
+    assert [kw["scope"].name for kw in vistos] == ["observatorio"]
+
+
+def test_a_cli_preserva_os_escopos_amplos_por_configuracao(ambiente, monkeypatch):
+    monkeypatch.setenv("RADAR_SCOPES", "observatorio,inferencia,agentes")
+    vistos = _espiar_run_day(monkeypatch)
+    cli.main(argv(ambiente))
+    assert [kw["scope"].name for kw in vistos] == [
+        "observatorio", "inferencia", "agentes",
+    ]
 
 
 def test_a_reconsulta_roda_uma_vez_so(ambiente, monkeypatch):
-    """Ela varre `papers` inteira e nao conhece escopo. Passar o orcamento nas
-    duas passadas re-consultaria o dobro -- os mesmos papers, duas vezes."""
+    monkeypatch.setenv("RADAR_SCOPES", "observatorio,inferencia,agentes")
     vistos = _espiar_run_day(monkeypatch)
     cli.main(argv(ambiente))
     limites = [kw["recheck_limit"] for kw in vistos]
     assert limites[0] == cli.load_recheck_limit()
-    assert limites[1] == 0
+    assert limites[1:] == [0, 0]
 
 
 def test_o_arquivo_do_dia_e_um_so(ambiente, monkeypatch):
@@ -279,8 +285,7 @@ def test_o_arquivo_do_dia_e_um_so(ambiente, monkeypatch):
     arquivos = list((ambiente / "radar").glob("*.md"))
     assert len(arquivos) == 1
     texto = arquivos[0].read_text(encoding="utf-8")
-    assert "marcador-inferencia" in texto
-    assert "marcador-agentes" in texto
+    assert "marcador-observatorio" in texto
 
 
 def test_o_push_concatena_os_dois_radares(ambiente, monkeypatch):
@@ -291,11 +296,10 @@ def test_o_push_concatena_os_dois_radares(ambiente, monkeypatch):
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "t")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "c")
     cli.main(argv(ambiente))
-    assert "push-inferencia" in enviados[0]
-    assert "push-agentes" in enviados[0]
+    assert enviados[0] == "push-observatorio"
 
 
-def test_o_buscador_de_citacao_e_ligado_nos_dois_escopos(ambiente, monkeypatch):
+def test_o_buscador_de_citacao_e_ligado_no_escopo_ativo(ambiente, monkeypatch):
     """Sem isso o campo continua desconhecido para sempre e o portao de
     estouro por citacao segue inerte, como esteve desde o dia um."""
     vistos = _espiar_run_day(monkeypatch)

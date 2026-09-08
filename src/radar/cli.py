@@ -14,10 +14,9 @@ import anthropic
 import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
-from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
-                     load_database_path, load_kimi_request_interval,
-                     load_llm_provider, load_model, load_recheck_limit,
-                     load_thresholds)
+from .config import (load_database_path, load_kimi_base_url,
+                     load_kimi_request_interval, load_llm_provider, load_model,
+                     load_recheck_limit, load_scopes, load_thresholds)
 from .github import GitHubClient
 from .judge import KimiJudge, collect_batch_results, submit_batch, wait_for_batch
 from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
@@ -114,7 +113,7 @@ def _executar(args, db_path: Path, today) -> int:
     resultados: dict[str, object] = {}
     cortes_do_dia: Counter[str] = Counter()
 
-    for i, escopo in enumerate((DEFAULT_SCOPE, AGENT_SCOPE)):
+    for i, escopo in enumerate(load_scopes()):
         r = run_day(
             store=store, scope=escopo, thresholds=limiares, today=today,
             model=model,

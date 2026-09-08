@@ -1,0 +1,146 @@
+[
+  {
+    "id": "positive-ttft",
+    "title": "Measuring Time to First Token Across Public LLM APIs",
+    "abstract": "We compare time to first token and inference latency for large language model endpoints across regions.",
+    "expected": true
+  },
+  {
+    "id": "positive-decode",
+    "title": "Inter-Token Latency Under Load",
+    "abstract": "This study measures inter-token latency and decode latency in hosted LLM services.",
+    "expected": true
+  },
+  {
+    "id": "positive-language-drift",
+    "title": "Cross-Linguistic Framing Divergence in Hosted Models",
+    "abstract": "Equivalent prompts reveal cross-linguistic behavioral drift in a large language model chatbot.",
+    "expected": true
+  },
+  {
+    "id": "positive-silent-update",
+    "title": "Detecting Silent Model Updates",
+    "abstract": "We identify silent model updates in a model API by tracking output stability over time.",
+    "expected": true
+  },
+  {
+    "id": "positive-routing",
+    "title": "RouterBench for Hosted Language Models",
+    "abstract": "A black-box benchmark detects model routing changes across public language model endpoints.",
+    "expected": true
+  },
+  {
+    "id": "positive-streaming",
+    "title": "Streaming Chunk Semantics in LLM Services",
+    "abstract": "We characterize streaming API responses and chunk timing from public LLM providers.",
+    "expected": true
+  },
+  {
+    "id": "positive-reliability",
+    "title": "Reliability of Public LLM APIs",
+    "abstract": "The paper measures API reliability and availability for hosted large language models.",
+    "expected": true
+  },
+  {
+    "id": "positive-speculation",
+    "title": "Observable Signatures of Speculative Decoding",
+    "abstract": "Speculative decoding changes streaming inference latency for large language model APIs.",
+    "expected": true
+  },
+  {
+    "id": "positive-kv",
+    "title": "KV Cache Lifecycles in Multi-Turn LLM Calls",
+    "abstract": "We measure how KV cache reuse changes inference latency in multi-turn language model serving.",
+    "expected": true
+  },
+  {
+    "id": "positive-batching",
+    "title": "Continuous Batching and Hosted LLM Tail Latency",
+    "abstract": "Continuous batching creates a measurable tail latency signature in a large language model service.",
+    "expected": true
+  },
+  {
+    "id": "positive-cost",
+    "title": "API Cost Drift in Routed LLM Endpoints",
+    "abstract": "We track API cost and model routing for a hosted LLM endpoint over six months.",
+    "expected": true
+  },
+  {
+    "id": "positive-prompt-sensitivity",
+    "title": "Longitudinal Prompt Sensitivity",
+    "abstract": "Prompt sensitivity reveals version drift in a hosted language model without access to weights.",
+    "expected": true
+  },
+  {
+    "id": "negative-spiking-hardware",
+    "title": "Event-Triggered Perturbation for Spiking Transformers",
+    "abstract": "A custom CMOS accelerator improves zeroth-order fine-tuning of spiking transformers.",
+    "expected": false
+  },
+  {
+    "id": "negative-pde",
+    "title": "Denoising Latent PDE Solver Under Sparse Observations",
+    "abstract": "A variational autoencoder improves physical simulation from sparse sensor observations.",
+    "expected": false
+  },
+  {
+    "id": "negative-polymer",
+    "title": "Knowledge Distillation for Polymer Property Prediction",
+    "abstract": "A Gaussian process predicts mechanical properties of epoxy polymers.",
+    "expected": false
+  },
+  {
+    "id": "negative-scientific-compression",
+    "title": "Neural Compression of Scientific Data",
+    "abstract": "Deep neural networks reduce storage for large climate simulation arrays.",
+    "expected": false
+  },
+  {
+    "id": "negative-multimodal-alignment",
+    "title": "Multimodal Alignment with Optimal Transport",
+    "abstract": "A joint kernel aligns image and audio representations for retrieval quality.",
+    "expected": false
+  },
+  {
+    "id": "negative-logic-memory",
+    "title": "Integrated Stochastic Logic-in-Memory",
+    "abstract": "An accelerator increases memory-level parallelism using a custom silicon architecture.",
+    "expected": false
+  },
+  {
+    "id": "negative-quantization",
+    "title": "Weight-Only Quantization for Large Language Models",
+    "abstract": "We compress a large language model to four-bit weights while preserving benchmark quality.",
+    "expected": false
+  },
+  {
+    "id": "negative-pruning",
+    "title": "Structured Pruning for Large Language Models",
+    "abstract": "The method removes attention heads and reduces parameter count during fine-tuning.",
+    "expected": false
+  },
+  {
+    "id": "negative-agent-benchmark",
+    "title": "A Tool-Use Benchmark for LLM Agents",
+    "abstract": "The benchmark evaluates planning and function calling across agent tasks.",
+    "expected": false
+  },
+  {
+    "id": "negative-image-latency",
+    "title": "Low-Latency Diffusion Image Generation",
+    "abstract": "A distilled image generator reduces sampling latency on a local GPU.",
+    "expected": false
+  },
+  {
+    "id": "negative-training-throughput",
+    "title": "Distributed Training for Large Language Models",
+    "abstract": "Tensor parallelism doubles training throughput and lowers training cost on 128 GPUs.",
+    "expected": false
+  },
+  {
+    "id": "negative-rag-quality",
+    "title": "Retrieval-Augmented Language Model Evaluation",
+    "abstract": "The method improves answer quality by reranking documents before generation.",
+    "expected": false
+  }
+]
