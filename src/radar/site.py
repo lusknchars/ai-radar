@@ -32,6 +32,7 @@ from .public_labels import (CORE_KIND_PHRASES,
     TRAINING_LABELS as ROTULOS_TREINO, public_label,
 )
 from .report import ReportDocument
+from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
@@ -676,6 +677,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
                      *, heading: str | None = None, kicker: str | None = None,
                      deck: str | None = None, back_href: str | None = None,
                      extra_script: str = "",
+                     extra_style: str = "",
                      description: str | None = None,
                      canonical_url: str | None = None,
                      shared_assets: bool = False,
@@ -695,6 +697,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     main_class = "pagina article-page" if deck else "pagina"
     header_deck = f'<p class="article-deck">{escape(deck)}</p>' if deck else ""
     enhancement = f'<script>{extra_script}</script>' if extra_script else ""
+    extra_style_tag = f'<style>{extra_style}</style>' if extra_style else ""
     if shared_assets:
         styles = (
             f'<link rel="stylesheet" '
@@ -725,7 +728,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
         f'href="{escape(public_config.path("feed.xml"))}">'
-        f'{metadata}<title>{escape(titulo)}</title>{styles}</head><body>'
+        f'{metadata}<title>{escape(titulo)}</title>{styles}{extra_style_tag}</head><body>'
         '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">Skip to content</a>'
         f'<div class="envelope">{_nav(atual, public_config)}'
@@ -1160,6 +1163,10 @@ def render_research_page(
         deck=page.summary, back_href=public_config.path("#acervo"),
         description=page.summary, canonical_url=canonical,
         shared_assets=True, public_config=public_config,
+        extra_style=(
+            math_font_face(public_config.path("assets/fonts/stix-two-math.woff2"))
+            if page.equations else ""
+        ),
     )
 
 

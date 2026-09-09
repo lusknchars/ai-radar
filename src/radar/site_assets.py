@@ -33,6 +33,15 @@ _FONT_FACE = (
     + _font_face(500, BE_VIETNAM_PRO_MEDIUM_WOFF2_BASE64)
 )
 
+def math_font_face(font_url: str) -> str:
+    """Math face for pages with equations: the reader's local copy first."""
+    return (
+        '@font-face{font-family:"AI Radar Math";font-style:normal;font-weight:400;'
+        'font-display:swap;src:local("STIX Two Math"),local("STIXTwoMath-Regular"),'
+        f'url({font_url}) format("woff2")}}'
+    )
+
+
 BACKGROUND_SCRIPT = r"""
 // Decorative ordered-dither field. This is deliberately small and local:
 // a 2D canvas, a standard 4x4 Bayer threshold matrix and an independent

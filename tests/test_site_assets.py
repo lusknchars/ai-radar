@@ -85,3 +85,13 @@ def test_equacoes_tem_tipografia_propria_sem_link_externo():
     assert "overflow-x:auto" in STYLES.split(".equation-display{")[1].split("}")[0]
     assert ".equation-eyebrow{" in STYLES
     assert ".equation-context{" in STYLES
+
+
+def test_a_fonte_matematica_prefere_a_copia_local_e_nunca_um_cdn():
+    from radar.site_assets import math_font_face
+    css = math_font_face("/ai-radar/assets/fonts/stix-two-math.woff2")
+    assert css.startswith('@font-face{font-family:"AI Radar Math";')
+    assert 'local("STIX Two Math"),local("STIXTwoMath-Regular"),' in css
+    assert 'url(/ai-radar/assets/fonts/stix-two-math.woff2) format("woff2")' in css
+    assert "font-display:swap" in css
+    assert "fonts.gstatic.com" not in css and "https://" not in css

@@ -977,3 +977,13 @@ def test_equacao_sem_numero_omite_o_rotulo_e_a_secao_vazia():
     html = render_research_page(_page_with_equations(equations=(equation,)))
     assert '<p class="equation-eyebrow">unnumbered equation · proposed method</p>' in html
     assert '<p class="equation-context">' not in html
+
+
+def test_a_pagina_com_equacoes_declara_a_fonte_matematica_no_head():
+    html = render_research_page(_page_with_equations())
+    head = html.split("</head>")[0]
+    assert '@font-face{font-family:"AI Radar Math"' in head
+    assert "url(/ai-radar/assets/fonts/stix-two-math.woff2)" in head
+    sem = render_research_page(_page_with_equations(equations=(), equations_status="unavailable",
+                                                    equations_fetched_at=""))
+    assert "AI Radar Math" not in sem.split("</head>")[0]

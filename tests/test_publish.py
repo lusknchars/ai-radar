@@ -148,3 +148,15 @@ def test_publish_site_uses_the_forks_public_urls(tmp_path):
     assert 'href="/research-radar/papers/2608.11111/index.json"' in research
     assert 'href="https://reader.github.io/research-radar/papers/2608.11111/"' in research
     assert "/ai-radar/" not in research
+
+
+def test_publish_copies_the_math_font_and_its_license_stays_in_the_repo(tmp_path):
+    from pathlib import Path
+    store = _store(tmp_path / "radar.db")
+    publish_site(store, tmp_path / "site", date(2026, 9, 8))
+    font = tmp_path / "site" / "assets" / "fonts" / "stix-two-math.woff2"
+    assert font.exists()
+    assert font.read_bytes()[:4] == b"wOF2"
+    license_text = (Path(__file__).resolve().parents[1] / "assets" / "fonts"
+                    / "STIXTwoMath-OFL.txt").read_text(encoding="utf-8")
+    assert license_text.startswith("Copyright 2001-2021 The STIX Fonts Project Authors")

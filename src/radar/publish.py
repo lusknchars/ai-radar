@@ -20,6 +20,9 @@ VENDOR_ASSETS = tuple(
     Path(__file__).resolve().parents[2] / "assets" / "vendor" / name
     for name in ("d3-7.9.0.min.js", "observable-plot-0.6.17.min.js")
 )
+FONT_ASSETS = tuple(sorted(
+    (Path(__file__).resolve().parents[2] / "assets" / "fonts").glob("*.woff2")
+))
 
 
 def publish_site(
@@ -42,6 +45,10 @@ def publish_site(
     assets_root.mkdir(parents=True, exist_ok=True)
     for asset in VENDOR_ASSETS:
         copyfile(asset, assets_root / asset.name)
+    fonts_root = assets_root / "fonts"
+    fonts_root.mkdir(parents=True, exist_ok=True)
+    for asset in FONT_ASSETS:
+        copyfile(asset, fonts_root / asset.name)
     (assets_root / "site.css").write_text(STYLES, encoding="utf-8")
     (assets_root / "background.js").write_text(
         BACKGROUND_SCRIPT, encoding="utf-8")
