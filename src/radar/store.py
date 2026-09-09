@@ -417,10 +417,15 @@ class Store:
               {filtro_entrega}
         """, {"dia": delivered_on} if delivered_on else {})
 
-        sources = {
-            row["arxiv_id"]: dict(row)
-            for row in self._conn.execute("SELECT * FROM equation_sources")
-        }
+        try:
+            sources = {
+                row["arxiv_id"]: dict(row)
+                for row in self._conn.execute("SELECT * FROM equation_sources")
+            }
+        except sqlite3.OperationalError:
+            # Banco gravado antes do passo de equacoes e aberto sem
+            # init_schema: a pagina diz "not fetched" em vez de quebrar.
+            sources = {}
         pontos = []
         for r in linhas:
             publicado = _date.fromisoformat(r["published"][:10])
@@ -436,7 +441,8 @@ class Store:
                 publicado=r["published"], score=r["score"] or 0.0,
                 scope=r["scope"],
                 technique=r["technique"], porque=r["porque"],
-                equations=tuple(self.equations_for(r["arxiv_id"])),
+                equations=(tuple(self.equations_for(r["arxiv_id"]))
+                           if r["arxiv_id"] in sources else ()),
                 equations_status=sources.get(r["arxiv_id"], {}).get("status", "not_fetched"),
                 equations_fetched_at=sources.get(r["arxiv_id"], {}).get("fetched_at", ""),
                 core_kind=sources.get(r["arxiv_id"], {}).get("core_kind") or "",

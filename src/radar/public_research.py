@@ -86,7 +86,8 @@ class IndependentTest(BaseModel):
 
 
 class ResearchEquation(BaseModel):
-    """One central equation, MathML already sanitized by the collector."""
+    """One central equation. `mathml` and `context` are sanitized markup:
+    the context is escaped prose with inline MathML for the paper's symbols."""
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 

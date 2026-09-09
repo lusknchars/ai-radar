@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+from html import escape
 from collections import Counter
 from typing import Literal
 
@@ -21,7 +22,7 @@ log = logging.getLogger(__name__)
 MAX_SELECTED = 3
 EquationsStatus = Literal[
     "not_fetched", "unavailable", "rejected", "no_equations", "not_formula",
-    "selected", "selector_failed",
+    "selected", "selector_failed", "parse_failed",
 ]
 
 
@@ -56,7 +57,8 @@ def _views(
         views.append(EquationView(
             anchor=equation.anchor, label=equation.label,
             section=equation.section, role=item.role, latex=equation.latex,
-            mathml=equation.mathml, context=equation.context_before,
+            mathml=equation.mathml,
+            context=equation.context_html or escape(equation.context_before, quote=False),
         ))
     return views
 
@@ -85,13 +87,18 @@ def collect_equations(
         if fetched.status != "available":
             record(fetched.status)
             continue
-        equations = parse_arxiv_html(fetched.text)
+        try:
+            equations = parse_arxiv_html(fetched.text)
+            all_candidates = html_candidates(equations)
+            ranked = rank_formula_candidates(all_candidates)
+        except Exception as exc:  # noqa: BLE001 - markup we have never seen
+            log.warning("arXiv HTML parse failed for %s: %s", paper.arxiv_id, exc)
+            record("parse_failed")
+            continue
         if not equations:
             record("no_equations")
             continue
-        all_candidates = html_candidates(equations)
         by_id = {c.candidate_id: e for c, e in zip(all_candidates, equations)}
-        ranked = rank_formula_candidates(all_candidates)
         try:
             selection = selector.select(paper, ranked)
             views = _views(selection, ranked, by_id)

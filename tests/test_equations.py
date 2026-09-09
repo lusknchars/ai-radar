@@ -65,6 +65,14 @@ def test_selected_equations_are_stored_with_roles_in_selection_order(store):
     assert [(e.anchor, e.role, e.label) for e in rows] == [
         ("S4.E9", "loss", "(9)"), ("S3.E1", "baseline", "(1)")]
     assert rows[0].context == "The loss function can be expressed as follows:"
+    unnumbered = {c.path: c for c in candidates}["arxiv-html:S4.Ex1"]
+    views = collect_equations(
+        store, [PAPER], fetch_html=_available, today="2026-09-08", selector_model="kimi-k2.6",
+        selector=FakeSelector(FormulaSelection(kind="formula", selected=[
+            FormulaSelectionItem(candidate_id=unnumbered.candidate_id, role="proposed_method")])))
+    assert views == Counter({"selected": 1})
+    assert store.equations_for(PAPER.arxiv_id)[0].context == (
+        'The update for <math display="inline"><msub><mi>Z</mi><mi>t</mi></msub></math> reads:')
     assert rows[0].mathml.startswith('<math display="block">')
     source = store.equation_source(PAPER.arxiv_id)
     assert source["status"] == "selected" and source["core_kind"] == "formula"
@@ -120,6 +128,20 @@ def test_selector_errors_and_unknown_ids_are_recorded_not_raised(store):
         store, [PAPER], fetch_html=_available, selector=unknown,
         today="2026-09-09", selector_model="kimi-k2.6")
     assert outcome == Counter({"selector_failed": 1})
+
+
+def test_a_parser_failure_is_recorded_not_raised(store, monkeypatch):
+    from radar import equations as module
+
+    def explode(text):
+        raise ValueError("markup we have never seen")
+
+    monkeypatch.setattr(module, "parse_arxiv_html", explode)
+    outcome = collect_equations(
+        store, [PAPER], fetch_html=_available, selector=FakeSelector(),
+        today="2026-09-08", selector_model="kimi-k2.6")
+    assert outcome == Counter({"parse_failed": 1})
+    assert store.equation_source(PAPER.arxiv_id)["status"] == "parse_failed"
 
 
 def test_a_fetch_exception_leaves_no_row_so_backfill_retries(store):

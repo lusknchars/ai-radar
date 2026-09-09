@@ -36,6 +36,11 @@ from .telegram import send
 # presenca do segredo, e nao de um numero fixo. Um valor unico de 2,5 s (24/min)
 # so serve para o caso COM token: sem ele, a maioria dos papers toma 403 e cai
 # em `sinal_indisponivel`.
+# Teto por execucao do passo de equacoes: cada paper custa uma chamada ao
+# seletor com intervalo de requisicao, e um banco historico com mil papers
+# nao pode transformar o run diario em horas.
+MAX_EQUATIONS_PER_RUN = 40
+
 GITHUB_SLEEP_WITHOUT_TOKEN = 6.0   # 10 req/min
 GITHUB_SLEEP_WITH_TOKEN = 2.5      # 24/min, dentro dos 30/min autenticados
 
@@ -144,7 +149,7 @@ def _executar(args, db_path: Path, today) -> int:
         # estado gravado: os de hoje e qualquer um que uma falha de rede tenha
         # deixado para tras. Corre depois do julgamento e antes do jornal; uma
         # falha vira estado por paper, nunca uma excecao que derrube o dia.
-        pendentes = store.papers_without_equations()
+        pendentes = store.papers_without_equations()[:MAX_EQUATIONS_PER_RUN]
         if pendentes:
             selector = KimiFormulaSelector(
                 os.environ.get("KIMI_API_KEY", ""), load_formula_model(),

@@ -441,3 +441,12 @@ def test_site_data_carries_the_selector_core_kind(store):
         equations=[])
     ponto = store.site_data(date(2026, 9, 8)).pontos[0]
     assert ponto.equations_status == "not_formula" and ponto.core_kind == "algorithm"
+
+
+def test_site_data_tolerates_a_database_without_equation_tables(store):
+    from datetime import date
+    _judged_with_signal(store)
+    store._conn.execute("DROP TABLE equations")
+    store._conn.execute("DROP TABLE equation_sources")
+    ponto = store.site_data(date(2026, 9, 8)).pontos[0]
+    assert ponto.equations == () and ponto.equations_status == "not_fetched"

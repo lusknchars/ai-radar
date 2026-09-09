@@ -960,6 +960,7 @@ def test_a_secao_de_equacoes_explica_cada_ausencia_em_ingles():
         "unavailable": "arXiv has no HTML rendering for this paper.",
         "rejected": "arXiv has no HTML rendering for this paper.",
         "no_equations": "No display equations were found in the arXiv HTML.",
+        "parse_failed": "Equations could not be extracted from the arXiv HTML.",
     }
     for status, copy in cases.items():
         html = render_research_page(
@@ -967,6 +968,17 @@ def test_a_secao_de_equacoes_explica_cada_ausencia_em_ingles():
                                  equations_fetched_at=""))
         assert copy in html, status
         assert "equations from arXiv HTML" not in html, status
+
+
+def test_o_contexto_da_equacao_mostra_simbolos_inline_como_mathml():
+    from radar.site_data import EquationView
+    equation = EquationView(
+        anchor="S4.Ex1", label="", section="4 Methodology", role="proposed_method",
+        latex="x", mathml='<math display="block"><mi>x</mi></math>',
+        context='The update for <math display="inline"><msub><mi>Z</mi><mi>t</mi></msub></math> reads:')
+    html = render_research_page(_page_with_equations(equations=(equation,)))
+    assert ('<p class="equation-context">The update for <math display="inline">'
+            '<msub><mi>Z</mi><mi>t</mi></msub></math> reads:</p>') in html
 
 
 def test_equacao_sem_numero_omite_o_rotulo_e_a_secao_vazia():

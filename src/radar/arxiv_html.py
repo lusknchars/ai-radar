@@ -20,6 +20,7 @@ MAX_EQUATIONS = 100
 MAX_LATEX_CHARS = 6000
 MAX_MATHML_CHARS = 20_000
 CONTEXT_CHARS = 900
+MAX_LABEL_CHARS = 24   # "(12)", "(A.3)"; a descriptive tag is not a number
 
 _ROW_SUFFIX = re.compile(r"X[a-z]*$")
 _DISPLAYSTYLE = re.compile(r"^\s*\\displaystyle(?![A-Za-z])\s*")
@@ -36,6 +37,9 @@ class HtmlEquation:
     mathml: str
     context_before: str
     context_after: str
+    # The introducing paragraph as page markup: escaped prose with inline
+    # MathML already sanitized, so symbols survive where plain text drops them.
+    context_html: str = ""
 
 
 @dataclass(frozen=True)
@@ -91,7 +95,9 @@ class _LatexmlParser(HTMLParser):
         self._div_depth = 0
         self._para_depth: int | None = None
         self._paragraph: list[str] | None = None
+        self._paragraph_html: list[str] | None = None
         self._last_paragraph = ""
+        self._last_paragraph_html = ""
         self._pending_after: list[dict] = []
         self._table_id = ""
         self._row: dict | None = None
@@ -99,6 +105,7 @@ class _LatexmlParser(HTMLParser):
         self._math_depth = 0
         self._math_alttext = ""
         self._tag: list[str] | None = None
+        self._anchors: set[str] = set()
 
     # -- tags ---------------------------------------------------------------
     def handle_starttag(self, tag: str, attrs) -> None:
@@ -118,6 +125,7 @@ class _LatexmlParser(HTMLParser):
             if "ltx_para" in classes:
                 self._para_depth = self._div_depth
                 self._last_paragraph = ""
+                self._last_paragraph_html = ""
                 self._pending_after = []
             return
         if tag in {"h1", "h2", "h3", "h4", "h5", "h6"} and (
@@ -127,6 +135,7 @@ class _LatexmlParser(HTMLParser):
             return
         if tag == "p" and "ltx_p" in classes:
             self._paragraph = []
+            self._paragraph_html = []
             return
         if tag == "table" and ("ltx_equation" in classes or "ltx_equationgroup" in classes):
             self._table_id = attributes.get("id") or ""
@@ -155,6 +164,9 @@ class _LatexmlParser(HTMLParser):
                 if self._row is not None:
                     self._row["cells"].append(markup)
                     self._row["latex"].append(self._math_alttext)
+                elif self._paragraph is not None:
+                    self._paragraph.append(" ")
+                    self._paragraph_html.append(sanitize_mathml(markup, display="inline"))
             return
         if tag == "div":
             if self._para_depth == self._div_depth:
@@ -168,14 +180,17 @@ class _LatexmlParser(HTMLParser):
             return
         if tag == "p" and self._paragraph is not None:
             text = _collapse(self._paragraph)
+            self._last_paragraph_html = _collapse(self._paragraph_html)
             self._paragraph = None
+            self._paragraph_html = None
             self._last_paragraph = text
             for row in self._pending_after:
                 row["context_after"] = text[:CONTEXT_CHARS]
             self._pending_after = []
             return
         if tag == "span" and self._tag is not None and self._row is not None:
-            self._row["label"] = _collapse(self._tag)
+            label = _collapse(self._tag)
+            self._row["label"] = label if len(label) <= MAX_LABEL_CHARS else ""
             self._tag = None
             return
         if tag == "tr" and self._row is not None:
@@ -193,24 +208,37 @@ class _LatexmlParser(HTMLParser):
             self._heading.append(data)
         elif self._paragraph is not None:
             self._paragraph.append(data)
+            self._paragraph_html.append(escape(data, quote=False))
 
     # -- rows ---------------------------------------------------------------
     def _finish_row(self) -> None:
         row, self._row = self._row, None
         if not row["cells"]:
             return
-        anchor = _ROW_SUFFIX.sub("", row["id"]) if row["id"] else self._table_id
+        base = _ROW_SUFFIX.sub("", row["id"]) if row["id"] else self._table_id
         latex = " ".join(_DISPLAYSTYLE.sub("", cell) for cell in row["latex"]).strip()
         previous = self.rows[-1] if self.rows else None
-        if previous is not None and previous["anchor"] == anchor and not row["label"]:
+        if previous is not None and previous["base"] == base and not row["label"]:
             previous["latex"] = f"{previous['latex']} \\\\ {latex}"
             previous["cell_rows"].append(row["cells"])
             return
+        # An id reused by a non-continuation row (a labeled row without its
+        # own id, or a repeated table id) still needs a unique anchor: the
+        # store keys equations by (paper, anchor).
+        anchor, n = base, 1
+        while anchor in self._anchors:
+            n += 1
+            anchor = f"{base}-{n}"
+        self._anchors.add(anchor)
         equation = {
-            "anchor": anchor, "label": row["label"], "section": self._section,
+            "anchor": anchor, "base": base, "label": row["label"], "section": self._section,
             "latex": latex, "cell_rows": [row["cells"]],
             "context_before": self._last_paragraph[-CONTEXT_CHARS:],
             "context_after": "",
+            "context_html": (
+                self._last_paragraph_html
+                if len(self._last_paragraph) <= CONTEXT_CHARS else ""
+            ),
         }
         self.rows.append(equation)
         self._pending_after.append(equation)
@@ -292,10 +320,10 @@ def _sanitized_inner(fragment: str) -> str:
     return _serialize(tree.root)
 
 
-def sanitize_mathml(fragment: str) -> str:
+def sanitize_mathml(fragment: str, *, display: str = "block") -> str:
     """Rebuild one equation from the allowlist; the input never reaches a page."""
     inner = _sanitized_inner(fragment)
-    return f'<math display="block">{inner}</math>' if inner else ""
+    return f'<math display="{display}">{inner}</math>' if inner else ""
 
 
 def sanitize_math_cells(fragments: list[str]) -> str:
@@ -327,6 +355,7 @@ def parse_arxiv_html(text: str) -> list[HtmlEquation]:
             position=len(equations) + 1, latex=row["latex"], mathml=mathml,
             context_before=row["context_before"],
             context_after=row["context_after"],
+            context_html=row["context_html"],
         ))
         if len(equations) >= MAX_EQUATIONS:
             break

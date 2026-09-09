@@ -77,5 +77,9 @@
   "report_available": false,
   "validation_tier": "unknown",
   "evidence_tier": "unknown",
-  "infrastructure_basis": "unknown"
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": ""
 }

@@ -401,3 +401,19 @@ def test_the_anthropic_provider_skips_equation_collection(ambiente, monkeypatch)
     monkeypatch.setattr(cli, "collect_equations",
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("called")))
     assert cli.main(argv(ambiente)) == 0
+
+
+def test_the_daily_equation_step_is_capped_per_run(ambiente, monkeypatch):
+    from collections import Counter
+    from radar.store import Store
+    many = [Paper(arxiv_id=f"2508.{n:05d}", title="T", abstract="A", authors=["A"],
+                  categories=["cs.LG"], published="2026-08-20") for n in range(1, 4)]
+    seen = {}
+    _kimi_environment(monkeypatch)
+    monkeypatch.setattr(cli, "MAX_EQUATIONS_PER_RUN", 2)
+    monkeypatch.setattr(Store, "papers_without_equations", lambda self: many)
+    monkeypatch.setattr(cli, "KimiFormulaSelector", lambda *a, **k: object())
+    monkeypatch.setattr(cli, "collect_equations",
+                        lambda store, papers, **k: seen.setdefault("n", len(papers)) and Counter())
+    assert cli.main(argv(ambiente)) == 0
+    assert seen["n"] == 2

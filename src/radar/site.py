@@ -882,6 +882,7 @@ EQUATIONS_ABSENT = {
     "unavailable": "arXiv has no HTML rendering for this paper.",
     "rejected": "arXiv has no HTML rendering for this paper.",
     "no_equations": "No display equations were found in the arXiv HTML.",
+    "parse_failed": "Equations could not be extracted from the arXiv HTML.",
 }
 
 
@@ -909,11 +910,11 @@ def _render_equations(page: ResearchPage) -> str:
             parts.append(f"§{equation.section}")
         parts.append(role)
         context = (
-            f'<p class="equation-context">{escape(equation.context)}</p>'
+            f'<p class="equation-context">{equation.context}</p>'
             if equation.context else ""
         )
-        # `mathml` is the sanitizer's own output and the page model enforces
-        # its `<math display="block">` prefix, so it is inserted as markup.
+        # `mathml` and `context` are the parser's own output: sanitized MathML
+        # and escaped prose with inline MathML. Both are inserted as markup.
         items.append(
             '<article class="equation">'
             f'{context}'

@@ -746,6 +746,7 @@ background:rgba(0,0,0,.035);color:var(--fraco);font-size:13px;line-height:1.65}
 border:1px solid var(--linha);border-radius:18px;background:var(--superficie)}
 .equation-display math{display:block;margin:0 auto;font-family:"AI Radar Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.15em;line-height:1.5;color:var(--texto)}
 .equation-display math+math{margin-top:10px}
+.equation-context math{font-family:"AI Radar Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.05em}
 .equation-eyebrow{margin:12px 0 0;color:var(--apagado);font:500 8px var(--mono);text-transform:uppercase;letter-spacing:.13em}
 .equations-provenance{margin:26px 0 0;color:var(--apagado);font:9px var(--mono)}
 .research-inference,.research-empty{max-width:66ch;margin:12px 0;color:var(--apagado);

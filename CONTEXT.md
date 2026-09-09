@@ -55,6 +55,11 @@ The formula, algorithm, execution model, or evaluation protocol that most
 directly explains what a paper changes. It may explicitly have no formula.
 _Avoid_: Mathematics section, technical summary
 
+**Central equation**:
+One of up to three equations selected from arXiv's HTML rendering and shown
+on a research page as typeset mathematics, with its number and section.
+_Avoid_: Formula walkthrough, key formula, derived equation
+
 **Formula walkthrough**:
 A source-grounded explanation of one formula, its symbols, its role in the
 paper, and any calculation AI Radar derives from it.

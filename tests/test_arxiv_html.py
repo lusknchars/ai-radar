@@ -49,6 +49,17 @@ def test_parser_context_is_the_neighbouring_prose_without_math(sample):
     assert equations["S4.Ex1"].context_after == ""
 
 
+def test_context_html_keeps_inline_symbols_as_sanitized_mathml(sample):
+    equations = {e.anchor: e for e in parse_arxiv_html(sample)}
+    update = equations["S4.Ex1"]
+    assert update.context_before == "The update for reads:"
+    assert update.context_html == (
+        'The update for <math display="inline"><msub><mi>Z</mi><mi>t</mi></msub></math> reads:'
+    )
+    assert equations["S3.E1"].context_html.endswith("defined by a function as follows:")
+    assert "alttext" not in update.context_html and 'id="' not in update.context_html
+
+
 def test_inline_math_in_prose_is_never_an_equation(sample):
     anchors = [e.anchor for e in parse_arxiv_html(sample)]
     assert "S3.SS1.p3" not in anchors
@@ -65,6 +76,28 @@ def test_parser_drops_an_equation_whose_latex_exceeds_the_cap(sample, monkeypatc
     anchors = [e.anchor for e in parse_arxiv_html(sample)]
     assert "S4.E9" not in anchors
     assert "A3.E19" in anchors
+
+
+def test_rows_that_reuse_an_id_without_being_continuations_get_unique_anchors():
+    row = ('<tr class="ltx_equation ltx_eqn_row"><td class="ltx_eqn_cell">'
+           '<math alttext="{latex}"><mi>x</mi></math></td>'
+           '<td class="ltx_eqn_cell ltx_eqn_eqno"><span class="ltx_tag ltx_tag_equation">({n})</span></td></tr>')
+    page = ('<div class="ltx_page_main"><table id="S1.Ex2" class="ltx_equation ltx_eqn_table"><tbody>'
+            + row.format(latex="a=1", n=1) + row.format(latex="b=2", n=2) + row.format(latex="c=3", n=3)
+            + '</tbody></table></div>')
+    equations = parse_arxiv_html(page)
+    assert [e.anchor for e in equations] == ["S1.Ex2", "S1.Ex2-2", "S1.Ex2-3"]
+    assert [e.label for e in equations] == ["(1)", "(2)", "(3)"]
+    assert len({e.anchor for e in equations}) == 3
+
+
+def test_a_descriptive_tag_is_not_an_equation_number():
+    page = ('<div class="ltx_page_main"><table id="S2.E4" class="ltx_equation ltx_eqn_table"><tbody>'
+            '<tr class="ltx_equation ltx_eqn_row"><td class="ltx_eqn_cell"><math alttext="e=1"><mi>e</mi></math></td>'
+            '<td class="ltx_eqn_cell ltx_eqn_eqno"><span class="ltx_tag ltx_tag_equation">'
+            '(Truncation error on population distributions)</span></td></tr></tbody></table></div>')
+    equation, = parse_arxiv_html(page)
+    assert equation.label == "" and equation.anchor == "S2.E4"
 
 
 def test_a_page_without_equations_yields_nothing():
