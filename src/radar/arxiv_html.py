@@ -190,11 +190,98 @@ class _LatexmlParser(HTMLParser):
         self._pending_after.append(equation)
 
 
+_ALLOWED_ELEMENTS = frozenset({
+    "math", "mrow", "mi", "mn", "mo", "mtext", "mspace", "ms", "msup", "msub",
+    "msubsup", "mfrac", "msqrt", "mroot", "mover", "munder", "munderover",
+    "mtable", "mtr", "mtd", "mstyle", "mpadded", "mphantom",
+})
+_DROPPED_ELEMENTS = frozenset({"annotation", "annotation-xml", "script", "style"})
+_ALLOWED_ATTRIBUTES = frozenset({
+    "mathvariant", "stretchy", "fence", "separator", "largeop", "movablelimits",
+    "symmetric", "lspace", "rspace", "minsize", "maxsize", "form", "accent",
+    "accentunder", "displaystyle", "scriptlevel", "linethickness",
+    "columnalign", "rowalign", "columnspacing", "rowspacing", "width",
+    "height", "depth", "voffset",
+})
+_ATTRIBUTE_VALUE = re.compile(r"^[A-Za-z0-9.%+\- ]{1,40}$")
+
+
+class _MathTree(HTMLParser):
+    """Tree of [tag, attrs, children] lists; text nodes are plain strings."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.root: list = []
+        self._stack: list = []
+
+    def _children(self) -> list:
+        return self._stack[-1][2] if self._stack else self.root
+
+    def handle_starttag(self, tag: str, attrs) -> None:
+        node = [tag.lower(), dict(attrs), []]
+        self._children().append(node)
+        self._stack.append(node)
+
+    def handle_startendtag(self, tag: str, attrs) -> None:
+        self._children().append([tag.lower(), dict(attrs), []])
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        while self._stack:
+            node = self._stack.pop()
+            if node[0] == tag:
+                break
+
+    def handle_data(self, data: str) -> None:
+        if data.strip():
+            self._children().append(data)
+
+
+def _serialize(nodes: list) -> str:
+    out: list[str] = []
+    for node in nodes:
+        if isinstance(node, str):
+            out.append(escape(node, quote=False))
+            continue
+        tag, attrs, children = node
+        if tag in _DROPPED_ELEMENTS:
+            continue
+        if tag not in _ALLOWED_ELEMENTS or tag == "math":
+            out.append(_serialize(children))
+            continue
+        kept = "".join(
+            f' {name}="{escape(value, quote=True)}"'
+            for name, value in attrs.items()
+            if name in _ALLOWED_ATTRIBUTES and value is not None
+            and _ATTRIBUTE_VALUE.fullmatch(value)
+        )
+        out.append(f"<{tag}{kept}>{_serialize(children)}</{tag}>")
+    return "".join(out)
+
+
+def _sanitized_inner(fragment: str) -> str:
+    tree = _MathTree()
+    tree.feed(fragment)
+    tree.close()
+    return _serialize(tree.root)
+
+
+def sanitize_mathml(fragment: str) -> str:
+    """Rebuild one equation from the allowlist; the input never reaches a page."""
+    inner = _sanitized_inner(fragment)
+    return f'<math display="block">{inner}</math>' if inner else ""
+
+
+def sanitize_math_cells(fragments: list[str]) -> str:
+    """Join the cells LaTeXML splits an aligned row into as one block."""
+    if len(fragments) == 1:
+        return sanitize_mathml(fragments[0])
+    inner = "".join(_sanitized_inner(fragment) for fragment in fragments)
+    return f'<math display="block"><mrow>{inner}</mrow></math>' if inner else ""
+
+
 def _render_cell_rows(cell_rows: list[list[str]]) -> str:
-    # Replaced by the sanitizer in the next slice; kept so this one stands alone.
-    return "".join(
-        '<math display="block">' + "".join(cells) + "</math>" for cells in cell_rows
-    )
+    return "".join(sanitize_math_cells(cells) for cells in cell_rows)
 
 
 def parse_arxiv_html(text: str) -> list[HtmlEquation]:
