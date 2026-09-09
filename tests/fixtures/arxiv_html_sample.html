@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Sample</title></head>
+<body>
+<div class="ltx_page_main">
+<article class="ltx_document">
+<section id="S3" class="ltx_section">
+<h2 class="ltx_title ltx_title_section"><span class="ltx_tag ltx_tag_section">3 </span>Preliminaries</h2>
+<div id="S3.SS1.p3" class="ltx_para">
+<p id="S3.SS1.p3.2" class="ltx_p">Static systems are governed by time-independent coefficients. They are typically defined by a function as follows:</p>
+<table id="S3.E1" class="ltx_equationgroup ltx_eqn_table">
+<tbody><tr id="S3.E1X" class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S3.E1.m1" class="ltx_Math" alttext="\displaystyle F(P;A,U)=0\mathrm{~in~}\Omega" display="inline"><semantics><mrow><mi>F</mi><mo>(</mo><mi>P</mi><mo>;</mo><mi>A</mi><mo>,</mo><mi>U</mi><mo>)</mo><mo>=</mo><mn>0</mn><mspace width="0.5em"/><mi mathvariant="normal">in</mi><mi mathvariant="normal">&#937;</mi></mrow><annotation encoding="application/x-tex">F(P;A,U)=0</annotation></semantics></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equationgroup ltx_align_right">(1)</span></td></tr></tbody>
+</table>
+<p id="S3.SS1.p3.3" class="ltx_p">where <math id="S3.SS1.p3.m1" class="ltx_Math" alttext="\Omega" display="inline"><semantics><mi mathvariant="normal">&#937;</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math> is a bounded spatial domain.</p>
+</div>
+</section>
+<section id="S4" class="ltx_section">
+<h2 class="ltx_title ltx_title_section"><span class="ltx_tag ltx_tag_section">4 </span>Methodology</h2>
+<div id="S4.SS2.p7" class="ltx_para">
+<p id="S4.SS2.p7.3" class="ltx_p">The loss function can be expressed as follows:</p>
+<table id="S4.E9" class="ltx_equationgroup ltx_eqn_table">
+<tbody><tr id="S4.E9X" class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S4.E9.m1" class="ltx_Math" alttext="\displaystyle Loss=" display="inline"><semantics><mrow><mi>L</mi><mi>o</mi><mi>s</mi><mi>s</mi><mo>=</mo></mrow></semantics></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="S4.E9.m2" class="ltx_Math" alttext="\displaystyle\operatorname{CE}(S^{F},I)" display="inline"><semantics><mrow><mi>CE</mi><mo>(</mo><msup><mi>S</mi><mi>F</mi></msup><mo>,</mo><mi>I</mi><mo>)</mo></mrow></semantics></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="2" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equationgroup ltx_align_right">(9)</span></td></tr>
+<tr id="S4.E9Xa" class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="S4.E9.m3" class="ltx_Math" alttext="\displaystyle+\operatorname{CE}(S^{I},I)" display="inline"><semantics><mrow><mo>+</mo><mi>CE</mi><mo>(</mo><msup><mi>S</mi><mi>I</mi></msup><mo>,</mo><mi>I</mi><mo>)</mo></mrow></semantics></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td></tr></tbody>
+</table>
+<p id="S4.SS2.p7.4" class="ltx_p">where CE is the cross-entropy loss function.</p>
+</div>
+<div id="S4.SS3.p1" class="ltx_para">
+<p id="S4.SS3.p1.1" class="ltx_p">The unnumbered update reads:</p>
+<table id="S4.Ex1" class="ltx_equation ltx_eqn_table">
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S4.Ex1.m1" class="ltx_Math" alttext="\displaystyle Z_{t-1}=\sqrt{\alpha_{t-1}}Z_{0}" display="inline"><semantics><mrow><msub><mi>Z</mi><mrow><mi>t</mi><mo>&#8722;</mo><mn>1</mn></mrow></msub><mo>=</mo><msqrt><msub><mi>&#945;</mi><mrow><mi>t</mi><mo>&#8722;</mo><mn>1</mn></mrow></msub></msqrt><msub><mi>Z</mi><mn>0</mn></msub></mrow></semantics></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td></tr></tbody>
+</table>
+</div>
+</section>
+<section id="A3" class="ltx_appendix">
+<h2 class="ltx_title ltx_title_appendix"><span class="ltx_tag ltx_tag_appendix">Appendix C </span>Proofs</h2>
+<div id="A3.p1" class="ltx_para">
+<p id="A3.p1.1" class="ltx_p">This yields the following approximation:</p>
+<table id="A3.E19" class="ltx_equationgroup ltx_eqn_table">
+<tbody><tr id="A3.E19X" class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="A3.E19.m1" class="ltx_Math" alttext="\displaystyle\mathbf{q}(\mathbf{x}_{l})" display="inline"><semantics><mrow><mi mathvariant="bold">q</mi><mo>(</mo><msub><mi mathvariant="bold">x</mi><mi>l</mi></msub><mo>)</mo></mrow></semantics></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equationgroup ltx_align_right">(19)</span></td></tr></tbody>
+</table>
+</div>
+</section>
+</article>
+</div>
+</body></html>
