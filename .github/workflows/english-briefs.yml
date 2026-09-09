@@ -1,0 +1,88 @@
+name: english briefs
+
+# Rewrites Portuguese paper briefs in English with the synthesis model,
+# keeping research area, recommendation and gain as judged, then republishes
+# the site. Manual only: it spends Kimi credits, one call per stale brief.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Only list the briefs that would be rewritten'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  rewrite:
+    runs-on: ubuntu-latest
+    outputs:
+      site_ready: ${{ steps.site_status.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Instalar
+        run: pip install -e .
+
+      - name: Rewrite briefs in English
+        env:
+          RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+          RADAR_LLM_PROVIDER:  kimi
+          RADAR_MODEL:         ${{ vars.RADAR_MODEL }}
+          RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
+          KIMI_API_KEY:        ${{ secrets.KIMI_API_KEY }}
+        run: |
+          python scripts/english_briefs.py --publish ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Commit briefs, checkpoint and site
+        # Same rule as the daily run: a partial rewrite is already paid for,
+        # so it is committed even when a later brief failed.
+        if: ${{ !cancelled() && !inputs.dry_run }}
+        run: |
+          git config user.name  "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A -- data eval
+          if test -d site; then git add -A -- site; fi
+          git diff --staged --quiet || git commit -m "radar: briefs rewritten in English"
+          git push
+
+      - name: Verificar artefato do jornal
+        id: site_status
+        if: ${{ !cancelled() && !inputs.dry_run }}
+        run: |
+          if test -f site/index.html; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Empacotar o jornal
+        if: ${{ !cancelled() && steps.site_status.outputs.ready == 'true' }}
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  publicar:
+    needs: rewrite
+    if: ${{ always() && !cancelled() && needs.rewrite.outputs.site_ready == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
