@@ -287,3 +287,16 @@ def test_non_formula_technical_core_rejects_exact_formulae():
             summary="Uma sequencia de passos discretos.",
             walkthroughs=[exact_formula()],
         )
+
+
+def test_candidates_can_carry_an_equation_label_and_section():
+    from radar.formulas import FormulaCandidate
+    candidate = FormulaCandidate(
+        candidate_id="eq-" + "a" * 16, path="arxiv-html:S4.E9",
+        environment="equation", latex="x", label="(9)", section="4 Methodology",
+    )
+    assert candidate.label == "(9)"
+    plain = FormulaCandidate(
+        candidate_id="eq-" + "b" * 16, path="main.tex", environment="equation", latex="x",
+    )
+    assert plain.label == "" and plain.section == ""

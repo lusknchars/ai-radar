@@ -62,6 +62,8 @@ class FormulaCandidate(BaseModel):
     latex: str = Field(min_length=1, max_length=MAX_CANDIDATE_LATEX_CHARS)
     context_before: str = Field(default="", max_length=CONTEXT_CHARS)
     context_after: str = Field(default="", max_length=CONTEXT_CHARS)
+    label: str = Field(default="", max_length=40)
+    section: str = Field(default="", max_length=200)
 
 
 class FormulaSelectionItem(BaseModel):

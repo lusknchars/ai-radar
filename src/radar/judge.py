@@ -218,6 +218,8 @@ def build_formula_selection_prompt(
             "latex": item.latex,
             "context_before": item.context_before,
             "context_after": item.context_after,
+            "label": item.label,
+            "section": item.section,
         }
         for item in candidates
     ]

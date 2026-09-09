@@ -514,3 +514,17 @@ def test_o_campo_de_fator_ensina_a_normalizacao():
     campo = JudgmentSchema.model_json_schema()["properties"]["ganho_fator"]
     assert "2.5" in campo["description"]      # o exemplo de 1/0.4
     assert "null" in campo["description"].lower()
+
+
+def test_formula_prompt_carries_equation_label_and_section():
+    from radar.formulas import FormulaCandidate
+    from radar.judge import build_formula_selection_prompt
+    from radar.models import Paper
+    paper = Paper(arxiv_id="2605.13790", title="T", abstract="A", authors=["X"],
+                  categories=["cs.LG"], published="2026-05-13")
+    prompt = build_formula_selection_prompt(paper, [FormulaCandidate(
+        candidate_id="eq-" + "c" * 16, path="arxiv-html:S4.E9",
+        environment="equation", latex="Loss=1", label="(9)", section="4 Methodology",
+    )])
+    assert '"label": "(9)"' in prompt
+    assert '"section": "4 Methodology"' in prompt
