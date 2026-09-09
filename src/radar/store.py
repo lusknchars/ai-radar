@@ -78,6 +78,27 @@ CREATE TABLE IF NOT EXISTS deliveries (
     rank         INTEGER,
     PRIMARY KEY (arxiv_id, delivered_at, channel)
 );
+CREATE TABLE IF NOT EXISTS equation_sources (
+    arxiv_id       TEXT PRIMARY KEY REFERENCES papers(arxiv_id),
+    fetched_at     TEXT NOT NULL,
+    status         TEXT NOT NULL,
+    html_sha256    TEXT,
+    core_kind      TEXT,
+    selector_model TEXT,
+    equation_count INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS equations (
+    arxiv_id   TEXT NOT NULL REFERENCES papers(arxiv_id),
+    anchor     TEXT NOT NULL,
+    position   INTEGER NOT NULL,
+    label      TEXT NOT NULL,
+    section    TEXT NOT NULL,
+    role       TEXT NOT NULL,
+    latex      TEXT NOT NULL,
+    mathml     TEXT NOT NULL,
+    context    TEXT NOT NULL,
+    PRIMARY KEY (arxiv_id, anchor)
+);
 """
 
 
@@ -290,6 +311,71 @@ class Store:
         """)
         return {familia: n for familia, n in linhas}
 
+    # ---------- equations ----------
+
+    def record_equations(
+        self, arxiv_id: str, *, fetched_at: str, status: str,
+        html_sha256: str | None, core_kind: str | None,
+        selector_model: str | None, equations,
+    ) -> None:
+        """Substitui o resultado anterior do paper: um paper tem um estado so."""
+        with self._conn:
+            self._conn.execute(
+                "DELETE FROM equations WHERE arxiv_id = ?", (arxiv_id,))
+            self._conn.execute("""
+                INSERT INTO equation_sources
+                    (arxiv_id, fetched_at, status, html_sha256, core_kind,
+                     selector_model, equation_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(arxiv_id) DO UPDATE SET
+                    fetched_at = excluded.fetched_at,
+                    status = excluded.status,
+                    html_sha256 = excluded.html_sha256,
+                    core_kind = excluded.core_kind,
+                    selector_model = excluded.selector_model,
+                    equation_count = excluded.equation_count
+            """, (arxiv_id, fetched_at, status, html_sha256, core_kind,
+                  selector_model, len(equations)))
+            self._conn.executemany("""
+                INSERT INTO equations
+                    (arxiv_id, anchor, position, label, section, role,
+                     latex, mathml, context)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, [
+                (arxiv_id, e.anchor, position, e.label, e.section, e.role,
+                 e.latex, e.mathml, e.context)
+                for position, e in enumerate(equations, 1)
+            ])
+
+    def equations_for(self, arxiv_id: str) -> list:
+        from .site_data import EquationView
+        rows = self._conn.execute("""
+            SELECT anchor, label, section, role, latex, mathml, context
+              FROM equations WHERE arxiv_id = ? ORDER BY position
+        """, (arxiv_id,))
+        return [EquationView(**dict(row)) for row in rows]
+
+    def equation_source(self, arxiv_id: str) -> dict | None:
+        row = self._conn.execute(
+            "SELECT * FROM equation_sources WHERE arxiv_id = ?", (arxiv_id,)
+        ).fetchone()
+        return dict(row) if row is not None else None
+
+    def papers_without_equations(self) -> list[Paper]:
+        rows = self._conn.execute("""
+            SELECT p.* FROM papers p
+             LEFT JOIN equation_sources s ON s.arxiv_id = p.arxiv_id
+             WHERE s.arxiv_id IS NULL
+             ORDER BY p.arxiv_id
+        """)
+        return [
+            Paper(arxiv_id=row["arxiv_id"], title=row["title"],
+                  abstract=row["abstract"], authors=json.loads(row["authors"]),
+                  categories=json.loads(row["categories"]),
+                  published=row["published"])
+            for row in rows
+        ]
+
     def site_data(self, hoje, delivered_on: str | None = None):
         """Monta o `SiteData` do acervo inteiro.
 
@@ -331,6 +417,10 @@ class Store:
               {filtro_entrega}
         """, {"dia": delivered_on} if delivered_on else {})
 
+        sources = {
+            row["arxiv_id"]: dict(row)
+            for row in self._conn.execute("SELECT * FROM equation_sources")
+        }
         pontos = []
         for r in linhas:
             publicado = _date.fromisoformat(r["published"][:10])
@@ -346,6 +436,9 @@ class Store:
                 publicado=r["published"], score=r["score"] or 0.0,
                 scope=r["scope"],
                 technique=r["technique"], porque=r["porque"],
+                equations=tuple(self.equations_for(r["arxiv_id"])),
+                equations_status=sources.get(r["arxiv_id"], {}).get("status", "not_fetched"),
+                equations_fetched_at=sources.get(r["arxiv_id"], {}).get("fetched_at", ""),
             ))
         dia = delivered_on or hoje.isoformat()
         destaque = max(pontos, key=lambda p: p.score, default=None)

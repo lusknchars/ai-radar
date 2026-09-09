@@ -342,3 +342,91 @@ def test_o_escopo_do_primeiro_descobridor_sobrevive_ao_upsert(store):
     store.upsert_paper(P, seen_at="2026-08-29", scope="inferencia")
     store.upsert_paper(P, seen_at="2026-08-30", scope="agentes")
     assert store.all_papers()[0]["scope"] == "inferencia"
+
+
+from radar.site_data import EquationView
+
+
+def _equation(anchor="S4.E9", role="loss") -> EquationView:
+    return EquationView(
+        anchor=anchor, label="(9)", section="4 Methodology", role=role,
+        latex=r"Loss=\operatorname{CE}(S^{F},I)",
+        mathml='<math display="block"><mi>L</mi></math>',
+        context="The loss function can be expressed as follows:",
+    )
+
+
+def test_recording_equations_stores_source_and_rows(store):
+    store.upsert_paper(P, seen_at="2026-09-08", scope="teste")
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-08", status="selected",
+        html_sha256="c" * 64, core_kind="formula", selector_model="kimi-k2.6",
+        equations=[_equation(), _equation(anchor="S3.E1", role="baseline")],
+    )
+    source = store.equation_source(P.arxiv_id)
+    assert source["status"] == "selected"
+    assert source["equation_count"] == 2
+    assert source["core_kind"] == "formula"
+    rows = store.equations_for(P.arxiv_id)
+    assert [e.anchor for e in rows] == ["S4.E9", "S3.E1"]
+    assert rows[0] == _equation()
+
+
+def test_recording_again_replaces_previous_rows(store):
+    store.upsert_paper(P, seen_at="2026-09-08", scope="teste")
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-08", status="selected",
+        html_sha256="c" * 64, core_kind="formula", selector_model="kimi-k2.6",
+        equations=[_equation()],
+    )
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-09", status="unavailable",
+        html_sha256=None, core_kind=None, selector_model=None, equations=[],
+    )
+    assert store.equations_for(P.arxiv_id) == []
+    assert store.equation_source(P.arxiv_id)["status"] == "unavailable"
+    assert store.equation_source(P.arxiv_id)["fetched_at"] == "2026-09-09"
+
+
+def test_papers_without_equations_lists_only_unfetched_papers(store):
+    other = Paper(arxiv_id="2508.22222", title="U", abstract="A", authors=["B"],
+                  categories=["cs.LG"], published="2026-08-21")
+    store.upsert_paper(P, seen_at="2026-09-08", scope="teste")
+    store.upsert_paper(other, seen_at="2026-09-08", scope="teste")
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-08", status="no_equations",
+        html_sha256="c" * 64, core_kind=None, selector_model=None, equations=[],
+    )
+    assert store.papers_without_equations() == [other]
+    assert store.equation_source("2508.22222") is None
+    assert store.equations_for("2508.22222") == []
+
+
+def _judged_with_signal(store):
+    store.upsert_paper(P, seen_at="2026-09-08", scope="teste")
+    store.record_judgment(
+        P.arxiv_id,
+        Judgment(technique="T", familia="cache_kv", pratica="testar",
+                 ganho_eixo="nenhum", ganho_fator=None, ganho_texto="",
+                 resumo="R", porque="P"),
+        model="kimi-k3", judged_at="2026-09-08")
+    store.record_signal(
+        P.arxiv_id,
+        Signal(total_impls=1, independent_impls=1, velocity_14d=0,
+               stars_total=0, citations=None),
+        score=0.5, checked_at="2026-09-08")
+
+
+def test_site_data_attaches_selected_equations_to_each_point(store):
+    from datetime import date
+    _judged_with_signal(store)
+    ponto = store.site_data(date(2026, 9, 8)).pontos[0]
+    assert ponto.equations == () and ponto.equations_status == "not_fetched"
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-08", status="selected",
+        html_sha256="c" * 64, core_kind="formula", selector_model="kimi-k2.6",
+        equations=[_equation()])
+    ponto = store.site_data(date(2026, 9, 8)).pontos[0]
+    assert ponto.equations == (_equation(),)
+    assert ponto.equations_status == "selected"
+    assert ponto.equations_fetched_at == "2026-09-08"

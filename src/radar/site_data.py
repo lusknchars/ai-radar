@@ -11,6 +11,18 @@ from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
+class EquationView:
+    """One selected equation as the page draws it. MathML is already sanitized."""
+    anchor: str
+    label: str
+    section: str
+    role: str
+    latex: str
+    mathml: str
+    context: str
+
+
+@dataclass(frozen=True)
 class Ponto:
     arxiv_id: str
     titulo: str
@@ -30,6 +42,11 @@ class Ponto:
     scope: str
     technique: str = ""
     porque: str = ""
+    # Equacoes centrais vindas do HTML do arXiv. `not_fetched` significa que
+    # o passo nunca rodou para este paper; a pagina diz isso em vez de omitir.
+    equations: tuple[EquationView, ...] = ()
+    equations_status: str = "not_fetched"
+    equations_fetched_at: str = ""
 
 
 @dataclass(frozen=True)
