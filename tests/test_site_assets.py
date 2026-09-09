@@ -77,3 +77,11 @@ def test_formula_longa_rola_no_mobile_sem_quebrar_o_artigo():
     assert ".formula-latex" in STYLES
     assert "overflow-x:auto" in STYLES
     assert ".technical-core-summary{grid-template-columns:1fr" in STYLES
+
+
+def test_equacoes_tem_tipografia_propria_sem_link_externo():
+    assert ".equation-display{" in STYLES
+    assert ".equation-display math{" in STYLES
+    assert "overflow-x:auto" in STYLES.split(".equation-display{")[1].split("}")[0]
+    assert ".equation-eyebrow{" in STYLES
+    assert ".equation-context{" in STYLES

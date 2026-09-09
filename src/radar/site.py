@@ -18,7 +18,7 @@ from .config import DEFAULT_PUBLIC_CONFIG, PublicConfig, load_thresholds
 from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
 from .public_research import ResearchPage
-from .public_labels import (
+from .public_labels import (CORE_KIND_PHRASES, 
     AUTHORSHIP_REASON_LABELS, CUT_LABELS, FAMILY_LABELS as ROTULOS_FAMILIA,
     EDITORIAL_STATUS_LABELS, EVIDENCE_BASIS_LABELS,
     EXPOSURE_DIMENSION_LABELS,
@@ -873,9 +873,64 @@ def _render_decision_snapshot(page: ResearchPage) -> str:
     )
 
 
+EQUATIONS_ABSENT = {
+    "not_fetched": "Equations have not been fetched yet.",
+    "selector_failed": "Equations have not been fetched yet.",
+    "unavailable": "arXiv has no HTML rendering for this paper.",
+    "rejected": "arXiv has no HTML rendering for this paper.",
+    "no_equations": "No display equations were found in the arXiv HTML.",
+}
+
+
+def _render_equations(page: ResearchPage) -> str:
+    head = (
+        '<div class="section-head"><h2>Central equations</h2>'
+        '<p class="sub">The equations the paper builds on, copied from '
+        "arXiv's HTML rendering and typeset here.</p></div>"
+    )
+    if page.equations_status != "selected":
+        if page.equations_status == "not_formula":
+            phrase = CORE_KIND_PHRASES.get(page.core_kind, "not classified")
+            copy = f"The technical core is {phrase}, not an equation."
+        else:
+            copy = EQUATIONS_ABSENT[page.equations_status]
+        return (
+            '<section id="equations" class="research-section">'
+            f'{head}<p class="research-empty">{escape(copy)}</p></section>'
+        )
+    items = []
+    for equation in page.equations:
+        role = ROTULOS_PAPEL_FORMULA.get(equation.role, equation.role)
+        parts = [f"equation {equation.label}" if equation.label else "unnumbered equation"]
+        if equation.section:
+            parts.append(f"§{equation.section}")
+        parts.append(role)
+        context = (
+            f'<p class="equation-context">{escape(equation.context)}</p>'
+            if equation.context else ""
+        )
+        # `mathml` is the sanitizer's own output and the page model enforces
+        # its `<math display="block">` prefix, so it is inserted as markup.
+        items.append(
+            '<article class="equation">'
+            f'{context}'
+            f'<div class="equation-display">{equation.mathml}</div>'
+            f'<p class="equation-eyebrow">{escape(" · ".join(parts))}</p>'
+            '</article>'
+        )
+    return (
+        '<section id="equations" class="research-section">'
+        f'{head}<div class="equation-stack">{"".join(items)}</div>'
+        '<p class="equations-provenance">equations from arXiv HTML · fetched '
+        f'{escape(page.equations_fetched_at)}</p></section>'
+    )
+
+
 def _render_research_jumps(page: ResearchPage) -> str:
-    links = [
-        ("decision", "shortlist reason"),
+    links = [("decision", "shortlist reason")]
+    if page.equations_status == "selected":
+        links.append(("equations", "equations"))
+    links += [
         ("claims", "evidence"),
         ("exposure", "constraints"),
         ("risks", "risks"),
@@ -1061,6 +1116,7 @@ def render_research_page(
         f'{technique}'
         f'<div><dt>published</dt><dd>{escape(page.published)}</dd></div>'
         f'</dl>{rationale}</section>'
+        f'{_render_equations(page)}'
         '<section id="signal" class="research-section">'
         '<div class="section-head"><h2>Observed signal</h2>'
         '<p class="sub">Repository adoption and public attention measured by AI Radar.</p>'

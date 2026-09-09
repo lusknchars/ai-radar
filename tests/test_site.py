@@ -911,3 +911,69 @@ def test_pagina_de_relatorio_escapa_texto_do_modelo():
     html = render_report(_report_document())
     assert "Fast &lt;Attention&gt;" in html
     assert "Fast <Attention>" not in html
+
+
+def _page_with_equations(**updates):
+    from radar.public_research import build_research_page
+    from radar.site_data import EquationView
+    equation = EquationView(
+        anchor="S4.E9", label="(9)", section="4 Methodology", role="loss",
+        latex=r"Loss=\operatorname{CE}(S^{F},I)",
+        mathml='<math display="block"><mrow><mi>L</mi><mo>=</mo><mi>Ω</mi></mrow></math>',
+        context="The loss function can be expressed as follows:")
+    values = dict(equations=(equation,), equations_status="selected",
+                  equations_fetched_at="2026-09-08")
+    values.update(updates)
+    return build_research_page(ponto(**values), as_of="2026-09-08")
+
+
+def test_a_pagina_de_pesquisa_mostra_equacoes_centrais_como_mathml():
+    html = render_research_page(_page_with_equations())
+    assert '<section id="equations" class="research-section">' in html
+    assert "Central equations" in html
+    assert '<div class="equation-display"><math display="block">' in html
+    assert "<mi>Ω</mi>" in html
+    assert '<p class="equation-context">The loss function can be expressed as follows:</p>' in html
+    assert '<p class="equation-eyebrow">equation (9) · §4 Methodology · loss function</p>' in html
+    assert "equations from arXiv HTML · fetched 2026-09-08" in html
+    assert 'href="#equations">equations</a>' in html
+    assert "arxiv.org/html" not in html
+    without = render_research_page(
+        _page_with_equations(equations=(), equations_status="not_fetched",
+                             equations_fetched_at=""))
+    assert html.count("arxiv.org/") == without.count("arxiv.org/")
+
+
+def test_a_secao_de_equacoes_diz_quando_o_nucleo_nao_e_uma_formula():
+    html = render_research_page(
+        _page_with_equations(equations=(), equations_status="not_formula",
+                             core_kind="algorithm"))
+    assert "The technical core is an algorithm, not an equation." in html
+    assert '<div class="equation-display">' not in html
+    assert 'href="#equations"' not in html
+
+
+def test_a_secao_de_equacoes_explica_cada_ausencia_em_ingles():
+    cases = {
+        "not_fetched": "Equations have not been fetched yet.",
+        "selector_failed": "Equations have not been fetched yet.",
+        "unavailable": "arXiv has no HTML rendering for this paper.",
+        "rejected": "arXiv has no HTML rendering for this paper.",
+        "no_equations": "No display equations were found in the arXiv HTML.",
+    }
+    for status, copy in cases.items():
+        html = render_research_page(
+            _page_with_equations(equations=(), equations_status=status,
+                                 equations_fetched_at=""))
+        assert copy in html, status
+        assert "equations from arXiv HTML" not in html, status
+
+
+def test_equacao_sem_numero_omite_o_rotulo_e_a_secao_vazia():
+    from radar.site_data import EquationView
+    equation = EquationView(anchor="S4.Ex1", label="", section="", role="proposed_method",
+                            latex="x", mathml='<math display="block"><mi>x</mi></math>',
+                            context="")
+    html = render_research_page(_page_with_equations(equations=(equation,)))
+    assert '<p class="equation-eyebrow">unnumbered equation · proposed method</p>' in html
+    assert '<p class="equation-context">' not in html
