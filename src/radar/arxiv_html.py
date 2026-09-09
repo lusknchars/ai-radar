@@ -45,6 +45,32 @@ class HtmlFetch:
     sha256: str = ""
 
 
+_ARXIV_ID = re.compile(r"^\d{4}\.\d{4,5}$")
+USER_AGENT = "ai-radar/0.1 (research page equations)"
+
+
+def fetch_arxiv_html(arxiv_id: str, *, get) -> HtmlFetch:
+    """Fetch the unversioned HTML rendering: latest version at fetch time."""
+    if not _ARXIV_ID.fullmatch(arxiv_id):
+        raise ValueError(f"arxiv_id invalido para download: {arxiv_id!r}")
+    response = get(
+        f"https://arxiv.org/html/{arxiv_id}",
+        headers={"User-Agent": USER_AGENT},
+        timeout=60.0,
+        follow_redirects=True,
+    )
+    if getattr(response, "status_code", 200) == 404:
+        return HtmlFetch(status="unavailable")
+    response.raise_for_status()
+    content = response.content
+    if len(content) > MAX_HTML_BYTES or LATEXML_MARKER not in response.text:
+        return HtmlFetch(status="rejected")
+    return HtmlFetch(
+        status="available", text=response.text,
+        sha256=hashlib.sha256(content).hexdigest(),
+    )
+
+
 def _collapse(parts: list[str]) -> str:
     return " ".join("".join(parts).split())
 

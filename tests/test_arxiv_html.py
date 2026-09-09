@@ -150,3 +150,68 @@ def test_parsed_equations_carry_sanitized_mathml(sample):
     loss = equations["S4.E9"].mathml
     assert loss.count('<math display="block">') == 2
     assert "<mi>CE</mi>" in loss
+
+
+import hashlib
+
+from radar.arxiv_html import fetch_arxiv_html
+
+
+class _Response:
+    status_code = 200
+
+    def __init__(self, body: bytes) -> None:
+        self.content = body
+        self.text = body.decode("utf-8", errors="replace")
+
+    def raise_for_status(self) -> None:
+        if self.status_code >= 400:
+            raise RuntimeError(f"HTTP {self.status_code}")
+
+
+def test_fetch_returns_the_page_and_its_hash(sample):
+    calls = []
+
+    def get(url, **kwargs):
+        calls.append((url, kwargs))
+        return _Response(sample.encode("utf-8"))
+
+    fetched = fetch_arxiv_html("2605.13790", get=get)
+    assert fetched.status == "available"
+    assert fetched.text == sample
+    assert fetched.sha256 == hashlib.sha256(sample.encode("utf-8")).hexdigest()
+    assert calls[0][0] == "https://arxiv.org/html/2605.13790"
+    assert calls[0][1]["headers"]["User-Agent"].startswith("ai-radar/")
+    assert calls[0][1]["follow_redirects"] is True
+
+
+def test_fetch_marks_a_missing_rendering_as_unavailable():
+    class Missing(_Response):
+        status_code = 404
+
+    fetched = fetch_arxiv_html("2608.24070", get=lambda url, **kw: Missing(b"no"))
+    assert fetched == arxiv_html.HtmlFetch(status="unavailable")
+
+
+def test_fetch_rejects_an_oversized_or_non_latexml_body(monkeypatch):
+    monkeypatch.setattr(arxiv_html, "MAX_HTML_BYTES", 10)
+    big = fetch_arxiv_html("2605.13790", get=lambda url, **kw: _Response(b"x" * 11))
+    assert big.status == "rejected"
+    monkeypatch.setattr(arxiv_html, "MAX_HTML_BYTES", 1000)
+    plain = fetch_arxiv_html("2605.13790", get=lambda url, **kw: _Response(b"<html>hi</html>"))
+    assert plain.status == "rejected"
+
+
+def test_fetch_raises_on_other_http_errors():
+    class Broken(_Response):
+        status_code = 503
+
+    with pytest.raises(RuntimeError):
+        fetch_arxiv_html("2605.13790", get=lambda url, **kw: Broken(b""))
+
+
+def test_fetch_rejects_a_versioned_or_malformed_id():
+    with pytest.raises(ValueError):
+        fetch_arxiv_html("2605.13790v1", get=lambda url, **kw: _Response(b""))
+    with pytest.raises(ValueError):
+        fetch_arxiv_html("../etc", get=lambda url, **kw: _Response(b""))
