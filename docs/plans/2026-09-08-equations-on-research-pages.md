@@ -75,9 +75,15 @@ daily run (after judging, before publishing) and backfill script
 - The LaTeX is the `alttext` as served, minus the `\displaystyle` prefix that
   LaTeXML injects at the start of each cell. Nothing else is rewritten.
 - Context comes from the neighbouring `ltx_p` paragraphs in the same
-  `ltx_para` block with math subtrees removed and whitespace collapsed. Caps
-  match `formulas.py`: 900 characters each side, 6,000 characters of LaTeX,
-  100 equations per paper.
+  `ltx_para` block. The plain-text form (math subtrees removed, whitespace
+  collapsed) feeds the selector. A second form, `context_html`, keeps the
+  paper's inline symbols as sanitized inline MathML inside escaped prose,
+  and that is what the page shows, so a sentence such as "Let V_p denote"
+  keeps its symbols. Caps match `formulas.py`: 900 characters each side,
+  6,000 characters of LaTeX, 100 equations per paper.
+- A tag longer than 24 characters is a descriptive name, not a number; the
+  equation is treated as unnumbered. An id reused by a non-continuation row
+  receives a numeric suffix so anchors stay unique per paper.
 - `sanitize_mathml(fragment) -> str` rebuilds the tree and serializes it from
   scratch. Allowed elements: `math`, `mrow`, `mi`, `mn`, `mo`, `mtext`,
   `mspace`, `ms`, `msup`, `msub`, `msubsup`, `mfrac`, `msqrt`, `mroot`,
@@ -104,11 +110,13 @@ daily run (after judging, before publishing) and backfill script
   ID with `verify_formula_selection`, store. It returns a summary counter of
   outcomes and never raises for one paper; each failure is stored as a status.
 - Per-paper status, stored in `equation_sources.status`: `unavailable`,
-  `rejected`, `no_equations`, `not_formula`, `selected`, `selector_failed`.
+  `rejected`, `no_equations`, `not_formula`, `selected`, `selector_failed`,
+  `parse_failed` (markup the parser or candidate contract rejected).
   `core_kind` stores the selector's classification when one was obtained.
-- The daily CLI runs the step only when not in dry-run mode and only for
-  papers judged that day. When the LLM provider is not Kimi, the step is
-  skipped and the papers stay unfetched; the page states that.
+- The daily CLI runs the step only when not in dry-run mode, for every paper
+  without a status row (today's papers plus anything a fetch error left
+  behind), capped at 40 papers per run. When the LLM provider is not Kimi,
+  the step is skipped and the papers stay unfetched; the page states that.
 - `scripts/backfill_equations.py` runs the same step for every paper without
   an `equation_sources` row, with `--arxiv-id`, `--limit`, and `--db`.
 
@@ -148,7 +156,8 @@ Re-running the step for a paper replaces its rows.
   `equations_status: str` (`not_fetched` when no source row exists).
 - `ResearchPage` gains `equations: tuple[ResearchEquation, ...]` and
   `equations_status`. `ResearchEquation` carries `anchor`, `label`,
-  `section`, `role`, `latex`, `mathml`, `context`. The page JSON includes
+  `section`, `role`, `latex`, `mathml`, `context`, where `context` is the
+  sanitized HTML form of the introducing sentence. The page JSON includes
   them. Schema version stays 1: the fields are additive with defaults.
 - A page with `equations_status == "selected"` must carry at least one
   equation; any other status must carry none.
@@ -204,6 +213,7 @@ YYYY-MM-DD".
 | Parsed, zero display equations | `no_equations` | No display equations were found in the arXiv HTML |
 | Selector says algorithm, system, protocol, concept, none | `not_formula` | The technical core is an algorithm, not an equation (per kind) |
 | Selector error or unknown IDs | `selector_failed` | Equations have not been fetched yet |
+| Parser or candidate contract rejects the markup | `parse_failed` | Equations could not be extracted from the arXiv HTML |
 | Step never ran | no row | Equations have not been fetched yet |
 
 Network errors other than 404 raise inside the fetch adapter and are caught
@@ -215,45 +225,46 @@ retries it.
 
 ### 1. Parser and sanitizer
 
-- [ ] Trim a real LaTeXML excerpt into `tests/fixtures/arxiv_html_sample.html`
+- [x] Trim a real LaTeXML excerpt into `tests/fixtures/arxiv_html_sample.html`
   with a numbered group, a single equation, an unnumbered one, a continuation
   row, inline math in prose, and an appendix equation.
-- [ ] `parse_arxiv_html` with anchors, labels, sections, joined cells, merged
+- [x] `parse_arxiv_html` with anchors, labels, sections, joined cells, merged
   continuation rows, math-free context, `\displaystyle` prefix removal, caps.
-- [ ] `sanitize_mathml` allowlist, unwrapping, attribute validation, size cap.
-- [ ] `fetch_arxiv_html` with injected `get`, statuses, hash.
+- [x] `sanitize_mathml` allowlist, unwrapping, attribute validation, size cap.
+- [x] `fetch_arxiv_html` with injected `get`, statuses, hash.
 
 ### 2. Store and selection
 
-- [ ] Two tables, `record_equations`, `equations_for`, `equation_source`,
+- [x] Two tables, `record_equations`, `equations_for`, `equation_source`,
   `papers_without_equations`.
-- [ ] `label` and `section` on `FormulaCandidate` and in the selector prompt.
-- [ ] `collect_equations` with injected fetch and selector, per-paper
+- [x] `label` and `section` on `FormulaCandidate` and in the selector prompt.
+- [x] `collect_equations` with injected fetch and selector, per-paper
   statuses, replace-on-rerun.
 
 ### 3. Page model and rendering
 
-- [ ] `Ponto.equations` and `equations_status` from `site_data`.
-- [ ] `ResearchEquation`, `ResearchPage.equations`, `equations_status`,
+- [x] `Ponto.equations` and `equations_status` from `site_data`.
+- [x] `ResearchEquation`, `ResearchPage.equations`, `equations_status`,
   invariant, JSON export.
-- [ ] Section markup, absence states, provenance line, no outbound links.
+- [x] Section markup, absence states, provenance line, no outbound links.
 
 ### 4. Typography and publishing
 
-- [ ] Vendored STIX Two Math subset and OFL file.
-- [ ] `@font-face` with local-first sources, `math` rules, display block CSS.
-- [ ] Publish copies fonts; tests assert the file lands and CSS references it.
+- [x] Vendored STIX Two Math subset and OFL file.
+- [x] `@font-face` with local-first sources, `math` rules, display block CSS.
+- [x] Publish copies fonts; tests assert the file lands and CSS references it.
 
 ### 5. Pipeline and backfill
 
-- [ ] Daily CLI step after judging, skipped on dry run and non-Kimi providers.
-- [ ] `scripts/backfill_equations.py` with a fake-selector test.
-- [ ] Backfill the 20 published papers, regenerate `site/`, commit.
+- [x] Daily CLI step after judging, skipped on dry run and non-Kimi providers.
+- [x] `scripts/backfill_equations.py` with a fake-selector test.
+- [ ] Backfill the 20 published papers (runs in CI with the Kimi key, or
+  `scripts/backfill_equations.py` locally), regenerate `site/`, commit.
 
 ### 6. Documentation
 
-- [ ] README: how it works, architecture, fonts paragraph.
-- [ ] CONTEXT.md: add "Central equation" to the language list.
+- [x] README: how it works, architecture, fonts paragraph.
+- [x] CONTEXT.md: add "Central equation" to the language list.
 
 ## Acceptance criteria
 
