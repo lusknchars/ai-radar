@@ -1,0 +1,96 @@
+name: equations backfill
+
+# Collects central equations from arXiv HTML for every paper without an
+# equation_sources row, then republishes the site. Manual only: it spends
+# Kimi credits, one selector call per paper. Needs the `kimi` environment
+# with a KIMI_API_KEY secret.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Maximum papers to process in this run'
+        type: number
+        default: 50
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    environment: kimi
+    outputs:
+      site_ready: ${{ steps.site_status.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Instalar
+        run: pip install -e .
+
+      - name: Backfill equations
+        env:
+          RADAR_DB:               ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+          RADAR_LLM_PROVIDER:     kimi
+          RADAR_FORMULA_MODEL:    ${{ vars.RADAR_FORMULA_MODEL }}
+          RADAR_KIMI_BASE_URL:    ${{ vars.RADAR_KIMI_BASE_URL }}
+          KIMI_API_KEY:           ${{ secrets.KIMI_API_KEY }}
+        run: |
+          python scripts/backfill_equations.py --limit ${{ inputs.limit }}
+
+      - name: Republish the site
+        env:
+          RADAR_DB: ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+        run: |
+          python scripts/publish_public_research.py --db "$RADAR_DB"
+
+      - name: Commit database and site
+        # A partial backfill is already paid for, so it is committed even
+        # when a later paper failed.
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name  "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A -- data
+          if test -d site; then git add -A -- site; fi
+          git diff --staged --quiet || git commit -m "radar: equations backfilled from arXiv HTML"
+          git push
+
+      - name: Verificar artefato do jornal
+        id: site_status
+        if: ${{ !cancelled() }}
+        run: |
+          if test -f site/index.html; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Empacotar o jornal
+        if: ${{ !cancelled() && steps.site_status.outputs.ready == 'true' }}
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  publicar:
+    needs: backfill
+    if: ${{ always() && !cancelled() && needs.backfill.outputs.site_ready == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
