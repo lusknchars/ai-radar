@@ -132,3 +132,33 @@ def test_a_fetch_exception_leaves_no_row_so_backfill_retries(store):
     assert outcome == Counter({"fetch_error": 1})
     assert store.equation_source(PAPER.arxiv_id) is None
     assert store.papers_without_equations() == [PAPER]
+
+
+def test_backfill_script_processes_only_unfetched_papers(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "backfill_equations",
+        Path(__file__).resolve().parents[1] / "scripts" / "backfill_equations.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    db = tmp_path / "radar.db"
+    s = Store(db)
+    s.init_schema()
+    s.upsert_paper(PAPER, seen_at="2026-09-08", scope="teste")
+    done = Paper(arxiv_id="2508.22222", title="U", abstract="A", authors=["B"],
+                 categories=["cs.LG"], published="2026-08-21")
+    s.upsert_paper(done, seen_at="2026-09-08", scope="teste")
+    s.record_equations(done.arxiv_id, fetched_at="2026-09-01", status="unavailable",
+                       html_sha256=None, core_kind=None, selector_model=None, equations=[])
+    s.close()
+
+    selector = FakeSelector(FormulaSelection(kind="concept", selected=[]))
+    code = module.main(["--db", str(db), "--today", "2026-09-08"],
+                       selector=selector, fetch_html=_available)
+    assert code == 0
+    assert [paper.arxiv_id for paper, _ in selector.calls] == [PAPER.arxiv_id]
+    s = Store(db)
+    assert s.equation_source(PAPER.arxiv_id)["status"] == "not_formula"
+    assert s.equation_source(done.arxiv_id)["fetched_at"] == "2026-09-01"
+    s.close()

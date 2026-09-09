@@ -14,12 +14,16 @@ import anthropic
 import httpx
 
 from .arxiv import USER_AGENT, ArxivClient
+from .arxiv_html import fetch_arxiv_html
 from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
-                     load_database_path, load_kimi_request_interval,
+                     load_database_path, load_formula_model,
+                     load_formula_thinking, load_kimi_request_interval,
                      load_llm_provider, load_model, load_recheck_limit,
                      load_thresholds)
+from .equations import collect_equations
 from .github import GitHubClient
-from .judge import KimiJudge, collect_batch_results, submit_batch, wait_for_batch
+from .judge import (KimiFormulaSelector, KimiJudge, collect_batch_results,
+                    submit_batch, wait_for_batch)
 from .openalex import USER_AGENT as OPENALEX_UA, OpenAlexClient
 from .pipeline import run_day
 from .render import compose_day
@@ -59,6 +63,10 @@ def _github_fetch(url: str) -> dict:
     r = httpx.get(url, headers=headers, timeout=30.0)
     r.raise_for_status()
     return r.json()
+
+
+def _arxiv_html_fetch(arxiv_id: str):
+    return fetch_arxiv_html(arxiv_id, get=httpx.get)
 
 
 def _telegram_post(url: str, json: dict) -> dict:
@@ -130,6 +138,26 @@ def _executar(args, db_path: Path, today) -> int:
         cortes_do_dia.update(r.cuts)
         print(f"{escopo.name}: radar {len(r.radar)} · feed {len(r.feed)} "
               f"· cortes {r.cuts}")
+
+    if not args.dry_run and provider == "kimi":
+        # Equacoes centrais do HTML do arXiv para todo paper que ainda nao tem
+        # estado gravado: os de hoje e qualquer um que uma falha de rede tenha
+        # deixado para tras. Corre depois do julgamento e antes do jornal; uma
+        # falha vira estado por paper, nunca uma excecao que derrube o dia.
+        pendentes = store.papers_without_equations()
+        if pendentes:
+            selector = KimiFormulaSelector(
+                os.environ.get("KIMI_API_KEY", ""), load_formula_model(),
+                thinking=load_formula_thinking(),
+                request_interval=load_kimi_request_interval(),
+                base_url=load_kimi_base_url(),
+            )
+            outcome = collect_equations(
+                store, pendentes, fetch_html=_arxiv_html_fetch,
+                selector=selector, today=today.isoformat(),
+                selector_model=load_formula_model(),
+            )
+            print(f"equacoes: {dict(outcome)}", flush=True)
 
     markdown = compose_day(today.isoformat(), resultados)
     push = "\n\n".join(r.push for r in resultados.values() if r.push)

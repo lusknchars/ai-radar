@@ -349,3 +349,55 @@ def test_o_ensaio_a_seco_nao_escreve_a_pagina(ambiente, monkeypatch):
     _espiar_run_day(monkeypatch)
     cli.main(argv(ambiente, "--dry-run"))
     assert not (ambiente / "site").exists()
+
+
+class _FakeKimiJudge:
+    def __init__(self, api_key, model, request_interval, base_url):
+        pass
+
+    def judge_all(self, papers):
+        return {paper.arxiv_id: JUDGMENT for paper in papers}
+
+
+def _kimi_environment(monkeypatch):
+    monkeypatch.setattr(cli, "KimiJudge", _FakeKimiJudge)
+    monkeypatch.setenv("RADAR_LLM_PROVIDER", "kimi")
+    monkeypatch.setenv("KIMI_API_KEY", "secret")
+    monkeypatch.setenv("RADAR_KIMI_REQUEST_INTERVAL", "0")
+    monkeypatch.setattr(cli, "send", lambda *a, **k: True)
+
+
+def test_a_cli_collects_equations_for_unfetched_papers_when_kimi_is_configured(ambiente, monkeypatch):
+    from collections import Counter
+    from datetime import datetime, timezone
+    calls = {}
+
+    def fake_collect(store, papers, *, fetch_html, selector, today, selector_model):
+        calls["papers"] = [p.arxiv_id for p in papers]
+        calls["today"] = today
+        calls["model"] = selector_model
+        calls["fetch"] = fetch_html
+        return Counter({"selected": len(papers)})
+
+    _kimi_environment(monkeypatch)
+    monkeypatch.setattr(cli, "collect_equations", fake_collect)
+    monkeypatch.setattr(cli, "KimiFormulaSelector", lambda *a, **k: object())
+
+    assert cli.main(argv(ambiente)) == 0
+    assert calls["papers"] == [PAPER.arxiv_id]
+    assert calls["today"] == datetime.now(timezone.utc).date().isoformat()
+    assert calls["model"] == "kimi-k2.6"
+    assert calls["fetch"] is cli._arxiv_html_fetch
+
+
+def test_dry_run_never_collects_equations(ambiente, monkeypatch):
+    _kimi_environment(monkeypatch)
+    monkeypatch.setattr(cli, "collect_equations",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("called")))
+    assert cli.main(argv(ambiente, "--dry-run")) == 0
+
+
+def test_the_anthropic_provider_skips_equation_collection(ambiente, monkeypatch):
+    monkeypatch.setattr(cli, "collect_equations",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("called")))
+    assert cli.main(argv(ambiente)) == 0
