@@ -9,6 +9,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from .equations import EquationsStatus
 from .public_labels import (INFRASTRUCTURE_LABELS, SOFTWARE_SETUP_LABELS,
                             TRAINING_LABELS)
 from .report import InfrastructureBasis, InfrastructureTier, ReportDocument
@@ -84,6 +85,20 @@ class IndependentTest(BaseModel):
     source_url: str = Field(pattern=r"^https://")
 
 
+class ResearchEquation(BaseModel):
+    """One central equation, MathML already sanitized by the collector."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    anchor: str = Field(min_length=1)
+    label: str = ""
+    section: str = ""
+    role: str = Field(min_length=1)
+    latex: str = Field(min_length=1)
+    mathml: str = Field(pattern=r'^<math display="block">')
+    context: str = ""
+
+
 class ResearchPage(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -113,6 +128,10 @@ class ResearchPage(BaseModel):
     validation_tier: InfrastructureTier = "unknown"
     evidence_tier: InfrastructureTier = "unknown"
     infrastructure_basis: InfrastructureBasis = "unknown"
+    equations: tuple[ResearchEquation, ...] = ()
+    equations_status: EquationsStatus = "not_fetched"
+    core_kind: str = ""
+    equations_fetched_at: str = ""
 
     @model_validator(mode="after")
     def exposure_map_is_complete(self) -> ResearchPage:
@@ -140,6 +159,10 @@ class ResearchPage(BaseModel):
             raise ValueError(
                 "source-mapped and independently-tested pages require a deep report"
             )
+        if self.equations_status == "selected" and not self.equations:
+            raise ValueError("selected equations status requires at least one equation")
+        if self.equations_status != "selected" and self.equations:
+            raise ValueError("only the selected status may carry equations")
         return self
 
 
@@ -296,4 +319,13 @@ def build_research_page(
         validation_tier=validation_tier,
         evidence_tier=evidence_tier,
         infrastructure_basis=infrastructure_basis,
+        equations=tuple(
+            ResearchEquation(
+                anchor=e.anchor, label=e.label, section=e.section, role=e.role,
+                latex=e.latex, mathml=e.mathml, context=e.context)
+            for e in paper.equations
+        ),
+        equations_status=paper.equations_status,
+        core_kind=paper.core_kind,
+        equations_fetched_at=paper.equations_fetched_at,
     )

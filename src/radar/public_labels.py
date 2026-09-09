@@ -83,6 +83,14 @@ FORMULA_ROLE_LABELS = {
     "complexity": "complexity",
 }
 
+CORE_KIND_PHRASES = {
+    "algorithm": "an algorithm",
+    "system": "a system design",
+    "evaluation_protocol": "an evaluation protocol",
+    "concept": "a concept",
+    "none": "not classified",
+}
+
 FORMULA_STATUS_LABELS = {
     "concept_only": "concept identified; notation not verified",
     "not_applicable": "the technical core does not depend on a new formula",

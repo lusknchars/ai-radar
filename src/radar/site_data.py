@@ -47,6 +47,7 @@ class Ponto:
     equations: tuple[EquationView, ...] = ()
     equations_status: str = "not_fetched"
     equations_fetched_at: str = ""
+    core_kind: str = ""
 
 
 @dataclass(frozen=True)

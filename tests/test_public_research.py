@@ -146,3 +146,58 @@ def test_indexed_page_cannot_claim_evaluated_infrastructure():
             **page.model_dump(),
             "validation_tier": "single_gpu_24gb",
         })
+
+
+from radar.site_data import EquationView
+
+
+def _equation_view(anchor="S4.E9", role="loss") -> EquationView:
+    return EquationView(
+        anchor=anchor, label="(9)", section="4 Methodology", role=role,
+        latex=r"Loss=\operatorname{CE}(S^{F},I)",
+        mathml='<math display="block"><mi>L</mi></math>',
+        context="The loss function can be expressed as follows:")
+
+
+def test_indexed_page_exports_selected_equations():
+    page = build_research_page(
+        _paper(equations=(_equation_view(),), equations_status="selected",
+               equations_fetched_at="2026-09-08"),
+        as_of="2026-09-08")
+    assert page.equations_status == "selected"
+    assert page.equations_fetched_at == "2026-09-08"
+    assert page.equations[0].mathml == '<math display="block"><mi>L</mi></math>'
+    assert page.equations[0].role == "loss"
+    payload = page.model_dump(mode="json")
+    assert payload["equations"][0]["latex"].startswith("Loss=")
+    assert payload["schema_version"] == 1
+
+
+def test_page_without_the_step_says_equations_were_not_fetched():
+    page = build_research_page(_paper(), as_of="2026-09-08")
+    assert page.equations == () and page.equations_status == "not_fetched"
+
+
+def test_selected_status_requires_at_least_one_equation():
+    with pytest.raises(ValidationError):
+        build_research_page(_paper(equations_status="selected"), as_of="2026-09-08")
+
+
+def test_absent_status_cannot_carry_equations():
+    with pytest.raises(ValidationError):
+        build_research_page(
+            _paper(equations=(_equation_view(),), equations_status="unavailable"),
+            as_of="2026-09-08")
+
+
+def test_core_kind_phrases_cover_every_non_formula_kind():
+    from radar.public_labels import CORE_KIND_PHRASES
+    assert set(CORE_KIND_PHRASES) == {
+        "algorithm", "system", "evaluation_protocol", "concept", "none"}
+    assert CORE_KIND_PHRASES["algorithm"] == "an algorithm"
+
+
+def test_page_names_the_non_formula_core_kind():
+    page = build_research_page(
+        _paper(equations_status="not_formula", core_kind="algorithm"), as_of="2026-09-08")
+    assert page.core_kind == "algorithm"

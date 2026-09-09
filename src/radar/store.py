@@ -439,6 +439,7 @@ class Store:
                 equations=tuple(self.equations_for(r["arxiv_id"])),
                 equations_status=sources.get(r["arxiv_id"], {}).get("status", "not_fetched"),
                 equations_fetched_at=sources.get(r["arxiv_id"], {}).get("fetched_at", ""),
+                core_kind=sources.get(r["arxiv_id"], {}).get("core_kind") or "",
             ))
         dia = delivered_on or hoje.isoformat()
         destaque = max(pontos, key=lambda p: p.score, default=None)

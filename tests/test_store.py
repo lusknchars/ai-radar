@@ -430,3 +430,14 @@ def test_site_data_attaches_selected_equations_to_each_point(store):
     assert ponto.equations == (_equation(),)
     assert ponto.equations_status == "selected"
     assert ponto.equations_fetched_at == "2026-09-08"
+
+
+def test_site_data_carries_the_selector_core_kind(store):
+    from datetime import date
+    _judged_with_signal(store)
+    store.record_equations(
+        P.arxiv_id, fetched_at="2026-09-08", status="not_formula",
+        html_sha256="c" * 64, core_kind="algorithm", selector_model="kimi-k2.6",
+        equations=[])
+    ponto = store.site_data(date(2026, 9, 8)).pontos[0]
+    assert ponto.equations_status == "not_formula" and ponto.core_kind == "algorithm"
