@@ -19,6 +19,7 @@ dependencies = [
 ai-radar = "radar.cli:main"
 ai-radar-doctor = "radar.doctor:main"
 ai-radar-newsletter = "radar.newsletter:main"
+ai-radar-preview = "radar.preview:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

@@ -246,6 +246,11 @@ ai-radar --dry-run              # paid rehearsal; no durable state
 ai-radar                        # paid daily run
 ```
 
+Preview the generated site locally with `python -m radar.preview`, then open
+`http://127.0.0.1:8766/`. The preview mounts the files at the configured public
+base path, so article links, page assets, and links back to the archive work
+exactly as they do on GitHub Pages.
+
 `--dry-run` calls the configured LLM and can spend credits. It copies the
 database to a temporary directory, so the rehearsal never consumes papers from
 the first real run. Telegram is optional; when both Telegram variables are

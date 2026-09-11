@@ -1,6 +1,6 @@
 """Browser smoke check against the generated 20-paper sample archive.
 
-Install Playwright separately, serve site/, then pass its URL. The default
+Install Playwright separately, run python -m radar.preview, then pass its URL. The default
 browser executable is the macOS Chrome installation used during development.
 """
 import argparse
@@ -22,6 +22,9 @@ def main():
             page = browser.new_page(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
+            failed_resources = []
+            page.on('response', lambda response: failed_resources.append(
+                f'{response.status} {response.url}') if response.status >= 400 else None)
             page.goto(args.url, wait_until='networkidle')
             assert page.locator('[data-collection-mode="sample"]').is_visible()
             page.get_by_role('button', name='newest', exact=True).click()
@@ -33,12 +36,23 @@ def main():
             assert page.locator('#contador').inner_text() == '1 of 20'
             page.get_by_role('searchbox').fill('')
             assert page.locator('.paper-entry:visible').count() == 20
+            for label in ('title', 'action'):
+                entry = page.locator('.paper-entry:visible').first
+                link = entry.locator('h3 a' if label == 'title' else '.entry-action .sheen-button')
+                with page.expect_navigation() as navigation:
+                    link.click()
+                assert navigation.value.status == 200, page.url
+                assert page.locator('h1').is_visible()
+                assert page.get_by_role('link', name='View page data (JSON)').is_visible()
+                page.get_by_role('link', name='Back to research index', exact=False).click()
+                assert page.locator('.paper-entry:visible').count() > 0
             for width in (390, 768, 1440):
                 page.set_viewport_size({'width': width, 'height': 900})
                 page.goto(args.url, wait_until='networkidle')
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
                 page.screenshot(path=str(args.out / f'archive-{width}.png'))
             assert not errors, errors
+            assert not failed_resources, failed_resources
         finally:
             browser.close()
     print('Browser smoke check passed')

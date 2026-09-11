@@ -5,6 +5,11 @@ closer look. The first publication is a weekly English email containing up to
 five relevant papers published during the previous Monday-to-Sunday window.
 The site continues to publish the complete archive daily.
 
+For local reading, run `python -m radar.preview` and open
+`http://127.0.0.1:8766/`. The server redirects to the configured publication
+path and serves article pages and assets there. A plain `http.server` rooted
+at `site/` does not provide the `/ai-radar/` mount used by generated links.
+
 The application collects and judges each paper centrally. The newsletter uses
 the stored brief, so adding readers does not add model calls. The website has
 separate recent-paper and independent-implementation selections. Recent papers
