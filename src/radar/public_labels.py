@@ -108,6 +108,7 @@ SOFTWARE_SETUP_LABELS = {
 }
 
 CUT_LABELS = {
+    "budget_deferred": "deferred to a later collection",
     "abaixo_do_piso": "below the signal threshold",
     "fora_de_escopo": "outside the research scope",
     "ja_conhecido": "already indexed",

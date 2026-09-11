@@ -239,10 +239,11 @@ def test_a_day_whose_papers_are_all_known_judges_nothing(store):
     assert result.push == ""
 
 
-def test_pushed_papers_are_marked_delivered(store):
+def test_selected_papers_are_published_but_not_marked_as_sent(store):
     p = paper("2508.00001")
     run(store, [p], {"2508.00001": fake_signal(4, 30)})
-    assert store.was_delivered("2508.00001", channel="telegram") is True
+    assert store.was_delivered("2508.00001", channel="telegram") is False
+    assert store.was_delivered("2508.00001", channel="markdown") is True
 
 
 def test_score_below_the_floor_is_cut(store):

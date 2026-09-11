@@ -119,6 +119,8 @@ class Store:
         if existing and existing != EXPECTED_JUDGMENT_COLUMNS:
             self._raise_schema_mismatch(existing)
         self._conn.executescript(SCHEMA)
+        for migration in sorted((Path(__file__).parent / "migrations").glob("*.sql")):
+            self._conn.executescript(migration.read_text(encoding="utf-8"))
         self._conn.commit()
         columns = {
             row["name"] for row in self._conn.execute("PRAGMA table_info(judgments)")
@@ -479,9 +481,88 @@ class Store:
         return SiteData(pontos=pontos, dia=dia, cortes=None, rechecked_total=0,
                         dias_de_coleta=dias_de_coleta,
                         papers_que_moveram=papers_que_moveram,
-                        repos_do_destaque=repos)
+                        repos_do_destaque=repos,
+                        collection=self.collection_status(dia))
 
     # ---------- deliveries ----------
+
+    def begin_collection(self, day: str, mode: str = "live") -> int:
+        cursor = self._conn.execute(
+            "INSERT INTO collection_runs(day, mode, status) VALUES (?, ?, 'running')",
+            (day, mode),
+        )
+        self._conn.commit()
+        return cursor.lastrowid
+
+    def finish_collection(self, run_id: int, status: str, *, discovered: int = 0,
+                          indexed: int = 0) -> None:
+        self._conn.execute(
+            "UPDATE collection_runs SET status=?, discovered=?, indexed=? WHERE id=?",
+            (status, discovered, indexed, run_id),
+        )
+        self._conn.commit()
+
+    def collection_status(self, as_of: str):
+        from .site_data import CollectionStatus
+
+        try:
+            rows = self._conn.execute(
+                "SELECT * FROM collection_runs WHERE day <= ? ORDER BY id DESC",
+                (as_of,),
+            ).fetchall()
+        except sqlite3.OperationalError:
+            return CollectionStatus()
+        latest = rows[0] if rows else None
+        success = next((r for r in rows if r['mode'] == 'live'
+                        and r['status'] == 'success'), None)
+        live = any(r['mode'] == 'live' and r['status'] in ('success', 'partial')
+                   for r in rows)
+        return CollectionStatus(
+            mode="live" if live else "sample" if any(r['mode'] == 'sample' for r in rows) else "unknown",
+            last_success=success['day'] if success else None,
+            last_attempt=latest['day'] if latest else None,
+            outcome=latest['status'] if latest else "unknown",
+        )
+
+    def queue_delivery(self, day: str, channel: str, destination_hash: str,
+                       body: str, items: list[str]) -> None:
+        from hashlib import sha256
+
+        identity = sha256(json.dumps([day, channel, destination_hash, body]).encode()).hexdigest()
+        with self._conn:
+            self._conn.execute(
+                "INSERT OR IGNORE INTO delivery_outbox"
+                "(id, day, channel, destination_hash, body) VALUES (?, ?, ?, ?, ?)",
+                (identity, day, channel, destination_hash, body),
+            )
+            self._conn.executemany(
+                "INSERT OR IGNORE INTO delivery_outbox_items VALUES (?, ?, ?)",
+                [(identity, pid, rank) for rank, pid in enumerate(items, 1)],
+            )
+
+    def is_queued(self, arxiv_id: str, channel: str) -> bool:
+        return self._conn.execute(
+            "SELECT 1 FROM delivery_outbox o JOIN delivery_outbox_items i "
+            "ON o.id=i.outbox_id WHERE i.arxiv_id=? AND o.channel=? "
+            "AND o.status='pending' LIMIT 1", (arxiv_id, channel),
+        ).fetchone() is not None
+
+    def pending_deliveries(self, channel: str, destination_hash: str) -> list[dict]:
+        return [dict(row) for row in self._conn.execute(
+            "SELECT * FROM delivery_outbox WHERE channel=? AND destination_hash=? "
+            "AND status='pending' ORDER BY day, rowid", (channel, destination_hash),
+        )]
+
+    def acknowledge_delivery(self, identity: str, day: str) -> None:
+        with self._conn:
+            self._conn.execute(
+                "INSERT OR IGNORE INTO deliveries(arxiv_id, delivered_at, channel, rank) "
+                "SELECT i.arxiv_id, ?, o.channel, i.rank FROM delivery_outbox_items i "
+                "JOIN delivery_outbox o ON o.id=i.outbox_id WHERE o.id=?",
+                (day, identity),
+            )
+            self._conn.execute("UPDATE delivery_outbox SET status='sent' WHERE id=?",
+                               (identity,))
 
     def mark_delivered(self, arxiv_id: str, channel: str, at: str, rank: int | None) -> None:
         self._conn.execute(

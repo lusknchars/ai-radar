@@ -18,9 +18,9 @@ def send(text: str, token: str, chat_id: str, post: Callable[[str, dict], object
     if not text.strip():
         return False      # silencio e resultado valido
     try:
-        post(build_endpoint(token), {"chat_id": chat_id, "text": text,
-                                     "disable_web_page_preview": False})
-        return True
+        response = post(build_endpoint(token), {"chat_id": chat_id, "text": text,
+                                                "disable_web_page_preview": False})
+        return isinstance(response, dict) and response.get("ok") is True
     except Exception:
         # Falha de entrega nao derruba o pipeline: o markdown ja foi gravado.
         return False

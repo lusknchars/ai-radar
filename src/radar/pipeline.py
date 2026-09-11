@@ -39,6 +39,8 @@ class DayResult:
     cuts: dict[str, int]
     markdown: str
     push: str
+    discovered_count: int = 0
+    indexed_count: int = 0
 
 
 def run_day(
@@ -56,6 +58,7 @@ def run_day(
     fetch_citations: Callable[[list[str]], dict[str, int | None]] | None = None,
     dry_run: bool = False,
     recheck_limit: int = 0,
+    new_paper_limit: int | None = None,
 ) -> DayResult:
     day = today.isoformat()
     discovery = fetch_papers(scope)
@@ -76,6 +79,13 @@ def run_day(
     papers = [p for p in discovered if p.arxiv_id not in conhecidos]
     if len(discovered) != len(papers):
         cuts["ja_conhecido"] += len(discovered) - len(papers)
+    if new_paper_limit is not None:
+        if new_paper_limit < 0:
+            raise ValueError("new_paper_limit must not be negative")
+        papers.sort(key=lambda p: (p.published, p.arxiv_id), reverse=True)
+        if len(papers) > new_paper_limit:
+            cuts["budget_deferred"] = len(papers) - new_paper_limit
+            papers = papers[:new_paper_limit]
 
     judgments = judge_all(papers) if papers else {}
 
@@ -227,7 +237,8 @@ def run_day(
         # neste laco todos os dias, e esta e a unica coisa entre eles e uma
         # segunda entrega. Apaga-la por parecer codigo morto quebra a garantia
         # central do produto.
-        elif store.was_delivered(paper.arxiv_id, channel="telegram"):
+        elif (store.was_delivered(paper.arxiv_id, channel="telegram")
+              or store.is_queued(paper.arxiv_id, channel="telegram")):
             cuts[_motivo("ja_entregue", e_novo)] += 1
             candidates.append((item, False, e_novo, mexeu))
         else:
@@ -282,12 +293,10 @@ def run_day(
         item for item, _, e_novo, mexeu in candidates if not e_novo and mexeu
     ]
 
-    if not dry_run:
-        # dry_run existe para ensaiar o dia sem consequencia. Gravar entrega de
-        # telegram aqui queimaria os tres melhores itens do dia para sempre: a
-        # primeira execucao de verdade os cortaria como ja_entregue.
-        for rank, item in enumerate(radar, start=1):
-            store.mark_delivered(item.paper.arxiv_id, channel="telegram", at=day, rank=rank)
+    # Selection is publication, not proof of an external delivery. The CLI
+    # queues Telegram messages and acknowledges them only after the API accepts.
+    for rank, item in enumerate(radar, start=1):
+        store.mark_delivered(item.paper.arxiv_id, channel="markdown", at=day, rank=rank)
     for item in feed:
         store.mark_delivered(item.paper.arxiv_id, channel="markdown", at=day, rank=None)
 
@@ -300,4 +309,6 @@ def run_day(
                                  rechecked=reconsultados_com_movimento,
                                  rechecked_total=total_reconsultado),
         push=render_telegram(radar),
+        discovered_count=len(discovered),
+        indexed_count=sum(1 for _, _, is_new, _ in candidates if is_new),
     )

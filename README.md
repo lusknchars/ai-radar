@@ -9,6 +9,13 @@
 
 ai-radar collects arXiv papers on efficient inference and agent harnesses, counts how many **independent** GitHub repositories implement each one, and publishes a daily digest plus a self-contained web archive. The archive opens with 30 concise paper briefs; a paper worth more attention can be expanded into a full-text report on demand. Papers that already broke out in attention are cut on purpose — the point is to find what nobody has looked at yet.
 
+The newsletter foundation adds separate recent-paper and implementation-signal
+selections, explicit collection freshness, reliable Telegram retries, and a
+weekly English email draft built from existing briefs. A private signup service
+supports confirmed email subscriptions through Resend. Setup, current limits,
+and the work required to activate live delivery are documented in
+[`docs/newsletter-foundation.md`](docs/newsletter-foundation.md).
+
 ![ai-radar](assets/banner.svg)
 
 ## Why independent implementations
@@ -557,25 +564,26 @@ The composition root also owns failure policy:
 
 ## Status
 
-Pre-1.0, and honest about it.
+Pre-1.0. The deployed archive currently uses the 20-paper sample. A successful
+sample publication is not a successful live collection.
 
-- The upstream scheduled workflow cannot complete until its historical database is migrated.
-- GitHub Pages uses GitHub Actions on `main`; a configured fork publishes from its own `data/radar-state.db`.
-- The historical `data/radar.db` committed upstream is still on the pre-migration schema.
-- Fresh clones use an ignored, current-schema `data/local.db`; forks configured by the wizard persist their own current-schema `data/radar-state.db`. Neither needs to migrate or pay to rejudge the original archive.
-- The 20-paper Kimi connectivity canary completed; the full archive re-judgment remains pending.
-- The same 20 papers now form a reproducible public-research corpus. All 20
-  indexed pages pass structural validation; the release gate remains red until
-  deep reports and the five-reader study exist.
-- A manual corpus workflow now runs one paid canary before the remaining
-  reports, republishes partial progress, and rejects weak completed reports.
-  The upstream repository still needs its `KIMI_API_KEY` Actions secret before
-  that paid path can run.
-- RSS, permanent paper URLs and JSON, stable daily-edition URLs, the exposure map, the editorial redesign, and the two-scope pipeline are done and tested.
-- The 30-brief archive and maintainer-approved, full-text report path are
-  implemented but remain unproven in the default-branch Actions environment.
+- The newsletter foundation branch records collection status separately from
+  page publication and translates the sample briefs into English.
+- Live daily collection requires the `kimi` environment key and the repository
+  variable `RADAR_COLLECTION_MODE=live`. New-brief and equation call limits are
+  configurable. The default Actions mode remains `sample`.
+- `data/radar-state.db` is the current-schema publication database. The
+  historical `data/radar.db` still requires the existing migration before use.
+- Weekly email drafts and the private confirmed-signup service are implemented.
+  Production signup needs a host, a verified sender, Resend configuration, and
+  Turnstile keys. Draft preparation does not send subscriber emails.
+- All 20 sample research pages pass structural validation. The research release
+  gate remains closed because deep reports and reader-study results are missing.
+- RSS, permanent paper URLs and JSON, edition URLs, and static report publishing
+  are implemented. The full paid report path still needs production validation.
 
-The test suite runs offline and completes in about one second on the current development machine.
+See [newsletter setup and limits](docs/newsletter-foundation.md) for activation
+steps and the distinction between implemented and deployed behavior.
 
 ## License
 

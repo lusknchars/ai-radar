@@ -62,3 +62,8 @@ def test_transport_failure_returns_false_without_raising():
         raise RuntimeError("timeout")
 
     assert send("oi", token="t", chat_id="42", post=failing_post) is False
+
+
+def test_api_rejection_is_not_a_delivery():
+    assert send("hello", token="t", chat_id="42",
+                post=lambda *a: {"ok": False, "description": "rejected"}) is False

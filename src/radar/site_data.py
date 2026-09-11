@@ -51,6 +51,14 @@ class Ponto:
 
 
 @dataclass(frozen=True)
+class CollectionStatus:
+    mode: str = "unknown"
+    last_success: str | None = None
+    last_attempt: str | None = None
+    outcome: str = "unknown"
+
+
+@dataclass(frozen=True)
 class SiteData:
     pontos: list[Ponto]
     dia: str
@@ -65,6 +73,7 @@ class SiteData:
     dias_de_coleta: int = 0
     papers_que_moveram: int = 0
     repos_do_destaque: list[dict] = field(default_factory=list)
+    collection: CollectionStatus = field(default_factory=CollectionStatus)
 
     @property
     def cobertura_de_ganho(self) -> float:

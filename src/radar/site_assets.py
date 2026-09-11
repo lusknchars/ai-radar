@@ -276,6 +276,8 @@ document.querySelectorAll('[data-ordenar]').forEach(function(b){
       return asc ? a - c : c - a;
     });
     linhas.forEach(function(tr){ corpo.appendChild(tr); });
+    mostrarTodos = true;
+    aplicar();
   });
 });
 
@@ -470,6 +472,18 @@ CHART_SCRIPT = r"""
 """
 
 STYLES = _FONT_FACE + r"""
+.collection-status{border-left:3px solid #cb2957;padding:12px 20px;margin:20px 0 40px;background:#eee}
+.collection-status p{margin:4px 0;font-size:13px}
+.discovery-selections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px}
+.discovery-selections .section-head{grid-template-columns:minmax(0,1fr);gap:12px}
+.discovery-selections>section{min-width:0;padding:32px 0}
+.discovery-papers{padding-left:20px}
+.discovery-papers li{padding:16px 0;border-top:1px solid #ddd}
+.discovery-papers h3{font-size:18px;line-height:1.4;margin:8px 0}
+.discovery-papers h3 a{text-decoration:underline;text-underline-offset:3px}
+.discovery-papers p{font-size:13px}
+.discovery-papers time,.discovery-papers small{font-size:11px}
+@media(max-width:760px){.discovery-selections{grid-template-columns:1fr;gap:0}}
 :root{--fundo:#eeeeee;--texto:#000000;--cinza:#dddddd;--acento:#cb2957;
 --superficie:color-mix(in srgb,var(--fundo) 68%,var(--cinza));
 --superficie-2:#dddddd;
@@ -482,6 +496,7 @@ STYLES = _FONT_FACE + r"""
 --editorial:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
 --sans:"Be Vietnam Pro",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;background:var(--fundo)}
 body{margin:0;background:var(--fundo);color:var(--texto);font-family:var(--sans);
 font-size:15px;font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}

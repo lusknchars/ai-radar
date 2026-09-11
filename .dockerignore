@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+.venv
+data
+site
+reports
+newsletter
+eval
+__pycache__
+*.db

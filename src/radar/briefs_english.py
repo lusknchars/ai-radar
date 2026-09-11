@@ -121,6 +121,36 @@ def _brief_text(judgment: Judgment) -> str:
     return f"{judgment.technique} {judgment.resumo} {judgment.porque}"
 
 
+def apply_english_checkpoint(store, checkpoint: Path, *, today: str) -> int:
+    """Apply reviewed translations without changing classifications or calling a model."""
+    from hashlib import sha256
+
+    replacements = []
+    for line in checkpoint.read_text(encoding="utf-8").splitlines():
+        record = json.loads(line)
+        if record.get('editorial_translation', {}).get('language') != 'en':
+            continue
+        current = store.latest_judgment(record['arxiv_id'])
+        if current is None or not is_portuguese(_brief_text(current)):
+            continue
+        source_hash = record['editorial_translation'].get('source_text_sha256')
+        source_fields = {key: getattr(current, key) for key in
+                         ('technique', 'ganho_texto', 'resumo', 'porque')}
+        if source_hash and sha256(json.dumps(source_fields, sort_keys=True,
+                                            ensure_ascii=False).encode()).hexdigest() != source_hash:
+            continue  # A later analysis must not be replaced with an old translation.
+        translated = Judgment(**record['judgment'])
+        for key in ('familia', 'pratica', 'ganho_eixo', 'ganho_fator'):
+            if getattr(current, key) != getattr(translated, key):
+                raise ValueError(f"Checkpoint classification differs for {record['arxiv_id']}")
+        if is_portuguese(_brief_text(translated)):
+            raise ValueError(f"Checkpoint is not English for {record['arxiv_id']}")
+        replacements.append((record['arxiv_id'], translated, record['model']))
+    for arxiv_id, judgment, model in replacements:
+        store.record_judgment(arxiv_id, judgment, model=model, judged_at=today)
+    return len(replacements)
+
+
 def rewrite_portuguese_briefs(
     store, *, judge, today: str, model: str, checkpoint: Path | None = None,
     arxiv_ids: list[str] | None = None, dry_run: bool = False,

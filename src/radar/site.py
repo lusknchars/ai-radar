@@ -122,6 +122,26 @@ def _sheen_link(label: str, href: str, *, classes: str = "",
     )
 
 
+def _collection_notice(d: SiteData) -> str:
+    status = d.collection
+    if status.mode == "sample":
+        message = "Sample archive. These papers demonstrate the format; this is not a fresh collection."
+    elif status.mode == "unknown":
+        message = "Collection freshness has not been recorded for this archive."
+    elif status.outcome != "success":
+        message = "The latest collection did not complete. Previously collected research remains available."
+    elif status.last_success and status.last_success < d.dia:
+        message = "Showing previously collected research. See the last successful collection date below."
+    else:
+        message = "Collection completed. Paper publication dates are shown on each entry."
+    return (
+        f'<aside class="collection-status" data-collection-mode="{escape(status.mode)}">'
+        f'<p>{escape(message)}</p>'
+        f'<p>Last successful collection: <strong>{escape(status.last_success or "not recorded")}</strong>'
+        f' · Page published: {escape(d.dia)}</p></aside>'
+    )
+
+
 def _cabecalho(d: SiteData, edicao: bool = False) -> str:
     impls = sum(p.independent_impls for p in d.pontos)
     contexto = "archived edition" if edicao else "research intelligence"
@@ -136,7 +156,7 @@ def _cabecalho(d: SiteData, edicao: bool = False) -> str:
         'of validation.</p>'
         f'{_sheen_link("Explore the research", "#acervo")}</div>'
         '<dl class="edition-ledger" aria-label="Edition summary">'
-        f'<div><dt>edition</dt><dd>{escape(d.dia)}</dd></div>'
+        f'<div><dt>{"edition" if edicao else "page published"}</dt><dd>{escape(d.dia)}</dd></div>'
         f'<div><dt>{"brief" if len(d.pontos) == 1 else "briefs"}</dt>'
         f'<dd>{len(d.pontos)}</dd></div>'
         f'<div><dt>{"research area" if len(d.familias_presentes) == 1 else "research areas"}</dt>'
@@ -453,7 +473,7 @@ def _linha(
         f'data-texto="{escape(texto)}" '
         f'data-impls="{p.independent_impls}" data-estrelas="{p.stars_total}" '
         f'data-citacoes="{ord_cit}" data-ganho="{ord_ganho:g}" '
-        f'data-score="{p.score:g}"{estado_inicial}>'
+        f'data-score="{p.score:g}" data-publicado="{escape(p.publicado.replace("-", ""))}"{estado_inicial}>'
         '<div class="entry-date">'
         f'<time datetime="{escape(p.publicado)}">{escape(_data_editorial(p.publicado))}</time>'
         f'<span>arXiv {escape(p.arxiv_id)}</span></div>'
@@ -522,6 +542,7 @@ def _secao_tabela(
         "</div>"
         '<div class="index-sort" aria-label="Sort research index">'
         '<span>sort by</span>'
+        '<button type="button" data-ordenar="publicado">newest</button>'
         '<button type="button" data-ordenar="score">signal</button>'
         '<button type="button" data-ordenar="impls">implementations</button>'
         '<button type="button" data-ordenar="estrelas">stars</button>'
@@ -617,6 +638,46 @@ def _pendente(qual: str) -> str:
     return f'<p class="futuro">{qual}</p>'
 
 
+def _discovery_selections(d: SiteData, public_config: PublicConfig) -> str:
+    from datetime import date
+    from .selection import implementation_papers, recent_papers
+
+    try:
+        recent = recent_papers(d.pontos, date.fromisoformat(d.dia))
+    except ValueError:
+        recent = []
+
+    def cards(points) -> str:
+        if not points:
+            return '<p class="nota">No qualifying papers in this selection.</p>'
+        return '<ol class="discovery-papers">' + ''.join(
+            '<li>'
+            f'<time datetime="{escape(p.publicado)}">{escape(p.publicado)}</time>'
+            f'<h3><a href="{escape(public_config.path(f"papers/{p.arxiv_id}/"))}">{escape(p.titulo)}</a></h3>'
+            f'<p>{escape(p.resumo)}</p>'
+            f'<small>{p.independent_impls} independent implementations · author claims, not reproduced</small>'
+            '</li>' for p in points[:3]
+        ) + '</ol>'
+
+    return '<div class="discovery-selections">' + _secao(
+        "Recent papers worth reading", "Published in the last seven days. No implementation count is required.",
+        cards(recent), section_id="recent",
+    ) + _secao(
+        "Independent implementation signals", "Papers below the attention thresholds with independent implementations. Counts do not establish quality.",
+        cards(implementation_papers(d.pontos)), section_id="implementations",
+    ) + '</div>'
+
+
+def _newsletter_signup(config: PublicConfig) -> str:
+    if config.subscribe_url:
+        action = _sheen_link("Get the weekly email", config.subscribe_url)
+        copy = "Up to five papers each week. Free to subscribe. Unsubscribe at any time."
+    else:
+        action = _sheen_link("Follow with RSS", config.path("feed.xml"))
+        copy = "Email subscriptions are not open yet. Follow new papers with your RSS reader."
+    return _secao("A weekly reading list", copy, action, section_id="newsletter")
+
+
 def render_site(
     dados: SiteData, *, edicao: bool = False,
     report_ids: set[str] | None = None,
@@ -628,7 +689,7 @@ def render_site(
     else:
         corpo = "".join((
             _secao("Research index",
-                   "The 30 strongest signals lead this edition. Each entry "
+                   "Explore the full archive, or sort by publication date. Each entry "
                    "provides a decision-ready brief, the original paper, and "
                    "an on-demand deep report when the evidence justifies it.",
                    _secao_tabela(dados, report_ids, public_config),
@@ -658,8 +719,11 @@ def render_site(
         '<a class="pular" href="#conteudo">Skip to content</a>'
         '<div class="envelope">'
         f"{_nav('edicoes' if edicao else 'acervo', public_config)}"
+        f"{_collection_notice(dados)}"
         f"{_cabecalho(dados, edicao=edicao)}"
         f'<main id="conteudo">'
+        f"{_newsletter_signup(public_config) if not edicao else ''}"
+        f"{_discovery_selections(dados, public_config) if not edicao else ''}"
         f"{_secao_leitura(dados)}"
         f"{corpo}"
         f'<section id="metodo" class="enquadramento">{_ENQUADRAMENTO}</section>'

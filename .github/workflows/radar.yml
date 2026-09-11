@@ -27,6 +27,8 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
+    environment: kimi
+    timeout-minutes: 45
     outputs:
       site_ready: ${{ steps.site_status.outputs.ready }}
     steps:
@@ -42,6 +44,10 @@ jobs:
       - name: Rodar o radar
         env:
           RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+          RADAR_COLLECTION_MODE: ${{ vars.RADAR_COLLECTION_MODE || 'sample' }}
+          RADAR_MAX_NEW_PER_SCOPE: ${{ vars.RADAR_MAX_NEW_PER_SCOPE || '20' }}
+          RADAR_MAX_EQUATIONS_PER_RUN: ${{ vars.RADAR_MAX_EQUATIONS_PER_RUN || '5' }}
+          RADAR_SUBSCRIBE_URL: ${{ vars.RADAR_SUBSCRIBE_URL }}
           RADAR_LLM_PROVIDER:  ${{ vars.RADAR_LLM_PROVIDER || 'kimi' }}
           RADAR_MODEL:         ${{ vars.RADAR_MODEL }}
           RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}

@@ -1,0 +1,43 @@
+name: weekly newsletter draft
+
+on:
+  schedule:
+    - cron: '23 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: vars.RADAR_COLLECTION_MODE == 'live'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install -e .
+      - name: Prepare the previous week's issue without model calls
+        env:
+          RADAR_DB: ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+        run: python scripts/prepare_newsletter.py
+      - name: Preserve the reviewable email draft
+        run: |
+          if test -d newsletter; then
+            git config user.name radar-bot
+            git config user.email radar-bot@users.noreply.github.com
+            git add -- newsletter
+            git diff --staged --quiet || git commit -m 'newsletter: prepare weekly draft'
+            git push
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weekly-newsletter-draft
+          path: newsletter/
+          if-no-files-found: ignore

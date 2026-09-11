@@ -8,6 +8,7 @@ import tempfile
 import time
 from collections import Counter
 from datetime import date, datetime, timezone
+from hashlib import sha256
 from pathlib import Path
 
 import anthropic
@@ -84,8 +85,30 @@ def _executar(args, db_path: Path, today) -> int:
     """O trabalho do dia. Separado de `main` para que a limpeza do diretorio de
     ensaio caiba num `finally` sem reindentar o corpo inteiro."""
     store = Store(db_path)
-    store.init_schema()
+    try:
+        store.init_schema()
+        run_id = store.begin_collection(today.isoformat())
+        try:
+            return _collect(args, store, today, run_id)
+        except Exception:
+            store.finish_collection(run_id, "failed")
+            if not args.dry_run:
+                try:
+                    publish_site(store, args.out.parent / "site", today)
+                except Exception:
+                    print("Could not publish the failed-collection notice", flush=True)
+            raise
+    finally:
+        store.close()
 
+
+def _collect(args, store: Store, today: date, run_id: int) -> int:
+    new_limit = int(os.environ.get("RADAR_MAX_NEW_PER_SCOPE", "20"))
+    if not 1 <= new_limit <= 100:
+        raise ValueError("RADAR_MAX_NEW_PER_SCOPE must be between 1 and 100")
+    equation_limit = int(os.environ.get("RADAR_MAX_EQUATIONS_PER_RUN", str(min(5, MAX_EQUATIONS_PER_RUN))))
+    if not 0 <= equation_limit <= MAX_EQUATIONS_PER_RUN:
+        raise ValueError(f"RADAR_MAX_EQUATIONS_PER_RUN must be between 0 and {MAX_EQUATIONS_PER_RUN}")
     arxiv = ArxivClient(fetch=_arxiv_fetch)
     github = GitHubClient(fetch=_github_fetch)
     provider = load_llm_provider()
@@ -134,6 +157,7 @@ def _executar(args, db_path: Path, today) -> int:
             fetch_papers=arxiv.recent, fetch_signal=fetch_signal,
             judge_all=judge_all, fetch_citations=openalex.citations_for,
             dry_run=args.dry_run,
+            new_paper_limit=new_limit,
             # A re-consulta e global e roda UMA VEZ SO: ela varre `papers`
             # inteira e nao conhece escopo. Ligar nas duas passadas gastaria
             # o dobro do orcamento re-consultando exatamente os mesmos papers.
@@ -144,12 +168,23 @@ def _executar(args, db_path: Path, today) -> int:
         print(f"{escopo.name}: radar {len(r.radar)} · feed {len(r.feed)} "
               f"· cortes {r.cuts}")
 
+    incomplete = any(
+        count and any(reason in key for reason in
+                      ("termo_falhou", "sem_julgamento", "sinal_indisponivel"))
+        for key, count in cortes_do_dia.items()
+    )
+    store.finish_collection(
+        run_id, "partial" if incomplete else "success",
+        discovered=sum(r.discovered_count for r in resultados.values()),
+        indexed=sum(r.indexed_count for r in resultados.values()),
+    )
+
     if not args.dry_run and provider == "kimi":
         # Equacoes centrais do HTML do arXiv para todo paper que ainda nao tem
         # estado gravado: os de hoje e qualquer um que uma falha de rede tenha
         # deixado para tras. Corre depois do julgamento e antes do jornal; uma
         # falha vira estado por paper, nunca uma excecao que derrube o dia.
-        pendentes = store.papers_without_equations()[:MAX_EQUATIONS_PER_RUN]
+        pendentes = store.papers_without_equations()[:min(equation_limit, MAX_EQUATIONS_PER_RUN)]
         if pendentes:
             selector = KimiFormulaSelector(
                 os.environ.get("KIMI_API_KEY", ""), load_formula_model(),
@@ -170,6 +205,15 @@ def _executar(args, db_path: Path, today) -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{today.isoformat()}.md").write_text(markdown, encoding="utf-8")
 
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    telegram_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    destination = sha256(telegram_chat.encode()).hexdigest()
+    if not args.dry_run and telegram_token and telegram_chat and push.strip():
+        store.queue_delivery(
+            today.isoformat(), "telegram", destination, push,
+            [item.paper.arxiv_id for result in resultados.values() for item in result.radar],
+        )
+
     if not args.dry_run:
         # O jornal e o acervo INTEIRO, nao o dia: por isso ele le do banco em
         # vez de usar os DayResult acima. E por isso tambem que o ensaio a
@@ -182,28 +226,21 @@ def _executar(args, db_path: Path, today) -> int:
         print("dry-run: push nao enviado, nada gravado no banco de verdade")
         return 0
 
-    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-    telegram_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not telegram_token and not telegram_chat:
         print("push skipped: Telegram is not configured", flush=True)
-        return 0
+        return 1 if incomplete else 0
 
-    try:
-        sent = send(push,
-                    token=telegram_token,
-                    chat_id=telegram_chat,
-                    post=_telegram_post)
-    except ValueError as exc:
-        # Segredo faltando nao pode custar o dia inteiro. Quando isto acontece o
-        # markdown ja esta escrito e o lote ja foi pago; deixar a excecao subir
-        # matava o processo antes do passo de commit e os dois iam embora com o
-        # runner efemero. Reporta e sai nao-zero -- o workflow fica vermelho,
-        # que e o sinal correto -- enquanto o commit (if: !cancelled()) preserva
-        # o que ja foi produzido.
-        print(f"push nao enviado: {exc}", flush=True)
+    if not telegram_token or not telegram_chat:
+        print("push nao enviado: configure both Telegram credentials", flush=True)
         return 1
-    print(f"push enviado: {sent}")
-    return 0
+    for message in store.pending_deliveries("telegram", destination):
+        if not send(message['body'], token=telegram_token, chat_id=telegram_chat,
+                    post=_telegram_post):
+            print("push nao enviado: queued for retry", flush=True)
+            return 1
+        store.acknowledge_delivery(message['id'], today.isoformat())
+        print("push enviado: True", flush=True)
+    return 1 if incomplete else 0
 
 
 def main(argv: list[str] | None = None) -> int:

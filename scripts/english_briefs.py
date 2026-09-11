@@ -12,7 +12,7 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from radar.briefs_english import rewrite_portuguese_briefs
+from radar.briefs_english import apply_english_checkpoint, rewrite_portuguese_briefs
 from radar.config import (load_database_path, load_kimi_base_url,
                           load_kimi_request_interval, load_model)
 from radar.judge import KimiJudge
@@ -31,10 +31,12 @@ def main(argv: list[str] | None = None, *, judge=None) -> int:
                         help="list the briefs that would be rewritten; no model call")
     parser.add_argument("--publish", action="store_true",
                         help="regenerate site/ from the database afterwards")
+    parser.add_argument("--apply-checkpoint", action="store_true",
+                        help="apply reviewed English translations offline; no model calls")
     args = parser.parse_args(argv)
 
     model = load_model()
-    if judge is None and not args.dry_run:
+    if judge is None and not args.dry_run and not args.apply_checkpoint:
         api_key = os.environ.get("KIMI_API_KEY", "")
         if not api_key:
             print("KIMI_API_KEY is required unless --dry-run", file=sys.stderr)
@@ -46,6 +48,15 @@ def main(argv: list[str] | None = None, *, judge=None) -> int:
     store = Store(args.db)
     try:
         store.init_schema()
+        if args.apply_checkpoint:
+            if args.dry_run:
+                print('Checkpoint preview: no changes made')
+                return 0
+            count = apply_english_checkpoint(store, args.checkpoint, today=args.today)
+            print(f'Applied {count} reviewed translations without model calls')
+            if args.publish:
+                publish_site(store, Path('site'), date.fromisoformat(args.today))
+            return 0
         outcome = rewrite_portuguese_briefs(
             store, judge=judge, today=args.today, model=model,
             checkpoint=args.checkpoint, arxiv_ids=args.arxiv_id or None,

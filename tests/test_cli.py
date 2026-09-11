@@ -157,6 +157,39 @@ def test_a_real_run_sends_and_records(ambiente, monkeypatch):
     assert store.was_delivered(PAPER.arxiv_id, channel="telegram") is True
 
 
+def test_failed_delivery_is_retried_even_when_paper_is_already_known(ambiente, monkeypatch):
+    from radar.store import Store
+
+    attempts = []
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "t")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "c")
+    monkeypatch.setattr(cli, "send", lambda text, **kw: attempts.append(text) or False)
+    assert cli.main(argv(ambiente)) == 1
+    store = Store(ambiente / "radar.db")
+    assert not store.was_delivered(PAPER.arxiv_id, "telegram")
+    store.close()
+
+    monkeypatch.setattr(cli, "send", lambda text, **kw: attempts.append(text) or True)
+    assert cli.main(argv(ambiente)) == 0
+    assert len(attempts) == 2
+    assert attempts[0] == attempts[1]
+    store = Store(ambiente / "radar.db")
+    assert store.was_delivered(PAPER.arxiv_id, "telegram")
+    store.close()
+    assert cli.main(argv(ambiente)) == 0
+    assert len(attempts) == 2
+
+
+def test_no_telegram_credentials_never_records_a_telegram_delivery(ambiente):
+    from radar.store import Store
+
+    assert cli.main(argv(ambiente)) == 0
+    store = Store(ambiente / "radar.db")
+    assert not store.was_delivered(PAPER.arxiv_id, "telegram")
+    assert store.was_delivered(PAPER.arxiv_id, "markdown")
+    store.close()
+
+
 def test_a_cli_uses_kimi_when_configured(ambiente, monkeypatch):
     calls = []
 

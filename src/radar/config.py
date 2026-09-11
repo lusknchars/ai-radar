@@ -44,6 +44,7 @@ class PublicConfig:
     repository: str
     base_path: str
     site_url: str
+    subscribe_url: str = ""
 
     def __post_init__(self) -> None:
         parts = self.repository.split("/")
@@ -60,6 +61,10 @@ class PublicConfig:
         parsed = urlsplit(self.site_url)
         if parsed.scheme not in {"http", "https"} or not parsed.netloc:
             raise ValueError("RADAR_SITE_URL must be an absolute HTTP(S) URL")
+        subscription = urlsplit(self.subscribe_url)
+        if self.subscribe_url and (subscription.scheme != "https" or not subscription.netloc
+                                   or subscription.username or subscription.password):
+            raise ValueError("RADAR_SUBSCRIBE_URL must be an absolute HTTPS URL")
 
     def path(self, resource: str = "") -> str:
         """Return a root-relative URL below the configured Pages base path."""
@@ -110,6 +115,7 @@ def load_public_config() -> PublicConfig:
         repository=repository,
         base_path=base_path,
         site_url=site_url,
+        subscribe_url=os.environ.get("RADAR_SUBSCRIBE_URL", "").strip(),
     )
 
 

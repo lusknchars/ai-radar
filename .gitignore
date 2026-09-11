@@ -6,6 +6,9 @@ __pycache__/
 venv/
 .env
 .env.*
+.private/
+signup.db*
+subscribers.db*
 !.env.example
 data/local.db
 data/local.db-*

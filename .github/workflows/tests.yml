@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
 
       - name: Instalar
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,newsletter]"
 
       - name: Rodar a suite
         run: pytest -q
