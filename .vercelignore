@@ -13,7 +13,7 @@ tests/
 eval/
 experiments/
 docs/
-radar/
+/radar/
 data/**
 !data/radar-state.db
 **/signup.db*

@@ -1,9 +1,19 @@
 # Deploying AI Radar to Vercel
 
+The production archive is [paperaft.vercel.app](https://paperaft.vercel.app),
+in the `floater/paperaft` Vercel project. The local checkout is linked for CLI
+deployments. Automatic GitHub deployments require the account owner to add a
+GitHub login connection in Vercel, then connect `lusknchars/ai-radar` to this
+project. Until then, publish updates with `vercel deploy --prod` from a linked
+checkout.
+
 The Vercel build renders the saved publication database into `dist/` using the
 same renderer as GitHub Pages. It serves the archive at `/`, including paper
 pages, JSON, RSS, the sitemap, fonts, and social sharing images. Only `dist/`
 is public. There are no server functions in this deployment.
+
+Dependencies install into a project virtual environment because Vercel's
+system Python is externally managed. The build uses that same environment.
 
 The build uses a temporary SQLite snapshot. It does not change the committed
 database, collect papers, call an LLM, send notifications, or rent GPUs. The
