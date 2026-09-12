@@ -601,6 +601,7 @@ def test_ha_fundo_dither_e_ripple_no_rodape(dados):
     assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
     assert "pointermove" in html
     assert 'data-ascii-ripple' in html
+    assert 'data-ascii-footer' in html
 
 
 def test_o_fundo_respeita_reducao_de_movimento(dados):
@@ -798,7 +799,7 @@ def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
     assert html.count("not reported") >= 2
     assert 'class="research-jumps"' in html
     assert 'data-ascii-ripple' in html
-    assert 'Animated Paperraft signal' in html
+    assert 'aria-hidden="true"><pre>paperraft signal' in html
     assert "Provisional research brief" in html
     assert 'href="/ai-radar/papers/2608.11111/index.json"' in html
     assert '<link rel="canonical" href="https://lusknchars.github.io/ai-radar/papers/2608.11111/">' in html

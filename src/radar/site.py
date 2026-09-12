@@ -113,9 +113,8 @@ def _social_metadata(title: str, description: str, canonical_url: str,
 
 def _footer(public_config: PublicConfig) -> str:
     return (
-        '<footer><div class="footer-ripple" data-ascii-ripple '
-        'aria-label="Animated Paperraft signal" role="img">'
-        '<pre aria-hidden="true">paperraft signal</pre></div>'
+        '<footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple '
+        'aria-hidden="true"><pre>paperraft signal</pre></div>'
         '<span>AI research, with the evidence in reach.</span>'
         f'<a href="{escape(public_config.path("about.html"))}">How Paperraft works</a>'
         f'<a href="https://github.com/{escape(public_config.repository)}">Source code</a>'

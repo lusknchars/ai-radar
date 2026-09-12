@@ -126,9 +126,11 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:48px
 color:var(--fraco);font-family:var(--sans);font-size:12px}
 footer span{margin-right:auto}footer a{padding:8px 0;text-decoration:underline;
 text-underline-offset:3px}
-.footer-ripple{width:190px;height:48px;flex:0 0 190px;overflow:hidden;border:1px solid var(--linha);
-background:rgba(238,238,238,.58);color:var(--acento);border-radius:9px;cursor:crosshair}
-.footer-ripple pre{margin:0;padding:8px 10px;font:500 8px/1.35 var(--mono);letter-spacing:.08em;white-space:pre}
+footer{position:relative;isolation:isolate;overflow:hidden}
+.footer-ripple{position:absolute;inset:0;z-index:0;overflow:hidden;color:var(--acento);opacity:.7;pointer-events:none}
+.footer-ripple pre{width:100%;height:100%;margin:0;padding:18px 0;font:500 8px/1.35 var(--mono);
+letter-spacing:.08em;white-space:pre;overflow:hidden}
+footer>span,footer>a{position:relative;z-index:1}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -510,9 +512,9 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}.footer-ripple{flex-basis:100%;width:100%;height:42px}.footer-ripple pre{padding:6px 8px}
+.report-to-top{right:14px;bottom:14px}.footer-ripple pre{padding:12px 0}
 }
-</style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/">Editions</a><a href="/ai-radar/about.html" aria-current="page">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><h1>Methodology · Paperraft</h1></header><main id="conteudo" class="pagina"><section><h2>What Paperraft measures</h2><p>Paperraft tracks research in efficient inference and AI agents, then counts the independent repositories that implement each paper. Author-owned repositories are separated using a published heuristic.</p><p>The score rewards independent implementation before mass attention. Papers above 1,000 stars or 200 citations are excluded because they no longer represent an early research signal.</p></section><section><h2>What it does not measure</h2><p>Paperraft does not reproduce experimental results. Performance gains come from the paper and are labeled as author-reported. The system does not explain why implementations appear or predict which papers will grow.</p></section><section><h2>Archive status</h2><p>20 papers across 0 editions. The database, scoring code, and exclusion rules are versioned in the same repository.</p></section></main><footer><div class="footer-ripple" data-ascii-ripple aria-label="Animated Paperraft signal" role="img"><pre aria-hidden="true">paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
+</style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/">Editions</a><a href="/ai-radar/about.html" aria-current="page">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><h1>Methodology · Paperraft</h1></header><main id="conteudo" class="pagina"><section><h2>What Paperraft measures</h2><p>Paperraft tracks research in efficient inference and AI agents, then counts the independent repositories that implement each paper. Author-owned repositories are separated using a published heuristic.</p><p>The score rewards independent implementation before mass attention. Papers above 1,000 stars or 200 citations are excluded because they no longer represent an early research signal.</p></section><section><h2>What it does not measure</h2><p>Paperraft does not reproduce experimental results. Performance gains come from the paper and are labeled as author-reported. The system does not explain why implementations appear or predict which papers will grow.</p></section><section><h2>Archive status</h2><p>20 papers across 0 editions. The database, scoring code, and exclusion rules are versioned in the same repository.</p></section></main><footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple aria-hidden="true"><pre>paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
 // Decorative ordered-dither field. This is deliberately small and local:
 // a 2D canvas, a standard 4x4 Bayer threshold matrix and an independent
 // sine field. It does not load assets or depend on the React Bits Pro source
@@ -623,9 +625,9 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 // Pointer-driven ASCII ripple for the footer. It stays bounded to this small
 // region and pauses when hidden or when the reader requests reduced motion.
 (function(){
-  var root = document.querySelector('[data-ascii-ripple]');
+  var root = document.querySelector('[data-ascii-footer]');
   if (!root) return;
-  var pre = root.querySelector('pre');
+  var pre = root.querySelector('[data-ascii-ripple] pre');
   if (!pre) return;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var chars = ' .·:+*#%@', width = 42, height = 6;

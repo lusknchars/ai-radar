@@ -155,9 +155,9 @@ ASCII_RIPPLE_SCRIPT = r"""
 // Pointer-driven ASCII ripple for the footer. It stays bounded to this small
 // region and pauses when hidden or when the reader requests reduced motion.
 (function(){
-  var root = document.querySelector('[data-ascii-ripple]');
+  var root = document.querySelector('[data-ascii-footer]');
   if (!root) return;
-  var pre = root.querySelector('pre');
+  var pre = root.querySelector('[data-ascii-ripple] pre');
   if (!pre) return;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var chars = ' .·:+*#%@', width = 42, height = 6;
@@ -661,9 +661,11 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:48px
 color:var(--fraco);font-family:var(--sans);font-size:12px}
 footer span{margin-right:auto}footer a{padding:8px 0;text-decoration:underline;
 text-underline-offset:3px}
-.footer-ripple{width:190px;height:48px;flex:0 0 190px;overflow:hidden;border:1px solid var(--linha);
-background:rgba(238,238,238,.58);color:var(--acento);border-radius:9px;cursor:crosshair}
-.footer-ripple pre{margin:0;padding:8px 10px;font:500 8px/1.35 var(--mono);letter-spacing:.08em;white-space:pre}
+footer{position:relative;isolation:isolate;overflow:hidden}
+.footer-ripple{position:absolute;inset:0;z-index:0;overflow:hidden;color:var(--acento);opacity:.7;pointer-events:none}
+.footer-ripple pre{width:100%;height:100%;margin:0;padding:18px 0;font:500 8px/1.35 var(--mono);
+letter-spacing:.08em;white-space:pre;overflow:hidden}
+footer>span,footer>a{position:relative;z-index:1}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -1045,6 +1047,6 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}.footer-ripple{flex-basis:100%;width:100%;height:42px}.footer-ripple pre{padding:6px 8px}
+.report-to-top{right:14px;bottom:14px}.footer-ripple pre{padding:12px 0}
 }
 """

@@ -27,7 +27,8 @@ def main():
                 f'{response.status} {response.url}') if response.status >= 400 else None)
             page.goto(args.url, wait_until='networkidle')
             assert page.locator('.publication-name').inner_text() == 'Paperraft'
-            assert page.locator('[data-ascii-ripple]').count() == 1
+            assert page.locator('[data-ascii-footer]').count() == 1
+            assert page.locator('[data-ascii-footer] [data-ascii-ripple]').count() == 1
             assert page.locator('[data-ascii-ripple] pre').inner_text()
             assert 'Paperraft' in page.title()
             assert page.locator('[data-collection-mode="sample"]').is_visible()
