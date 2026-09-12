@@ -1,6 +1,6 @@
 ---
 name: paper-2608-24070-evidence
-description: Use the evidence boundaries and implementation checks for Compression Trinity: Exploring Sparsity, Quantization, and Low-Rank Approximations for LLM Compression (2608.24070).
+description: "Use the evidence boundaries and implementation checks for Compression Trinity: Exploring Sparsity, Quantization, and Low-Rank Approximations for LLM Compression (2608.24070)."
 ---
 
 # Compression Trinity: Exploring Sparsity, Quantization, and Low-Rank Approximations for LLM Compression
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

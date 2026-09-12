@@ -36,6 +36,7 @@ from .report import ReportDocument
 from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
 from .site_assets import ASCII_RIPPLE_SCRIPT as _ASCII_RIPPLE_JS
+from .site_assets import PAPER_STACK_SCRIPT
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
@@ -506,6 +507,7 @@ def _linha(
     ord_cit = -1 if p.citations is None else p.citations
     ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
     evidence_stage = "source mapped" if has_report else "abstract only"
+    skill_path = f"skills/paper-{p.arxiv_id.replace('.', '-')}-evidence.zip"
     texto = (
         f"{p.titulo} {p.resumo} {p.familia} {p.pratica} {p.arxiv_id} "
         f"{public_label(ROTULOS_FAMILIA, p.familia)} "
@@ -541,6 +543,8 @@ def _linha(
         '<div class="entry-action">'
         f'<span class="entry-stage">{evidence_stage}</span>'
         f'{_report_action(p, has_report, public_config)}'
+        f'<a class="skill-download" download href="{escape(public_config.path(skill_path))}" '
+        f'aria-label="Download skill for {escape(p.titulo)}">Download skill ↓</a>'
         f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
         'target="_blank" rel="noopener noreferrer">Original paper ↗</a></div>'
         '</article>'
@@ -851,7 +855,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
         f'{_footer(public_config)}</div>{background}<script>{_ASCII_RIPPLE_JS}</script>'
-        f'{enhancement}</body></html>'
+        f'{enhancement}<script>{PAPER_STACK_SCRIPT}</script></body></html>'
     )
 
 
@@ -1280,6 +1284,7 @@ def _render_risk_notes(page: ResearchPage) -> str:
 def render_research_page(
     page: ResearchPage,
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
+    *, preview_pages: int = 0,
 ) -> str:
     """Render one permanent, linkable research assessment."""
     status = EDITORIAL_STATUS_LABELS[page.editorial_status]
@@ -1339,7 +1344,8 @@ def render_research_page(
         f'<a href="{escape(page.source_url)}" target="_blank" '
         'rel="noopener noreferrer">Read original paper ↗</a>'
         f'<a href="{escape(json_href)}">View page data (JSON)</a>'
-        f'<a href="{escape(skill_href)}">Download research skill</a></div>'
+        f'<a class="skill-download" download href="{escape(skill_href)}">Download research skill ↓</a></div>'
+        f'{_render_paper_stack(page, public_config, preview_pages)}'
         f'{_render_research_jumps(page)}'
         '<section id="decision" class="research-section">'
         '<div class="section-head"><h2>Why it was shortlisted</h2>'
@@ -1384,6 +1390,34 @@ def render_research_page(
             math_font_face(public_config.path("assets/fonts/stix-two-math.woff2"))
             if page.equations else ""
         ),
+    )
+
+
+def _render_paper_stack(page: ResearchPage, config: PublicConfig, count: int) -> str:
+    if not count:
+        return ''
+    cards = ''.join(
+        f'<img class="paper-sheet" src="{escape(config.path(f"assets/paper-previews/{page.arxiv_id}/page-{number}.jpg"))}" '
+        f'alt="Page {number} of {escape(page.title)}" loading="lazy" decoding="async" '
+        f'style="--depth:{number - 1}" aria-hidden="{str(number != 1).lower()}">'
+        for number in range(1, count + 1)
+    )
+    return (
+        '<section class="paper-preview" aria-label="Paper page preview" data-paper-stack>'
+        '<div class="paper-preview-copy"><h2>Inside the paper</h2>'
+        f'<p>Preview the first {count} pages of the original PDF. '
+        'Click the stack to turn the page.</p>'
+        '<p>The downloadable skill includes <code>SKILL.md</code> and '
+        '<code>evidence.json</code>, with recorded findings and unanswered checks.</p>'
+        '<p class="sub">A reading aid for your agent. Findings still need validation.</p>'
+        '<div class="paper-stack-controls">'
+        '<button type="button" data-stack-prev aria-label="Previous preview page">←</button>'
+        f'<span data-stack-status role="status" aria-live="polite">Page 1 of {count}</span>'
+        '<button type="button" data-stack-next aria-label="Next preview page">→</button></div>'
+        f'<a data-stack-source href="https://arxiv.org/pdf/{escape(page.arxiv_id)}#page=1" '
+        'target="_blank" rel="noopener noreferrer">Open this page in the PDF ↗</a></div>'
+        f'<button type="button" class="paper-stack" aria-label="Show next paper page">{cards}</button>'
+        '<noscript><p>Open the original PDF to browse all pages.</p></noscript></section>'
     )
 
 

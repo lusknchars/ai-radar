@@ -1,6 +1,6 @@
 ---
 name: paper-2608-14787-evidence
-description: Use the evidence boundaries and implementation checks for From Positionwise Confidence to Prefix Scheduling: Verifier Skipping in Speculative Decoding (2608.14787).
+description: "Use the evidence boundaries and implementation checks for From Positionwise Confidence to Prefix Scheduling: Verifier Skipping in Speculative Decoding (2608.14787)."
 ---
 
 # From Positionwise Confidence to Prefix Scheduling: Verifier Skipping in Speculative Decoding
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

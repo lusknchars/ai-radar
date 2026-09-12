@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import json
 import re
+from html import escape
 from pathlib import Path
-from zipfile import ZIP_DEFLATED, ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from .public_research import ResearchPage
 
@@ -34,7 +35,7 @@ def render_skill(page: ResearchPage) -> str:
         exposures.append(f"- {item.dimension}: {finding} [{item.basis}]")
     return f"""---
 name: {_skill_name(page)}
-description: Use the evidence boundaries and implementation checks for {page.title} ({page.arxiv_id}).
+description: {json.dumps(f'Use the evidence boundaries and implementation checks for {page.title} ({page.arxiv_id}).', ensure_ascii=False)}
 ---
 
 # {_safe_text(page.title, 160)}
@@ -69,7 +70,7 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.
 """
 
 
@@ -89,8 +90,11 @@ def build_paper_skills(pages: list[ResearchPage], root: Path, *, base_path: str 
             json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         archive = skills_root / f"{name}.zip"
         with ZipFile(archive, "w", ZIP_DEFLATED) as zipped:
-            zipped.write(folder / "SKILL.md", f"{name}/SKILL.md")
-            zipped.write(folder / "evidence.json", f"{name}/evidence.json")
+            for filename in ("SKILL.md", "evidence.json"):
+                info = ZipInfo(f"{name}/{filename}", date_time=(2026, 1, 1, 0, 0, 0))
+                info.compress_type = ZIP_DEFLATED
+                info.external_attr = 0o644 << 16
+                zipped.writestr(info, (folder / filename).read_bytes())
         catalog.append({
             "arxiv_id": page.arxiv_id,
             "title": page.title,
@@ -104,6 +108,6 @@ def build_paper_skills(pages: list[ResearchPage], root: Path, *, base_path: str 
         "<!doctype html><html><head><meta charset=\"utf-8\"><title>Paperraft skills</title></head><body>"
         "<h1>Paperraft research skills</h1><p>Downloadable evidence-aware reading aids.</p>"
         + "<ul>" + "".join(
-            f'<li><a href="{item["download"]}">{_safe_text(item["title"], 140)}</a> '
+            f'<li><a download href="{escape(item["download"])}">{escape(_safe_text(item["title"], 140))}</a> '
             f'({item["arxiv_id"]}, {item["status"]})</li>' for item in catalog
         ) + "</ul></body></html>", encoding="utf-8")

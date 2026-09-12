@@ -1,6 +1,6 @@
 ---
 name: paper-2603-16925-evidence
-description: Use the evidence boundaries and implementation checks for Gaussian Process Regression-based Knowledge Distillation Framework for Simultaneous Prediction of Physical and Mechanical Properties of Epoxy Polymers (2603.16925).
+description: "Use the evidence boundaries and implementation checks for Gaussian Process Regression-based Knowledge Distillation Framework for Simultaneous Prediction of Physical and Mechanical Properties of Epoxy Polymers (2603.16925)."
 ---
 
 # Gaussian Process Regression-based Knowledge Distillation Framework for Simultaneous Prediction of Physical and Mechanical Properties of Epoxy Polymers
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

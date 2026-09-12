@@ -1,6 +1,6 @@
 ---
 name: paper-2605-13790-evidence
-description: Use the evidence boundaries and implementation checks for Di-BiLPS: Denoising induced Bidirectional Latent-PDE-Solver under Sparse Observations (2605.13790).
+description: "Use the evidence boundaries and implementation checks for Di-BiLPS: Denoising induced Bidirectional Latent-PDE-Solver under Sparse Observations (2605.13790)."
 ---
 
 # Di-BiLPS: Denoising induced Bidirectional Latent-PDE-Solver under Sparse Observations
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

@@ -1,6 +1,6 @@
 ---
 name: paper-2601-12164-evidence
-description: Use the evidence boundaries and implementation checks for The Language You Ask In: Language-Conditioned Ideological Divergence in LLM Analysis of Contested Political Documents (2601.12164).
+description: "Use the evidence boundaries and implementation checks for The Language You Ask In: Language-Conditioned Ideological Divergence in LLM Analysis of Contested Political Documents (2601.12164)."
 ---
 
 # The Language You Ask In: Language-Conditioned Ideological Divergence in LLM Analysis of Contested Political Documents
@@ -42,4 +42,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.
