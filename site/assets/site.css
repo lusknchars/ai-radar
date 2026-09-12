@@ -131,6 +131,9 @@ footer{position:relative;isolation:isolate;overflow:hidden}
 .footer-ripple pre{width:100%;height:100%;margin:0;padding:18px 0;font:500 8px/1.35 var(--mono);
 letter-spacing:.08em;white-space:pre;overflow:hidden}
 footer>span,footer>a{position:relative;z-index:1}
+footer{width:100vw;margin-left:calc(50% - 50vw);min-height:230px;box-sizing:border-box;
+padding:142px max(24px,calc((100vw - 930px)/2)) 34px;align-items:flex-end}
+.footer-ripple pre{font-size:clamp(9px,1.05vw,15px);line-height:1.45;padding:22px max(24px,calc((100vw - 930px)/2))}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -477,6 +480,32 @@ height:44px;place-items:center;border:1px solid var(--linha-forte);border-radius
 background:var(--fundo);color:var(--texto);opacity:0;pointer-events:none;
 transform:translateY(8px);transition:opacity 180ms ease-out,transform 180ms ease-out}
 .report-to-top.is-visible{opacity:1;pointer-events:auto;transform:none}
+/* Action feedback shares timing across pointer and keyboard interaction. */
+:where(button,.research-actions>a,.research-jumps a,.nav a,footer>a,summary){
+transition:color 160ms ease-out,background-color 160ms ease-out,
+border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
+.index-sort button{border-radius:6px;min-height:44px}
+.index-sort button[aria-sort],.index-sort button:focus-visible,
+.research-jumps a:focus-visible,summary:focus-visible{
+background-color:rgba(203,41,87,.08);color:var(--acento)}
+.filtros input,.filtros select{transition:border-color 160ms ease-out,box-shadow 160ms ease-out}
+.filtros input:focus-visible,.filtros select:focus-visible{
+border-color:var(--acento);box-shadow:0 0 0 3px rgba(203,41,87,.12)}
+.sheen-button:focus-visible{filter:brightness(1.06)}
+.sheen-button:focus-visible svg{transform:translateX(2px)}
+.sheen-button:focus-visible .sheen-sweep{transform:translateX(105%)}
+button:not(:disabled):active{transform:scale(.98)}
+button:disabled{cursor:not-allowed;opacity:.55}
+@media (hover:hover){
+.index-sort button:hover,.research-jumps a:hover,summary:hover{background-color:rgba(203,41,87,.06)}
+.research-actions>a:hover{transform:translateY(-2px)}
+.nav a:hover,footer>a:hover{color:var(--acento)}
+}
+@media (prefers-reduced-motion:reduce){
+button,a,summary,input,select{transition:none!important}
+button:active,.research-actions>a:hover,.sheen-button svg{transform:none!important}
+.sheen-sweep{display:none}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sheen-button,
 .sheen-button *,.paper-entry,#fundo,.report-to-top{transition-duration:1ms!important}}
 @media (max-width:1050px){.index-head,.paper-entry{grid-template-columns:88px minmax(0,1fr) 190px 144px;
@@ -512,5 +541,5 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}.footer-ripple pre{padding:12px 0}
+.report-to-top{right:14px;bottom:14px}footer{min-height:190px;padding:108px 20px 24px}.footer-ripple pre{padding:16px 20px;font-size:9px}
 }

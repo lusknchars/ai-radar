@@ -131,6 +131,9 @@ footer{position:relative;isolation:isolate;overflow:hidden}
 .footer-ripple pre{width:100%;height:100%;margin:0;padding:18px 0;font:500 8px/1.35 var(--mono);
 letter-spacing:.08em;white-space:pre;overflow:hidden}
 footer>span,footer>a{position:relative;z-index:1}
+footer{width:100vw;margin-left:calc(50% - 50vw);min-height:230px;box-sizing:border-box;
+padding:142px max(24px,calc((100vw - 930px)/2)) 34px;align-items:flex-end}
+.footer-ripple pre{font-size:clamp(9px,1.05vw,15px);line-height:1.45;padding:22px max(24px,calc((100vw - 930px)/2))}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -477,6 +480,32 @@ height:44px;place-items:center;border:1px solid var(--linha-forte);border-radius
 background:var(--fundo);color:var(--texto);opacity:0;pointer-events:none;
 transform:translateY(8px);transition:opacity 180ms ease-out,transform 180ms ease-out}
 .report-to-top.is-visible{opacity:1;pointer-events:auto;transform:none}
+/* Action feedback shares timing across pointer and keyboard interaction. */
+:where(button,.research-actions>a,.research-jumps a,.nav a,footer>a,summary){
+transition:color 160ms ease-out,background-color 160ms ease-out,
+border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
+.index-sort button{border-radius:6px;min-height:44px}
+.index-sort button[aria-sort],.index-sort button:focus-visible,
+.research-jumps a:focus-visible,summary:focus-visible{
+background-color:rgba(203,41,87,.08);color:var(--acento)}
+.filtros input,.filtros select{transition:border-color 160ms ease-out,box-shadow 160ms ease-out}
+.filtros input:focus-visible,.filtros select:focus-visible{
+border-color:var(--acento);box-shadow:0 0 0 3px rgba(203,41,87,.12)}
+.sheen-button:focus-visible{filter:brightness(1.06)}
+.sheen-button:focus-visible svg{transform:translateX(2px)}
+.sheen-button:focus-visible .sheen-sweep{transform:translateX(105%)}
+button:not(:disabled):active{transform:scale(.98)}
+button:disabled{cursor:not-allowed;opacity:.55}
+@media (hover:hover){
+.index-sort button:hover,.research-jumps a:hover,summary:hover{background-color:rgba(203,41,87,.06)}
+.research-actions>a:hover{transform:translateY(-2px)}
+.nav a:hover,footer>a:hover{color:var(--acento)}
+}
+@media (prefers-reduced-motion:reduce){
+button,a,summary,input,select{transition:none!important}
+button:active,.research-actions>a:hover,.sheen-button svg{transform:none!important}
+.sheen-sweep{display:none}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sheen-button,
 .sheen-button *,.paper-entry,#fundo,.report-to-top{transition-duration:1ms!important}}
 @media (max-width:1050px){.index-head,.paper-entry{grid-template-columns:88px minmax(0,1fr) 190px 144px;
@@ -512,7 +541,7 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}.footer-ripple pre{padding:12px 0}
+.report-to-top{right:14px;bottom:14px}footer{min-height:190px;padding:108px 20px 24px}.footer-ripple pre{padding:16px 20px;font-size:9px}
 }
 </style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/">Editions</a><a href="/ai-radar/about.html" aria-current="page">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><h1>Methodology · Paperraft</h1></header><main id="conteudo" class="pagina"><section><h2>What Paperraft measures</h2><p>Paperraft tracks research in efficient inference and AI agents, then counts the independent repositories that implement each paper. Author-owned repositories are separated using a published heuristic.</p><p>The score rewards independent implementation before mass attention. Papers above 1,000 stars or 200 citations are excluded because they no longer represent an early research signal.</p></section><section><h2>What it does not measure</h2><p>Paperraft does not reproduce experimental results. Performance gains come from the paper and are labeled as author-reported. The system does not explain why implementations appear or predict which papers will grow.</p></section><section><h2>Archive status</h2><p>20 papers across 0 editions. The database, scoring code, and exclusion rules are versioned in the same repository.</p></section></main><footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple aria-hidden="true"><pre>paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
 // Decorative ordered-dither field. This is deliberately small and local:
@@ -630,8 +659,12 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
   var pre = root.querySelector('[data-ascii-ripple] pre');
   if (!pre) return;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var chars = ' .·:+*#%@', width = 42, height = 6;
+  var chars = ' .·:+*#%@', width = 120, height = 12;
   var pointer = {x:.5, y:.5}, frame = 0, last = 0;
+  function resize(){
+    width=Math.max(42,Math.min(120,Math.floor(root.clientWidth/8)));
+    height=Math.max(6,Math.min(16,Math.floor(root.clientHeight/14)));
+  }
   function render(time){
     frame = 0;
     if (reduced.matches || document.hidden) return;
@@ -658,12 +691,14 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
     if (!frame && !reduced.matches) frame=requestAnimationFrame(render);
   }
   root.addEventListener('pointermove',move,{passive:true});
+  window.addEventListener('resize',function(){resize();},{passive:true});
   root.addEventListener('pointerleave',function(){pointer.x=.5;pointer.y=.5},{passive:true});
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&!frame)frame=requestAnimationFrame(render);});
   if (reduced.addEventListener) reduced.addEventListener('change',function(){
     if(reduced.matches){if(frame)cancelAnimationFrame(frame);frame=0;pre.textContent='paperraft signal';}
     else if(!frame)frame=requestAnimationFrame(render);
   });
+  resize();
   pre.textContent='paperraft signal';
   if(!reduced.matches)frame=requestAnimationFrame(render);
 })();
