@@ -1,0 +1,121 @@
+{
+  "kind": "published_artifact_audit_not_model_execution",
+  "retrieved_at": "2026-09-12T02:35:23.413732+00:00",
+  "repository": "mem0ai/memory-benchmarks",
+  "revision": "4b61c5d31b9c668a12b4f5e78064248a02c82d2b",
+  "records": [
+    {
+      "file": "longmemeval_results.json",
+      "url": "https://raw.githubusercontent.com/mem0ai/memory-benchmarks/4b61c5d31b9c668a12b4f5e78064248a02c82d2b/results/platform/longmemeval_results.json",
+      "sha256": "58bd6d8934a54d8cd568ef481bbd3e37270c2c74a5d59713b661d4c3ddb332a1",
+      "metadata": {
+        "timestamp": "20260406_101243",
+        "model": "gpt-5",
+        "generation_model": "gpt-5",
+        "total_questions": 500,
+        "top_k_cutoffs": [
+          "top_200"
+        ]
+      },
+      "reported_overall": {
+        "total": 500,
+        "passed": 467,
+        "failed": 33,
+        "errors": 0,
+        "pass_rate": 93.4,
+        "avg_search_latency_ms": 0.0,
+        "avg_add_latency_ms": 0.0
+      },
+      "recounted_rows": 500,
+      "recounted_passed": 467,
+      "recounted_pass_rate": 93.4
+    },
+    {
+      "file": "locomo_results.json",
+      "url": "https://raw.githubusercontent.com/mem0ai/memory-benchmarks/4b61c5d31b9c668a12b4f5e78064248a02c82d2b/results/platform/locomo_results.json",
+      "sha256": "36338fa6c1ca38bcf9e3fc33a5cbc3b6e53bdc4bafaeeaee0947cf13b5527911",
+      "metadata": {
+        "timestamp": "20260406_170942",
+        "answerer_model": "gpt-5",
+        "judge_model": "gpt-5",
+        "provider": "azure",
+        "total_questions": 1540,
+        "top_k_cutoffs": [
+          "top_200"
+        ],
+        "categories": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "reported_overall": {
+        "total": 1540,
+        "correct": 1410,
+        "errors": 1,
+        "accuracy": 91.55844155844156,
+        "avg_score": 91.55844155844156
+      },
+      "recounted_rows": 1540,
+      "recounted_passed": 1410,
+      "recounted_pass_rate": 91.55844155844156
+    },
+    {
+      "file": "beam_1m_results.json",
+      "url": "https://raw.githubusercontent.com/mem0ai/memory-benchmarks/4b61c5d31b9c668a12b4f5e78064248a02c82d2b/results/platform/beam_1m_results.json",
+      "sha256": "60a4878fdbd0082164dbf48a440f62384ec5e16001eaea4152732b8dfc9f75da",
+      "metadata": {
+        "timestamp": "20260326_205916",
+        "answerer_model": "gpt-5",
+        "judge_model": "gpt-5",
+        "provider": "azure",
+        "total_questions": 700,
+        "top_k_cutoffs": [
+          "top_200"
+        ],
+        "chat_sizes": [
+          "1M"
+        ]
+      },
+      "reported_overall": {
+        "total": 700,
+        "correct": 491,
+        "errors": 0,
+        "accuracy": 70.14285714285714,
+        "avg_score": 0.6408655714285715
+      },
+      "recounted_rows": 700,
+      "recounted_passed": 491,
+      "recounted_pass_rate": 70.14285714285714
+    },
+    {
+      "file": "beam_10m_results.json",
+      "url": "https://raw.githubusercontent.com/mem0ai/memory-benchmarks/4b61c5d31b9c668a12b4f5e78064248a02c82d2b/results/platform/beam_10m_results.json",
+      "sha256": "e0a3578d501d29a0dec9e13218945611e61e2d859a8a4aca2d4beaf4a71d78f3",
+      "metadata": {
+        "timestamp": "20260331_180734",
+        "answerer_model": "gpt-5",
+        "judge_model": "gpt-5",
+        "provider": "azure",
+        "total_questions": 200,
+        "top_k_cutoffs": [
+          "top_200"
+        ],
+        "chat_sizes": [
+          "10M"
+        ]
+      },
+      "reported_overall": {
+        "total": 200,
+        "correct": 101,
+        "errors": 0,
+        "accuracy": 50.5,
+        "avg_score": 0.4860235
+      },
+      "recounted_rows": 200,
+      "recounted_passed": 101,
+      "recounted_pass_rate": 50.5
+    }
+  ]
+}

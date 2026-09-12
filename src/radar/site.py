@@ -75,8 +75,8 @@ CORES_FAMILIA = {
 _ENQUADRAMENTO = (
     "<p>AI Radar tracks one signal: how many <strong>independent "
     "implementations</strong> a paper attracts on GitHub after author-owned "
-    "repositories are removed. Independent implementation is a stronger sign "
-    "of engineering relevance than attention alone.</p>"
+    "repositories are removed. This is a discovery signal to investigate, "
+    "not a measure of implementation quality.</p>"
     "<p>It <strong>does not claim</strong> that a method works. AI Radar runs "
     "no reproduction benchmarks. Reported gains remain author claims until "
     "independently tested. Papers above the attention threshold are excluded "
@@ -84,13 +84,46 @@ _ENQUADRAMENTO = (
     "consensus forms.</p>"
 )
 
+_SITE_DESCRIPTION = (
+    "Find AI research worth testing. Explore English paper briefs on LLM "
+    "inference, agent memory, and evaluation, with source links and practical trade-offs."
+)
+
+
+def _social_metadata(title: str, description: str, canonical_url: str,
+                     public_config: PublicConfig, *, kind: str = "website") -> str:
+    image_url = public_config.site_url.rstrip("/") + "/assets/social-card.png"
+    return (
+        f'<meta name="description" content="{escape(description, quote=True)}">'
+        f'<link rel="canonical" href="{escape(canonical_url, quote=True)}">'
+        '<meta property="og:site_name" content="AI Radar">'
+        f'<meta property="og:type" content="{kind}">'
+        f'<meta property="og:title" content="{escape(title, quote=True)}">'
+        f'<meta property="og:description" content="{escape(description, quote=True)}">'
+        f'<meta property="og:url" content="{escape(canonical_url, quote=True)}">'
+        f'<meta property="og:image" content="{escape(image_url, quote=True)}">'
+        '<meta property="og:image:width" content="1200">'
+        '<meta property="og:image:height" content="630">'
+        '<meta property="og:image:alt" content="AI Radar. Find the AI research worth testing.">'
+        '<meta name="twitter:card" content="summary_large_image">'
+    )
+
+
+def _footer(public_config: PublicConfig) -> str:
+    return (
+        '<footer><span>AI research, with the evidence in reach.</span>'
+        f'<a href="{escape(public_config.path("about.html"))}">How AI Radar works</a>'
+        f'<a href="https://github.com/{escape(public_config.repository)}">Source code</a>'
+        '</footer>'
+    )
+
 
 def _nav(atual: str, public_config: PublicConfig) -> str:
     itens = (
-        ("acervo", public_config.path("#acervo"), "research"),
-        ("sinais", public_config.path("#sinais"), "signals"),
-        ("edicoes", public_config.path("edicoes/"), "editions"),
-        ("about", public_config.path("about.html"), "methodology"),
+        ("acervo", public_config.path("#acervo"), "Research"),
+        ("sinais", public_config.path("#sinais"), "Signals"),
+        ("edicoes", public_config.path("edicoes/"), "Editions"),
+        ("about", public_config.path("about.html"), "Methodology"),
         ("rss", public_config.path("feed.xml"), "RSS"),
     )
     links = "".join(
@@ -142,19 +175,23 @@ def _collection_notice(d: SiteData) -> str:
     )
 
 
-def _cabecalho(d: SiteData, edicao: bool = False) -> str:
+def _cabecalho(d: SiteData, edicao: bool = False,
+               public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG) -> str:
     impls = sum(p.independent_impls for p in d.pontos)
     contexto = "archived edition" if edicao else "research intelligence"
     return (
         '<header class="masthead publication-head"><div class="hero-copy">'
         f'<p class="hero-eyebrow">{contexto} · {escape(d.dia)}</p>'
-        '<h1><span class="marca">AI Radar · Research Intelligence</span>'
-        'Find the AI research<br><em>worth testing.</em></h1>'
-        '<p class="hero-deck">Evidence-led paper briefs for engineers deciding '
-        'where to spend compute, budget, and reading time. Each brief separates '
-        'the method, the independent adoption signal, and the practical cost '
-        'of validation.</p>'
-        f'{_sheen_link("Explore the research", "#acervo")}</div>'
+        '<h1><span class="marca">AI Radar</span>'
+        'Find the AI research<br>worth testing.</h1>'
+        '<p class="hero-deck">Understand what a paper changes, what it costs, '
+        'and whether it fits your next build. Explore research on faster LLM '
+        'inference, agent memory, and evaluation, with the original sources in reach.</p>'
+        '<div class="hero-actions">'
+        f'{_sheen_link("Explore the research", "#acervo")}'
+        f'<a class="hero-method" href="{escape(public_config.path("about.html"))}">'
+        'How papers are assessed</a></div>'
+        '<p class="hero-note">Start with a brief. Follow the evidence. Choose a test.</p></div>'
         '<dl class="edition-ledger" aria-label="Edition summary">'
         f'<div><dt>{"edition" if edicao else "page published"}</dt><dd>{escape(d.dia)}</dd></div>'
         f'<div><dt>{"brief" if len(d.pontos) == 1 else "briefs"}</dt>'
@@ -464,7 +501,10 @@ def _linha(
     ord_ganho = p.ganho_fator if p.ganho_fator is not None else -1
     evidence_stage = "source mapped" if has_report else "abstract only"
     texto = (
-        f"{p.titulo} {p.resumo} {p.familia} {p.pratica} {p.arxiv_id}"
+        f"{p.titulo} {p.resumo} {p.familia} {p.pratica} {p.arxiv_id} "
+        f"{public_label(ROTULOS_FAMILIA, p.familia)} "
+        f"{public_label(ROTULOS_PRATICA, p.pratica)} "
+        f"{public_label(GAIN_AXIS_LABELS, p.ganho_eixo)}"
     ).lower()
     estado_inicial = ' data-inicial="oculta" hidden' if initial_hidden else ""
     return (
@@ -491,7 +531,7 @@ def _linha(
         f'<div><b>{p.independent_impls}</b><span>impl.</span></div>'
         f'<div><b>{p.stars_total}</b><span>stars</span></div>'
         f'<div><b>{cit}</b><span>citations</span></div>'
-        f'<div><b>{ganho}</b><span>gain</span></div></div>'
+        f'<div><b>{ganho}</b><span>claimed gain</span></div></div>'
         '<div class="entry-action">'
         f'<span class="entry-stage">{evidence_stage}</span>'
         f'{_report_action(p, has_report, public_config)}'
@@ -537,8 +577,8 @@ def _secao_tabela(
         '<div><label for="f-busca">search</label>'
         '<input id="f-busca" type="search" data-busca '
         'placeholder="quantization, agent, cache..."></div>'
-        f'<div class="contagem"><label>showing</label>'
-        f'<span id="contador">{inicial} of {len(d.pontos)}</span></div>'
+        f'<div class="contagem"><span class="count-label">showing</span>'
+        f'<span id="contador" role="status" aria-live="polite">{inicial} of {len(d.pontos)}</span></div>'
         "</div>"
         '<div class="index-sort" aria-label="Sort research index">'
         '<span>sort by</span>'
@@ -551,7 +591,12 @@ def _secao_tabela(
         '<div class="research-index"><div class="index-head" aria-hidden="true">'
         '<span>published</span><span>paper and brief</span>'
         '<span>signal</span><span>analysis</span></div>'
-        f'<div class="paper-list" data-paper-list>{linhas}</div></div>{mostrar}'
+        f'<div class="paper-list" data-paper-list>{linhas}</div>'
+        '<div class="search-empty" data-search-empty hidden>'
+        '<p>No papers match your search.</p>'
+        '<p>Try another term or clear the filters to explore the archive.</p>'
+        '<button type="button" data-clear-filters>Clear search and filters</button>'
+        f'</div></div>{mostrar}'
     )
 
 
@@ -655,7 +700,9 @@ def _discovery_selections(d: SiteData, public_config: PublicConfig) -> str:
             f'<time datetime="{escape(p.publicado)}">{escape(p.publicado)}</time>'
             f'<h3><a href="{escape(public_config.path(f"papers/{p.arxiv_id}/"))}">{escape(p.titulo)}</a></h3>'
             f'<p>{escape(p.resumo)}</p>'
-            f'<small>{p.independent_impls} independent implementations · author claims, not reproduced</small>'
+            f'<small>{p.independent_impls} independent '
+            f'{"implementation" if p.independent_impls == 1 else "implementations"}'
+            ' · author claims, not reproduced</small>'
             '</li>' for p in points[:3]
         ) + '</ol>'
 
@@ -685,13 +732,13 @@ def render_site(
 ) -> str:
     report_ids = report_ids or set()
     if not dados.pontos:
-        corpo = '<p class="vazio">No papers are available yet.</p>'
+        corpo = '<section id="acervo"><p class="vazio">No papers are available yet. Check back after the next collection.</p></section>'
     else:
         corpo = "".join((
             _secao("Research index",
-                   "Explore the full archive, or sort by publication date. Each entry "
-                   "provides a decision-ready brief, the original paper, and "
-                   "an on-demand deep report when the evidence justifies it.",
+                   "Search by topic, browse a research area, or sort by date. "
+                   "Read a brief, open the original paper, and inspect the "
+                   "available evidence before deciding what to test.",
                    _secao_tabela(dados, report_ids, public_config),
                    section_id="acervo"),
             _secao("Research signals",
@@ -708,19 +755,24 @@ def render_site(
                    _secao_cortes(dados)),
         ))
 
+    page_title = (f"AI Radar · Edition {dados.dia}" if edicao
+                  else "AI Radar | Find AI research worth testing")
+    canonical = public_config.site_url.rstrip("/") + (
+        f"/edicoes/{dados.dia}/" if edicao else "/")
     return (
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
         '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
         f'href="{escape(public_config.path("feed.xml"))}">'
-        f"<title>AI Radar · {'Edition ' if edicao else ''}{escape(dados.dia)}</title>"
+        f"<title>{escape(page_title)}</title>"
+        f'{_social_metadata(page_title, _SITE_DESCRIPTION, canonical, public_config)}'
         f"<style>{_CSS}</style></head><body>"
         '<canvas id="fundo" aria-hidden="true"></canvas>'
         '<a class="pular" href="#conteudo">Skip to content</a>'
         '<div class="envelope">'
         f"{_nav('edicoes' if edicao else 'acervo', public_config)}"
         f"{_collection_notice(dados)}"
-        f"{_cabecalho(dados, edicao=edicao)}"
+        f"{_cabecalho(dados, edicao=edicao, public_config=public_config)}"
         f'<main id="conteudo">'
         f"{_newsletter_signup(public_config) if not edicao else ''}"
         f"{_discovery_selections(dados, public_config) if not edicao else ''}"
@@ -728,8 +780,7 @@ def render_site(
         f"{corpo}"
         f'<section id="metodo" class="enquadramento">{_ENQUADRAMENTO}</section>'
         "</main>"
-        "<footer>Generated by the AI Radar pipeline. No framework, build step, "
-        "or remote asset request.</footer>"
+        f'{_footer(public_config)}'
         f'</div><script src="{escape(public_config.path("assets/d3-7.9.0.min.js"))}"></script>'
         f'<script src="{escape(public_config.path("assets/observable-plot-0.6.17.min.js"))}">'
         f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
@@ -774,19 +825,12 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     else:
         styles = f'<style>{_CSS}</style>'
         background = f'<script>{_BACKGROUND_JS}</script>'
-    metadata = ""
-    if description:
-        metadata += (
-            f'<meta name="description" content="{escape(description)}">'
-            f'<meta property="og:title" content="{escape(titulo)}">'
-            f'<meta property="og:description" content="{escape(description)}">'
-            '<meta property="og:type" content="article">'
-        )
-    if canonical_url:
-        metadata += (
-            f'<link rel="canonical" href="{escape(canonical_url)}">'
-            f'<meta property="og:url" content="{escape(canonical_url)}">'
-        )
+    if canonical_url is None:
+        suffix = "edicoes/" if atual == "edicoes" else "about.html"
+        canonical_url = public_config.site_url.rstrip("/") + "/" + suffix
+    metadata = _social_metadata(titulo, description or _SITE_DESCRIPTION,
+                                canonical_url, public_config,
+                                kind="article" if deck else "website")
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -800,8 +844,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'<p class="hero-eyebrow">{escape(kicker or f"Updated {dia}")}</p>'
         f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
-        '<footer>Generated by the AI Radar pipeline. No framework, build step, '
-        f'or remote asset request.</footer></div>{background}'
+        f'{_footer(public_config)}</div>{background}'
         f'{enhancement}</body></html>'
     )
 
@@ -1463,5 +1506,7 @@ def render_report(
         kicker=(f"deep report · arXiv {document.arxiv_id} · "
                 f"{document.generated_at[:10]}"),
         deck=r.one_sentence, back_href=public_config.path("#acervo"),
+        description=r.one_sentence,
+        canonical_url=public_config.site_url.rstrip("/") + f"/reports/{document.arxiv_id}/",
         extra_script=_REPORT_JS, public_config=public_config,
     )

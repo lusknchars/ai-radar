@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "paper_id": "2211.17192",
+  "report_path": "source-review.json",
+  "business_use_case": "Screen faster structured generation for SaaS catalog and invoice workflows.",
+  "hypothesis": "Native MTP reduces p95 complete-response latency by at least 10% without any lost correct answers on the smoke set.",
+  "dataset_path": "cases.jsonl",
+  "dataset_sha256": "c0ff9006b1ef29605f4bbb0a276a4590781f5677156b7caec0e9ab7ea806e6ff",
+  "quality_metric": "Exact typed JSON match; incomplete or truncated answers score zero.",
+  "implementation_ref": "zai-org/GLM-4.7-Flash@7dd20894a642a0aa287e9827cb1a1f7f91386b67; adapter: src/radar/glm47_trial.py",
+  "license_review": "GLM-4.7-Flash model card declares MIT; generated test cases contain no customer data.",
+  "environment_ref": "vllm/vllm-openai@sha256:c2914767605584b6d8f45686b82de173ecc99e781897aa3d0a66dacd72c51ae1; vLLM 0.29.0; BF16; TP1; context4096; concurrency1; temperature0; thinking disabled; prefix cache disabled.",
+  "baseline_command": [
+    "python",
+    "-m",
+    "radar.glm47_trial",
+    "--hourly-rate-usd",
+    "3.98",
+    "--evidence-dir",
+    "../../eval/results/glm47-mtp"
+  ],
+  "candidate_command": [
+    "python",
+    "-m",
+    "radar.glm47_trial",
+    "--hourly-rate-usd",
+    "3.98",
+    "--evidence-dir",
+    "../../eval/results/glm47-mtp"
+  ],
+  "validation_tier": "single_gpu_48_80gb",
+  "hardware": "Planned: one NVIDIA H200. Actual GPU UUID and driver recorded by adapter.",
+  "phase": "gpu",
+  "evaluation_scope": "smoke",
+  "primary_metric": "latency_ms",
+  "minimum_improvement_fraction": 0.1,
+  "maximum_quality_drop": 0.0,
+  "maximum_case_quality_drop": 0.0,
+  "minimum_quality": 0.9,
+  "minimum_cases": 40,
+  "seeds": [
+    17,
+    42,
+    93
+  ],
+  "timeout_seconds": 1200,
+  "max_trial_usd": 20.0,
+  "max_hourly_usd": 5.0,
+  "max_hours": 3.0,
+  "storage_and_transfer_allowance_usd": 5.0
+}

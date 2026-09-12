@@ -53,6 +53,36 @@ def test_publication_shell_uses_english_editorial_copy(dados):
         assert legacy not in html
 
 
+def test_search_indexes_displayed_english_labels_without_changing_storage_keys():
+    import re
+    from html import unescape
+
+    html = render_site(_acervo([ponto(
+        titulo="A retrieval method", resumo="Stores previous messages.",
+        familia="memoria_e_contexto", pratica="observar", ganho_eixo="custo",
+    )]))
+    entry = re.search(r'<article class="linha paper-entry"[^>]+>', html).group(0)
+    search = unescape(re.search(r'data-texto="([^"]+)"', entry).group(1))
+    assert "memory and context" in search
+    assert "watch" in search and "cost" in search
+    assert 'data-familia="memoria_e_contexto"' in entry
+    assert 'data-pratica="observar"' in entry
+
+
+def test_social_metadata_uses_configured_domain_and_distinct_edition_url(dados):
+    from radar.config import PublicConfig
+
+    config = PublicConfig(repository="reader/radar", base_path="/radar",
+                          site_url="https://example.com/radar")
+    home = render_site(dados, public_config=config)
+    edition = render_site(dados, public_config=config, edicao=True)
+    assert '<link rel="canonical" href="https://example.com/radar/">' in home
+    assert '<link rel="canonical" href="https://example.com/radar/edicoes/2026-08-30/">' in edition
+    assert 'property="og:image" content="https://example.com/radar/assets/social-card.png"' in home
+    assert 'name="twitter:card" content="summary_large_image"' in home
+    assert '/ai-radar/' not in home
+
+
 def test_a_navegacao_publica_liga_acervo_edicoes_about_e_rss(dados):
     html = render_site(dados)
     for caminho in ("/ai-radar/", "/ai-radar/edicoes/",
@@ -78,7 +108,7 @@ def test_about_declara_o_que_o_radar_nao_mede():
     html = render_about("2026-08-30", papers=12, edicoes=2)
     assert "12 papers across 2 editions" in html
     assert "does not reproduce experimental results" in html
-    assert "remote asset request" in html
+    assert "How AI Radar works" in html
     assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
     assert "getContext('2d'" in html
 
@@ -95,7 +125,11 @@ def test_a_pagina_nao_faz_requisicao_externa(dados):
 
     Links para arXiv e GitHub sao navegacao do leitor, nao recursos da pagina.
     """
-    html = (render_site(dados)
+    import re
+    # Canonical and social metadata identify the public page; they do not
+    # load resources in the reader's browser.
+    html = re.sub(r'<meta\b[^>]*>|<link rel="canonical"[^>]*>', '', render_site(dados))
+    html = (html
             .replace("https://arxiv.org", "")
             .replace("https://github.com", "")
             # Identificador de namespace, nao URL de recurso nem requisicao.
@@ -144,8 +178,8 @@ def test_o_cabecalho_traz_os_numeros_do_acervo(dados):
     assert ">2<" in html          # dois papers
 
 
-def test_o_titulo_da_aba_nomeia_o_projeto_e_o_dia(dados):
-    assert "<title>AI Radar · 2026-08-30</title>" in render_site(dados)
+def test_home_title_describes_the_publication(dados):
+    assert "<title>AI Radar | Find AI research worth testing</title>" in render_site(dados)
 
 
 def test_o_site_nao_importa_io():
@@ -641,7 +675,7 @@ def test_o_acervo_mostra_trinta_briefs_antes_de_pedir_expansao():
               for i in range(31)]
     html = render_site(_acervo(pontos))
     assert html.count('data-inicial="oculta" hidden') == 1
-    assert '<span id="contador">30 of 31</span>' in html
+    assert '<span id="contador" role="status" aria-live="polite">30 of 31</span>' in html
     assert 'data-mostrar-todos' in html
     assert 'Show all 31 papers' in html
 

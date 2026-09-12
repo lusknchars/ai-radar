@@ -45,6 +45,8 @@ def publish_site(
     assets_root.mkdir(parents=True, exist_ok=True)
     for asset in VENDOR_ASSETS:
         copyfile(asset, assets_root / asset.name)
+    copyfile(Path(__file__).resolve().parents[2] / "assets" / "social-card.png",
+             assets_root / "social-card.png")
     fonts_root = assets_root / "fonts"
     fonts_root.mkdir(parents=True, exist_ok=True)
     for asset in FONT_ASSETS:

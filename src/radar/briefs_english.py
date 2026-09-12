@@ -118,7 +118,7 @@ def update_checkpoint(
 
 
 def _brief_text(judgment: Judgment) -> str:
-    return f"{judgment.technique} {judgment.resumo} {judgment.porque}"
+    return f"{judgment.technique} {judgment.resumo} {judgment.porque} {judgment.ganho_texto}"
 
 
 def apply_english_checkpoint(store, checkpoint: Path, *, today: str) -> int:

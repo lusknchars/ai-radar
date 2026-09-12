@@ -56,6 +56,17 @@ def test_language_heuristic_separates_the_two_briefs():
     assert not is_portuguese("Replaces the FP16 kernel with a fused INT4 kernel.")
 
 
+def test_a_portuguese_gain_claim_is_not_skipped_when_the_summary_is_english(store):
+    from dataclasses import replace
+
+    english = rewrite_brief(PORTUGUESE, ENGLISH)
+    mixed = replace(english, ganho_texto="Melhora a qualidade com menos memoria para inferencia.")
+    store.record_judgment(PAPER.arxiv_id, mixed, model="kimi-k3", judged_at="2026-09-10")
+    outcome = rewrite_portuguese_briefs(store, judge=FakeJudge(), today="2026-09-11",
+                                      model="kimi-k3", dry_run=True)
+    assert outcome == Counter({"would_rewrite": 1})
+
+
 def test_prompt_carries_the_original_fields_and_asks_for_english():
     prompt = build_english_brief_prompt(PAPER, PORTUGUESE)
     assert "Rewrite the following fields in English" in prompt
