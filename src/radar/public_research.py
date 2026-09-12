@@ -59,6 +59,12 @@ class ExposureAssessment(BaseModel):
     dimension: ExposureDimension
     basis: EvidenceBasis
     finding: str = ""
+    interpretation: str = ""
+    limitation: str = ""
+    next_check: str = ""
+    source_url: str = Field(default="", pattern=r"^$|^https://")
+    source_page: int | None = Field(default=None, ge=1)
+    source_excerpt: str = Field(default="", max_length=320)
 
     @model_validator(mode="after")
     def unevaluated_has_no_finding(self) -> ExposureAssessment:
@@ -66,6 +72,16 @@ class ExposureAssessment(BaseModel):
             raise ValueError("not-evaluated exposure cannot present a finding")
         if self.basis != "not_evaluated" and not self.finding.strip():
             raise ValueError("evaluated exposure requires a finding")
+        if self.basis == "source_linked" and (
+            not self.source_url or self.source_page is None
+            or not self.source_excerpt.strip()
+        ):
+            raise ValueError("source-linked exposures require a PDF page and matching excerpt")
+        if self.basis == "not_evaluated" and self.interpretation:
+            raise ValueError("not-evaluated exposure cannot present an interpretation")
+        source_parts = (bool(self.source_url), self.source_page is not None, bool(self.source_excerpt.strip()))
+        if any(source_parts) and not all(source_parts):
+            raise ValueError("exposure source requires URL, page, and excerpt together")
         return self
 
 
@@ -142,6 +158,8 @@ class ResearchPage(BaseModel):
     equations_fetched_at: str = ""
     equations_source_url: str = ""
     equations_source_sha256: str = ""
+    exposures_reviewed_at: str = ""
+    exposures_source_sha256: str = ""
 
     @model_validator(mode="after")
     def exposure_map_is_complete(self) -> ResearchPage:

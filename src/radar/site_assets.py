@@ -827,6 +827,15 @@ grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;padding:1px;
 border:1px solid var(--linha);border-radius:18px;overflow:hidden;background:var(--linha)}
 .exposure-item{min-height:118px;padding:20px;background:var(--superficie)}
 .exposure-item p{margin:0;color:var(--fraco);font-size:12px;line-height:1.6}
+.exposure-item{min-width:0;padding:24px}
+.exposure-item .exposure-answer{font:400 21px/1.4 var(--editorial);color:var(--texto);margin-bottom:20px}
+.exposure-note{margin-top:16px}.exposure-note h4{font:500 11px var(--display);margin:0 0 6px;color:var(--texto)}
+.exposure-note p{font-size:13px;line-height:1.7}
+.exposure-source{margin-top:20px;border-top:1px solid var(--linha);font-size:12px}
+.exposure-source summary{padding:14px 0;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.exposure-source blockquote{margin:8px 0;padding-left:14px;border-left:2px solid var(--acento);font-size:13px;color:var(--fraco)}
+.exposure-source a{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:4px}
+.exposure-provenance{max-width:78ch;margin:0 0 24px;font-size:12px;line-height:1.7;color:var(--fraco)}
 .research-risks p{margin:0;color:var(--fraco);font-size:15px;line-height:1.65}
 .research-test{counter-reset:research-step;list-style:none;margin:0;padding:0}
 .research-test li{counter-increment:research-step;display:grid;grid-template-columns:34px 1fr;

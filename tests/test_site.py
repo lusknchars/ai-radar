@@ -790,7 +790,7 @@ def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
     html = render_research_page(page)
 
     assert "abstract indexed" in html
-    assert html.count("not evaluated") >= 8
+    assert html.count("Still unknown") >= 8
     assert "Missing analysis never counts as evidence of safety" in html
     assert "Do not allocate compute yet." in html
     assert "0 of 8" in html

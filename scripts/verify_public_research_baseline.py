@@ -51,6 +51,8 @@ def main(argv: list[str] | None = None) -> int:
                 site,
                 date.fromisoformat(args.as_of),
                 reports_root=root / "reports",
+                # Keep the raw brief baseline independent of selected editorial reviews.
+                content_root=root / "content",
             )
         finally:
             store.close()

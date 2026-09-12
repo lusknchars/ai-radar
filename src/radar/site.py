@@ -1164,22 +1164,53 @@ def _render_research_claims(page: ResearchPage) -> str:
 
 
 def _render_exposure_map(page: ResearchPage) -> str:
-    items = "".join(
-        '<article class="exposure-item" '
-        f'id="exposure-{escape(item.dimension)}">'
-        '<div class="research-item-head">'
-        f'<h3>{escape(EXPOSURE_DIMENSION_LABELS[item.dimension])}</h3>'
-        f'<span data-basis="{escape(item.basis)}">'
-        f'{escape(EVIDENCE_BASIS_LABELS[item.basis])}</span></div>'
-        + (
-            f'<p>{escape(item.finding)}</p>'
-            if item.finding else
-            f'<p class="exposure-prompt">{escape(EXPOSURE_PROMPTS[item.dimension])}</p>'
-        )
-        + '</article>'
-        for item in page.exposure_map
-    )
-    return f'<div class="exposure-grid">{items}</div>'
+    items = []
+    for item in page.exposure_map:
+        label = {
+            "source_linked": "From the paper",
+            "inferred": "Paperraft interpretation",
+            "not_evaluated": "Still unknown",
+        }[item.basis]
+        detail = ''
+        if item.interpretation:
+            detail += ('<div class="exposure-note"><h4>Paperraft interpretation</h4>'
+                       f'<p>{escape(item.interpretation)}</p></div>')
+        if item.limitation:
+            detail += ('<div class="exposure-note"><h4>Limits and unknowns</h4>'
+                       f'<p>{escape(item.limitation)}</p></div>')
+        if item.next_check:
+            detail += ('<div class="exposure-note"><h4>Next check</h4>'
+                       f'<p>{escape(item.next_check)}</p></div>')
+        if item.source_url:
+            detail += ('<details class="exposure-source"><summary>Inspect source'
+                       f' · PDF p. {item.source_page}</summary>'
+                       f'<blockquote>{escape(item.source_excerpt)}</blockquote>'
+                       f'<a href="{escape(item.source_url, quote=True)}">'
+                       f'Open paper at page {item.source_page}</a></details>')
+        items.append(
+            '<article class="exposure-item" '
+            f'id="exposure-{escape(item.dimension)}">'
+            '<div class="research-item-head">'
+            f'<h3>{escape(EXPOSURE_DIMENSION_LABELS[item.dimension])}</h3>'
+            f'<span data-basis="{escape(item.basis)}">'
+            f'{label}</span></div>'
+            + (
+                f'<p class="exposure-answer">{escape(item.finding)}</p>'
+                if item.finding else
+                '' if item.limitation else
+                f'<p class="exposure-prompt">{escape(EXPOSURE_PROMPTS[item.dimension])}</p>'
+            )
+            + detail + '</article>')
+    provenance = ''
+    if page.exposures_reviewed_at:
+        reported = sum(item.basis == 'source_linked' for item in page.exposure_map)
+        inferred = sum(item.basis == 'inferred' for item in page.exposure_map)
+        unknown = sum(item.basis == 'not_evaluated' for item in page.exposure_map)
+        provenance = ('<p class="exposure-provenance">Selected source review · '
+                      f'{escape(page.exposures_reviewed_at)}. '
+                      f'{reported} from the paper · {inferred} inferred by Paperraft · '
+                      f'{unknown} still unknown. This review is not an independent experiment.</p>')
+    return f'{provenance}<div class="exposure-grid">{"".join(items)}</div>'
 
 
 def _render_reading_guide(page: ResearchPage) -> str:
@@ -1322,8 +1353,8 @@ def render_research_page(
         f'{_render_research_claims(page)}</section>'
         '<section id="exposure" class="research-section">'
         '<div class="section-head"><h2>Exposure map</h2>'
-        '<p class="sub">For unchecked areas, use the questions below when reading. Missing analysis never '
-        'counts as evidence of safety.</p></div>'
+        '<p class="sub">Author findings, Paperraft interpretations, and the next check. '
+        'Missing analysis never counts as evidence of safety.</p></div>'
         f'{_render_exposure_map(page)}</section>'
         f'{detail_sections}{_render_reading_guide(page)}{independent_tests}'
         '<aside id="signal" class="research-signal-note" aria-label="Discovery signal">'
