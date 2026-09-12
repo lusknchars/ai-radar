@@ -175,6 +175,7 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
     cortes_do_dia: Counter[str] = Counter()
 
     for i, escopo in enumerate((DEFAULT_SCOPE, AGENT_SCOPE)):
+        print(f"Collecting {escopo.name}: up to {new_limit} new briefs", flush=True)
         r = run_day(
             store=store, scope=escopo, thresholds=limiares, today=today,
             model=model,

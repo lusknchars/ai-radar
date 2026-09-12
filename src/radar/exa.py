@@ -1,11 +1,14 @@
 """Optional bounded discovery. arXiv remains the authority for paper metadata."""
 from collections import Counter
 from datetime import date, timedelta
+import logging
 import re
 from urllib.parse import urlencode, urlsplit
 
 from .arxiv import ARXIV_ENDPOINT, parse_feed
 from .models import Discovery
+
+_log = logging.getLogger(__name__)
 
 
 def arxiv_id(url: str) -> str | None:
@@ -48,7 +51,9 @@ class ExaDiscovery:
                         ids.add(candidate)
                     else:
                         cuts["exa_invalid_source"] += 1
-            except Exception:
+            except Exception as error:
+                _log.warning("Exa query %s failed: %s, HTTP %s", index + 1,
+                             type(error).__name__, getattr(getattr(error, 'response', None), 'status_code', None))
                 cuts["exa_search_failed"] += 1
         try:
             ids -= papers.keys()
@@ -67,8 +72,10 @@ class ExaDiscovery:
                     else:
                         papers[paper.arxiv_id] = paper
                 cuts["exa_metadata_missing"] += len(ids - found)
-        except Exception:
+        except Exception as error:
             # Never log provider response bodies or credentials. Preserve the
             # primary discovery and mark the collection partial in the caller.
+            _log.warning("Exa metadata resolution failed: %s, HTTP %s",
+                         type(error).__name__, getattr(getattr(error, 'response', None), 'status_code', None))
             cuts["exa_metadata_failed"] += 1
         return Discovery(papers=list(papers.values()), cuts={k: v for k, v in cuts.items() if v})

@@ -57,6 +57,7 @@ jobs:
 
       - name: Rodar o radar
         env:
+          PYTHONUNBUFFERED: '1'
           RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
           RADAR_COLLECTION_MODE: ${{ vars.RADAR_COLLECTION_MODE || 'auto' }}
           RADAR_EXA_MODE:      ${{ inputs.exa_mode || vars.RADAR_EXA_MODE || 'daily' }}

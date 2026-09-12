@@ -354,6 +354,7 @@ class KimiJudge(_KimiStructuredClient):
                 if index:
                     self.wait_between_requests()
                 try:
+                    print(f"Brief {index + 1}/{len(papers)}: {paper.arxiv_id}", flush=True)
                     results[paper.arxiv_id] = self.judge_one(paper)
                 except Exception as exc:
                     _log.warning("julgamento Kimi de %s falhou: %s", paper.arxiv_id, exc)
