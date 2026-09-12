@@ -480,6 +480,32 @@ height:44px;place-items:center;border:1px solid var(--linha-forte);border-radius
 background:var(--fundo);color:var(--texto);opacity:0;pointer-events:none;
 transform:translateY(8px);transition:opacity 180ms ease-out,transform 180ms ease-out}
 .report-to-top.is-visible{opacity:1;pointer-events:auto;transform:none}
+/* Action feedback shares timing across pointer and keyboard interaction. */
+:where(button,.research-actions>a,.research-jumps a,.nav a,footer>a,summary){
+transition:color 160ms ease-out,background-color 160ms ease-out,
+border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
+.index-sort button{border-radius:6px;min-height:44px}
+.index-sort button[aria-sort],.index-sort button:focus-visible,
+.research-jumps a:focus-visible,summary:focus-visible{
+background-color:rgba(203,41,87,.08);color:var(--acento)}
+.filtros input,.filtros select{transition:border-color 160ms ease-out,box-shadow 160ms ease-out}
+.filtros input:focus-visible,.filtros select:focus-visible{
+border-color:var(--acento);box-shadow:0 0 0 3px rgba(203,41,87,.12)}
+.sheen-button:focus-visible{filter:brightness(1.06)}
+.sheen-button:focus-visible svg{transform:translateX(2px)}
+.sheen-button:focus-visible .sheen-sweep{transform:translateX(105%)}
+button:not(:disabled):active{transform:scale(.98)}
+button:disabled{cursor:not-allowed;opacity:.55}
+@media (hover:hover){
+.index-sort button:hover,.research-jumps a:hover,summary:hover{background-color:rgba(203,41,87,.06)}
+.research-actions>a:hover{transform:translateY(-2px)}
+.nav a:hover,footer>a:hover{color:var(--acento)}
+}
+@media (prefers-reduced-motion:reduce){
+button,a,summary,input,select{transition:none!important}
+button:active,.research-actions>a:hover,.sheen-button svg{transform:none!important}
+.sheen-sweep{display:none}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sheen-button,
 .sheen-button *,.paper-entry,#fundo,.report-to-top{transition-duration:1ms!important}}
 @media (max-width:1050px){.index-head,.paper-entry{grid-template-columns:88px minmax(0,1fr) 190px 144px;

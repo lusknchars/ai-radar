@@ -34,6 +34,14 @@ def main():
             assert footer_box['width'] >= page.viewport_size['width'] * .9
             assert footer_box['height'] >= 180
             assert 'Paperraft' in page.title()
+            newest = page.get_by_role('button', name='newest', exact=True)
+            newest.focus()
+            assert newest.evaluate('(el) => el.matches(":focus-visible")')
+            assert newest.evaluate('(el) => parseFloat(getComputedStyle(el).outlineWidth)') >= 2
+            assert newest.evaluate('(el) => getComputedStyle(el).transitionDuration') == '0s'
+            page.emulate_media(reduced_motion='no-preference')
+            assert newest.evaluate('(el) => getComputedStyle(el).transitionDuration') != '0s'
+            page.emulate_media(reduced_motion='reduce')
             assert page.locator('[data-collection-mode="sample"]').is_visible()
             page.get_by_role('button', name='newest', exact=True).click()
             dates = page.locator('.paper-entry:visible').evaluate_all(
