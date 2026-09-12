@@ -1055,6 +1055,10 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .entry-main::after{content:"";display:block;clear:both}
 @media(min-width:761px) and (max-width:1050px){.entry-cover{width:88px;margin-left:14px}}
 .skill-download{text-decoration:none}
+.nav{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);overflow:visible}
+.nav .publication-name{grid-column:2;margin:0;justify-self:center}
+.nav-links{grid-column:3;display:flex;justify-content:flex-end;align-items:center;gap:22px}
+@media(max-width:1000px){.nav{grid-template-columns:1fr;justify-items:center;gap:14px;padding:16px 0}.nav .publication-name,.nav-links{grid-column:1}.nav-links{justify-content:center;flex-wrap:wrap;gap:12px 18px}}
 .article-opening.has-paper-image{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:48px;align-items:start}
 .article-opening.has-paper-image h1{font-size:clamp(30px,3.8vw,48px)}
 .paper-lead-image{margin:8px 0 0;min-width:0}

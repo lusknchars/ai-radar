@@ -136,7 +136,7 @@ def _nav(atual: str, public_config: PublicConfig) -> str:
     )
     return (f'<nav class="nav" aria-label="Primary navigation">'
             f'<a class="publication-name" href="{escape(public_config.path())}">Paperraft</a>'
-            f'{links}</nav>')
+            f'<div class="nav-links">{links}</div></nav>')
 
 
 def _sheen_content(label: str) -> str:
