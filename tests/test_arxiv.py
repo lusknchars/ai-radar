@@ -12,7 +12,7 @@ ABSTRACT_PAGE = '''<html><head>
 <meta name="citation_title" content="Kernels &amp; inference">
 <meta name="citation_abstract" content="We compare inference kernels.">
 <meta name="citation_date" content="2026/08/20">
-<meta name="citation_author" content="First Author">
+<meta name="citation_author" content="Author, First">
 <meta name="citation_author" content="Second Author">
 </head><body><td class="tablecell subjects">
 <span class="primary-subject">Machine Learning (cs.LG)</span>;

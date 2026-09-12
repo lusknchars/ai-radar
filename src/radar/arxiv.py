@@ -102,12 +102,17 @@ def parse_abstract_page(text: str, expected_id: str) -> Paper:
     meta = parser.meta
     if re.sub(r'v\d+$', '', meta.get('citation_arxiv_id', [''])[0]) != expected_id:
         raise ValueError('arXiv metadata identity mismatch')
-    title = meta['citation_title'][0].strip()
-    abstract = meta['citation_abstract'][0].strip()
-    authors = meta['citation_author']
+    title = ' '.join(meta['citation_title'][0].split())
+    abstract = ' '.join(meta['citation_abstract'][0].split())
+    # citation_author uses "Surname, Given name"; the feed and repository
+    # authorship classifier expect the surname at the end of each name.
+    authors = []
+    for author in meta['citation_author']:
+        surname, comma, given = author.partition(',')
+        authors.append(' '.join((f'{given} {surname}' if comma else author).split()))
     categories = re.findall(r'\(([a-z-]+\.[A-Z]+)\)', ''.join(parser.subjects))
     published = date.fromisoformat(meta['citation_date'][0].replace('/', '-')).isoformat()
-    if not title or not abstract or not authors or not categories:
+    if not title or not abstract or not authors or not all(authors) or not categories:
         raise ValueError('Incomplete arXiv citation metadata')
     return Paper(arxiv_id=expected_id, title=title, abstract=abstract,
                  authors=authors, categories=categories, published=published)
