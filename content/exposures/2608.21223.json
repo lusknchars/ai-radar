@@ -1,0 +1,80 @@
+{
+  "arxiv_id": "2608.21223",
+  "source_url": "https://arxiv.org/pdf/2608.21223v1",
+  "source_sha256": "5a50e8db03eccddacd6088c7c3c5b477a98e078cfeb068aa144cdaeafeb023e4",
+  "reviewed_at": "2026-09-12",
+  "assessments": [
+    {
+      "dimension": "quality",
+      "basis": "source_linked",
+      "finding": "On CIFAR-10, PGU-XOR reaches 76.41% accuracy, versus 66.85% for PGU-Reuse and 76.53% for the software Randint reference.",
+      "interpretation": "The gain is strongest against the reuse baseline. The software reference remains slightly ahead.",
+      "limitation": "These are the authors’ spiking-model results. They do not establish quality gains for GLM or Kimi.",
+      "next_check": "Repeat the same task and perturbation baselines with fixed seeds before testing another architecture.",
+      "source_page": 9,
+      "source_excerpt": "PGU-XOR 76.41 84 54.20 687 83.98 777",
+      "source_url": "https://arxiv.org/pdf/2608.21223v1#page=9"
+    },
+    {
+      "dimension": "compute",
+      "basis": "source_linked",
+      "finding": "The hardware study uses a 128 × 16 in-memory array and a custom perturbation generator in 16-nm CMOS, evaluated after chip layout.",
+      "interpretation": "The reported savings concern perturbation energy. They cannot price a complete training run or an A100/H200 rental.",
+      "limitation": "GPU memory needs, total system energy, and rental cost remain unknown.",
+      "next_check": "First establish a runnable implementation and measure its full memory footprint and wall-clock cost.",
+      "source_page": 10,
+      "source_excerpt": "All hardware results reported in this section are obtained from post-layout implementations",
+      "source_url": "https://arxiv.org/pdf/2608.21223v1#page=10"
+    },
+    {
+      "dimension": "latency",
+      "basis": "source_linked",
+      "finding": "At 1 GHz, perturbation throughput falls from 4.10 to 0.51 TOPS as accumulation grows from one to eight cycles.",
+      "interpretation": "Smaller circuitry trades throughput for area. The paper’s no-penalty condition requires the generator to keep pace with the in-memory array.",
+      "limitation": "This is circuit throughput. Startup time, time to first token, and slow-request latency are not established.",
+      "next_check": "Measure startup, median and p95 request latency separately on a complete implementation.",
+      "source_page": 11,
+      "source_excerpt": "lowering the throughput from 4.10 TOPS at c = 1 to 2.05, 1.02 and 0.51 TOPS",
+      "source_url": "https://arxiv.org/pdf/2608.21223v1#page=11"
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "limitation": "The reviewed architecture and experiments do not establish a deployment, monitoring, or rollback procedure.",
+      "next_check": "Define checkpoint recovery, failure detection, and rollback behavior before a service trial."
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "inferred",
+      "finding": "Applying this method requires the spiking model, in-memory compute path, and perturbation generator to work together.",
+      "limitation": "A drop-in implementation for GLM-4.7-Flash, Kimi, or a conventional GPU inference server has not been established.",
+      "next_check": "Locate runnable code and verify the architecture mapping before renting GPUs for this technique.",
+      "source_page": 4,
+      "source_excerpt": "the IMC array executes the standard MVM with the input spike vector",
+      "source_url": "https://arxiv.org/pdf/2608.21223v1#page=4"
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "limitation": "The reviewed source does not establish data-access controls, isolation, or resistance to malicious inputs.",
+      "next_check": "Review input handling, model access, and isolation for the actual implementation before using private data."
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "source_linked",
+      "finding": "Spikingformer starts from ImageNet-1K pretraining; 75% of its parameters stay frozen during CIFAR-10 fine-tuning. SpikeGPT is fully fine-tuned on WikiText.",
+      "interpretation": "This requires model adaptation and training data. It is not an inference-server setting.",
+      "limitation": "Pretraining and data preparation are outside the quoted perturbation-energy comparison.",
+      "next_check": "Account for checkpoints, dataset preparation, training, and evaluation in the experiment budget.",
+      "source_page": 9,
+      "source_excerpt": "CIFAR-10 with 75% of its parameters frozen, leaving 16.6M trainable parameters",
+      "source_url": "https://arxiv.org/pdf/2608.21223v1#page=9"
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "limitation": "The paper describes its circuit settings and benchmarks. Released hardware design files, exact seeds, and runnable evaluation scripts have not been verified.",
+      "next_check": "Locate and pin the code, checkpoints, datasets, and hardware design; then attempt the smallest reported experiment."
+    }
+  ]
+}

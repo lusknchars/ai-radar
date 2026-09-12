@@ -9,6 +9,7 @@ from shutil import copyfile
 from .config import PublicConfig, load_public_config
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
+from .exposure_editions import apply_exposure_edition
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
 from .report import load_report
@@ -34,6 +35,7 @@ def publish_site(
     cuts: dict[str, int] | None = None,
     reports_root: Path | None = None,
     public_config: PublicConfig | None = None,
+    content_root: Path | None = None,
 ) -> None:
     """Escreve todos os artefatos servidos pelo GitHub Pages.
 
@@ -41,6 +43,7 @@ def publish_site(
     acervo existente sem acionar o pipeline diario ou gastar outro lote.
     """
     public_config = public_config or load_public_config()
+    content_root = content_root if content_root is not None else Path(__file__).resolve().parents[2] / "content"
     root.mkdir(parents=True, exist_ok=True)
     assets_root = root / "assets"
     assets_root.mkdir(parents=True, exist_ok=True)
@@ -104,8 +107,10 @@ def publish_site(
             report=reports_by_id.get(point.arxiv_id),
         )
         page = apply_equation_edition(
-            page, Path(__file__).resolve().parents[2] / "content" / "equations"
+            page, content_root / "equations"
             / f"{point.arxiv_id}.json")
+        page = apply_exposure_edition(
+            page, content_root / "exposures" / f"{point.arxiv_id}.json")
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
         (destination / "index.html").write_text(

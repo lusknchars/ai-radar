@@ -80,10 +80,22 @@ def main():
             assert page.locator('.equation-evidence').count() == 2
             assert page.locator('.research-signal').count() == 0
             assert page.locator('.research-signal-note').count() == 1
+            exposures = page.locator('#exposure')
+            assert exposures.locator('.exposure-item').count() == 8
+            assert exposures.locator('[data-basis="source_linked"]').count() == 4
+            assert exposures.locator('[data-basis="inferred"]').count() == 1
+            assert exposures.locator('[data-basis="not_evaluated"]').count() == 3
+            assert exposures.locator('.exposure-source').count() == 5
+            source = exposures.locator('.exposure-source').first
+            source.locator('summary').click()
+            assert source.locator('blockquote').is_visible()
+            assert source.locator('a').get_attribute('href') == 'https://arxiv.org/pdf/2608.21223v1#page=9'
+            source.locator('summary').click()
             for width in (390, 1440):
                 page.set_viewport_size({'width': width, 'height': 1000})
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
                 page.locator('#equations').screenshot(path=str(args.out / f'equations-{width}.png'))
+                exposures.screenshot(path=str(args.out / f'exposures-{width}.png'))
             assert not errors, errors
             assert not failed_resources, failed_resources
         finally:

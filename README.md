@@ -131,6 +131,16 @@ only when an external test can be linked. A finding is `source_linked` only when
 the PDF page and matching excerpt are present. Everything else remains labeled
 as an AI Radar inference or not evaluated.
 
+Selected briefs can also receive a limited editorial exposure review from
+`content/exposures/<arxiv-id>.json`. Each review pins a versioned PDF, its SHA-256,
+the review date, and page excerpts for supported findings. The exposure map
+separates author findings, Paperraft interpretations, limits, and the next check.
+Unknown areas remain `not_evaluated`. This does not create a deep report or claim
+independent testing. A later deep report supersedes the limited review.
+The raw 20-paper baseline explicitly excludes these curated editions; ordinary
+publication includes them. The first review and its evidence audit are recorded
+in [the spiking-transformer review](docs/research/2026-09-12-spiking-exposure-review.md).
+
 Every deep report separates two infrastructure questions:
 
 | Field | Meaning |

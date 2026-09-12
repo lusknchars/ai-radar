@@ -32,42 +32,90 @@
     {
       "dimension": "quality",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "compute",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "latency",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "operations",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "compatibility",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "security",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "data_and_training",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     },
     {
       "dimension": "reproducibility",
       "basis": "not_evaluated",
-      "finding": ""
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
     }
   ],
   "risks": [],
@@ -83,5 +131,7 @@
   "core_kind": "",
   "equations_fetched_at": "",
   "equations_source_url": "",
-  "equations_source_sha256": ""
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
 }
