@@ -39,6 +39,13 @@ async def main():
                 assert any(name.endswith("SKILL.md") for name in archive.namelist())
             await page.goto("http://127.0.0.1:8778/")
             assert await page.locator(".paper-entry .skill-download").count() == 20
+            assert await page.locator('.entry-cover img').count() == 20
+            first = page.locator('.paper-entry:visible').first
+            await first.scroll_into_view_if_needed()
+            await page.wait_for_function("document.querySelector('.entry-cover img').naturalWidth > 0")
+            await first.screenshot(path=f'/tmp/paperraft-entry-{width}.png')
+            assert await page.locator('[data-ascii-ripple]').count() == 0
+            assert await page.evaluate('document.documentElement.scrollWidth <= innerWidth')
             await page.close()
         await browser.close()
     print("Desktop/mobile previews, navigation, source links and ZIP downloads passed")

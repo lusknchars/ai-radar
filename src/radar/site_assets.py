@@ -151,59 +151,6 @@ BACKGROUND_SCRIPT = r"""
 })();
 """
 
-ASCII_RIPPLE_SCRIPT = r"""
-// Pointer-driven ASCII ripple for the footer. It stays bounded to this small
-// region and pauses when hidden or when the reader requests reduced motion.
-(function(){
-  var root = document.querySelector('[data-ascii-footer]');
-  if (!root) return;
-  var pre = root.querySelector('[data-ascii-ripple] pre');
-  if (!pre) return;
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var chars = ' .·:+*#%@', width = 120, height = 12;
-  var pointer = {x:.5, y:.5}, frame = 0, last = 0;
-  function resize(){
-    width=Math.max(42,Math.min(120,Math.floor(root.clientWidth/8)));
-    height=Math.max(6,Math.min(16,Math.floor(root.clientHeight/14)));
-  }
-  function render(time){
-    frame = 0;
-    if (reduced.matches || document.hidden) return;
-    if (time - last < 48){ frame = requestAnimationFrame(render); return; }
-    last = time;
-    var output = [];
-    for (var y=0; y<height; y++){
-      var line = '';
-      for (var x=0; x<width; x++){
-        var nx=x/(width-1), ny=y/(height-1), dx=nx-pointer.x, dy=ny-pointer.y;
-        var distance=Math.sqrt(dx*dx+dy*dy), wave=Math.sin(distance*25-time*.004)*.5+.5;
-        var value=Math.max(0,Math.min(.999,wave*Math.max(0,1-distance*1.35)+.08*Math.sin(x*.7+time*.001)));
-        line += chars[Math.floor(value*chars.length)];
-      }
-      output.push(line);
-    }
-    pre.textContent=output.join('\n');
-    frame=requestAnimationFrame(render);
-  }
-  function move(event){
-    var rect=root.getBoundingClientRect();
-    pointer.x=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
-    pointer.y=Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height));
-    if (!frame && !reduced.matches) frame=requestAnimationFrame(render);
-  }
-  root.addEventListener('pointermove',move,{passive:true});
-  window.addEventListener('resize',function(){resize();},{passive:true});
-  root.addEventListener('pointerleave',function(){pointer.x=.5;pointer.y=.5},{passive:true});
-  document.addEventListener('visibilitychange',function(){if(!document.hidden&&!frame)frame=requestAnimationFrame(render);});
-  if (reduced.addEventListener) reduced.addEventListener('change',function(){
-    if(reduced.matches){if(frame)cancelAnimationFrame(frame);frame=0;pre.textContent='paperraft signal';}
-    else if(!frame)frame=requestAnimationFrame(render);
-  });
-  resize();
-  pre.textContent='paperraft signal';
-  if(!reduced.matches)frame=requestAnimationFrame(render);
-})();
-"""
 
 REPORT_SCRIPT = r"""
 // Progressive enhancement for long reports: reading progress and the current
@@ -693,14 +640,6 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:48px
 color:var(--fraco);font-family:var(--sans);font-size:12px}
 footer span{margin-right:auto}footer a{padding:8px 0;text-decoration:underline;
 text-underline-offset:3px}
-footer{position:relative;isolation:isolate;overflow:hidden}
-.footer-ripple{position:absolute;inset:0;z-index:0;overflow:hidden;color:var(--acento);opacity:.7;pointer-events:none}
-.footer-ripple pre{width:100%;height:100%;margin:0;padding:18px 0;font:500 8px/1.35 var(--mono);
-letter-spacing:.08em;white-space:pre;overflow:hidden}
-footer>span,footer>a{position:relative;z-index:1}
-footer{width:100vw;margin-left:calc(50% - 50vw);min-height:230px;box-sizing:border-box;
-padding:142px max(24px,calc((100vw - 930px)/2)) 34px;align-items:flex-end}
-.footer-ripple pre{font-size:clamp(9px,1.05vw,15px);line-height:1.45;padding:22px max(24px,calc((100vw - 930px)/2))}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -1108,8 +1047,13 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}footer{min-height:190px;padding:108px 20px 24px}.footer-ripple pre{padding:16px 20px;font-size:9px}
+.report-to-top{right:14px;bottom:14px}footer{padding:32px 0}
 }
+.entry-cover{float:right;width:112px;margin:0 0 16px 22px;display:block;border:1px solid var(--linha);background:white}
+.entry-cover img{display:block;width:100%;height:auto}
+.entry-cover:hover{border-color:var(--acento)}
+.entry-main::after{content:"";display:block;clear:both}
+@media(min-width:761px) and (max-width:1050px){.entry-cover{width:88px;margin-left:14px}}
 .skill-download{text-decoration:none}
 .article-opening.has-paper-image{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:48px;align-items:start}
 .article-opening.has-paper-image h1{font-size:clamp(30px,3.8vw,48px)}

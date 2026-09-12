@@ -27,12 +27,8 @@ def main():
                 f'{response.status} {response.url}') if response.status >= 400 else None)
             page.goto(args.url, wait_until='networkidle')
             assert page.locator('.publication-name').inner_text() == 'Paperraft'
-            assert page.locator('[data-ascii-footer]').count() == 1
-            assert page.locator('[data-ascii-footer] [data-ascii-ripple]').count() == 1
-            assert page.locator('[data-ascii-ripple] pre').inner_text()
-            footer_box = page.locator('[data-ascii-footer]').bounding_box()
-            assert footer_box['width'] >= page.viewport_size['width'] * .9
-            assert footer_box['height'] >= 180
+            assert page.locator('footer').count() == 1
+            assert page.locator('[data-ascii-ripple]').count() == 0
             assert 'Paperraft' in page.title()
             newest = page.get_by_role('button', name='newest', exact=True)
             newest.focus()
