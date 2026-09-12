@@ -7,8 +7,12 @@
   var pre = root.querySelector('[data-ascii-ripple] pre');
   if (!pre) return;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var chars = ' .·:+*#%@', width = 42, height = 6;
+  var chars = ' .·:+*#%@', width = 120, height = 12;
   var pointer = {x:.5, y:.5}, frame = 0, last = 0;
+  function resize(){
+    width=Math.max(42,Math.min(120,Math.floor(root.clientWidth/8)));
+    height=Math.max(6,Math.min(16,Math.floor(root.clientHeight/14)));
+  }
   function render(time){
     frame = 0;
     if (reduced.matches || document.hidden) return;
@@ -35,12 +39,14 @@
     if (!frame && !reduced.matches) frame=requestAnimationFrame(render);
   }
   root.addEventListener('pointermove',move,{passive:true});
+  window.addEventListener('resize',function(){resize();},{passive:true});
   root.addEventListener('pointerleave',function(){pointer.x=.5;pointer.y=.5},{passive:true});
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&!frame)frame=requestAnimationFrame(render);});
   if (reduced.addEventListener) reduced.addEventListener('change',function(){
     if(reduced.matches){if(frame)cancelAnimationFrame(frame);frame=0;pre.textContent='paperraft signal';}
     else if(!frame)frame=requestAnimationFrame(render);
   });
+  resize();
   pre.textContent='paperraft signal';
   if(!reduced.matches)frame=requestAnimationFrame(render);
 })();
