@@ -10,6 +10,7 @@ from .config import PublicConfig, load_public_config
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
 from .exposure_editions import apply_exposure_edition
+from .paper_skills import build_paper_skills
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
 from .report import load_report
@@ -62,6 +63,7 @@ def publish_site(
     reports = [load_report(path) for path in sorted(reports_root.glob("*.json"))]
     available_reports = {document.arxiv_id for document in reports}
     reports_by_id = {document.arxiv_id: document for document in reports}
+    published_pages = []
 
     data = store.site_data(today)
     if cuts is not None:
@@ -111,12 +113,15 @@ def publish_site(
             / f"{point.arxiv_id}.json")
         page = apply_exposure_edition(
             page, content_root / "exposures" / f"{point.arxiv_id}.json")
+        published_pages.append(page)
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
         (destination / "index.html").write_text(
             render_research_page(page, public_config), encoding="utf-8")
         (destination / "index.json").write_text(
             page.model_dump_json(indent=2), encoding="utf-8")
+
+    build_paper_skills(published_pages, root, base_path=public_config.base_path)
 
     for document in reports:
         destination = root / "reports" / document.arxiv_id

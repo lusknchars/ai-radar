@@ -1323,6 +1323,8 @@ def render_research_page(
             f'<ul class="research-independent-tests">{items}</ul></section>'
         )
     json_href = public_config.path(f"papers/{page.arxiv_id}/index.json")
+    skill_href = public_config.path(
+        f"skills/paper-{page.arxiv_id.replace('.', '-')}-evidence.zip")
     canonical = (
         f'{public_config.site_url.rstrip("/")}/papers/{page.arxiv_id}/'
     )
@@ -1333,7 +1335,8 @@ def render_research_page(
         f'{_research_page_action(page, public_config)}'
         f'<a href="{escape(page.source_url)}" target="_blank" '
         'rel="noopener noreferrer">Read original paper ↗</a>'
-        f'<a href="{escape(json_href)}">View page data (JSON)</a></div>'
+        f'<a href="{escape(json_href)}">View page data (JSON)</a>'
+        f'<a href="{escape(skill_href)}">Download research skill</a></div>'
         f'{_render_research_jumps(page)}'
         '<section id="decision" class="research-section">'
         '<div class="section-head"><h2>Why it was shortlisted</h2>'
