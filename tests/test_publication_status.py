@@ -1,4 +1,5 @@
 from datetime import date
+import json
 
 from radar.publish import publish_site
 from radar.store import Store
@@ -11,9 +12,11 @@ def test_republishing_sample_never_claims_a_successful_collection(tmp_path):
     store.finish_collection(run, "unconfigured")
     publish_site(store, tmp_path / "site", date(2026, 9, 10))
     html = (tmp_path / "site/index.html").read_text()
-    assert "Sample archive" in html
-    assert 'Last successful collection: <strong>not recorded</strong>' in html
-    assert "Page published: 2026-09-10" in html
+    assert 'class="collection-status"' not in html
+    status = json.loads((tmp_path / 'site/collection.json').read_text())
+    assert status['mode'] == 'sample'
+    assert status['last_success'] is None
+    assert status['page_published'] == '2026-09-10'
     store.close()
 
 

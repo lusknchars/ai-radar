@@ -38,7 +38,7 @@ def main():
             page.emulate_media(reduced_motion='no-preference')
             assert newest.evaluate('(el) => getComputedStyle(el).transitionDuration') != '0s'
             page.emulate_media(reduced_motion='reduce')
-            assert page.locator('[data-collection-mode="sample"]').is_visible()
+            assert page.locator('.collection-status').count() == 0
             page.get_by_role('button', name='newest', exact=True).click()
             dates = page.locator('.paper-entry:visible').evaluate_all(
                 '(rows) => rows.map(row => row.dataset.publicado)')
@@ -61,7 +61,7 @@ def main():
             assert page.locator('meta[property="og:image"]').get_attribute('content').endswith('/assets/social-card.png')
             for label in ('title', 'action'):
                 entry = page.locator('.paper-entry:visible').first
-                link = entry.locator('h3 a' if label == 'title' else '.entry-action .sheen-button')
+                link = entry.locator('h3 a' if label == 'title' else '.entry-action .report-action')
                 with page.expect_navigation() as navigation:
                     link.click()
                 assert navigation.value.status == 200, page.url

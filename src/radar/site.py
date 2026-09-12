@@ -160,24 +160,6 @@ def _sheen_link(label: str, href: str, *, classes: str = "",
     )
 
 
-def _collection_notice(d: SiteData) -> str:
-    status = d.collection
-    if status.mode == "sample":
-        message = "Sample archive. These papers demonstrate the format; this is not a fresh collection."
-    elif status.mode == "unknown":
-        message = "Collection freshness has not been recorded for this archive."
-    elif status.outcome != "success":
-        message = "The latest collection did not complete. Previously collected research remains available."
-    elif status.last_success and status.last_success < d.dia:
-        message = "Showing previously collected research. See the last successful collection date below."
-    else:
-        message = "Collection completed. Paper publication dates are shown on each entry."
-    return (
-        f'<aside class="collection-status" data-collection-mode="{escape(status.mode)}">'
-        f'<p>{escape(message)}</p>'
-        f'<p>Last successful collection: <strong>{escape(status.last_success or "not recorded")}</strong>'
-        f' · Page published: {escape(d.dia)}</p></aside>'
-    )
 
 
 def _cabecalho(d: SiteData, edicao: bool = False,
@@ -787,7 +769,6 @@ def render_site(
         '<a class="pular" href="#conteudo">Skip to content</a>'
         '<div class="envelope">'
         f"{_nav('edicoes' if edicao else 'acervo', public_config)}"
-        f"{_collection_notice(dados)}"
         f"{_cabecalho(dados, edicao=edicao, public_config=public_config)}"
         f'<main id="conteudo">'
         f"{_newsletter_signup(public_config) if not edicao else ''}"

@@ -1,7 +1,7 @@
 """Publicacao atomica do acervo e dos relatorios estaticos."""
 from __future__ import annotations
 
-from dataclasses import replace
+from dataclasses import asdict, replace
 from datetime import date
 from pathlib import Path
 from shutil import copyfile, copytree
@@ -71,6 +71,9 @@ def publish_site(
     published_pages = []
 
     data = store.site_data(today)
+    (root / "collection.json").write_text(json.dumps({
+        "page_published": today.isoformat(), **asdict(data.collection),
+    }, indent=2) + "\n", encoding="utf-8")
     if cuts is not None:
         data = replace(data, cortes=cuts)
     days = store.delivery_days()

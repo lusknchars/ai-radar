@@ -513,8 +513,6 @@ document.querySelectorAll('[data-paper-stack]').forEach(root => {
 """
 
 STYLES = _FONT_FACE + r"""
-.collection-status{border-left:3px solid #cb2957;padding:12px 20px;margin:20px 0 40px;background:#eee}
-.collection-status p{margin:4px 0;font-size:13px}
 .discovery-selections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px}
 .discovery-selections .section-head{grid-template-columns:minmax(0,1fr);gap:12px}
 .discovery-selections>section{min-width:0;padding:32px 0}

@@ -2,13 +2,18 @@ name: radar
 
 on:
   schedule:
-    - cron: '0 9 * * *'      # 09:00 UTC = 06:00 em Brasilia
+    - cron: '17 9 * * *'     # Daily 09:17 UTC / 06:17 Brasilia, including Exa when configured.
   workflow_dispatch:
     inputs:
       dry_run:
         description: 'Rodar sem enviar o push'
         type: boolean
         default: false
+      exa_mode:
+        description: 'Exa discovery frequency (requires EXA_API_KEY)'
+        type: choice
+        options: [daily, weekly, off]
+        default: daily
 
 permissions:
   contents: write            # necessario para commitar o db e o markdown
@@ -44,7 +49,10 @@ jobs:
       - name: Rodar o radar
         env:
           RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
-          RADAR_COLLECTION_MODE: ${{ vars.RADAR_COLLECTION_MODE || 'sample' }}
+          RADAR_COLLECTION_MODE: ${{ vars.RADAR_COLLECTION_MODE || 'auto' }}
+          RADAR_EXA_MODE:      ${{ inputs.exa_mode || vars.RADAR_EXA_MODE || 'daily' }}
+          RADAR_EXA_RESULTS:   ${{ vars.RADAR_EXA_RESULTS || '10' }}
+          EXA_API_KEY:         ${{ secrets.EXA_API_KEY }}
           RADAR_MAX_NEW_PER_SCOPE: ${{ vars.RADAR_MAX_NEW_PER_SCOPE || '20' }}
           RADAR_MAX_EQUATIONS_PER_RUN: ${{ vars.RADAR_MAX_EQUATIONS_PER_RUN || '5' }}
           RADAR_SUBSCRIBE_URL: ${{ vars.RADAR_SUBSCRIBE_URL }}
@@ -58,6 +66,17 @@ jobs:
           GH_TOKEN:           ${{ github.token }}
         run: |
           python scripts/run_workflow.py ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Refresh paper previews and publication
+        if: ${{ success() && !inputs.dry_run }}
+        env:
+          RADAR_DB: ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+          if ! python scripts/build_paper_previews.py; then
+            echo "::warning::Some paper previews are unavailable; original PDF links remain available."
+          fi
+          python scripts/publish_public_research.py --db "$RADAR_DB" --as-of "$(date -u +%F)"
 
       - name: Commitar estado e digest
         # `always()` de proposito: quando o passo anterior falha, o markdown do
@@ -76,8 +95,22 @@ jobs:
           # 128 e esconder a falha original do radar.
           git add -A -- data radar
           if test -d site; then git add -A -- site; fi
+          if test -d assets/paper-previews; then git add -A -- assets/paper-previews; fi
           git diff --staged --quiet || git commit -m "radar: digest de $(date -u +%F)"
           git push
+
+      - name: Publish to Vercel when configured
+        if: ${{ success() && !inputs.dry_run }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: |
+          if test -n "$VERCEL_TOKEN" && test -n "$VERCEL_ORG_ID" && test -n "$VERCEL_PROJECT_ID"; then
+            npx --yes vercel@54.12.2 deploy --prod --yes --token "$VERCEL_TOKEN"
+          else
+            echo "Vercel automatic deployment is not configured." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Verificar artefato do jornal
         id: site_status
