@@ -50,6 +50,7 @@ def publish_site(
     assets_root = root / "assets"
     assets_root.mkdir(parents=True, exist_ok=True)
     previews_root = Path(__file__).resolve().parents[2] / "assets/paper-previews"
+    preview_ids = {p.parent.name for p in previews_root.glob("*/page-1.jpg")}
     if previews_root.exists():
         copytree(previews_root, assets_root / "paper-previews", dirs_exist_ok=True)
     for asset in VENDOR_ASSETS:
@@ -76,7 +77,7 @@ def publish_site(
 
     (root / "index.html").write_text(
         render_site(
-            data, report_ids=available_reports, public_config=public_config,
+            data, report_ids=available_reports, public_config=public_config, preview_ids=preview_ids,
         ), encoding="utf-8")
     (root / "feed.xml").write_text(
         render_rss(
@@ -102,6 +103,7 @@ def publish_site(
         (destination / "index.html").write_text(
             render_site(
                 edition_data, edicao=True, report_ids=available_reports,
+                preview_ids=preview_ids,
                 public_config=public_config,
             ),
             encoding="utf-8")

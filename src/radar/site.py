@@ -35,7 +35,6 @@ from .public_labels import (CORE_KIND_PHRASES,
 from .report import ReportDocument
 from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
-from .site_assets import ASCII_RIPPLE_SCRIPT as _ASCII_RIPPLE_JS
 from .site_assets import PAPER_STACK_SCRIPT
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
@@ -114,8 +113,7 @@ def _social_metadata(title: str, description: str, canonical_url: str,
 
 def _footer(public_config: PublicConfig) -> str:
     return (
-        '<footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple '
-        'aria-hidden="true"><pre>paperraft signal</pre></div>'
+        '<footer>'
         '<span>AI research, with the evidence in reach.</span>'
         f'<a href="{escape(public_config.path("about.html"))}">How Paperraft works</a>'
         f'<a href="https://github.com/{escape(public_config.repository)}">Source code</a>'
@@ -491,6 +489,7 @@ def _data_editorial(publicado: str) -> str:
 def _linha(
     p, *, public_config: PublicConfig, has_report: bool = False,
     initial_hidden: bool = False,
+    has_preview: bool = False,
 ) -> str:
     cor = CORES_FAMILIA.get(p.familia, "currentColor")
     # `None` e desconhecido e vira travessao. Renderizar 0 aqui reintroduziria,
@@ -526,6 +525,10 @@ def _linha(
         f'<time datetime="{escape(p.publicado)}">{escape(_data_editorial(p.publicado))}</time>'
         f'<span>arXiv {escape(p.arxiv_id)}</span></div>'
         '<div class="entry-main">'
+        + (f'<a class="entry-cover" href="{escape(public_config.path(f"papers/{p.arxiv_id}/"))}">'
+           f'<img src="{escape(public_config.path(f"assets/paper-previews/{p.arxiv_id}/page-1.jpg"))}" '
+           f'alt="First page of {escape(p.titulo)}" loading="lazy" width="136" height="192">'
+           '</a>' if has_preview else '') +
         '<div class="entry-taxonomy">'
         f'<span><i class="pt" style="background:{cor}"></i>'
         f'{escape(ROTULOS_FAMILIA.get(p.familia, p.familia))}</span>'
@@ -553,6 +556,7 @@ def _linha(
 
 def _secao_tabela(
     d: SiteData, report_ids: set[str], public_config: PublicConfig,
+    preview_ids: set[str] | None = None,
 ) -> str:
     """Indice editorial com filtro por pratica e por familia.
 
@@ -565,6 +569,7 @@ def _secao_tabela(
     linhas = "".join(
         _linha(p, public_config=public_config,
                has_report=p.arxiv_id in report_ids,
+               has_preview=p.arxiv_id in (preview_ids or set()),
                initial_hidden=index >= BRIEF_INITIAL_LIMIT)
         for index, p in enumerate(ordenados)
     )
@@ -738,6 +743,7 @@ def _newsletter_signup(config: PublicConfig) -> str:
 def render_site(
     dados: SiteData, *, edicao: bool = False,
     report_ids: set[str] | None = None,
+    preview_ids: set[str] | None = None,
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
 ) -> str:
     report_ids = report_ids or set()
@@ -749,7 +755,7 @@ def render_site(
                    "Search by topic, browse a research area, or sort by date. "
                    "Read a brief, open the original paper, and inspect the "
                    "available evidence before deciding what to test.",
-                   _secao_tabela(dados, report_ids, public_config),
+                   _secao_tabela(dados, report_ids, public_config, preview_ids),
                    section_id="acervo"),
             _secao("Research signals",
                    "Three views of the same evidence: adoption against "
@@ -793,7 +799,7 @@ def render_site(
         f'{_footer(public_config)}'
         f'</div><script src="{escape(public_config.path("assets/d3-7.9.0.min.js"))}"></script>'
         f'<script src="{escape(public_config.path("assets/observable-plot-0.6.17.min.js"))}">'
-        f'</script><script>{_BACKGROUND_JS}</script><script>{_ASCII_RIPPLE_JS}</script><script>{_JS}</script>'
+        f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
         f'<script>{_CHART_JS}</script></body></html>'
     )
 
@@ -857,7 +863,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'<div><h1>{escape(heading or titulo)}</h1>{header_deck}</div>'
         f'{lead_figure}</div></header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
-        f'{_footer(public_config)}</div>{background}<script>{_ASCII_RIPPLE_JS}</script>'
+        f'{_footer(public_config)}</div>{background}'
         f'{enhancement}<script>{PAPER_STACK_SCRIPT}</script></body></html>'
     )
 
