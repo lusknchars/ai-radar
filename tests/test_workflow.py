@@ -1,6 +1,15 @@
 from pathlib import Path
+import pytest
 
 import radar.workflow as workflow
+
+
+def test_live_mode_without_credentials_fails_instead_of_publishing_sample(monkeypatch):
+    monkeypatch.setenv('RADAR_COLLECTION_MODE', 'live')
+    monkeypatch.setenv('RADAR_LLM_PROVIDER', 'kimi')
+    monkeypatch.delenv('KIMI_API_KEY', raising=False)
+    with pytest.raises(ValueError, match='Live collection requires KIMI_API_KEY'):
+        workflow.main([])
 
 
 def test_configured_provider_runs_the_paid_pipeline(monkeypatch, tmp_path):

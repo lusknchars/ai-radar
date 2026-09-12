@@ -31,6 +31,8 @@ def main(argv: list[str] | None = None) -> int:
         raise ValueError("RADAR_COLLECTION_MODE must be auto, live, or sample")
     if mode != "sample" and os.environ.get(credential):
         return run_radar(argv)
+    if mode == "live":
+        raise ValueError(f"Live collection requires {credential}; stored research was not relabeled.")
     if argv and "--dry-run" in argv:
         print("No live collection configured; dry-run did not change any files.")
         return 0

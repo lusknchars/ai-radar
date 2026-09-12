@@ -22,6 +22,7 @@ from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
                      load_llm_provider, load_model, load_recheck_limit,
                      load_thresholds)
 from .equations import collect_equations
+from .exa import ExaDiscovery
 from .github import GitHubClient
 from .judge import (KimiFormulaSelector, KimiJudge, collect_batch_results,
                     submit_batch, wait_for_batch)
@@ -51,9 +52,23 @@ def github_sleep_seconds() -> float:
 
 
 def _arxiv_fetch(url: str) -> str:
-    r = httpx.get(url, headers={"User-Agent": USER_AGENT}, timeout=30.0)
-    r.raise_for_status()
-    return r.text
+    for attempt in range(3):
+        try:
+            r = httpx.get(url, headers={"User-Agent": USER_AGENT}, timeout=30.0, follow_redirects=True)
+            r.raise_for_status()
+            return r.text
+        except (httpx.TransportError, httpx.HTTPStatusError) as error:
+            retryable = not isinstance(error, httpx.HTTPStatusError) or error.response.status_code in {429, 500, 502, 503, 504}
+            if not retryable or attempt == 2:
+                raise
+            time.sleep(3 * (attempt + 1))
+
+
+def _exa_search(payload: dict) -> dict:
+    response = httpx.post("https://api.exa.ai/search", json=payload,
+                          headers={"x-api-key": os.environ["EXA_API_KEY"]}, timeout=30)
+    response.raise_for_status()
+    return response.json()
 
 
 def _openalex_fetch(url: str) -> dict:
@@ -110,6 +125,13 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
     if not 0 <= equation_limit <= MAX_EQUATIONS_PER_RUN:
         raise ValueError(f"RADAR_MAX_EQUATIONS_PER_RUN must be between 0 and {MAX_EQUATIONS_PER_RUN}")
     arxiv = ArxivClient(fetch=_arxiv_fetch)
+    discovery = arxiv
+    exa_mode = os.environ.get("RADAR_EXA_MODE", "daily")
+    if exa_mode not in {"off", "weekly", "daily"}:
+        raise ValueError("RADAR_EXA_MODE must be off, weekly, or daily")
+    if os.environ.get("EXA_API_KEY") and (exa_mode == "daily" or (exa_mode == "weekly" and today.weekday() == 0)):
+        discovery = ExaDiscovery(arxiv, search=_exa_search, fetch=_arxiv_fetch,
+                                 today=today, results=int(os.environ.get("RADAR_EXA_RESULTS", "10")))
     github = GitHubClient(fetch=_github_fetch)
     provider = load_llm_provider()
     model = load_model()
@@ -154,7 +176,7 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
         r = run_day(
             store=store, scope=escopo, thresholds=limiares, today=today,
             model=model,
-            fetch_papers=arxiv.recent, fetch_signal=fetch_signal,
+            fetch_papers=discovery.recent, fetch_signal=fetch_signal,
             judge_all=judge_all, fetch_citations=openalex.citations_for,
             dry_run=args.dry_run,
             new_paper_limit=new_limit,
@@ -170,7 +192,7 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
 
     incomplete = any(
         count and any(reason in key for reason in
-                      ("termo_falhou", "sem_julgamento", "sinal_indisponivel"))
+                      ("termo_falhou", "sem_julgamento", "sinal_indisponivel", "exa_search_failed", "exa_metadata_missing"))
         for key, count in cortes_do_dia.items()
     )
     store.finish_collection(

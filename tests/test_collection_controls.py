@@ -1,4 +1,5 @@
 from datetime import date
+import json
 
 import pytest
 
@@ -44,4 +45,6 @@ def test_fatal_collection_failure_is_visible_in_republished_page(ambiente, monke
     assert store.collection_status('9999-12-31').outcome == 'failed'
     assert store.collection_status('9999-12-31').last_success is None
     store.close()
-    assert 'Last successful collection: <strong>not recorded</strong>' in (ambiente / 'site/index.html').read_text()
+    status = json.loads((ambiente / 'site/collection.json').read_text())
+    assert status['last_success'] is None
+    assert status['outcome'] == 'failed'
