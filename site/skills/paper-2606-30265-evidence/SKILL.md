@@ -1,6 +1,6 @@
 ---
 name: paper-2606-30265-evidence
-description: Use the evidence boundaries and implementation checks for When Is a Draft Accepted? A Theory of Acceptance in Speculative Decoding (2606.30265).
+description: "Use the evidence boundaries and implementation checks for When Is a Draft Accepted? A Theory of Acceptance in Speculative Decoding (2606.30265)."
 ---
 
 # When Is a Draft Accepted? A Theory of Acceptance in Speculative Decoding
@@ -42,4 +42,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

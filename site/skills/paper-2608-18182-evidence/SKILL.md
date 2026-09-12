@@ -1,6 +1,6 @@
 ---
 name: paper-2608-18182-evidence
-description: Use the evidence boundaries and implementation checks for Efficient INT8 Inference of Small NLP Models on Server CPUs with PyTorch Native Stack (2608.18182).
+description: "Use the evidence boundaries and implementation checks for Efficient INT8 Inference of Small NLP Models on Server CPUs with PyTorch Native Stack (2608.18182)."
 ---
 
 # Efficient INT8 Inference of Small NLP Models on Server CPUs with PyTorch Native Stack
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.

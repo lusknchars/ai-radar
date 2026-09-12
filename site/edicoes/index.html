@@ -543,6 +543,21 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
 .report-to-top{right:14px;bottom:14px}footer{min-height:190px;padding:108px 20px 24px}.footer-ripple pre{padding:16px 20px;font-size:9px}
 }
+.skill-download,.research-actions a.skill-download{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid #cb2957;border-radius:7px;background:#cb2957;color:white;text-decoration:none;font-size:12px;line-height:1.4}
+.skill-download:hover{background:#a82049;color:white}
+.paper-preview{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center;padding:48px 24px 58px;margin:28px 0 48px;border-block:1px solid #d3c9cc}
+.paper-preview-copy h2{font-size:28px;font-weight:400;margin:0 0 18px}
+.paper-preview-copy p{font-size:14px;line-height:1.75;max-width:38ch}
+.paper-preview-copy>a{font-size:12px;text-underline-offset:4px}
+.paper-stack{position:relative;display:block;width:100%;max-width:300px;aspect-ratio:0.72;margin:0 auto;padding:0;border:0;background:transparent;cursor:pointer;perspective:1000px}
+.paper-sheet{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:white;border:1px solid #d5ced1;border-radius:3px;box-shadow:0 10px 24px #20202418;z-index:calc(4 - var(--depth));transform:translate(calc(var(--depth) * 9px),calc(var(--depth) * -6px)) rotate(calc(var(--depth) * 3deg));transition:transform 360ms ease,opacity 360ms ease}
+.paper-stack:hover .paper-sheet{transform:translate(calc(var(--depth) * 13px),calc(var(--depth) * -8px)) rotate(calc(var(--depth) * 4deg))}
+.paper-stack-controls{display:flex;align-items:center;gap:16px;margin:22px 0 18px;font-size:12px}
+.paper-stack-controls button{width:44px;height:44px;border:1px solid #b5aab0;border-radius:50%;background:transparent;color:#202024;cursor:pointer;font-size:18px}
+.paper-stack-controls button:hover{background:#f3dde4}
+.paper-stack:focus-visible,.paper-stack-controls button:focus-visible,.skill-download:focus-visible{outline:3px solid #cb2957;outline-offset:6px}
+@media(max-width:600px){.paper-preview{grid-template-columns:1fr;gap:42px;padding:30px 12px 40px}.paper-preview-copy{order:2}.paper-stack{max-width:240px}.paper-preview-copy p{max-width:none}}
+@media(prefers-reduced-motion:reduce){.paper-sheet{transition:none}.paper-stack:hover .paper-sheet{transform:translate(calc(var(--depth) * 9px),calc(var(--depth) * -6px)) rotate(calc(var(--depth) * 3deg))}}
 </style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/" aria-current="page">Editions</a><a href="/ai-radar/about.html">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><h1>Editions · Paperraft</h1></header><main id="conteudo" class="pagina"><section><h2>Daily editions</h2><p>Each permanent URL preserves the papers published on that date. The main index always reflects the latest observation.</p><p class="vazio">No editions have been published yet.</p></section></main><footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple aria-hidden="true"><pre>paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
 // Decorative ordered-dither field. This is deliberately small and local:
 // a 2D canvas, a standard 4x4 Bayer threshold matrix and an independent
@@ -702,4 +717,28 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
   pre.textContent='paperraft signal';
   if(!reduced.matches)frame=requestAnimationFrame(render);
 })();
+</script><script>
+document.querySelectorAll('[data-paper-stack]').forEach(root => {
+  const sheets = Array.from(root.querySelectorAll('.paper-sheet'));
+  let current = 0;
+  const turn = step => {
+    current = (current + step + sheets.length) % sheets.length;
+    sheets.forEach((sheet, index) => {
+      const depth = (index - current + sheets.length) % sheets.length;
+      sheet.style.setProperty('--depth', depth);
+      sheet.setAttribute('aria-hidden', String(depth !== 0));
+    });
+    root.querySelector('[data-stack-status]').textContent = `Page ${current + 1} of ${sheets.length}`;
+    const source = root.querySelector('[data-stack-source]');
+    source.href = source.href.split('#')[0] + `#page=${current + 1}`;
+  };
+  root.querySelector('.paper-stack').addEventListener('click', () => turn(1));
+  root.querySelector('[data-stack-next]').addEventListener('click', () => turn(1));
+  root.querySelector('[data-stack-prev]').addEventListener('click', () => turn(-1));
+  root.addEventListener('keydown', event => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      event.preventDefault(); turn(event.key === 'ArrowRight' ? 1 : -1);
+    }
+  });
+});
 </script></body></html>

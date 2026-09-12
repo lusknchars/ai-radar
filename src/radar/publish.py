@@ -4,7 +4,8 @@ from __future__ import annotations
 from dataclasses import replace
 from datetime import date
 from pathlib import Path
-from shutil import copyfile
+from shutil import copyfile, copytree
+import json
 
 from .config import PublicConfig, load_public_config
 from .discovery_files import render_robots, render_sitemap
@@ -48,6 +49,9 @@ def publish_site(
     root.mkdir(parents=True, exist_ok=True)
     assets_root = root / "assets"
     assets_root.mkdir(parents=True, exist_ok=True)
+    previews_root = Path(__file__).resolve().parents[2] / "assets/paper-previews"
+    if previews_root.exists():
+        copytree(previews_root, assets_root / "paper-previews", dirs_exist_ok=True)
     for asset in VENDOR_ASSETS:
         copyfile(asset, assets_root / asset.name)
     copyfile(Path(__file__).resolve().parents[2] / "assets" / "social-card.png",
@@ -116,8 +120,12 @@ def publish_site(
         published_pages.append(page)
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
+        preview_manifest = previews_root / point.arxiv_id / "manifest.json"
+        preview_pages = 0
+        if preview_manifest.exists():
+            preview_pages = json.loads(preview_manifest.read_text())["pages"]
         (destination / "index.html").write_text(
-            render_research_page(page, public_config), encoding="utf-8")
+            render_research_page(page, public_config, preview_pages=preview_pages), encoding="utf-8")
         (destination / "index.json").write_text(
             page.model_dump_json(indent=2), encoding="utf-8")
 

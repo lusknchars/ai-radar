@@ -1,6 +1,6 @@
 ---
 name: paper-2608-07855-evidence
-description: Use the evidence boundaries and implementation checks for CommitKV: Lifecycle-Aware KV Cache Compression via Commit Transitions for Multi-Turn Agents (2608.07855).
+description: "Use the evidence boundaries and implementation checks for CommitKV: Lifecycle-Aware KV Cache Compression via Commit Transitions for Multi-Turn Agents (2608.07855)."
 ---
 
 # CommitKV: Lifecycle-Aware KV Cache Compression via Commit Transitions for Multi-Turn Agents
@@ -43,4 +43,4 @@ runtime without a measured comparison.
 
 Generated from Paperraft's versioned public JSON. Regenerate this skill when the
 research page changes. The downloadable package contains `evidence.json` with
-the complete structured fields and is safe to inspect before installation.
+the complete structured fields. Inspect both files before installation.
