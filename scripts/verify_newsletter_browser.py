@@ -30,6 +30,9 @@ def main():
             assert page.locator('[data-ascii-footer]').count() == 1
             assert page.locator('[data-ascii-footer] [data-ascii-ripple]').count() == 1
             assert page.locator('[data-ascii-ripple] pre').inner_text()
+            footer_box = page.locator('[data-ascii-footer]').bounding_box()
+            assert footer_box['width'] >= page.viewport_size['width'] * .9
+            assert footer_box['height'] >= 180
             assert 'Paperraft' in page.title()
             assert page.locator('[data-collection-mode="sample"]').is_visible()
             page.get_by_role('button', name='newest', exact=True).click()
