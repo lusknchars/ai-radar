@@ -1,0 +1,12 @@
+{
+  "origins": [
+    "https://paperaft.vercel.app",
+    "https://lusknchars.github.io",
+    "https://giscus.app"
+  ],
+  "originsRegex": [
+    "^https://paperaft-[a-z0-9-]+-floater\\.vercel\\.app$",
+    "^http://(?:localhost|127\\.0\\.0\\.1):[0-9]+$"
+  ],
+  "defaultCommentOrder": "oldest"
+}

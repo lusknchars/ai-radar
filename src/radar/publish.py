@@ -8,6 +8,7 @@ from shutil import copyfile, copytree
 import json
 
 from .config import PublicConfig, load_public_config
+from .community import COMMUNITY_SCRIPT
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
 from .exposure_editions import apply_exposure_edition
@@ -15,7 +16,7 @@ from .paper_skills import build_paper_skills
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
 from .report import load_report
-from .site import (render_about, render_editions, render_report,
+from .site import (render_about, render_community, render_editions, render_report,
                    render_research_page, render_site)
 from .site_assets import BACKGROUND_SCRIPT, STYLES
 from .store import Store
@@ -71,6 +72,11 @@ def publish_site(
     published_pages = []
 
     data = store.site_data(today)
+    if public_config.community:
+        community_root = root / 'community'
+        community_root.mkdir(exist_ok=True)
+        (community_root / 'index.html').write_text(render_community(data, public_config), encoding='utf-8')
+        (assets_root / 'community.js').write_text(COMMUNITY_SCRIPT, encoding='utf-8')
     (root / "collection.json").write_text(json.dumps({
         "page_published": today.isoformat(), **asdict(data.collection),
     }, indent=2) + "\n", encoding="utf-8")

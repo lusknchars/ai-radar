@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
+from .community import CommunityConfig, load_community_config
 
 # Local commands and scripts share one configuration file. Environment
 # variables still win, which keeps GitHub Actions and explicit shell exports
@@ -32,7 +33,6 @@ RECHECK_LIMIT = 30
 DEFAULT_REPOSITORY = "lusknchars/ai-radar"
 _GITHUB_NAME = re.compile(r"^[A-Za-z0-9_.-]+$")
 
-
 @dataclass(frozen=True)
 class PublicConfig:
     """Public links used by the static archive.
@@ -45,6 +45,7 @@ class PublicConfig:
     base_path: str
     site_url: str
     subscribe_url: str = ""
+    community: CommunityConfig | None = None
 
     def __post_init__(self) -> None:
         parts = self.repository.split("/")
@@ -65,6 +66,8 @@ class PublicConfig:
         if self.subscribe_url and (subscription.scheme != "https" or not subscription.netloc
                                    or subscription.username or subscription.password):
             raise ValueError("RADAR_SUBSCRIBE_URL must be an absolute HTTPS URL")
+        if self.community and self.community.repository != self.repository:
+            raise ValueError('Community must belong to the configured repository')
 
     def path(self, resource: str = "") -> str:
         """Return a root-relative URL below the configured Pages base path."""
@@ -116,6 +119,7 @@ def load_public_config() -> PublicConfig:
         base_path=base_path,
         site_url=site_url,
         subscribe_url=os.environ.get("RADAR_SUBSCRIBE_URL", "").strip(),
+        community=load_community_config(repository),
     )
 
 

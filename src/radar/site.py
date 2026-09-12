@@ -15,6 +15,7 @@ from html import escape
 from urllib.parse import urlencode
 
 from .config import DEFAULT_PUBLIC_CONFIG, PublicConfig, load_thresholds
+from .community import render_paper_discussion
 from .editorial import EXPOSURE_PROMPTS, reading_prompts
 from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
@@ -129,12 +130,15 @@ def _nav(atual: str, public_config: PublicConfig) -> str:
         ("about", public_config.path("about.html"), "Methodology"),
         ("rss", public_config.path("feed.xml"), "RSS"),
     )
+    if public_config.community:
+        itens = itens[:-1] + (("community", public_config.path("community/"), "Community"),) + itens[-1:]
     links = "".join(
         f'<a href="{href}"'
         f'{" aria-current=\"page\"" if chave == atual else ""}>{rotulo}</a>'
         for chave, href, rotulo in itens
     )
-    return (f'<nav class="nav" aria-label="Primary navigation">'
+    nav_class = 'nav has-community' if public_config.community else 'nav'
+    return (f'<nav class="{nav_class}" aria-label="Primary navigation">'
             f'<a class="publication-name" href="{escape(public_config.path())}">Paperraft</a>'
             f'<div class="nav-links">{links}</div></nav>')
 
@@ -829,6 +833,8 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     metadata = _social_metadata(titulo, description or _SITE_DESCRIPTION,
                                 canonical_url, public_config,
                                 kind="article" if deck else "website")
+    if public_config.community:
+        metadata += f'<meta name="giscus:backlink" content="{escape(canonical_url)}">'
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -1072,7 +1078,7 @@ def _render_equations(page: ResearchPage) -> str:
     )
 
 
-def _render_research_jumps(page: ResearchPage) -> str:
+def _render_research_jumps(page: ResearchPage, *, community: bool = False) -> str:
     links = [("decision", "shortlist reason")]
     if page.equations_status == "selected":
         links.append(("equations", "equations"))
@@ -1084,6 +1090,8 @@ def _render_research_jumps(page: ResearchPage) -> str:
     ]
     if page.independent_tests:
         links.append(("independent-tests", "independent tests"))
+    if community:
+        links.append(('discussion', 'discussion'))
     return (
         '<nav class="research-jumps" aria-label="Research brief sections">'
         '<span>Jump to</span>'
@@ -1326,6 +1334,10 @@ def render_research_page(
     canonical = (
         f'{public_config.site_url.rstrip("/")}/papers/{page.arxiv_id}/'
     )
+    discussion_action = '<a href="#discussion">Discuss this paper</a>' if public_config.community else ''
+    discussion = render_paper_discussion(
+        public_config.community, page.arxiv_id, public_config.path('assets/community.js'),
+    ) if public_config.community else ''
     corpo = (
         '<article class="research-page">'
         f'{_render_decision_snapshot(page)}'
@@ -1334,9 +1346,10 @@ def render_research_page(
         f'<a href="{escape(page.source_url)}" target="_blank" '
         'rel="noopener noreferrer">Read original paper ↗</a>'
         f'<a href="{escape(json_href)}">View page data (JSON)</a>'
-        f'<a class="sheen-button skill-download" download href="{escape(skill_href)}">Download research skill ↓</a></div>'
+        f'<a class="sheen-button skill-download" download href="{escape(skill_href)}">Download research skill ↓</a>'
+        f'{discussion_action}</div>'
         f'{_render_paper_stack(page, public_config, preview_pages)}'
-        f'{_render_research_jumps(page)}'
+        f'{_render_research_jumps(page, community=bool(public_config.community))}'
         '<section id="decision" class="research-section">'
         '<div class="section-head"><h2>Why it was shortlisted</h2>'
         '<p class="sub">The technical change, research area, and reason it '
@@ -1367,7 +1380,7 @@ def render_research_page(
         '<p>Repository activity and attention, not experimental evidence.</p></aside>'
         '<p class="research-provenance">Provisional research brief updated '
         f'{escape(page.as_of)}. Paperraft has not reproduced this experiment.</p>'
-        '</article>'
+        f'</article>{discussion}'
     )
     return _pagina_estatica(
         f"{page.title} · Research brief · Paperraft", "acervo", page.as_of,
@@ -1390,6 +1403,83 @@ def render_research_page(
             math_font_face(public_config.path("assets/fonts/stix-two-math.woff2"))
             if page.equations else ""
         ),
+    )
+
+
+def render_community(data: SiteData, public_config: PublicConfig) -> str:
+    community = public_config.community
+    if community is None:
+        raise ValueError('Community is not configured')
+    papers = sorted(data.pontos, key=lambda point: (point.publicado, point.arxiv_id), reverse=True)
+    rows = []
+    for paper in papers:
+        family = ROTULOS_FAMILIA.get(paper.familia, paper.familia)
+        search_text = f'{paper.titulo} {family} {paper.arxiv_id}'.casefold()
+        rows.append(
+            f'<li data-paper data-search-text="{escape(search_text)}">'
+            f'<p>{escape(family)} <span>Published {escape(paper.publicado)}</span></p>'
+            f'<h3><a href="{escape(public_config.path(f"papers/{paper.arxiv_id}/#discussion"))}">'
+            f'{escape(paper.titulo)}</a></h3>'
+            f'<span class="community-paper-id">arXiv {escape(paper.arxiv_id)}</span></li>'
+        )
+    content = (
+        '<div class="community-welcome"><div>'
+        '<h2>Bring your perspective.</h2>'
+        '<p>Read the discussion without an account. Sign in with GitHub to '
+        'ask questions, reply and react. Your GitHub name and profile appear with your comments.</p>'
+        '<div class="community-links">'
+        f'{_sheen_link("Join with GitHub", community.sign_in_url)}'
+        '<a href="https://github.com/signup" target="_blank" rel="noopener noreferrer">Create a GitHub account</a>'
+        '</div></div><div class="community-forum-link">'
+        f'<a href="{escape(community.forum_url)}" target="_blank" rel="noopener noreferrer">Open the community forum</a>'
+        '<p>Read public conversations and follow the ones you care about.</p></div></div>'
+        '<section class="community-directory" aria-labelledby="community-papers-title">'
+        '<div class="section-head"><h2 id="community-papers-title">Choose a paper</h2>'
+        '<p class="sub">Start with a question about a claim, an equation, '
+        'or what it would take to try the method.</p></div>'
+        '<div class="community-search" hidden>'
+        '<label for="community-search">Find a paper</label>'
+        '<input id="community-search" type="search" placeholder="Title, research area or arXiv ID" '
+        'aria-controls="community-papers" autocomplete="off">'
+        '<button type="button" id="community-clear">Clear search</button></div>'
+        f'<p id="community-count" role="status" aria-live="polite">{len(papers)} papers</p>'
+        f'<ul id="community-papers" class="community-papers">{"".join(rows)}</ul>'
+        '<p id="community-empty" hidden>No papers match. Try another title, research area or arXiv ID.</p>'
+        '</section><details class="community-guidelines"><summary>Make the discussion useful</summary>'
+        '<p>Link to the page, equation or code you are discussing. When sharing a test, '
+        'include the model, hardware, baseline and results. Say what you measured '
+        'and what remains uncertain. Keep criticism focused on the work.</p>'
+        '<p>Reader comments are public contributions. They do not change the evidence status '
+        'of a Paperraft brief. Repository moderators can manage discussions on GitHub.</p></details>'
+    )
+    script = """
+(() => {
+  const search = document.getElementById('community-search');
+  const rows = Array.from(document.querySelectorAll('[data-paper]'));
+  document.querySelector('.community-search').hidden = false;
+  const filter = () => {
+    const words = search.value.toLocaleLowerCase().trim().split(/\\s+/).filter(Boolean);
+    let visible = 0;
+    rows.forEach(row => {
+      row.hidden = !words.every(word => row.dataset.searchText.includes(word));
+      if (!row.hidden) visible++;
+    });
+    document.getElementById('community-count').textContent = visible + (visible === 1 ? ' paper' : ' papers');
+    document.getElementById('community-empty').hidden = visible !== 0;
+  };
+  search.addEventListener('input', filter);
+  document.getElementById('community-clear').addEventListener('click', () => {
+    search.value = ''; filter(); search.focus();
+  });
+})();
+"""
+    return _pagina_estatica(
+        'The reading room · Paperraft community', 'community', data.dia, content,
+        heading='The reading room', kicker='Paperraft community',
+        deck='A place to read AI research together. Bring a question, a page reference, or a result you can share.',
+        canonical_url=f'{public_config.site_url}/community/',
+        description='Discuss AI research papers with other Paperraft readers.',
+        shared_assets=True, public_config=public_config, extra_script=script,
     )
 
 

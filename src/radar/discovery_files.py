@@ -25,6 +25,8 @@ def render_sitemap(
         _public_url(config, "about.html"),
         _public_url(config, "edicoes/"),
     ]
+    if config.community:
+        urls.append(_public_url(config, 'community/'))
     urls.extend(
         _public_url(config, f"edicoes/{day}/")
         for day in sorted(set(edition_days), reverse=True)

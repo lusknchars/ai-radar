@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from radar.config import DEFAULT_REPOSITORY, PublicConfig
+from radar.community import load_community_config
 from radar.publish import publish_site
 from radar.store import Store
 
@@ -38,6 +39,7 @@ def build(*, database: Path, output: Path, reports: Path, as_of: date) -> None:
         base_path="",
         site_url=production_url(),
         subscribe_url=os.environ.get("RADAR_SUBSCRIBE_URL", ""),
+        community=load_community_config(os.environ.get("RADAR_REPOSITORY", DEFAULT_REPOSITORY)),
     )
     if not database.is_file():
         raise FileNotFoundError(f"Publication database is missing: {database}")
