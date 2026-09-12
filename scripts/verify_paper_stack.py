@@ -13,6 +13,12 @@ async def main():
         for width in (390, 1440):
             page = await browser.new_page(viewport={"width": width, "height": 1000}, reduced_motion="reduce")
             await page.goto("http://127.0.0.1:8778/papers/2608.21223/")
+            lead = page.locator('.paper-lead-image img')
+            await lead.scroll_into_view_if_needed()
+            await page.wait_for_function("document.querySelector('.paper-lead-image img').naturalWidth > 0")
+            assert (await lead.get_attribute('src')).endswith('/page-1.jpg')
+            await page.locator('.article-opening').screenshot(path=f'/tmp/paperraft-opening-{width}.png')
+            assert await page.locator('.skill-download').first.evaluate("el => getComputedStyle(el).backgroundImage.includes('linear-gradient')")
             stack = page.locator(".paper-stack")
             await stack.scroll_into_view_if_needed()
             await page.wait_for_function("Array.from(document.querySelectorAll('.paper-sheet')).every(i => i.complete && i.naturalWidth > 0)")

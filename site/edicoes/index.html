@@ -543,8 +543,15 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
 .report-to-top{right:14px;bottom:14px}footer{min-height:190px;padding:108px 20px 24px}.footer-ripple pre{padding:16px 20px;font-size:9px}
 }
-.skill-download,.research-actions a.skill-download{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid #cb2957;border-radius:7px;background:#cb2957;color:white;text-decoration:none;font-size:12px;line-height:1.4}
-.skill-download:hover{background:#a82049;color:white}
+.skill-download{text-decoration:none}
+.article-opening.has-paper-image{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:48px;align-items:start}
+.article-opening.has-paper-image h1{font-size:clamp(30px,3.8vw,48px)}
+.paper-lead-image{margin:8px 0 0;min-width:0}
+.paper-lead-image a{display:block;background:#fff;box-shadow:0 8px 28px #20202415;border:1px solid #d3c9cc}
+.paper-lead-image img{display:block;width:100%;height:auto}
+.paper-lead-image figcaption{margin-top:12px;color:var(--fraco);font:300 12px/1.6 var(--sans)}
+.paper-lead-image figcaption span{display:block}
+@media(max-width:760px){.article-opening.has-paper-image{grid-template-columns:1fr;gap:26px}.paper-lead-image{max-width:440px;margin:0 auto;width:100%}}
 .paper-preview{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center;padding:48px 24px 58px;margin:28px 0 48px;border-block:1px solid #d3c9cc}
 .paper-preview-copy h2{font-size:28px;font-weight:400;margin:0 0 18px}
 .paper-preview-copy p{font-size:14px;line-height:1.75;max-width:38ch}
@@ -558,7 +565,7 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .paper-stack:focus-visible,.paper-stack-controls button:focus-visible,.skill-download:focus-visible{outline:3px solid #cb2957;outline-offset:6px}
 @media(max-width:600px){.paper-preview{grid-template-columns:1fr;gap:42px;padding:30px 12px 40px}.paper-preview-copy{order:2}.paper-stack{max-width:240px}.paper-preview-copy p{max-width:none}}
 @media(prefers-reduced-motion:reduce){.paper-sheet{transition:none}.paper-stack:hover .paper-sheet{transform:translate(calc(var(--depth) * 9px),calc(var(--depth) * -6px)) rotate(calc(var(--depth) * 3deg))}}
-</style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/" aria-current="page">Editions</a><a href="/ai-radar/about.html">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><h1>Editions · Paperraft</h1></header><main id="conteudo" class="pagina"><section><h2>Daily editions</h2><p>Each permanent URL preserves the papers published on that date. The main index always reflects the latest observation.</p><p class="vazio">No editions have been published yet.</p></section></main><footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple aria-hidden="true"><pre>paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
+</style></head><body><canvas id="fundo" aria-hidden="true"></canvas><a class="pular" href="#conteudo">Skip to content</a><div class="envelope"><nav class="nav" aria-label="Primary navigation"><a class="publication-name" href="/ai-radar/">Paperraft</a><a href="/ai-radar/#acervo">Research</a><a href="/ai-radar/#sinais">Signals</a><a href="/ai-radar/edicoes/" aria-current="page">Editions</a><a href="/ai-radar/about.html">Methodology</a><a href="/ai-radar/feed.xml">RSS</a></nav><header class="static-masthead"><p class="hero-eyebrow">Updated 2026-09-12</p><div class="article-opening"><div><h1>Editions · Paperraft</h1></div></div></header><main id="conteudo" class="pagina"><section><h2>Daily editions</h2><p>Each permanent URL preserves the papers published on that date. The main index always reflects the latest observation.</p><p class="vazio">No editions have been published yet.</p></section></main><footer data-ascii-footer><div class="footer-ripple" data-ascii-ripple aria-hidden="true"><pre>paperraft signal</pre></div><span>AI research, with the evidence in reach.</span><a href="/ai-radar/about.html">How Paperraft works</a><a href="https://github.com/lusknchars/ai-radar">Source code</a></footer></div><script>
 // Decorative ordered-dither field. This is deliberately small and local:
 // a 2D canvas, a standard 4x4 Bayer threshold matrix and an independent
 // sine field. It does not load assets or depend on the React Bits Pro source
