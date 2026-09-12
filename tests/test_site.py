@@ -94,7 +94,7 @@ def test_a_navegacao_publica_liga_acervo_edicoes_about_e_rss(dados):
 def test_a_edicao_se_identifica_como_recorte_diario(dados):
     html = render_site(dados, edicao=True)
     assert "archived edition · 2026-08-30" in html
-    assert "<title>AI Radar · Edition 2026-08-30</title>" in html
+    assert "<title>Paperraft · Edition 2026-08-30</title>" in html
 
 
 def test_o_indice_de_edicoes_usa_urls_estaveis():
@@ -108,7 +108,7 @@ def test_about_declara_o_que_o_radar_nao_mede():
     html = render_about("2026-08-30", papers=12, edicoes=2)
     assert "12 papers across 2 editions" in html
     assert "does not reproduce experimental results" in html
-    assert "How AI Radar works" in html
+    assert "How Paperraft works" in html
     assert '<canvas id="fundo" aria-hidden="true"></canvas>' in html
     assert "getContext('2d'" in html
 
@@ -179,7 +179,7 @@ def test_o_cabecalho_traz_os_numeros_do_acervo(dados):
 
 
 def test_home_title_describes_the_publication(dados):
-    assert "<title>AI Radar | Find AI research worth testing</title>" in render_site(dados)
+    assert "<title>Paperraft | Find AI research worth testing</title>" in render_site(dados)
 
 
 def test_o_site_nao_importa_io():
@@ -782,7 +782,7 @@ def test_pagina_de_relatorio_separa_teste_minimo_de_experimento():
     assert "multiple GPUs" in html
     assert "minimum useful test" in html
     assert "original experiment" in html
-    assert "AI Radar did not reproduce this experiment" in html
+    assert "Paperraft did not reproduce this experiment" in html
 
 
 def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
@@ -791,7 +791,7 @@ def test_pagina_publica_indexada_expõe_o_que_nao_foi_avaliado():
 
     assert "abstract indexed" in html
     assert html.count("not evaluated") >= 8
-    assert "not evidence of safety" in html
+    assert "Missing analysis never counts as evidence of safety" in html
     assert "Do not allocate compute yet." in html
     assert "0 of 8" in html
     assert html.count("not reported") >= 2
@@ -861,6 +861,37 @@ def test_pagina_publica_usa_assets_locais_compartilhados():
     assert "<style>" not in html
 
 
+def test_incomplete_brief_has_family_reading_prompts_without_inventing_findings():
+    page = build_research_page(ponto(familia="decodificacao_especulativa"), as_of="2026-09-12")
+    before = page.model_dump_json()
+    html = render_research_page(page)
+    assert 'data-content-kind="editorial-guidance"' in html
+    assert "Editorial prompts, not findings from this paper" in html
+    assert "How are proposals verified" in html
+    assert "same target model with speculation off and on" in html
+    assert "No risks have been source-mapped yet" not in html
+    assert "Open questions have not been mapped yet" not in html
+    assert '<details id="equations"' in html
+    assert page.model_dump_json() == before
+    assert page.minimum_test == () and page.risks == ()
+
+
+def test_deep_report_findings_replace_pending_reading_prompts():
+    page = build_research_page(ponto(), as_of="2026-09-12", report=_report_document())
+    html = render_research_page(page)
+    assert 'id="risk-01"' in html
+    assert 'id="minimum-test" class="research-section"' in html
+    assert 'id="open-questions" class="research-section"' in html
+    assert 'data-content-kind="editorial-guidance"' not in html
+
+
+def test_public_brand_is_paperraft(dados):
+    html = render_site(dados)
+    assert '<meta property="og:site_name" content="Paperraft">' in html
+    assert 'class="publication-name" href="/ai-radar/">Paperraft</a>' in html
+    assert "AI Radar" not in html
+
+
 def test_report_shell_uses_english_editorial_copy():
     html = render_report(_report_document())
     assert '<html lang="en">' in html
@@ -913,7 +944,7 @@ def test_nucleo_tecnico_mostra_formula_explicacao_e_origem_da_conta():
     assert "From equation to test" in html
     assert r"S = QK^T / \sqrt{d}" in html
     assert "attention head dimension" in html
-    assert "AI Radar worked example" in html
+    assert "Paperraft worked example" in html
     assert "With d=64, the illustrative divisor is 8." in html
     assert 'href="https://arxiv.org/pdf/2608.11111#page=6"' in html
 
@@ -931,7 +962,7 @@ def test_nucleo_sem_formula_explica_qual_mecanismo_importa():
     html = render_report(document.model_copy(update={"report": report}))
     assert "system-level core" in html
     assert "The gain comes from scheduling" in html
-    assert "AI Radar worked example" not in html
+    assert "Paperraft worked example" not in html
 
 
 def test_rotulos_publicos_nao_expoem_os_enums_internos(dados):
@@ -975,7 +1006,7 @@ def test_a_pagina_de_pesquisa_mostra_equacoes_centrais_como_mathml():
     without = render_research_page(
         _page_with_equations(equations=(), equations_status="not_fetched",
                              equations_fetched_at=""))
-    assert html.count("arxiv.org/") == without.count("arxiv.org/")
+    assert "Inspect the original paper" in without
 
 
 def test_a_secao_de_equacoes_diz_quando_o_nucleo_nao_e_uma_formula():
@@ -1028,8 +1059,8 @@ def test_equacao_sem_numero_omite_o_rotulo_e_a_secao_vazia():
 def test_a_pagina_com_equacoes_declara_a_fonte_matematica_no_head():
     html = render_research_page(_page_with_equations())
     head = html.split("</head>")[0]
-    assert '@font-face{font-family:"AI Radar Math"' in head
+    assert '@font-face{font-family:"Paperraft Math"' in head
     assert "url(/ai-radar/assets/fonts/stix-two-math.woff2)" in head
     sem = render_research_page(_page_with_equations(equations=(), equations_status="unavailable",
                                                     equations_fetched_at=""))
-    assert "AI Radar Math" not in sem.split("</head>")[0]
+    assert "Paperraft Math" not in sem.split("</head>")[0]

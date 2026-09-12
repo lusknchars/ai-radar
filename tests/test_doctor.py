@@ -22,7 +22,7 @@ def test_doctor_initialises_a_fresh_local_database(monkeypatch, tmp_path, capsys
     assert main(["--init"]) == 0
     assert database.exists()
     output = capsys.readouterr().out
-    assert "AI Radar is ready" in output
+    assert "Paperraft is ready" in output
     assert "Telegram delivery is optional" in output
 
 

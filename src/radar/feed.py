@@ -16,7 +16,7 @@ from xml.sax.saxutils import escape
 from .config import DEFAULT_PUBLIC_CONFIG
 from .public_labels import FAMILY_LABELS, PRACTICE_LABELS, public_label
 
-TITULO = "ai-radar"
+TITULO = "Paperraft"
 DESCRICAO = (
     "Research in efficient inference and AI agents, ranked by independent "
     "GitHub implementations instead of citations or stars. Papers above the "

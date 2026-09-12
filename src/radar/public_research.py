@@ -217,7 +217,7 @@ def _report_exposures(
         exposures["reproducibility"] = ExposureAssessment(
             dimension="reproducibility", basis="inferred",
             finding=(
-                f"AI Radar defines a {count}-{step} falsification test. "
+                f"Paperraft defines a {count}-{step} falsification test. "
                 "No reproduction is recorded."
             ),
         )

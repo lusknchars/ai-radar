@@ -137,7 +137,7 @@ EDITORIAL_STATUS_LABELS = {
 
 EVIDENCE_BASIS_LABELS = {
     "source_linked": "source-linked",
-    "inferred": "AI Radar inference",
+    "inferred": "Paperraft inference",
     "not_evaluated": "not evaluated",
 }
 
