@@ -26,6 +26,8 @@ def main():
             page.on('response', lambda response: failed_resources.append(
                 f'{response.status} {response.url}') if response.status >= 400 else None)
             page.goto(args.url, wait_until='networkidle')
+            assert page.locator('.publication-name').inner_text() == 'Paperraft'
+            assert 'Paperraft' in page.title()
             assert page.locator('[data-collection-mode="sample"]').is_visible()
             page.get_by_role('button', name='newest', exact=True).click()
             dates = page.locator('.paper-entry:visible').evaluate_all(
@@ -54,6 +56,14 @@ def main():
                     link.click()
                 assert navigation.value.status == 200, page.url
                 assert page.locator('h1').is_visible()
+                assert page.locator('[data-content-kind="editorial-guidance"]').count() == 1
+                assert not page.locator('#equations').get_attribute('open')
+                page.locator('#equations summary').click()
+                assert page.locator('#equations').evaluate('(element) => element.open')
+                for article_width in (390, 1440):
+                    page.set_viewport_size({'width': article_width, 'height': 900})
+                    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+                page.screenshot(path=str(args.out / f'paper-{label}.png'), full_page=True)
                 assert page.get_by_role('link', name='View page data (JSON)').is_visible()
                 page.get_by_role('link', name='Back to research index', exact=False).click()
                 assert page.locator('.paper-entry:visible').count() > 0

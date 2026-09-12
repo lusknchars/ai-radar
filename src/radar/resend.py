@@ -26,11 +26,11 @@ class ResendClient:
     def send_confirmation(self, email: str, sender: str, url: str, key: str) -> None:
         from html import escape
         result = self.request('POST', '/emails', headers={'Idempotency-Key': key}, json={
-            'from': sender, 'to': [email], 'subject': 'Confirm your AI Radar subscription',
-            'html': '<p>You requested the weekly AI Radar newsletter.</p>'
+            'from': sender, 'to': [email], 'subject': 'Confirm your Paperraft subscription',
+            'html': '<p>You requested the weekly Paperraft newsletter.</p>'
                     f'<p><a href="{escape(url)}">Confirm subscription</a></p>'
                     '<p>This link expires in 24 hours. If you did not request it, ignore this email.</p>',
-            'text': f'Confirm your weekly AI Radar subscription: {url}\n'
+            'text': f'Confirm your weekly Paperraft subscription: {url}\n'
                     'This link expires in 24 hours. Ignore it if you did not request it.',
         })
         if not result.get('id'):

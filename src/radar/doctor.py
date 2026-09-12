@@ -1,4 +1,4 @@
-"""Fast, non-networking checks for a local AI Radar installation."""
+"""Fast, non-networking checks for a local Paperraft installation."""
 from __future__ import annotations
 
 import argparse
@@ -119,5 +119,5 @@ def main(argv: list[str] | None = None) -> int:
         for error in errors:
             print(f"error  {error}")
         return 1
-    print("\nAI Radar is ready. No network requests were made.")
+    print("\nPaperraft is ready. No network requests were made.")
     return 0

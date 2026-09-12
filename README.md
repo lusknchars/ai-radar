@@ -1,4 +1,14 @@
-# ai-radar — a paper radar that ranks by independent implementations, not by hype.
+# Paperraft
+
+AI research briefs for deciding what to read, test, and build.
+
+Paperraft is the public name of the project. The `ai-radar` repository, command
+names, storage keys, and existing URLs remain compatible.
+
+Briefs with pending analysis include an editorial reading guide selected by
+research area. These authored prompts help readers inspect the paper and plan
+a comparison; they do not populate the evidence model or imply that a test was
+run. Existing deep reports supply findings and test steps when available.
 
 [![tests](https://github.com/lusknchars/ai-radar/actions/workflows/tests.yml/badge.svg)](https://github.com/lusknchars/ai-radar/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.12+-3572A5)
@@ -7,7 +17,7 @@
 ![llm](https://img.shields.io/badge/judge-Kimi_K3_or_Claude-d4a373)
 ![status](https://img.shields.io/badge/status-pre--1.0-db6d28)
 
-ai-radar collects arXiv papers on efficient inference and agent harnesses, counts how many **independent** GitHub repositories implement each one, and publishes a daily digest plus a self-contained web archive. The archive opens with 30 concise paper briefs; a paper worth more attention can be expanded into a full-text report on demand. Papers that already broke out in attention are cut on purpose — the point is to find what nobody has looked at yet.
+Paperraft collects arXiv papers on efficient inference and agent harnesses, counts how many **independent** GitHub repositories implement each one, and publishes a daily digest plus a self-contained web archive. The archive opens with 30 concise paper briefs; a paper worth more attention can be expanded into a full-text report on demand. Papers that already broke out in attention are cut on purpose — the point is to find what nobody has looked at yet.
 
 The newsletter foundation adds separate recent-paper and implementation-signal
 selections, explicit collection freshness, reliable Telegram retries, and a
@@ -16,7 +26,7 @@ supports confirmed email subscriptions through Resend. Setup, current limits,
 and the work required to activate live delivery are documented in
 [`docs/newsletter-foundation.md`](docs/newsletter-foundation.md).
 
-![ai-radar](assets/banner.svg)
+![Paperraft](assets/banner.svg)
 
 ## Deploy to Vercel
 

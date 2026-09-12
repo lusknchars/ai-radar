@@ -15,6 +15,7 @@ from html import escape
 from urllib.parse import urlencode
 
 from .config import DEFAULT_PUBLIC_CONFIG, PublicConfig, load_thresholds
+from .editorial import EXPOSURE_PROMPTS, reading_prompts
 from .formulas import FormulaWalkthrough, TechnicalCore
 from .leitura import afirmacoes
 from .public_research import ResearchPage
@@ -73,11 +74,11 @@ CORES_FAMILIA = {
 # Contrato com o leitor. Escrito a mao e versionado -- nao e gerado, e nao
 # muda com o dado do dia.
 _ENQUADRAMENTO = (
-    "<p>AI Radar tracks one signal: how many <strong>independent "
+    "<p>Paperraft tracks one signal: how many <strong>independent "
     "implementations</strong> a paper attracts on GitHub after author-owned "
     "repositories are removed. This is a discovery signal to investigate, "
     "not a measure of implementation quality.</p>"
-    "<p>It <strong>does not claim</strong> that a method works. AI Radar runs "
+    "<p>It <strong>does not claim</strong> that a method works. Paperraft runs "
     "no reproduction benchmarks. Reported gains remain author claims until "
     "independently tested. Papers above the attention threshold are excluded "
     "because this publication is designed to identify research before "
@@ -96,7 +97,7 @@ def _social_metadata(title: str, description: str, canonical_url: str,
     return (
         f'<meta name="description" content="{escape(description, quote=True)}">'
         f'<link rel="canonical" href="{escape(canonical_url, quote=True)}">'
-        '<meta property="og:site_name" content="AI Radar">'
+        '<meta property="og:site_name" content="Paperraft">'
         f'<meta property="og:type" content="{kind}">'
         f'<meta property="og:title" content="{escape(title, quote=True)}">'
         f'<meta property="og:description" content="{escape(description, quote=True)}">'
@@ -104,7 +105,7 @@ def _social_metadata(title: str, description: str, canonical_url: str,
         f'<meta property="og:image" content="{escape(image_url, quote=True)}">'
         '<meta property="og:image:width" content="1200">'
         '<meta property="og:image:height" content="630">'
-        '<meta property="og:image:alt" content="AI Radar. Find the AI research worth testing.">'
+        '<meta property="og:image:alt" content="Paperraft. Find the AI research worth testing.">'
         '<meta name="twitter:card" content="summary_large_image">'
     )
 
@@ -112,7 +113,7 @@ def _social_metadata(title: str, description: str, canonical_url: str,
 def _footer(public_config: PublicConfig) -> str:
     return (
         '<footer><span>AI research, with the evidence in reach.</span>'
-        f'<a href="{escape(public_config.path("about.html"))}">How AI Radar works</a>'
+        f'<a href="{escape(public_config.path("about.html"))}">How Paperraft works</a>'
         f'<a href="https://github.com/{escape(public_config.repository)}">Source code</a>'
         '</footer>'
     )
@@ -131,7 +132,9 @@ def _nav(atual: str, public_config: PublicConfig) -> str:
         f'{" aria-current=\"page\"" if chave == atual else ""}>{rotulo}</a>'
         for chave, href, rotulo in itens
     )
-    return f'<nav class="nav" aria-label="Primary navigation">{links}</nav>'
+    return (f'<nav class="nav" aria-label="Primary navigation">'
+            f'<a class="publication-name" href="{escape(public_config.path())}">Paperraft</a>'
+            f'{links}</nav>')
 
 
 def _sheen_content(label: str) -> str:
@@ -182,7 +185,7 @@ def _cabecalho(d: SiteData, edicao: bool = False,
     return (
         '<header class="masthead publication-head"><div class="hero-copy">'
         f'<p class="hero-eyebrow">{contexto} · {escape(d.dia)}</p>'
-        '<h1><span class="marca">AI Radar</span>'
+        '<h1><span class="marca">Paperraft</span>'
         'Find the AI research<br>worth testing.</h1>'
         '<p class="hero-deck">Understand what a paper changes, what it costs, '
         'and whether it fits your next build. Explore research on faster LLM '
@@ -288,7 +291,7 @@ def _secao_fronteira(d: SiteData) -> str:
     )
     nota = (f'<p class="nota">Papers above {lim.broke_out_stars} stars or '
             f"{lim.broke_out_citations} citations are not scored. They have "
-            f"already broken through the attention threshold, while AI Radar "
+            f"already broken through the attention threshold, while Paperraft "
             f"is designed to identify earlier signals.</p>")
     return botoes and (
         f'<div class="eixos chart-controls" aria-label="Horizontal axis">'
@@ -461,7 +464,7 @@ def _report_request_href(
         "body": (
             f"Please review arXiv {arxiv_id} for a deep report.\n\n"
             f"Paper: {title}\n\n"
-            "Requested from the AI Radar archive.\n\n"
+            "Requested from the Paperraft archive.\n\n"
             "No API credits are spent when this request is opened. A "
             "maintainer must approve it before generation starts."
         ),
@@ -755,14 +758,14 @@ def render_site(
                    _secao_cortes(dados)),
         ))
 
-    page_title = (f"AI Radar · Edition {dados.dia}" if edicao
-                  else "AI Radar | Find AI research worth testing")
+    page_title = (f"Paperraft · Edition {dados.dia}" if edicao
+                  else "Paperraft | Find AI research worth testing")
     canonical = public_config.site_url.rstrip("/") + (
         f"/edicoes/{dados.dia}/" if edicao else "/")
     return (
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-        '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
+        '<link rel="alternate" type="application/rss+xml" title="Paperraft" '
         f'href="{escape(public_config.path("feed.xml"))}">'
         f"<title>{escape(page_title)}</title>"
         f'{_social_metadata(page_title, _SITE_DESCRIPTION, canonical, public_config)}'
@@ -834,7 +837,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<link rel="alternate" type="application/rss+xml" title="ai-radar" '
+        '<link rel="alternate" type="application/rss+xml" title="Paperraft" '
         f'href="{escape(public_config.path("feed.xml"))}">'
         f'{metadata}<title>{escape(titulo)}</title>{styles}{extra_style_tag}</head><body>'
         '<canvas id="fundo" aria-hidden="true"></canvas>'
@@ -869,7 +872,7 @@ def render_editions(
         f'{lista}</section>'
     )
     return _pagina_estatica(
-        "Editions · AI Radar", "edicoes", dia, corpo,
+        "Editions · Paperraft", "edicoes", dia, corpo,
         public_config=public_config,
     )
 
@@ -879,15 +882,15 @@ def render_about(
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
 ) -> str:
     corpo = (
-        '<section><h2>What AI Radar measures</h2>'
-        '<p>AI Radar tracks research in efficient inference and AI agents, then '
+        '<section><h2>What Paperraft measures</h2>'
+        '<p>Paperraft tracks research in efficient inference and AI agents, then '
         'counts the independent repositories that implement each paper. '
         'Author-owned repositories are separated using a published heuristic.</p>'
         '<p>The score rewards independent implementation before mass attention. '
         'Papers above 1,000 stars or 200 citations are excluded because they no '
         'longer represent an early research signal.</p></section>'
         '<section><h2>What it does not measure</h2>'
-        '<p>AI Radar does not reproduce experimental results. Performance gains '
+        '<p>Paperraft does not reproduce experimental results. Performance gains '
         'come from the paper and are labeled as author-reported. The system does '
         'not explain why implementations appear or predict which papers will grow.</p>'
         '</section><section><h2>Archive status</h2>'
@@ -895,7 +898,7 @@ def render_about(
         'code, and exclusion rules are versioned in the same repository.</p></section>'
     )
     return _pagina_estatica(
-        "Methodology · AI Radar", "about", dia, corpo,
+        "Methodology · Paperraft", "about", dia, corpo,
         public_config=public_config,
     )
 
@@ -932,7 +935,7 @@ _REPORT_DECISION_GUIDANCE = {
     ),
     "nao_aplica": (
         "Skip for now.",
-        "The current analysis found no practical fit within AI Radar's scope.",
+        "The current analysis found no practical fit within Paperraft's scope.",
     ),
 }
 
@@ -965,7 +968,7 @@ def _render_decision_snapshot(page: ResearchPage) -> str:
         '<section class="decision-snapshot" aria-labelledby="decision-outcome">'
         '<div class="decision-copy"><p class="decision-eyebrow">'
         f'<span>{escape(EDITORIAL_STATUS_LABELS[page.editorial_status])}</span>'
-        'AI Radar next step</p>'
+        'Paperraft next step</p>'
         f'<h2 id="decision-outcome">{escape(heading)}</h2>'
         f'<p>{escape(explanation)}</p>'
         f'<span>{escape(_EDITORIAL_STATUS_NOTES[page.editorial_status])} '
@@ -1006,8 +1009,14 @@ def _render_equations(page: ResearchPage) -> str:
         else:
             copy = EQUATIONS_ABSENT[page.equations_status]
         return (
-            '<section id="equations" class="research-section">'
-            f'{head}<p class="research-empty">{escape(copy)}</p></section>'
+            '<details id="equations" class="equation-note">'
+            '<summary>About the technical core</summary>'
+            f'<p>{escape(copy)}</p>'
+            '<p>When reading the methods, identify the rule, algorithm, or '
+            'evaluation protocol that produces the claimed change. An equation '
+            'is useful here only if it explains that mechanism.</p>'
+            f'<a href="{escape(page.source_url)}" target="_blank" '
+            'rel="noopener noreferrer">Inspect the original paper</a></details>'
         )
     items = []
     for equation in page.equations:
@@ -1103,18 +1112,24 @@ def _render_research_claims(page: ResearchPage) -> str:
             )
         else:
             source = (
-                '<p class="research-inference">This is an AI Radar inference. '
+                '<p class="research-inference">This is a Paperraft inference. '
                 'It is not pinned to a verified PDF passage.</p>'
                 f'<a class="evidence-link" href="{escape(claim.source_url)}" '
                 'target="_blank" rel="noopener noreferrer">Inspect the source</a>'
             )
+        statement = (
+            '<details class="brief-claim"><summary>Read the brief interpretation</summary>'
+            f'<p>{escape(claim.statement)}</p></details>'
+            if not page.report_available and claim.statement == page.summary else
+            f'<h3>{escape(claim.statement)}</h3>'
+        )
         items.append(
             f'<li id="{escape(claim.claim_id)}">'
             '<div class="research-item-head">'
             f'<a href="#{escape(claim.claim_id)}">claim {index:02d}</a>'
             f'<span data-basis="{escape(claim.basis)}">'
             f'{escape(EVIDENCE_BASIS_LABELS[claim.basis])}</span></div>'
-            f'<h3>{escape(claim.statement)}</h3>{detail}{source}</li>'
+            f'{statement}{detail}{source}</li>'
         )
     return f'<ol class="research-claims">{"".join(items)}</ol>'
 
@@ -1130,12 +1145,53 @@ def _render_exposure_map(page: ResearchPage) -> str:
         + (
             f'<p>{escape(item.finding)}</p>'
             if item.finding else
-            '<p>Not evaluated. This is an open question, not evidence of safety.</p>'
+            f'<p class="exposure-prompt">{escape(EXPOSURE_PROMPTS[item.dimension])}</p>'
         )
         + '</article>'
         for item in page.exposure_map
     )
     return f'<div class="exposure-grid">{items}</div>'
+
+
+def _render_reading_guide(page: ResearchPage) -> str:
+    """Fill absent analysis with explicitly editorial questions, not evidence."""
+    prompts = reading_prompts(page.family)
+    missing = []
+    if not page.risks:
+        missing.append(("risks", "What to inspect", prompts.inspect))
+    if not page.minimum_test:
+        missing.append(("minimum-test", "Plan a fair comparison", prompts.compare))
+    if not page.open_questions:
+        missing.append(("open-questions", "Questions for adoption", prompts.ask))
+    if not missing:
+        return ""
+    columns = "".join(
+        f'<div id="{anchor}" class="reading-prompt"><h3>{title}</h3>'
+        f'<p>{escape(text)}</p></div>'
+        for anchor, title, text in missing
+    )
+    family = public_label(ROTULOS_FAMILIA, page.family)
+    guide_description = ("Questions to guide your next reading." if family == "other"
+                         else f"A reading guide for {family}.")
+    return (
+        '<section class="research-section reading-guide" id="reading-guide" '
+        'data-content-kind="editorial-guidance">'
+        '<div class="section-head"><h2>Continue the investigation</h2>'
+        f'<p class="sub">{escape(guide_description)}</p></div>'
+        '<p class="reading-guide-note">Editorial prompts, not findings from this '
+        'paper or a validated test plan. Detailed analysis is still pending '
+        'for the topics below.</p>'
+        f'<div class="reading-prompts">{columns}</div>'
+        f'<a class="reading-source" href="{escape(page.source_url)}" '
+        'target="_blank" rel="noopener noreferrer">Read the paper with these questions</a>'
+        '</section>'
+    )
+
+
+def _research_section(anchor: str, title: str, description: str, content: str) -> str:
+    return (f'<section id="{anchor}" class="research-section">'
+            f'<div class="section-head"><h2>{title}</h2>'
+            f'<p class="sub">{description}</p></div>{content}</section>')
 
 
 def _render_risk_notes(page: ResearchPage) -> str:
@@ -1173,21 +1229,23 @@ def render_research_page(
         f'<p class="research-rationale">{escape(page.rationale)}</p>'
         if page.rationale else ""
     )
-    minimum_test = (
-        '<ol class="research-test">'
-        + "".join(f'<li>{escape(step)}</li>' for step in page.minimum_test)
-        + '</ol>'
-        if page.minimum_test else
-        '<p class="research-empty">A minimum falsification test has not been '
-        'generated yet. Request the deep report before allocating compute.</p>'
-    )
-    questions = (
-        '<ul class="research-questions">'
-        + "".join(f'<li>{escape(item)}</li>' for item in page.open_questions)
-        + '</ul>'
-        if page.open_questions else
-        '<p class="research-empty">Open questions have not been mapped yet.</p>'
-    )
+    detail_sections = ""
+    if page.risks:
+        detail_sections += _research_section(
+            "risks", "Risk notes", "Conditions that may negate the gain or block adoption.",
+            _render_risk_notes(page))
+    if page.minimum_test:
+        detail_sections += _research_section(
+            "minimum-test", "Minimum useful test",
+            "The smallest test intended to disprove the technique on a local workload.",
+            '<ol class="research-test">'
+            + "".join(f'<li>{escape(step)}</li>' for step in page.minimum_test) + '</ol>')
+    if page.open_questions:
+        detail_sections += _research_section(
+            "open-questions", "Questions before adoption",
+            "What still needs reading or measurement.",
+            '<ul class="research-questions">'
+            + "".join(f'<li>{escape(item)}</li>' for item in page.open_questions) + '</ul>')
     independent_tests = ""
     if page.independent_tests:
         items = "".join(
@@ -1230,7 +1288,7 @@ def render_research_page(
         f'{_render_equations(page)}'
         '<section id="signal" class="research-section">'
         '<div class="section-head"><h2>Observed signal</h2>'
-        '<p class="sub">Repository adoption and public attention measured by AI Radar.</p>'
+        '<p class="sub">Repository adoption and public attention measured by Paperraft.</p>'
         '</div><dl class="research-signal">'
         f'<div><dt>independent implementations</dt><dd>{page.independent_implementations}</dd></div>'
         f'<div><dt>all implementations</dt><dd>{page.total_implementations}</dd></div>'
@@ -1244,28 +1302,16 @@ def render_research_page(
         f'{_render_research_claims(page)}</section>'
         '<section id="exposure" class="research-section">'
         '<div class="section-head"><h2>Exposure map</h2>'
-        '<p class="sub">Unknown areas remain visible. Missing analysis never '
+        '<p class="sub">For unchecked areas, use the questions below when reading. Missing analysis never '
         'counts as evidence of safety.</p></div>'
         f'{_render_exposure_map(page)}</section>'
-        '<section id="risks" class="research-section">'
-        '<div class="section-head"><h2>Risk notes</h2>'
-        '<p class="sub">Conditions that may negate the gain or block adoption.</p>'
-        f'</div>{_render_risk_notes(page)}</section>'
-        '<section id="minimum-test" class="research-section">'
-        '<div class="section-head"><h2>Minimum useful test</h2>'
-        '<p class="sub">The smallest test intended to disprove the technique '
-        'on a local workload.</p></div>'
-        f'{minimum_test}</section>'
-        '<section id="open-questions" class="research-section">'
-        '<div class="section-head"><h2>Questions before adoption</h2>'
-        '<p class="sub">What still needs reading or measurement.</p></div>'
-        f'{questions}</section>{independent_tests}'
+        f'{detail_sections}{_render_reading_guide(page)}{independent_tests}'
         '<p class="research-provenance">Provisional research brief updated '
-        f'{escape(page.as_of)}. AI Radar has not reproduced this experiment.</p>'
+        f'{escape(page.as_of)}. Paperraft has not reproduced this experiment.</p>'
         '</article>'
     )
     return _pagina_estatica(
-        f"{page.title} · Research brief · AI Radar", "acervo", page.as_of,
+        f"{page.title} · Research brief · Paperraft", "acervo", page.as_of,
         corpo, heading=page.title,
         kicker=f"{status} · arXiv {page.arxiv_id} · updated {page.as_of}",
         deck=page.summary, back_href=public_config.path("#acervo"),
@@ -1325,7 +1371,7 @@ def _render_formula_walkthrough(
         )
         worked = (
             '<figure class="worked-example">'
-            '<figcaption>AI Radar worked example</figcaption>'
+            '<figcaption>Paperraft worked example</figcaption>'
             + (f'<code>{escape(inputs)}</code>' if inputs else "")
             + f'<p>{escape(item.worked_example.explanation)}</p>'
             f'<samp>{escape(item.worked_example.expression)} = '
@@ -1495,13 +1541,13 @@ def render_report(
         f'<a href="{escape(document.source_url)}">arXiv PDF</a> with '
         f'{escape(document.model)} on {escape(document.generated_at[:10])}. '
         f'The PDF text was extracted with {escape(extractor)}.{escape(fallback)} '
-        'AI Radar did not reproduce this experiment.</p>'
+        'Paperraft did not reproduce this experiment.</p>'
         '</article></div>'
         '<a class="report-to-top" data-report-top href="#conteudo" '
         'aria-label="Back to the start of the analysis">↑</a>'
     )
     return _pagina_estatica(
-        f"{document.title} · Deep report · AI Radar", "acervo",
+        f"{document.title} · Deep report · Paperraft", "acervo",
         document.generated_at[:10], corpo, heading=document.title,
         kicker=(f"deep report · arXiv {document.arxiv_id} · "
                 f"{document.generated_at[:10]}"),

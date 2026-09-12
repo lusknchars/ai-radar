@@ -44,7 +44,7 @@ def build_issue(data: SiteData, week_end: date, config: PublicConfig, *,
     if not preview and any(is_portuguese(p.resumo + " " + p.porque) for p in selected):
         raise ValueError("Translate the selected briefs into English before preparing an issue")
     label = "[SAMPLE PREVIEW] " if preview else ""
-    subject = f"{label}AI Radar: {len(selected)} papers worth reading · {week_end.isoformat()}"
+    subject = f"{label}Paperraft: {len(selected)} papers worth reading · {week_end.isoformat()}"
     intro = ("Sample preview. This is not a current research newsletter." if preview else
              "This week's research for engineers building with AI. "
              "Claims below come from paper abstracts and have not been independently reproduced.")
@@ -68,7 +68,7 @@ def build_issue(data: SiteData, week_end: date, config: PublicConfig, *,
         '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'
         '<body style="margin:0;background:#eee;color:#111;font:16px/1.65 Arial,sans-serif">'
         '<main style="max-width:620px;margin:auto;padding:32px 24px">'
-        f'<h1>AI Radar</h1><p>{escape(intro)}</p><p>{start} to {week_end}</p>'
+        f'<h1>Paperraft</h1><p>{escape(intro)}</p><p>{start} to {week_end}</p>'
         + ''.join(parts)
         + '<footer style="padding-top:24px;border-top:1px solid #ddd">'
         f'<p><a href="{escape(config.site_url)}">Research archive</a> · '

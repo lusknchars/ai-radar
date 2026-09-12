@@ -1,4 +1,4 @@
-"""Browser assets for AI Radar's generated, no-build frontend.
+"""Browser assets for Paperraft's generated, no-build frontend.
 
 The renderer in :mod:`radar.site` owns semantic HTML. This module owns the
 visual system and progressive enhancement that are inlined into each page.
@@ -36,7 +36,7 @@ _FONT_FACE = (
 def math_font_face(font_url: str) -> str:
     """Math face for pages with equations: the reader's local copy first."""
     return (
-        '@font-face{font-family:"AI Radar Math";font-style:normal;font-weight:400;'
+        '@font-face{font-family:"Paperraft Math";font-style:normal;font-weight:400;'
         'font-display:swap;src:local("STIX Two Math"),local("STIXTwoMath-Regular"),'
         f'url({font_url}) format("woff2")}}'
     )
@@ -712,6 +712,26 @@ border-bottom:1px solid var(--linha)}.repos .quem{color:var(--apagado);font-size
 .repos .indep{color:var(--acento);font-weight:500}.cortes{list-style:none;padding:0;
 margin:0;font-size:12px;font-variant-numeric:tabular-nums}.cortes li{display:flex;
 justify-content:space-between;max-width:480px;padding:10px 0;border-bottom:1px solid var(--linha)}
+.nav .publication-name{margin-right:auto;font:500 25px var(--editorial);letter-spacing:-.04em;color:var(--texto)}
+body:has(.research-page) #fundo{opacity:.16}
+.research-page .section-head h2{margin:0;font-size:27px;line-height:1.15}
+.research-page .section-head{align-items:start}
+.research-page .section-head .sub{font-size:13px;line-height:1.55}
+.reading-guide-note{font-size:13px;color:var(--fraco);margin:0 0 24px}
+.reading-prompts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.reading-prompt{scroll-margin-top:24px;border-top:2px solid var(--acento);padding-top:16px}
+.reading-prompt h3{margin:0 0 12px;font:400 23px/1.15 var(--editorial)}
+.reading-prompt p{margin:0;font-size:14px;line-height:1.7;color:var(--fraco)}
+.reading-source{display:inline-flex;align-items:center;min-height:44px;margin-top:20px;
+font-size:13px;text-decoration:underline;text-underline-offset:4px}
+.brief-claim summary{cursor:pointer;min-height:44px;align-content:center;font:400 22px/1.3 var(--editorial)}
+.brief-claim p{font-size:15px;line-height:1.7;color:var(--fraco)}
+.equation-note{padding:15px 0;border-top:1px solid var(--linha);font-size:13px;color:var(--fraco)}
+.equation-note summary{cursor:pointer;min-height:44px;align-content:center;color:var(--texto)}
+.equation-note p{max-width:68ch;line-height:1.65}.equation-note a{display:inline-flex;align-items:center;
+min-height:44px;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:640px){.reading-prompts{grid-template-columns:1fr;gap:24px}
+.nav{flex-wrap:wrap;justify-content:flex-start;padding:14px 0}.nav .publication-name{flex-basis:100%}}
 .pagina{max-width:850px}.pagina p,.pagina li{max-width:68ch}.pagina h2{margin-top:34px}
 .article-page{max-width:none}
 .research-page{max-width:920px}.decision-snapshot{display:grid;
@@ -743,7 +763,7 @@ margin-right:5px;color:var(--apagado);font:500 8px var(--mono);text-transform:up
 letter-spacing:.12em}.research-jumps a{display:inline-flex;flex:0 0 auto;min-height:44px;
 align-items:center;padding:7px 11px;border-radius:999px;color:var(--fraco);font:500 9px var(--mono);
 text-transform:uppercase;letter-spacing:.06em}.research-jumps a:hover{background:var(--superficie);
-color:var(--acento)}.research-section{padding:52px 0;
+color:var(--acento)}.research-section{padding:32px 0;
 border-top:1px solid var(--linha);scroll-margin-top:24px}.research-section>.section-head{
 margin-bottom:24px}.research-decision,.research-signal{display:grid;
 grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;padding:1px;
@@ -781,16 +801,16 @@ background:rgba(0,0,0,.035);color:var(--fraco);font-size:13px;line-height:1.65}
 .equation-context{max-width:62ch;margin:0 0 14px;color:var(--fraco);font-size:15px;line-height:1.6}
 .equation-display{max-width:100%;margin:0;padding:22px 26px;overflow-x:auto;
 border:1px solid var(--linha);border-radius:18px;background:var(--superficie)}
-.equation-display math{display:block;margin:0 auto;font-family:"AI Radar Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.15em;line-height:1.5;color:var(--texto)}
+.equation-display math{display:block;margin:0 auto;font-family:"Paperraft Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.15em;line-height:1.5;color:var(--texto)}
 .equation-display math+math{margin-top:10px}
-.equation-context math{font-family:"AI Radar Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.05em}
+.equation-context math{font-family:"Paperraft Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.05em}
 .equation-eyebrow{margin:12px 0 0;color:var(--apagado);font:500 8px var(--mono);text-transform:uppercase;letter-spacing:.13em}
 .equations-provenance{margin:26px 0 0;color:var(--apagado);font:9px var(--mono)}
 .research-inference,.research-empty{max-width:66ch;margin:12px 0;color:var(--apagado);
 font-size:13px;line-height:1.65}.exposure-grid{display:grid;
 grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;padding:1px;
 border:1px solid var(--linha);border-radius:18px;overflow:hidden;background:var(--linha)}
-.exposure-item{min-height:150px;padding:20px;background:var(--superficie)}
+.exposure-item{min-height:118px;padding:20px;background:var(--superficie)}
 .exposure-item p{margin:0;color:var(--fraco);font-size:12px;line-height:1.6}
 .research-risks p{margin:0;color:var(--fraco);font-size:15px;line-height:1.65}
 .research-test{counter-reset:research-step;list-style:none;margin:0;padding:0}

@@ -88,7 +88,7 @@ class SignupStore:
             # Remove the address immediately after confirmation. The token hash
             # prevents a replay from re-subscribing someone who later opts out.
             conn.execute("UPDATE signup_requests SET status='confirmed',email='',lease_until=0 WHERE token_hash=?", (key,))
-        return 'You are subscribed. Look out for the next weekly AI Radar email.'
+        return 'You are subscribed. Look out for the next weekly Paperraft email.'
 
 
 def page(title: str, body: str, *, turnstile: bool = False) -> HTMLResponse:
@@ -97,13 +97,13 @@ def page(title: str, body: str, *, turnstile: bool = False) -> HTMLResponse:
     return HTMLResponse(
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f'<title>{escape(title)} · AI Radar</title>'
+        f'<title>{escape(title)} · Paperraft</title>'
         '<style>body{background:#eee;color:#111;font:16px/1.6 system-ui;margin:0}'
         'main{max-width:540px;margin:8vh auto;padding:24px}input[type=email]{display:block;'
         'box-sizing:border-box;width:100%;padding:12px;font:inherit;margin:8px 0 20px}'
         'button{display:block;margin:20px 0;padding:12px 20px;background:#cb2957;color:white;'
         'border:0;font:inherit;cursor:pointer}a{color:#a41c43}:focus-visible{outline:3px solid #cb2957}</style>'
-        f'{script}</head><body><main><p>AI Radar</p><h1>{escape(title)}</h1>{body}</main></body></html>',
+        f'{script}</head><body><main><p>Paperraft</p><h1>{escape(title)}</h1>{body}</main></body></html>',
         headers={'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer',
                  'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY',
                  'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'; "
@@ -181,7 +181,7 @@ def create_app(*, provider=None, verify_challenge=None, clock=time.time) -> Fast
                     '<label for="email">Email address</label>'
                     '<input id="email" name="email" type="email" maxlength="254" required autocomplete="email">'
                     '<label><input name="consent" type="checkbox" value="yes" required> '
-                    'Send me the weekly AI Radar newsletter. I can unsubscribe at any time.</label>'
+                    'Send me the weekly Paperraft newsletter. I can unsubscribe at any time.</label>'
                     f'<div class="cf-turnstile" data-sitekey="{escape(site_key)}"></div>'
                     '<button type="submit">Send confirmation link</button></form>'
                     '<p>Resend delivers our emails and stores confirmed subscriptions. '
