@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,6 +30,18 @@ def main(argv: list[str] | None = None) -> int:
         "--manifest", type=Path,
         help="generate every paper in a public research evaluation manifest",
     )
+    target.add_argument(
+        "--all", action="store_true",
+        help="discover every paper currently in the archive",
+    )
+    parser.add_argument(
+        "--plan", action="store_true",
+        help="print the discovered queue without downloading PDFs or spending credits",
+    )
+    parser.add_argument(
+        "--continue-on-error", action="store_true",
+        help="record a per-paper failure and continue the discovered queue",
+    )
     parser.add_argument(
         "--limit", type=int,
         help="limit manifest execution while testing the paid path",
@@ -40,7 +53,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be at least 1")
-    if args.manifest:
+    store = Store(args.db)
+    store.init_schema()
+    if args.all:
+        target_ids = sorted(row["arxiv_id"] for row in store.all_papers())
+        if not target_ids:
+            raise SystemExit("the archive contains no papers")
+    elif args.manifest:
         target_ids = [
             case.arxiv_id for case in load_evaluation_manifest(args.manifest).cases
         ]
@@ -51,8 +70,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit is not None:
         target_ids = target_ids[:args.limit]
 
-    store = Store(args.db)
-    store.init_schema()
     papers = []
     for arxiv_id in target_ids:
         paper = store.get_paper(arxiv_id)
@@ -64,6 +81,11 @@ def main(argv: list[str] | None = None) -> int:
         paper for paper in papers
         if not (args.reports_dir / f"{paper.arxiv_id}.json").exists()
     ]
+    if args.plan:
+        print(f"Paperraft assistant queue: {len(pending)} pending of {len(papers)} papers")
+        for index, paper in enumerate(pending, 1):
+            print(f"{index:02d} {paper.arxiv_id} {paper.title}")
+        return 0
     if not pending:
         publish_site(
             store, args.site_dir, datetime.now(timezone.utc).date(),
@@ -97,35 +119,47 @@ def main(argv: list[str] | None = None) -> int:
         api_key, load_formula_model(),
         thinking=load_formula_thinking(), **common,
     )
+    failures = []
     try:
         for index, paper in enumerate(pending, 1):
             if index > 1:
                 judge.wait_between_requests()
-            source = fetch_paper_source(
-                paper.arxiv_id,
-                extractor=build_pdf_extractor(load_pdf_extractor()),
-            )
-            technical_core = extract_technical_core(source, paper, selector)
-            source_provenance = SourceProvenance(
-                pdf_sha256=source.pdf_sha256,
-                extracted_text_sha256=hashlib.sha256(
-                    source.full_text.encode("utf-8")).hexdigest(),
-                extractor=source.pdf_extraction_method,
-                pages=len(source.pdf_pages),
-                fallback_from=source.pdf_fallback_from,
-                fallback_reason=source.pdf_fallback_reason,
-            )
-            document = generate_report(
-                paper, source.full_text, judge,
-                technical_core=technical_core,
-                source_provenance=source_provenance,
-                provider="kimi", model=model)
-            destination = args.reports_dir / f"{paper.arxiv_id}.json"
-            save_report(document, args.reports_dir)
-            print(
-                f"relatorio {index}/{len(pending)} gerado: {destination}",
-                flush=True,
-            )
+            try:
+                source = fetch_paper_source(
+                    paper.arxiv_id,
+                    extractor=build_pdf_extractor(load_pdf_extractor()),
+                )
+                technical_core = extract_technical_core(source, paper, selector)
+                source_provenance = SourceProvenance(
+                    pdf_sha256=source.pdf_sha256,
+                    extracted_text_sha256=hashlib.sha256(
+                        source.full_text.encode("utf-8")).hexdigest(),
+                    extractor=source.pdf_extraction_method,
+                    pages=len(source.pdf_pages),
+                    fallback_from=source.pdf_fallback_from,
+                    fallback_reason=source.pdf_fallback_reason,
+                )
+                document = generate_report(
+                    paper, source.full_text, judge,
+                    technical_core=technical_core,
+                    source_provenance=source_provenance,
+                    provider="kimi", model=model)
+                destination = args.reports_dir / f"{paper.arxiv_id}.json"
+                save_report(document, args.reports_dir)
+                print(f"relatorio {index}/{len(pending)} gerado: {destination}", flush=True)
+            except Exception as exc:
+                if not (args.continue_on_error or args.all):
+                    raise
+                failures.append(paper.arxiv_id)
+                failure_path = args.reports_dir / "failures" / f"{paper.arxiv_id}.json"
+                failure_path.parent.mkdir(parents=True, exist_ok=True)
+                failure_path.write_text(json.dumps({
+                    "arxiv_id": paper.arxiv_id,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                    "recorded_at": datetime.now(timezone.utc).isoformat(),
+                }, indent=2) + "\n", encoding="utf-8")
+                print(f"relatorio {index}/{len(pending)} falhou: {paper.arxiv_id} ({type(exc).__name__})", flush=True)
     finally:
         selector.close()
         judge.close()
@@ -135,6 +169,8 @@ def main(argv: list[str] | None = None) -> int:
         reports_root=args.reports_dir,
     )
     print(f"site republicado: {args.site_dir / 'index.html'}")
+    if failures:
+        print(f"falhas registradas: {len(failures)} em {args.reports_dir / 'failures'}")
     return 0
 
 

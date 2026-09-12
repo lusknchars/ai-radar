@@ -313,6 +313,29 @@ python scripts/gerar_relatorio.py --arxiv-id 2608.11111
 This is a paid call. If `reports/2608.11111.json` already exists, the command
 only republishes it and spends no additional credits.
 
+The Paperraft assistant can discover the whole current archive. Planning is
+free and does not download PDFs; execution downloads each missing paper, asks
+the configured report model for structured findings, grounds excerpts against
+the extracted pages, and republishes after the batch:
+
+```bash
+python scripts/gerar_relatorio.py --all --plan --db data/radar-state.db
+RADAR_LLM_PROVIDER=kimi KIMI_API_KEY=... \
+  python scripts/gerar_relatorio.py --all --db data/radar-state.db
+```
+
+`python scripts/paperraft_assistant.py` is an English-named entry point for the
+same command. In a large run, `--all` continues after an individual download or
+model failure and writes a small diagnostic record under `reports/failures/`.
+Those records never publish as research pages and can be retried after the
+underlying problem is fixed.
+
+The queue is resumable. Existing report JSON is skipped, and each report keeps
+its own PDF and extracted-text hashes. A claim is source-linked only when its
+page and verbatim excerpt survive the grounding check. Missing evidence stays
+unlocated, so a failed paper does not turn into an invented finding. Start with
+`--limit 1` and inspect the generated page before running the remaining queue.
+
 ### Validate the public research format
 
 The repository includes a fixed corpus of 20 real papers selected from the Kimi
