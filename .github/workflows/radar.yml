@@ -5,6 +5,11 @@ on:
     - cron: '17 9 * * *'     # Daily 09:17 UTC / 06:17 Brasilia, including Exa when configured.
   workflow_dispatch:
     inputs:
+      profile:
+        description: 'Expanded: up to 60 briefs, six Exa searches and three deep reports'
+        type: choice
+        options: [daily, expanded]
+        default: daily
       dry_run:
         description: 'Rodar sem enviar o push'
         type: boolean
@@ -33,11 +38,15 @@ jobs:
   run:
     runs-on: ubuntu-latest
     environment: kimi
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.profile == 'expanded' && 120 || 45 }}
     outputs:
       site_ready: ${{ steps.site_status.outputs.ready }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Resolve the branch when this serialized job starts, including
+          # state committed by the preceding collector.
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v6
         with:
@@ -51,9 +60,11 @@ jobs:
           RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
           RADAR_COLLECTION_MODE: ${{ vars.RADAR_COLLECTION_MODE || 'auto' }}
           RADAR_EXA_MODE:      ${{ inputs.exa_mode || vars.RADAR_EXA_MODE || 'daily' }}
-          RADAR_EXA_RESULTS:   ${{ vars.RADAR_EXA_RESULTS || '10' }}
+          RADAR_EXA_RESULTS:   ${{ inputs.profile == 'expanded' && '15' || vars.RADAR_EXA_RESULTS || '10' }}
+          RADAR_EXA_QUERIES:   ${{ inputs.profile == 'expanded' && '3' || '1' }}
+          RADAR_EXA_LOOKBACK_DAYS: ${{ inputs.profile == 'expanded' && '90' || '30' }}
           EXA_API_KEY:         ${{ secrets.EXA_API_KEY }}
-          RADAR_MAX_NEW_PER_SCOPE: ${{ vars.RADAR_MAX_NEW_PER_SCOPE || '20' }}
+          RADAR_MAX_NEW_PER_SCOPE: ${{ inputs.profile == 'expanded' && '30' || vars.RADAR_MAX_NEW_PER_SCOPE || '20' }}
           RADAR_MAX_EQUATIONS_PER_RUN: ${{ vars.RADAR_MAX_EQUATIONS_PER_RUN || '5' }}
           RADAR_SUBSCRIBE_URL: ${{ vars.RADAR_SUBSCRIBE_URL }}
           RADAR_LLM_PROVIDER:  ${{ vars.RADAR_LLM_PROVIDER || 'kimi' }}
@@ -66,6 +77,33 @@ jobs:
           GH_TOKEN:           ${{ github.token }}
         run: |
           python scripts/run_workflow.py ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Read selected full papers
+        id: deepen
+        if: ${{ success() && !inputs.dry_run && inputs.profile == 'expanded' }}
+        continue-on-error: true
+        env:
+          RADAR_DB: ${{ vars.RADAR_DB || 'data/radar-state.db' }}
+          RADAR_LLM_PROVIDER: kimi
+          RADAR_MODEL: ${{ vars.RADAR_MODEL }}
+          RADAR_FORMULA_MODEL: ${{ vars.RADAR_FORMULA_MODEL }}
+          RADAR_KIMI_BASE_URL: ${{ vars.RADAR_KIMI_BASE_URL }}
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: python scripts/deepen_shortlist.py --db "$RADAR_DB" --limit 3
+
+      - name: Preserve completed deep reports
+        if: ${{ !cancelled() && inputs.profile == 'expanded' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: research-round-${{ github.run_id }}
+          path: reports/
+          if-no-files-found: ignore
+
+      - name: Report partial analysis
+        if: ${{ !cancelled() && steps.deepen.outcome == 'failure' }}
+        run: |
+          echo "::warning::Some full-paper reports failed. Completed reports are preserved; missing evidence remains unknown."
+          echo "Full-paper analysis is incomplete. Inspect the report artifact for failures." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Refresh paper previews and publication
         if: ${{ success() && !inputs.dry_run }}
@@ -96,6 +134,7 @@ jobs:
           git add -A -- data radar
           if test -d site; then git add -A -- site; fi
           if test -d assets/paper-previews; then git add -A -- assets/paper-previews; fi
+          if test -d reports; then git add -A -- reports; fi
           git diff --staged --quiet || git commit -m "radar: digest de $(date -u +%F)"
           git push
 

@@ -52,3 +52,20 @@ def test_stale_or_missing_metadata_does_not_enter_archive():
     result = adapter.recent(SCOPE)
     assert not result.papers
     assert result.cuts == {'exa_outside_window': 1, 'exa_metadata_missing': 1}
+
+
+def test_expanded_queries_are_distinct_and_one_failure_does_not_stop_others():
+    payloads = []
+    def search(payload):
+        payloads.append(payload)
+        if len(payloads) == 1:
+            raise RuntimeError('temporary failure')
+        return {'results':[{'url':'https://arxiv.org/abs/2608.11111'}]}
+    scope = ScopeConfig(name='inference', categories=('cs.LG',),
+                        terms=('quantization','attention','serving','cache','sparsity','decoding'))
+    adapter = ExaDiscovery(SimpleNamespace(recent=lambda scope: Discovery([])),
+        search=search, fetch=lambda url: FEED, today=date(2026,9,1), queries=3, lookback_days=90)
+    result = adapter.recent(scope)
+    assert len(payloads) == 3 and len({p['query'] for p in payloads}) == 3
+    assert len(result.papers) == 1
+    assert result.cuts == {'exa_search_failed':1}

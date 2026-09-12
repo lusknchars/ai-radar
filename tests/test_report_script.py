@@ -40,6 +40,33 @@ def _args(tmp_path):
     ]
 
 
+def test_plan_limit_is_applied_after_skipping_completed_reports(tmp_path, monkeypatch, capsys):
+    report = tmp_path / 'reports' / f'{PAPER.arxiv_id}.json'
+    report.parent.mkdir()
+    report.write_text('existing report')
+    monkeypatch.setattr(gerar_relatorio, 'Store', FakeStore)
+    assert gerar_relatorio.main([*_args(tmp_path), '--arxiv-id', PAPER_2.arxiv_id,
+                                 '--limit', '1', '--plan']) == 0
+    assert PAPER_2.arxiv_id in capsys.readouterr().out
+
+
+def test_report_failure_is_nonzero_and_diagnostics_omit_response_text(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    monkeypatch.setenv('KIMI_API_KEY', 'test')
+    monkeypatch.setattr(gerar_relatorio, 'Store', FakeStore)
+    monkeypatch.setattr(gerar_relatorio, 'load_llm_provider', lambda: 'kimi')
+    monkeypatch.setattr(gerar_relatorio, 'KimiJudge', lambda *a, **k: SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr(gerar_relatorio, 'KimiFormulaSelector', lambda *a, **k: SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr(gerar_relatorio, 'publish_site', lambda *a, **k: None)
+    def fail(*args, **kwargs):
+        raise RuntimeError('private provider response')
+    monkeypatch.setattr(gerar_relatorio, 'fetch_paper_source', fail)
+    assert gerar_relatorio.main([*_args(tmp_path), '--continue-on-error']) == 1
+    diagnostic = (tmp_path / 'reports/failures' / f'{PAPER.arxiv_id}.json').read_text()
+    assert 'RuntimeError' in diagnostic
+    assert 'private provider response' not in diagnostic
+
+
 def test_existing_report_is_republished_without_another_paid_call(tmp_path, monkeypatch):
     report = tmp_path / "reports" / f"{PAPER.arxiv_id}.json"
     report.parent.mkdir()

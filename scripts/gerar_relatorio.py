@@ -67,8 +67,6 @@ def main(argv: list[str] | None = None) -> int:
         target_ids = args.arxiv_id
     if len(target_ids) != len(set(target_ids)):
         parser.error("target list contains duplicate arXiv IDs")
-    if args.limit is not None:
-        target_ids = target_ids[:args.limit]
 
     papers = []
     for arxiv_id in target_ids:
@@ -81,6 +79,8 @@ def main(argv: list[str] | None = None) -> int:
         paper for paper in papers
         if not (args.reports_dir / f"{paper.arxiv_id}.json").exists()
     ]
+    if args.limit is not None:
+        pending = pending[:args.limit]
     if args.plan:
         print(f"Paperraft assistant queue: {len(pending)} pending of {len(papers)} papers")
         for index, paper in enumerate(pending, 1):
@@ -156,7 +156,6 @@ def main(argv: list[str] | None = None) -> int:
                 failure_path.write_text(json.dumps({
                     "arxiv_id": paper.arxiv_id,
                     "error_type": type(exc).__name__,
-                    "error": str(exc),
                     "recorded_at": datetime.now(timezone.utc).isoformat(),
                 }, indent=2) + "\n", encoding="utf-8")
                 print(f"relatorio {index}/{len(pending)} falhou: {paper.arxiv_id} ({type(exc).__name__})", flush=True)
@@ -171,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"site republicado: {args.site_dir / 'index.html'}")
     if failures:
         print(f"falhas registradas: {len(failures)} em {args.reports_dir / 'failures'}")
-    return 0
+    return 1 if failures else 0
 
 
 if __name__ == "__main__":

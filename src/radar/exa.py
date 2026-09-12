@@ -17,31 +17,40 @@ def arxiv_id(url: str) -> str | None:
 
 
 class ExaDiscovery:
-    def __init__(self, primary, *, search, fetch, today: date, results: int = 10):
+    def __init__(self, primary, *, search, fetch, today: date, results: int = 10,
+                 queries: int = 1, lookback_days: int = 30):
         if not 1 <= results <= 25:
             raise ValueError("RADAR_EXA_RESULTS must be between 1 and 25")
+        if not 1 <= queries <= 3 or not 1 <= lookback_days <= 180:
+            raise ValueError("Exa requires 1–3 queries and a 1–180 day lookback")
         self.primary, self.search, self.fetch = primary, search, fetch
         self.today, self.results = today, results
+        self.queries, self.lookback_days = queries, lookback_days
 
     def recent(self, scope):
         original = self.primary.recent(scope)
         papers = {paper.arxiv_id: paper for paper in original.papers}
         cuts = Counter(original.cuts)
-        start = self.today - timedelta(days=30)
+        start = self.today - timedelta(days=self.lookback_days)
+        ids = set()
+        for index in range(min(self.queries, max(1, len(scope.terms)))):
+            terms = scope.terms[index::self.queries]
+            try:
+                response = self.search({
+                    "query": f"AI research {scope.name}: " + ", ".join(terms),
+                    "type": "auto", "category": "research paper",
+                    "includeDomains": ["arxiv.org"], "numResults": self.results,
+                    "startPublishedDate": f"{start.isoformat()}T00:00:00Z",
+                })
+                for result in response["results"][:self.results]:
+                    candidate = arxiv_id(result.get("url", ""))
+                    if candidate:
+                        ids.add(candidate)
+                    else:
+                        cuts["exa_invalid_source"] += 1
+            except Exception:
+                cuts["exa_search_failed"] += 1
         try:
-            response = self.search({
-                "query": f"AI research {scope.name}: " + ", ".join(scope.terms),
-                "type": "auto", "category": "research paper",
-                "includeDomains": ["arxiv.org"], "numResults": self.results,
-                "startPublishedDate": f"{start.isoformat()}T00:00:00Z",
-            })
-            ids = set()
-            for result in response["results"][:self.results]:
-                candidate = arxiv_id(result.get("url", ""))
-                if candidate:
-                    ids.add(candidate)
-                else:
-                    cuts["exa_invalid_source"] += 1
             ids -= papers.keys()
             if ids:
                 url = ARXIV_ENDPOINT + "?" + urlencode({"id_list": ",".join(sorted(ids)), "max_results": len(ids)})
@@ -61,5 +70,5 @@ class ExaDiscovery:
         except Exception:
             # Never log provider response bodies or credentials. Preserve the
             # primary discovery and mark the collection partial in the caller.
-            cuts["exa_search_failed"] += 1
+            cuts["exa_metadata_failed"] += 1
         return Discovery(papers=list(papers.values()), cuts={k: v for k, v in cuts.items() if v})

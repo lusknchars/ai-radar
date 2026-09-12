@@ -1,5 +1,34 @@
 # Daily paper discovery
 
+## Expanded research round
+
+Manual runs can select the `expanded` profile. Scheduled runs keep the daily profile.
+
+| Limit | Daily | Expanded |
+| --- | --- | --- |
+| Exa searches | 2 | Up to 6, splitting each scope's terms into distinct queries |
+| Results per search | 10 by default | 15 |
+| Exa publication window | 30 days | 90 days |
+| New briefs attempted | Up to 40 | Up to 60 |
+| Full-paper reports | 0 | Up to 3 |
+| Workflow time limit | 45 minutes | 120 minutes |
+
+These are maximum attempts, not promised publication counts or dollar-spending limits. Existing arXiv, relevance and evidence requirements still apply. One failed Exa query does not prevent the remaining queries from running.
+
+After collection, the expanded round selects recent actionable briefs from different research areas. It reads the original full texts through the existing source-grounded report generator and preserves source hashes, excerpts, limitations and unanswered checks. It does not reproduce the experiments. Reports already on disk are skipped before the limit is applied. Failed reports return a nonzero status; the workflow records incomplete analysis and preserves successfully generated reports.
+
+Queued runs resolve the branch when the job starts, so they see state saved by the previous collection. They share the existing serialization group.
+
+```sh
+gh workflow run radar.yml --repo lusknchars/ai-radar -f profile=expanded -f exa_mode=daily
+```
+
+Preview the report shortlist locally without model calls:
+
+```sh
+.venv/bin/python scripts/deepen_shortlist.py --db data/radar-state.db --plan
+```
+
 The radar workflow requests a run daily at 09:17 UTC, 06:17 in Brasilia. GitHub scheduled jobs can start later than the requested time. Manual runs use the same concurrency group, so two collectors cannot write the publication database simultaneously.
 
 ## Discovery and publication

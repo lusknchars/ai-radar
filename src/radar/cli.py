@@ -131,7 +131,9 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
         raise ValueError("RADAR_EXA_MODE must be off, weekly, or daily")
     if os.environ.get("EXA_API_KEY") and (exa_mode == "daily" or (exa_mode == "weekly" and today.weekday() == 0)):
         discovery = ExaDiscovery(arxiv, search=_exa_search, fetch=_arxiv_fetch,
-                                 today=today, results=int(os.environ.get("RADAR_EXA_RESULTS", "10")))
+                                 today=today, results=int(os.environ.get("RADAR_EXA_RESULTS", "10")),
+                                 queries=int(os.environ.get("RADAR_EXA_QUERIES", "1")),
+                                 lookback_days=int(os.environ.get("RADAR_EXA_LOOKBACK_DAYS", "30")))
     github = GitHubClient(fetch=_github_fetch)
     provider = load_llm_provider()
     model = load_model()
@@ -192,7 +194,7 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
 
     incomplete = any(
         count and any(reason in key for reason in
-                      ("termo_falhou", "sem_julgamento", "sinal_indisponivel", "exa_search_failed", "exa_metadata_missing"))
+                      ("termo_falhou", "sem_julgamento", "sinal_indisponivel", "exa_search_failed", "exa_metadata_missing", "exa_metadata_failed"))
         for key, count in cortes_do_dia.items()
     )
     store.finish_collection(
