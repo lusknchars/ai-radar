@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +17,29 @@ from .store import Store
 EVALUATION_MANIFEST = Path("eval/public-research-corpus.json")
 EVALUATION_JUDGMENTS = Path("eval/public-research-judgments.jsonl")
 HISTORICAL_DATABASE = Path("data/radar.db")
+
+
+def actions_main(argv: list[str] | None = None) -> int:
+    """Let Actions publish useful partial collections without hiding failures."""
+    output = os.environ.get('GITHUB_OUTPUT')
+    if not output or (argv and '--dry-run' in argv):
+        return main(argv)
+    status_path = Path('site/collection.json')
+    # The tracked publication may describe a previous run on the same day.
+    # Only a status document written by this invocation can unlock publishing.
+    status_path.unlink(missing_ok=True)
+    result = main(argv)
+    outcome = 'unknown'
+    if result in (0, 1) and status_path.exists():
+        try:
+            outcome = json.loads(status_path.read_text())['outcome']
+        except (ValueError, KeyError, TypeError):
+            pass
+    ready = outcome in {'success', 'partial', 'unconfigured'}
+    with Path(output).open('a') as stream:
+        stream.write(f'publication_ready={str(ready).lower()}\n')
+        stream.write(f'collection_outcome={outcome if ready else "unknown"}\n')
+    return result
 
 
 def _credential_name(provider: str) -> str:

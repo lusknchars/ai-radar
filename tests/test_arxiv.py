@@ -1,9 +1,55 @@
 from pathlib import Path
+import httpx
+import pytest
 
-from radar.arxiv import ARXIV_ENDPOINT, ArxivClient, build_query, parse_feed
+from radar.arxiv import ARXIV_ENDPOINT, ArxivClient, build_query, parse_feed, parse_abstract_page
 from radar.config import ScopeConfig
 
 FIXTURE = (Path(__file__).parent / "fixtures" / "arxiv_response.xml").read_text()
+
+ABSTRACT_PAGE = '''<html><head>
+<meta name="citation_arxiv_id" content="2608.11111v2">
+<meta name="citation_title" content="Kernels &amp; inference">
+<meta name="citation_abstract" content="We compare inference kernels.">
+<meta name="citation_date" content="2026/08/20">
+<meta name="citation_author" content="First Author">
+<meta name="citation_author" content="Second Author">
+</head><body><td class="tablecell subjects">
+<span class="primary-subject">Machine Learning (cs.LG)</span>;
+Hardware Architecture (cs.AR)</td></body></html>'''
+
+
+def test_abstract_page_recovers_official_metadata_and_cross_listed_categories():
+    paper = parse_abstract_page(ABSTRACT_PAGE, '2608.11111')
+    assert paper.title == 'Kernels & inference'
+    assert paper.abstract == 'We compare inference kernels.'
+    assert paper.authors == ('First Author', 'Second Author')
+    assert paper.categories == ('cs.LG', 'cs.AR')
+    assert paper.published == '2026-08-20'
+
+
+@pytest.mark.parametrize('page', [
+    ABSTRACT_PAGE.replace('2608.11111v2', '2608.22222'),
+    ABSTRACT_PAGE.replace('2026/08/20', 'not a date'),
+    ABSTRACT_PAGE.replace('We compare inference kernels.', ''),
+    '<html>Temporarily unavailable</html>',
+])
+def test_abstract_page_rejects_wrong_identity_and_incomplete_metadata(page):
+    with pytest.raises(ValueError):
+        parse_abstract_page(page, '2608.11111')
+
+
+def test_repeated_rate_limits_defer_remaining_queries_without_hiding_gaps():
+    calls = []
+    def fetch(url):
+        calls.append(url)
+        response = httpx.Response(429, request=httpx.Request('GET', url))
+        response.raise_for_status()
+    scope = ScopeConfig(name='test', categories=('cs.LG',), terms=('a', 'b', 'c', 'd'))
+    result = ArxivClient(fetch=fetch, sleep=lambda _: None).recent(scope)
+    assert len(calls) == 2
+    assert result.cuts == {'termo_falhou': 2, 'termo_adiado': 2}
+    assert result.papers == []
 
 
 def test_endpoint_is_https():

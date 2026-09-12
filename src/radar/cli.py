@@ -14,7 +14,7 @@ from pathlib import Path
 import anthropic
 import httpx
 
-from .arxiv import USER_AGENT, ArxivClient
+from .arxiv import USER_AGENT, ArxivClient, parse_abstract_page
 from .arxiv_html import fetch_arxiv_html
 from .config import (AGENT_SCOPE, DEFAULT_SCOPE, load_kimi_base_url,
                      load_database_path, load_formula_model,
@@ -131,6 +131,8 @@ def _collect(args, store: Store, today: date, run_id: int) -> int:
         raise ValueError("RADAR_EXA_MODE must be off, weekly, or daily")
     if os.environ.get("EXA_API_KEY") and (exa_mode == "daily" or (exa_mode == "weekly" and today.weekday() == 0)):
         discovery = ExaDiscovery(arxiv, search=_exa_search, fetch=_arxiv_fetch,
+                                 fetch_one=lambda paper_id: parse_abstract_page(
+                                     _arxiv_fetch(f'https://arxiv.org/abs/{paper_id}'), paper_id),
                                  today=today, results=int(os.environ.get("RADAR_EXA_RESULTS", "10")),
                                  queries=int(os.environ.get("RADAR_EXA_QUERIES", "1")),
                                  lookback_days=int(os.environ.get("RADAR_EXA_LOOKBACK_DAYS", "30")))

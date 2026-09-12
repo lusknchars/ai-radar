@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from radar.exa import ExaDiscovery, arxiv_id
 from radar.config import ScopeConfig
 from radar.models import Discovery
+from radar.arxiv import parse_feed
 
 FEED = (Path(__file__).parent / 'fixtures/arxiv_response.xml').read_text()
 SCOPE = ScopeConfig(name='inference', terms=('quantization',), categories=('cs.LG',))
@@ -69,3 +70,38 @@ def test_expanded_queries_are_distinct_and_one_failure_does_not_stop_others():
     assert len(payloads) == 3 and len({p['query'] for p in payloads}) == 3
     assert len(result.papers) == 1
     assert result.cuts == {'exa_search_failed':1}
+
+
+def test_official_page_fallback_recovers_metadata_when_feed_is_unavailable():
+    def unavailable(url):
+        raise RuntimeError('feed unavailable')
+    fetched = []
+    def fetch_one(paper_id):
+        fetched.append(paper_id)
+        return parse_feed(FEED)[0]
+    adapter = ExaDiscovery(SimpleNamespace(recent=lambda scope: Discovery([])),
+        search=lambda _: {'results': [{'url': 'https://arxiv.org/abs/2608.11111'}]},
+        fetch=unavailable, fetch_one=fetch_one, today=date(2026, 9, 1))
+    result = adapter.recent(SCOPE)
+    assert fetched == ['2608.11111']
+    assert result.papers == [parse_feed(FEED)[0]]
+    assert result.cuts == {}
+
+
+def test_partial_feed_uses_fallback_only_for_missing_ids_and_counts_failures():
+    fetched, sleeps = [], []
+    def fetch_one(paper_id):
+        fetched.append(paper_id)
+        if paper_id == '2608.33333':
+            raise RuntimeError('no metadata')
+        return parse_feed(FEED)[0]  # A different ID must not be accepted.
+    adapter = ExaDiscovery(SimpleNamespace(recent=lambda scope: Discovery([])),
+        search=lambda _: {'results': [{'url': f'https://arxiv.org/abs/{paper_id}'}
+                                     for paper_id in ('2608.11111', '2608.33333', '2608.44444')]},
+        fetch=lambda _: FEED, fetch_one=fetch_one, sleep=sleeps.append,
+        today=date(2026, 9, 1))
+    result = adapter.recent(SCOPE)
+    assert fetched == ['2608.33333', '2608.44444']
+    assert sleeps == [3]
+    assert [p.arxiv_id for p in result.papers] == ['2608.11111']
+    assert result.cuts == {'exa_metadata_missing': 2}

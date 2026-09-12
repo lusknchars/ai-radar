@@ -56,6 +56,8 @@ jobs:
         run: pip install -e .
 
       - name: Rodar o radar
+        id: collect
+        continue-on-error: true
         env:
           PYTHONUNBUFFERED: '1'
           RADAR_DB:            ${{ vars.RADAR_DB || 'data/radar-state.db' }}
@@ -79,9 +81,21 @@ jobs:
         run: |
           python scripts/run_workflow.py ${{ inputs.dry_run && '--dry-run' || '' }}
 
+      - name: Require usable collection output
+        if: ${{ !cancelled() && steps.collect.outcome == 'failure' && steps.collect.outputs.publication_ready != 'true' }}
+        run: |
+          echo "::error::Collection failed before producing a usable publication. Saved state will still be committed."
+          exit 1
+
+      - name: Report partial collection
+        if: ${{ !cancelled() && steps.collect.outputs.collection_outcome == 'partial' }}
+        run: |
+          echo "::warning::Discovery was incomplete. Publishing available papers with partial status in collection.json."
+          echo "Discovery was partial. Available papers can be read, but collection coverage is incomplete." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Read selected full papers
         id: deepen
-        if: ${{ success() && !inputs.dry_run && inputs.profile == 'expanded' }}
+        if: ${{ success() && !inputs.dry_run && inputs.profile == 'expanded' && (steps.collect.outputs.collection_outcome == 'success' || steps.collect.outputs.collection_outcome == 'partial') }}
         continue-on-error: true
         env:
           RADAR_DB: ${{ vars.RADAR_DB || 'data/radar-state.db' }}

@@ -3,6 +3,7 @@ from collections import Counter
 from datetime import date, timedelta
 import logging
 import re
+import time
 from urllib.parse import urlencode, urlsplit
 
 from .arxiv import ARXIV_ENDPOINT, parse_feed
@@ -21,7 +22,7 @@ def arxiv_id(url: str) -> str | None:
 
 class ExaDiscovery:
     def __init__(self, primary, *, search, fetch, today: date, results: int = 10,
-                 queries: int = 1, lookback_days: int = 30):
+                 queries: int = 1, lookback_days: int = 30, fetch_one=None, sleep=time.sleep):
         if not 1 <= results <= 25:
             raise ValueError("RADAR_EXA_RESULTS must be between 1 and 25")
         if not 1 <= queries <= 3 or not 1 <= lookback_days <= 180:
@@ -29,6 +30,7 @@ class ExaDiscovery:
         self.primary, self.search, self.fetch = primary, search, fetch
         self.today, self.results = today, results
         self.queries, self.lookback_days = queries, lookback_days
+        self.fetch_one, self.sleep = fetch_one, sleep
 
     def recent(self, scope):
         original = self.primary.recent(scope)
@@ -59,7 +61,23 @@ class ExaDiscovery:
             ids -= papers.keys()
             if ids:
                 url = ARXIV_ENDPOINT + "?" + urlencode({"id_list": ",".join(sorted(ids)), "max_results": len(ids)})
-                resolved = parse_feed(self.fetch(url))
+                try:
+                    resolved = parse_feed(self.fetch(url))
+                except Exception:
+                    if self.fetch_one is None:
+                        raise
+                    resolved = []
+                returned = {paper.arxiv_id for paper in resolved}
+                if self.fetch_one is not None:
+                    for index, missing in enumerate(sorted(ids - returned)):
+                        if index:
+                            self.sleep(3)
+                        try:
+                            paper = self.fetch_one(missing)
+                            if paper.arxiv_id == missing:
+                                resolved.append(paper)
+                        except Exception as error:
+                            _log.warning('arXiv abstract metadata unavailable for %s: %s', missing, type(error).__name__)
                 found = set()
                 for paper in resolved:
                     if paper.arxiv_id not in ids:
