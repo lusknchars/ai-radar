@@ -543,7 +543,7 @@ def _linha(
         '<div class="entry-action">'
         f'<span class="entry-stage">{evidence_stage}</span>'
         f'{_report_action(p, has_report, public_config)}'
-        f'<a class="skill-download" download href="{escape(public_config.path(skill_path))}" '
+        f'<a class="sheen-button skill-download" download href="{escape(public_config.path(skill_path))}" '
         f'aria-label="Download skill for {escape(p.titulo)}">Download skill ↓</a>'
         f'<a class="source-link" href="https://arxiv.org/abs/{escape(p.arxiv_id)}" '
         'target="_blank" rel="noopener noreferrer">Original paper ↗</a></div>'
@@ -801,6 +801,7 @@ def render_site(
 def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
                      *, heading: str | None = None, kicker: str | None = None,
                      deck: str | None = None, back_href: str | None = None,
+                     lead_figure: str = "",
                      extra_script: str = "",
                      extra_style: str = "",
                      description: str | None = None,
@@ -852,7 +853,9 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'<div class="envelope">{_nav(atual, public_config)}'
         f'<header class="{header_class}">{back}'
         f'<p class="hero-eyebrow">{escape(kicker or f"Updated {dia}")}</p>'
-        f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
+        f'<div class="article-opening{ " has-paper-image" if lead_figure else ""}">'
+        f'<div><h1>{escape(heading or titulo)}</h1>{header_deck}</div>'
+        f'{lead_figure}</div></header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
         f'{_footer(public_config)}</div>{background}<script>{_ASCII_RIPPLE_JS}</script>'
         f'{enhancement}<script>{PAPER_STACK_SCRIPT}</script></body></html>'
@@ -1344,7 +1347,7 @@ def render_research_page(
         f'<a href="{escape(page.source_url)}" target="_blank" '
         'rel="noopener noreferrer">Read original paper ↗</a>'
         f'<a href="{escape(json_href)}">View page data (JSON)</a>'
-        f'<a class="skill-download" download href="{escape(skill_href)}">Download research skill ↓</a></div>'
+        f'<a class="sheen-button skill-download" download href="{escape(skill_href)}">Download research skill ↓</a></div>'
         f'{_render_paper_stack(page, public_config, preview_pages)}'
         f'{_render_research_jumps(page)}'
         '<section id="decision" class="research-section">'
@@ -1384,6 +1387,16 @@ def render_research_page(
         corpo, heading=page.title,
         kicker=f"{status} · arXiv {page.arxiv_id} · updated {page.as_of}",
         deck=page.summary, back_href=public_config.path("#acervo"),
+        lead_figure=(
+            '<figure class="paper-lead-image">'
+            f'<a href="https://arxiv.org/pdf/{escape(page.arxiv_id)}#page=1" '
+            'target="_blank" rel="noopener noreferrer" aria-label="Open the first page of the original PDF">'
+            f'<img src="{escape(public_config.path(f"assets/paper-previews/{page.arxiv_id}/page-1.jpg"))}" '
+            f'alt="First page of {escape(page.title)}" fetchpriority="high" width="680" height="960"></a>'
+            f'<figcaption>From the original paper · arXiv {escape(page.arxiv_id)}'
+            '<span>Page 1. Select the image to read the PDF.</span></figcaption></figure>'
+            if preview_pages else ""
+        ),
         description=page.summary, canonical_url=canonical,
         shared_assets=True, public_config=public_config,
         extra_style=(
