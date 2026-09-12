@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#eeeeee"/>
+  <g fill="none" stroke="#cb2957" opacity=".17">
+    <circle cx="1100" cy="150" r="165"/><circle cx="1100" cy="150" r="230"/>
+    <circle cx="1100" cy="150" r="295"/><circle cx="1100" cy="150" r="360"/>
+    <path d="M760 150h440M1100 0v490"/>
+  </g>
+  <circle cx="960" cy="270" r="9" fill="#cb2957"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#000000">
+    <text x="72" y="95" font-size="30" font-weight="700">AI Radar</text>
+    <text x="72" y="242" font-size="76" letter-spacing="-3">Find the AI research</text>
+    <text x="72" y="328" font-size="76" letter-spacing="-3">worth testing.</text>
+    <text x="76" y="421" font-size="26">The method. The trade-offs. The evidence.</text>
+    <path d="M76 490h1048" stroke="#000000" opacity=".18"/>
+    <text x="76" y="548" font-size="21" fill="#555555">LLM inference / Agent memory / Evaluation</text>
+  </g>
+</svg>

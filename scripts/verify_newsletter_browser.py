@@ -36,6 +36,17 @@ def main():
             assert page.locator('#contador').inner_text() == '1 of 20'
             page.get_by_role('searchbox').fill('')
             assert page.locator('.paper-entry:visible').count() == 20
+            page.get_by_role('searchbox').fill('not-a-real-research-topic-404')
+            assert page.locator('.paper-entry:visible').count() == 0
+            assert page.get_by_text('No papers match your search.', exact=True).is_visible()
+            page.get_by_role('button', name='Clear search and filters').click()
+            assert page.get_by_role('searchbox').input_value() == ''
+            assert page.locator('.paper-entry:visible').count() == 20
+            assert page.get_by_role('searchbox').evaluate('(element) => element === document.activeElement')
+            page.get_by_role('searchbox').fill('speculative decoding')
+            assert page.locator('.paper-entry[data-familia="decodificacao_especulativa"]:visible').count() > 0
+            page.get_by_role('searchbox').fill('')
+            assert page.locator('meta[property="og:image"]').get_attribute('content').endswith('/assets/social-card.png')
             for label in ('title', 'action'):
                 entry = page.locator('.paper-entry:visible').first
                 link = entry.locator('h3 a' if label == 'title' else '.entry-action .sheen-button')

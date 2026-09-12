@@ -18,6 +18,14 @@ and the work required to activate live delivery are documented in
 
 ![ai-radar](assets/banner.svg)
 
+## Deploy to Vercel
+
+Import this repository with `main` as the production branch. The included
+`vercel.json` builds a static archive at the domain root from saved research
+data, with no model calls. Set `RADAR_SITE_URL` to your preferred domain.
+See [Vercel deployment](docs/vercel-deployment.md) for setup, local checks,
+and the separate requirements for live newsletter signup.
+
 ## Why independent implementations
 
 Citations lag by a year. Stars measure whether a repository got posted somewhere. Neither tells you if a technique is worth your afternoon.
@@ -124,6 +132,25 @@ Every deep report separates two infrastructure questions:
 The tiers are closed and visible: API/CPU, one 24 GB GPU, one 48–80 GB GPU,
 multiple GPUs, cluster, custom hardware, or unknown. “Try it on one GPU” never
 means “reproduce a cluster result.”
+
+An opt-in [engineering validation workflow](docs/engineering-validation.md) now
+connects those reading decisions to local experiments. `ai-radar-validate`
+checks a frozen experiment plan, runs explicitly configured baseline/candidate
+adapters, and saves repeated measurements with quality and performance gates.
+The guide includes a runnable speculative-sampling correctness check and the
+handoff requirements for a future Vast.ai trial. GPU provisioning and public
+editorial promotion are separate from this local runner.
+
+The [AI engineering research shortlist](docs/research/2026-09-11-ai-engineering-opportunities.md)
+maps inference techniques to testable business outcomes, benchmark tools, and
+sources to monitor. It starts with the prepared GLM-4.7-Flash MTP trial and
+distinguishes proposed experiments from measured results.
+
+For agent-assisted research, use
+[`$ai-radar-research`](.agents/skills/ai-radar-research/SKILL.md).
+The project skill maps context sources, guides paper-to-practice extraction,
+and defines experiment review rules. `AGENTS.md` points research tasks to it;
+the detailed experiment rules load only when needed.
 
 The static site never receives an API key. "Request deep report" opens a
 prefilled GitHub issue and records public interest without spending credits. A
@@ -559,7 +586,9 @@ The composition root also owns failure policy:
 
 ## What it deliberately does not do
 
-**It does not reproduce papers.** No benchmark, no measurement. Every gain figure is an abstract claim, labeled as such in every place it renders.
+**The public archive does not reproduce papers.** Its gain figures remain author
+claims, labeled as such wherever rendered. Local validation artifacts are separate
+from the archive and do not change a paper's editorial status.
 
 **It does not tell you why.** The data supports "how many", never "why". The reading block on the site refuses causal and predictive language, and there is a test over the whole output that enforces it.
 

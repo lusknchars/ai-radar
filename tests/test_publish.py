@@ -128,6 +128,7 @@ def test_publish_site_uses_the_forks_public_urls(tmp_path):
     assert "https://reader.github.io/research-radar/" in feed
     robots = (tmp_path / "site" / "robots.txt").read_text(encoding="utf-8")
     assert "https://reader.github.io/research-radar/sitemap.xml" in robots
+    assert (tmp_path / "site" / "assets" / "social-card.png").read_bytes().startswith(b"\x89PNG")
     sitemap = (tmp_path / "site" / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://reader.github.io/research-radar/papers/2608.11111/" in sitemap
     assert "lusknchars" not in sitemap
@@ -144,6 +145,7 @@ def test_publish_site_uses_the_forks_public_urls(tmp_path):
         tmp_path / "site" / "papers" / "2608.11111" / "index.html"
     ).read_text(encoding="utf-8")
     assert 'href="/research-radar/#acervo"' in report
+    assert 'rel="canonical" href="https://reader.github.io/research-radar/reports/2608.11111/"' in report
     assert "/ai-radar/" not in report
     assert 'href="/research-radar/papers/2608.11111/index.json"' in research
     assert 'href="https://reader.github.io/research-radar/papers/2608.11111/"' in research

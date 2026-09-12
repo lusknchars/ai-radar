@@ -26,3 +26,8 @@ jobs:
 
       - name: Verificar baseline publico de 20 papers
         run: python scripts/verify_public_research_baseline.py
+
+      - name: Verify Vercel static build
+        env:
+          RADAR_SITE_URL: https://radar.example.com
+        run: python scripts/build_vercel.py

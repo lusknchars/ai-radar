@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Radar Research"
+  short_description: "Recover context and test paper-derived AI techniques"
+  default_prompt: "Use $ai-radar-research to recover the project's current evidence and assess the next paper or experiment."
