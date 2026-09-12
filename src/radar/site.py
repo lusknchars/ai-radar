@@ -996,11 +996,17 @@ EQUATIONS_ABSENT = {
 }
 
 
+def _equation_symbol(symbol: str) -> str:
+    base, separator, subscript = symbol.partition("_")
+    return (f'<var>{escape(base)}</var><sub>{escape(subscript)}</sub>'
+            if separator else f'<var>{escape(symbol)}</var>')
+
+
 def _render_equations(page: ResearchPage) -> str:
     head = (
         '<div class="section-head"><h2>Central equations</h2>'
-        '<p class="sub">The equations the paper builds on, copied from '
-        "arXiv's HTML rendering and typeset here.</p></div>"
+        '<p class="sub">Original equations, typeset for reading. Paperraft '
+        'explanations connect the mechanism, its aim, and the evidence.</p></div>'
     )
     if page.equations_status != "selected":
         if page.equations_status == "not_formula":
@@ -1029,13 +1035,36 @@ def _render_equations(page: ResearchPage) -> str:
             f'<p class="equation-context">{equation.context}</p>'
             if equation.context else ""
         )
+        heading = (f'<h3 class="equation-title">{escape(equation.headline)}</h3>'
+                   if equation.headline else "")
+        source_link = (
+            f'<a href="{escape(equation.source_url)}" target="_blank" '
+            'rel="noopener noreferrer">View original equation</a>'
+            if equation.source_url else "")
+        symbols = "".join(
+            f'<div><dt>{_equation_symbol(symbol)}</dt><dd>{escape(meaning)}</dd></div>'
+            for symbol, meaning in equation.symbols.items())
+        explanation = (
+            '<div class="equation-reading"><div>'
+            f'<p>{escape(equation.explanation)}</p>'
+            f'<p><strong>Aim.</strong> {escape(equation.objective)}</p></div>'
+            f'<dl class="equation-symbols">{symbols}</dl></div>'
+            if equation.explanation else "")
+        evidence = (
+            '<aside class="equation-evidence"><h4>Evidence and limits</h4>'
+            f'<p>{escape(equation.evidence)}</p>'
+            f'<a href="{escape(equation.evidence_url)}" target="_blank" '
+            'rel="noopener noreferrer">Read the supporting section</a></aside>'
+            if equation.evidence else "")
         # `mathml` and `context` are the parser's own output: sanitized MathML
         # and escaped prose with inline MathML. Both are inserted as markup.
         items.append(
             '<article class="equation">'
-            f'{context}'
-            f'<div class="equation-display">{equation.mathml}</div>'
+            f'{heading}{context}'
+            f'<div class="equation-display" tabindex="0" role="region" '
+            f'aria-label="Equation {escape(equation.label or equation.anchor)}">{equation.mathml}</div>'
             f'<p class="equation-eyebrow">{escape(" · ".join(parts))}</p>'
+            f'{source_link}{explanation}{evidence}'
             '</article>'
         )
     return (
@@ -1286,15 +1315,6 @@ def render_research_page(
         f'<div><dt>published</dt><dd>{escape(page.published)}</dd></div>'
         f'</dl>{rationale}</section>'
         f'{_render_equations(page)}'
-        '<section id="signal" class="research-section">'
-        '<div class="section-head"><h2>Observed signal</h2>'
-        '<p class="sub">Repository adoption and public attention measured by Paperraft.</p>'
-        '</div><dl class="research-signal">'
-        f'<div><dt>independent implementations</dt><dd>{page.independent_implementations}</dd></div>'
-        f'<div><dt>all implementations</dt><dd>{page.total_implementations}</dd></div>'
-        f'<div><dt>stars</dt><dd>{page.stars}</dd></div>'
-        f'<div><dt>citations</dt><dd>{escape(citations)}</dd></div>'
-        '</dl></section>'
         '<section id="claims" class="research-section">'
         '<div class="section-head"><h2>Claims and evidence</h2>'
         '<p class="sub">A claim is source-linked only when the PDF page and '
@@ -1306,6 +1326,12 @@ def render_research_page(
         'counts as evidence of safety.</p></div>'
         f'{_render_exposure_map(page)}</section>'
         f'{detail_sections}{_render_reading_guide(page)}{independent_tests}'
+        '<aside id="signal" class="research-signal-note" aria-label="Discovery signal">'
+        '<span>Discovery signal</span>'
+        f'<p>{page.independent_implementations} independent implementations '
+        f'of {page.total_implementations} total · {page.stars} '
+        f'{"star" if page.stars == 1 else "stars"} · {escape(citations)} citations</p>'
+        '<p>Repository activity and attention, not experimental evidence.</p></aside>'
         '<p class="research-provenance">Provisional research brief updated '
         f'{escape(page.as_of)}. Paperraft has not reproduced this experiment.</p>'
         '</article>'

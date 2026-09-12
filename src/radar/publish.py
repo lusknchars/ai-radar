@@ -8,6 +8,7 @@ from shutil import copyfile
 
 from .config import PublicConfig, load_public_config
 from .discovery_files import render_robots, render_sitemap
+from .equation_editions import apply_equation_edition
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
 from .report import load_report
@@ -102,6 +103,9 @@ def publish_site(
             point, as_of=today.isoformat(),
             report=reports_by_id.get(point.arxiv_id),
         )
+        page = apply_equation_edition(
+            page, Path(__file__).resolve().parents[2] / "content" / "equations"
+            / f"{point.arxiv_id}.json")
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
         (destination / "index.html").write_text(

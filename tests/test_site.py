@@ -996,7 +996,8 @@ def test_a_pagina_de_pesquisa_mostra_equacoes_centrais_como_mathml():
     html = render_research_page(_page_with_equations())
     assert '<section id="equations" class="research-section">' in html
     assert "Central equations" in html
-    assert '<div class="equation-display"><math display="block">' in html
+    assert 'class="equation-display" tabindex="0" role="region"' in html
+    assert '<math display="block">' in html
     assert "<mi>Ω</mi>" in html
     assert '<p class="equation-context">The loss function can be expressed as follows:</p>' in html
     assert '<p class="equation-eyebrow">equation (9) · §4 Methodology · loss function</p>' in html
