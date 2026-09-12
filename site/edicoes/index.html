@@ -310,11 +310,26 @@ text-transform:uppercase;letter-spacing:.1em}.research-claim-facts dd{margin:6px
 color:var(--fraco);font-size:11px;line-height:1.45}.research-claims blockquote{
 max-width:66ch;margin:16px 0 10px;padding:15px 17px;border-left:2px solid var(--acento);
 background:rgba(0,0,0,.035);color:var(--fraco);font-size:13px;line-height:1.65}
-.equation-stack{display:grid;gap:34px;max-width:72ch}
+.equation-stack{display:grid;grid-template-columns:minmax(0,1fr);gap:44px;max-width:100%}
+.equation{min-width:0}
+.equation-title{font:400 clamp(24px,3vw,34px)/1.15 var(--editorial);margin:0 0 18px;max-width:40ch}
+.equation+.equation{border-top:1px solid var(--linha);padding-top:32px}
+.equation-reading{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px;margin:22px 0}
+.equation-reading p{font-size:15px;line-height:1.75;color:var(--fraco);margin:0 0 12px}
+.equation-symbols{margin:0}.equation-symbols div{display:grid;grid-template-columns:90px 1fr;gap:12px;margin-bottom:12px}
+.equation-symbols dt{font:20px var(--editorial);white-space:nowrap}.equation-symbols sub{font-size:12px}
+.equation-symbols dd{margin:0;font-size:13px;color:var(--fraco)}
+.equation a{display:inline-flex;align-items:center;min-height:44px;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.equation-evidence{padding-left:18px;border-left:2px solid var(--acento);max-width:72ch}
+.equation-evidence h4{font:500 14px var(--display);margin:0 0 8px}
+.equation-evidence p{font-size:14px;line-height:1.7;margin:0;color:var(--fraco)}
+.research-signal-note{padding:22px 0;border-top:1px solid var(--linha);color:var(--fraco);font-size:12px}
+.research-signal-note span{font-weight:500}.research-signal-note p{margin:6px 0}
+@media(max-width:640px){.equation-reading{grid-template-columns:1fr;gap:16px}}
 .equation-context{max-width:62ch;margin:0 0 14px;color:var(--fraco);font-size:15px;line-height:1.6}
-.equation-display{max-width:100%;margin:0;padding:22px 26px;overflow-x:auto;
-border:1px solid var(--linha);border-radius:18px;background:var(--superficie)}
-.equation-display math{display:block;margin:0 auto;font-family:"Paperraft Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.15em;line-height:1.5;color:var(--texto)}
+.equation-display{max-width:100%;margin:0;padding:24px 4px;overflow-x:auto;
+border-block:1px solid var(--linha);background:transparent}
+.equation-display math{display:block;width:max-content;min-width:100%;margin:0 auto;font-family:"Paperraft Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:clamp(21px,2.5vw,29px);line-height:1.5;color:var(--texto)}
 .equation-display math+math{margin-top:10px}
 .equation-context math{font-family:"Paperraft Math","STIX Two Math","Latin Modern Math","Cambria Math",math;font-size:1.05em}
 .equation-eyebrow{margin:12px 0 0;color:var(--apagado);font:500 8px var(--mono);text-transform:uppercase;letter-spacing:.13em}

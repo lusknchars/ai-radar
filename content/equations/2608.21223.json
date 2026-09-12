@@ -1,0 +1,50 @@
+{
+  "arxiv_id": "2608.21223",
+  "source_url": "https://arxiv.org/html/2608.21223v1",
+  "source_sha256": "111c56449ca5f4ed5f6ddf430d4b9d49943c53c6f3ac6f4c08aac103d8210032",
+  "fetched_at": "2026-09-12",
+  "equations": [
+    {
+      "anchor": "S4.E3",
+      "label": "(3)",
+      "section": "IV Architecture and Design",
+      "latex": "x\\cdot(\\theta\\pm\\epsilon z_{i})=x\\cdot\\theta\\pm x\\cdot\\epsilon z_{i}.",
+      "mathml": "<math display=\"block\"><mrow><mrow><mrow><mi>x</mi><mo lspace=\"0.222em\" rspace=\"0.222em\">⋅</mo><mrow><mo stretchy=\"false\">(</mo><mrow><mi>θ</mi><mo>±</mo><mrow><mi>ϵ</mi><mo lspace=\"0em\" rspace=\"0em\">​</mo><msub><mi>z</mi><mi>i</mi></msub></mrow></mrow><mo stretchy=\"false\">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>x</mi><mo lspace=\"0.222em\" rspace=\"0.222em\">⋅</mo><mi>θ</mi></mrow><mo>±</mo><mrow><mrow><mi>x</mi><mo lspace=\"0.222em\" rspace=\"0.222em\">⋅</mo><mi>ϵ</mi></mrow><mo lspace=\"0em\" rspace=\"0em\">​</mo><msub><mi>z</mi><mi>i</mi></msub></mrow></mrow></mrow><mo lspace=\"0em\">.</mo></mrow></math>",
+      "role": "proposed_method",
+      "headline": "Perturb the output, keep the weights in place",
+      "explanation": "Distributivity separates the weighted input from its perturbation contribution. Their sum reconstructs the perturbed output.",
+      "objective": "Avoid rewriting stored weights during perturbation evaluations.",
+      "symbols": {
+        "x": "spike input",
+        "θ": "weights",
+        "ε": "perturbation scale",
+        "zᵢ": "random perturbation"
+      },
+      "evidence": "Section IV-A establishes algebraic equivalence. This identity alone does not establish an energy saving.",
+      "evidence_url": "https://arxiv.org/html/2608.21223v1#S4.SS1",
+      "context": "",
+      "source_url": "https://arxiv.org/html/2608.21223v1#S4.E3"
+    },
+    {
+      "anchor": "S5.E6",
+      "label": "(6)",
+      "section": "V Experiments and Results",
+      "latex": "R=\\frac{E_{\\text{IPZO}}}{E_{\\text{EPZO}}}=\\frac{2e_{\\text{PGU-XOR}}\\cdot BT}{3e_{\\text{RMW}}},",
+      "mathml": "<math display=\"block\"><mrow><mrow><mi>R</mi><mo>=</mo><mfrac><msub><mi>E</mi><mtext>IPZO</mtext></msub><msub><mi>E</mi><mtext>EPZO</mtext></msub></mfrac><mo>=</mo><mfrac><mrow><mrow><mrow><mn>2</mn><mo lspace=\"0em\" rspace=\"0em\">​</mo><msub><mi>e</mi><mtext>PGU-XOR</mtext></msub></mrow><mo lspace=\"0.222em\" rspace=\"0.222em\">⋅</mo><mi>B</mi></mrow><mo lspace=\"0em\" rspace=\"0em\">​</mo><mi>T</mi></mrow><mrow><mn>3</mn><mo lspace=\"0em\" rspace=\"0em\">​</mo><msub><mi>e</mi><mtext>RMW</mtext></msub></mrow></mfrac></mrow><mo>,</mo></mrow></math>",
+      "role": "metric",
+      "headline": "Find the energy break-even point",
+      "explanation": "R compares implicit and explicit perturbation energy. The numerator grows with batch size B and time steps T; R below one favors IPZO.",
+      "objective": "Identify workloads where avoided memory operations outweigh perturbation generation.",
+      "symbols": {
+        "B": "batch size",
+        "T": "time steps",
+        "e_PGU-XOR": "energy per perturbation MVM",
+        "e_RMW": "energy per read-modify-write cycle"
+      },
+      "evidence": "At B = 64 and T = 4, the authors report ratios of 0.83 in BIT8 and 0.46 in BIT1. Figure 15 compares post-layout IPZO simulation with estimated EPZO energy. This is perturbation energy in a 16-nm IMC design, not measured GPU inference cost.",
+      "evidence_url": "https://arxiv.org/html/2608.21223v1#S5.SS4.SSS2",
+      "context": "",
+      "source_url": "https://arxiv.org/html/2608.21223v1#S5.E6"
+    }
+  ]
+}

@@ -74,6 +74,18 @@ def main():
                 page.screenshot(path=str(args.out / f'archive-{width}.png'))
             assert not errors, errors
             assert not failed_resources, failed_resources
+            paper_url = args.url.rstrip('/') + '/papers/2608.21223/'
+            page.goto(paper_url, wait_until='networkidle')
+            assert page.locator('.equation-display math').count() == 2
+            assert page.locator('.equation-evidence').count() == 2
+            assert page.locator('.research-signal').count() == 0
+            assert page.locator('.research-signal-note').count() == 1
+            for width in (390, 1440):
+                page.set_viewport_size({'width': width, 'height': 1000})
+                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
+                page.locator('#equations').screenshot(path=str(args.out / f'equations-{width}.png'))
+            assert not errors, errors
+            assert not failed_resources, failed_resources
         finally:
             browser.close()
     print('Browser smoke check passed')

@@ -98,6 +98,13 @@ class ResearchEquation(BaseModel):
     latex: str = Field(min_length=1)
     mathml: str = Field(pattern=r'^<math display="block">')
     context: str = ""
+    headline: str = ""
+    explanation: str = ""
+    objective: str = ""
+    symbols: dict[str, str] = Field(default_factory=dict)
+    evidence: str = ""
+    evidence_url: str = Field(default="", pattern=r"^$|^https://")
+    source_url: str = Field(default="", pattern=r"^$|^https://")
 
 
 class ResearchPage(BaseModel):
@@ -133,6 +140,8 @@ class ResearchPage(BaseModel):
     equations_status: EquationsStatus = "not_fetched"
     core_kind: str = ""
     equations_fetched_at: str = ""
+    equations_source_url: str = ""
+    equations_source_sha256: str = ""
 
     @model_validator(mode="after")
     def exposure_map_is_complete(self) -> ResearchPage:
