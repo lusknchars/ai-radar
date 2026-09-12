@@ -151,6 +151,54 @@ BACKGROUND_SCRIPT = r"""
 })();
 """
 
+ASCII_RIPPLE_SCRIPT = r"""
+// Pointer-driven ASCII ripple for the footer. It stays bounded to this small
+// region and pauses when hidden or when the reader requests reduced motion.
+(function(){
+  var root = document.querySelector('[data-ascii-ripple]');
+  if (!root) return;
+  var pre = root.querySelector('pre');
+  if (!pre) return;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var chars = ' .·:+*#%@', width = 42, height = 6;
+  var pointer = {x:.5, y:.5}, frame = 0, last = 0;
+  function render(time){
+    frame = 0;
+    if (reduced.matches || document.hidden) return;
+    if (time - last < 48){ frame = requestAnimationFrame(render); return; }
+    last = time;
+    var output = [];
+    for (var y=0; y<height; y++){
+      var line = '';
+      for (var x=0; x<width; x++){
+        var nx=x/(width-1), ny=y/(height-1), dx=nx-pointer.x, dy=ny-pointer.y;
+        var distance=Math.sqrt(dx*dx+dy*dy), wave=Math.sin(distance*25-time*.004)*.5+.5;
+        var value=Math.max(0,Math.min(.999,wave*Math.max(0,1-distance*1.35)+.08*Math.sin(x*.7+time*.001)));
+        line += chars[Math.floor(value*chars.length)];
+      }
+      output.push(line);
+    }
+    pre.textContent=output.join('\n');
+    frame=requestAnimationFrame(render);
+  }
+  function move(event){
+    var rect=root.getBoundingClientRect();
+    pointer.x=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
+    pointer.y=Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height));
+    if (!frame && !reduced.matches) frame=requestAnimationFrame(render);
+  }
+  root.addEventListener('pointermove',move,{passive:true});
+  root.addEventListener('pointerleave',function(){pointer.x=.5;pointer.y=.5},{passive:true});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&!frame)frame=requestAnimationFrame(render);});
+  if (reduced.addEventListener) reduced.addEventListener('change',function(){
+    if(reduced.matches){if(frame)cancelAnimationFrame(frame);frame=0;pre.textContent='paperraft signal';}
+    else if(!frame)frame=requestAnimationFrame(render);
+  });
+  pre.textContent='paperraft signal';
+  if(!reduced.matches)frame=requestAnimationFrame(render);
+})();
+"""
+
 REPORT_SCRIPT = r"""
 // Progressive enhancement for long reports: reading progress and the current
 // section in the contents rail. The article and every anchor work without JS.
@@ -613,6 +661,9 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:48px
 color:var(--fraco);font-family:var(--sans);font-size:12px}
 footer span{margin-right:auto}footer a{padding:8px 0;text-decoration:underline;
 text-underline-offset:3px}
+.footer-ripple{width:190px;height:48px;flex:0 0 190px;overflow:hidden;border:1px solid var(--linha);
+background:rgba(238,238,238,.58);color:var(--acento);border-radius:9px;cursor:crosshair}
+.footer-ripple pre{margin:0;padding:8px 10px;font:500 8px/1.35 var(--mono);letter-spacing:.08em;white-space:pre}
 .eixos,.filtros,.legenda,.research-index,.repos,.cortes,.nota{font-family:var(--sans)}
 .chart-suite{display:grid;gap:18px}
 .chart-shared-legend{display:flex;align-items:flex-start;gap:18px;padding:14px 18px;
@@ -994,6 +1045,6 @@ gap:10px}.report-links{width:100%}.report-links a{flex:1;justify-content:center;
 .research-actions>a,.research-primary-action{width:100%;justify-content:center;text-align:center}
 .research-decision,.research-signal,.exposure-grid,.research-claim-facts{grid-template-columns:1fr}
 .research-decision div,.research-signal div{min-height:78px}.exposure-item{min-height:0}
-.report-to-top{right:14px;bottom:14px}
+.report-to-top{right:14px;bottom:14px}.footer-ripple{flex-basis:100%;width:100%;height:42px}.footer-ripple pre{padding:6px 8px}
 }
 """

@@ -35,6 +35,7 @@ from .public_labels import (CORE_KIND_PHRASES,
 from .report import ReportDocument
 from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
+from .site_assets import ASCII_RIPPLE_SCRIPT as _ASCII_RIPPLE_JS
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
@@ -112,7 +113,10 @@ def _social_metadata(title: str, description: str, canonical_url: str,
 
 def _footer(public_config: PublicConfig) -> str:
     return (
-        '<footer><span>AI research, with the evidence in reach.</span>'
+        '<footer><div class="footer-ripple" data-ascii-ripple '
+        'aria-label="Animated Paperraft signal" role="img">'
+        '<pre aria-hidden="true">paperraft signal</pre></div>'
+        '<span>AI research, with the evidence in reach.</span>'
         f'<a href="{escape(public_config.path("about.html"))}">How Paperraft works</a>'
         f'<a href="https://github.com/{escape(public_config.repository)}">Source code</a>'
         '</footer>'
@@ -786,7 +790,7 @@ def render_site(
         f'{_footer(public_config)}'
         f'</div><script src="{escape(public_config.path("assets/d3-7.9.0.min.js"))}"></script>'
         f'<script src="{escape(public_config.path("assets/observable-plot-0.6.17.min.js"))}">'
-        f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
+        f'</script><script>{_BACKGROUND_JS}</script><script>{_ASCII_RIPPLE_JS}</script><script>{_JS}</script>'
         f'<script>{_CHART_JS}</script></body></html>'
     )
 
@@ -847,7 +851,7 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'<p class="hero-eyebrow">{escape(kicker or f"Updated {dia}")}</p>'
         f'<h1>{escape(heading or titulo)}</h1>{header_deck}</header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
-        f'{_footer(public_config)}</div>{background}'
+        f'{_footer(public_config)}</div>{background}<script>{_ASCII_RIPPLE_JS}</script>'
         f'{enhancement}</body></html>'
     )
 
