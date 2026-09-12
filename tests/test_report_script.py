@@ -187,3 +187,23 @@ def test_new_report_requires_key_before_creating_clients(tmp_path, monkeypatch):
 
     with pytest.raises(SystemExit, match="KIMI_API_KEY is required"):
         gerar_relatorio.main(_args(tmp_path))
+
+
+def test_all_plan_discovers_archive_without_creating_paid_clients(tmp_path, monkeypatch, capsys):
+    class ArchiveStore(FakeStore):
+        def all_papers(self):
+            return [
+                {"arxiv_id": PAPER_2.arxiv_id},
+                {"arxiv_id": PAPER.arxiv_id},
+            ]
+
+    monkeypatch.setattr(gerar_relatorio, "Store", ArchiveStore)
+    monkeypatch.setattr(gerar_relatorio, "KimiJudge",
+                        lambda *a, **k: pytest.fail("plan must not create a paid client"))
+    assert gerar_relatorio.main([
+        "--all", "--plan", "--db", str(tmp_path / "radar.db"),
+        "--reports-dir", str(tmp_path / "reports"),
+    ]) == 0
+    output = capsys.readouterr().out
+    assert "2 pending of 2 papers" in output
+    assert "2608.11111 Fast Attention" in output
