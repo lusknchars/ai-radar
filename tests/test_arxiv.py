@@ -39,11 +39,14 @@ def test_abstract_page_rejects_wrong_identity_and_incomplete_metadata(page):
         parse_abstract_page(page, '2608.11111')
 
 
-def test_repeated_rate_limits_defer_remaining_queries_without_hiding_gaps():
+@pytest.mark.parametrize('failure', [429, 503, 'timeout'])
+def test_repeated_upstream_failures_defer_remaining_queries_without_hiding_gaps(failure):
     calls = []
     def fetch(url):
         calls.append(url)
-        response = httpx.Response(429, request=httpx.Request('GET', url))
+        if failure == 'timeout':
+            raise httpx.ReadTimeout('arXiv did not respond')
+        response = httpx.Response(failure, request=httpx.Request('GET', url))
         response.raise_for_status()
     scope = ScopeConfig(name='test', categories=('cs.LG',), terms=('a', 'b', 'c', 'd'))
     result = ArxivClient(fetch=fetch, sleep=lambda _: None).recent(scope)

@@ -21,6 +21,8 @@ import xml.etree.ElementTree as ET
 from typing import Callable
 from urllib.parse import urlencode
 
+import httpx
+
 from .config import ScopeConfig
 from .models import Discovery, Paper
 
@@ -141,7 +143,7 @@ class ArxivClient:
         # escopo em dois termos diferentes e um corte so.
         fora_de_escopo: set[str] = set()
         termos_falhos = 0
-        throttled = 0
+        unavailable = 0
         deferred = 0
         for index, term in enumerate(scope.terms):
             if index:
@@ -162,13 +164,14 @@ class ArxivClient:
                 termos_falhos += 1
                 _log.warning("termo %r nao produziu resultados: %s", term, exc)
                 status = getattr(getattr(exc, 'response', None), 'status_code', None)
-                throttled = throttled + 1 if status == 429 else 0
-                if throttled >= 2:
+                transient = isinstance(exc, httpx.TransportError) or status in {429, 500, 502, 503, 504}
+                unavailable = unavailable + 1 if transient else 0
+                if unavailable >= 2:
                     deferred = len(scope.terms) - index - 1
-                    _log.warning('arXiv rate limit: deferring %s remaining keyword queries', deferred)
+                    _log.warning('arXiv temporarily unavailable: deferring %s remaining keyword queries', deferred)
                     break
                 continue
-            throttled = 0
+            unavailable = 0
             for paper in parsed:
                 if paper.arxiv_id in seen:
                     continue
