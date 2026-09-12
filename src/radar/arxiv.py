@@ -13,10 +13,15 @@ de depurar.
 from __future__ import annotations
 
 import logging
+from datetime import date
+from html.parser import HTMLParser
+import re
 import time
 import xml.etree.ElementTree as ET
 from typing import Callable
 from urllib.parse import urlencode
+
+import httpx
 
 from .config import ScopeConfig
 from .models import Discovery, Paper
@@ -69,6 +74,52 @@ def parse_feed(xml_text: str) -> list[Paper]:
     return papers
 
 
+class _AbstractMetadata(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.meta = {}
+        self.subjects = []
+        self.in_subjects = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == 'meta' and attrs.get('name', '').startswith('citation_'):
+            self.meta.setdefault(attrs['name'], []).append(attrs.get('content', ''))
+        if tag == 'td' and 'subjects' in attrs.get('class', '').split():
+            self.in_subjects = True
+
+    def handle_endtag(self, tag):
+        if tag == 'td':
+            self.in_subjects = False
+
+    def handle_data(self, text):
+        if self.in_subjects:
+            self.subjects.append(text)
+
+
+def parse_abstract_page(text: str, expected_id: str) -> Paper:
+    """Read citation metadata from an official arXiv abstract page."""
+    parser = _AbstractMetadata()
+    parser.feed(text)
+    meta = parser.meta
+    if re.sub(r'v\d+$', '', meta.get('citation_arxiv_id', [''])[0]) != expected_id:
+        raise ValueError('arXiv metadata identity mismatch')
+    title = ' '.join(meta['citation_title'][0].split())
+    abstract = ' '.join(meta['citation_abstract'][0].split())
+    # citation_author uses "Surname, Given name"; the feed and repository
+    # authorship classifier expect the surname at the end of each name.
+    authors = []
+    for author in meta['citation_author']:
+        surname, comma, given = author.partition(',')
+        authors.append(' '.join((f'{given} {surname}' if comma else author).split()))
+    categories = re.findall(r'\(([a-z-]+\.[A-Z]+)\)', ''.join(parser.subjects))
+    published = date.fromisoformat(meta['citation_date'][0].replace('/', '-')).isoformat()
+    if not title or not abstract or not authors or not all(authors) or not categories:
+        raise ValueError('Incomplete arXiv citation metadata')
+    return Paper(arxiv_id=expected_id, title=title, abstract=abstract,
+                 authors=authors, categories=categories, published=published)
+
+
 class ArxivClient:
     def __init__(
         self,
@@ -92,6 +143,8 @@ class ArxivClient:
         # escopo em dois termos diferentes e um corte so.
         fora_de_escopo: set[str] = set()
         termos_falhos = 0
+        unavailable = 0
+        deferred = 0
         for index, term in enumerate(scope.terms):
             if index:
                 self._sleep(ETIQUETTE_SLEEP_SECONDS)
@@ -110,7 +163,15 @@ class ArxivClient:
                 # e o truncamento silencioso que o projeto proibe.
                 termos_falhos += 1
                 _log.warning("termo %r nao produziu resultados: %s", term, exc)
+                status = getattr(getattr(exc, 'response', None), 'status_code', None)
+                transient = isinstance(exc, httpx.TransportError) or status in {429, 500, 502, 503, 504}
+                unavailable = unavailable + 1 if transient else 0
+                if unavailable >= 2:
+                    deferred = len(scope.terms) - index - 1
+                    _log.warning('arXiv temporarily unavailable: deferring %s remaining keyword queries', deferred)
+                    break
                 continue
+            unavailable = 0
             for paper in parsed:
                 if paper.arxiv_id in seen:
                     continue
@@ -124,4 +185,6 @@ class ArxivClient:
             cuts["fora_de_escopo"] = len(fora_de_escopo)
         if termos_falhos:
             cuts["termo_falhou"] = termos_falhos
+        if deferred:
+            cuts['termo_adiado'] = deferred
         return Discovery(papers=list(seen.values()), cuts=cuts)

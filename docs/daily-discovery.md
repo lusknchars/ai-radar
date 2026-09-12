@@ -1,12 +1,45 @@
 # Daily paper discovery
 
+## Expanded research round
+
+Manual runs can select the `expanded` profile. Scheduled runs keep the daily profile.
+
+| Limit | Daily | Expanded |
+| --- | --- | --- |
+| Exa searches | 2 | Up to 6, splitting each scope's terms into distinct queries |
+| Results per search | 10 by default | 15 |
+| Exa publication window | 30 days | 90 days |
+| New briefs attempted | Up to 40 | Up to 60 |
+| Full-paper reports | 0 | Up to 3 |
+| Workflow time limit | 45 minutes | 120 minutes |
+
+These are maximum attempts, not promised publication counts or dollar-spending limits. Existing arXiv, relevance and evidence requirements still apply. One failed Exa query does not prevent the remaining queries from running.
+
+After two consecutive keyword queries fail with rate limits, transport errors or transient server errors, arXiv discovery defers the remaining terms and records the gap. Exa discovery can continue. When the official arXiv feed is unavailable or omits an ID, the collector checks that paper's official abstract page for citation metadata, with a three-second pause between page requests. It requires a matching arXiv ID, title, abstract, authors, date and categories. It never substitutes an Exa summary for the paper.
+
+After collection, the expanded round selects recent actionable briefs from different research areas. It reads the original full texts through the existing source-grounded report generator and preserves source hashes, excerpts, limitations and unanswered checks. It does not reproduce the experiments. Reports already on disk are skipped before the limit is applied. Failed reports return a nonzero status; the workflow records incomplete analysis and preserves successfully generated reports.
+
+Queued runs resolve the branch when the job starts, so they see state saved by the previous collection. They share the existing serialization group.
+
+A partial collection can proceed to analysis and publication when it produced usable output. The workflow records a warning and retains `partial` in `/collection.json`. A failed collection without usable output blocks publication. The decision uses a status file written by the current invocation, so an old successful snapshot cannot unlock a failed run. Collection logs show each brief as it starts.
+
+```sh
+gh workflow run radar.yml --repo lusknchars/ai-radar -f profile=expanded -f exa_mode=daily
+```
+
+Preview the report shortlist locally without model calls:
+
+```sh
+.venv/bin/python scripts/deepen_shortlist.py --db data/radar-state.db --plan
+```
+
 The radar workflow requests a run daily at 09:17 UTC, 06:17 in Brasilia. GitHub scheduled jobs can start later than the requested time. Manual runs use the same concurrency group, so two collectors cannot write the publication database simultaneously.
 
 ## Discovery and publication
 
 1. Query arXiv for the existing inference and agent research scopes. Retry transient transport errors, rate limits and selected server errors up to three attempts, with increasing waits.
 2. When EXA_API_KEY is configured, run one Exa search per scope. Default: two searches per daily collection, ten results each, with a 30-day publication window. No content extraction or synthesized answer requests are sent to Exa.
-3. Accept only arxiv.org paper URLs, normalize versioned IDs and deduplicate against arXiv discovery. Resolve every new ID through the official arXiv feed. Exa titles and summaries never become paper metadata or scientific evidence. Recheck categories and publication dates against that feed.
+3. Accept only arxiv.org paper URLs, normalize versioned IDs and deduplicate against arXiv discovery. Resolve every new ID through the official arXiv feed, falling back to its official abstract page if necessary. Exa titles and summaries never become paper metadata or scientific evidence. Recheck categories and publication dates against the official metadata.
 4. Apply the existing relevance, repository-signal and judgment pipeline. The new-paper limit remains 20 per scope. Search results are candidates, not automatically published briefs. Exa errors preserve the arXiv results and mark the collection partial.
 5. Generate previews for newly published papers, regenerate the site and skill downloads, and commit the resulting state. Missing thumbnails retain original-paper links.
 6. Publish GitHub Pages through the existing job. Publish Vercel too when its credentials are configured.
@@ -42,4 +75,4 @@ API contract checked against [Exa Search reference](https://exa.ai/docs/referenc
 
 ## Validation on 2026-09-12
 
-The offline suite passed, including injected Exa responses, canonical source validation, deduplication, missing metadata, stale results and fallback behavior. Retry behavior was checked separately with transient and permanent HTTP failures. A live arXiv metadata probe exhausted its retry budget with HTTP 429; no new corpus was published from that probe. Exa and model calls were not made because activation credentials were not configured. These checks validate the implementation, not end-to-end live discovery quality.
+The offline suite covers injected Exa responses, canonical source validation, deduplication, missing metadata, stale results and fallback behavior. Retry behavior was checked separately with transient and permanent HTTP failures. A live arXiv feed probe exhausted its retry budget with HTTP 429. The official abstract page for arXiv `2608.07855` returned complete citation metadata and passed the fallback parser. A single Exa search and a structured Kimi brief also succeeded after credentials were configured. These checks establish that the adapters respond; collection coverage and report quality still need inspection after the expanded run.

@@ -1,11 +1,15 @@
 """Optional bounded discovery. arXiv remains the authority for paper metadata."""
 from collections import Counter
 from datetime import date, timedelta
+import logging
 import re
+import time
 from urllib.parse import urlencode, urlsplit
 
 from .arxiv import ARXIV_ENDPOINT, parse_feed
 from .models import Discovery
+
+_log = logging.getLogger(__name__)
 
 
 def arxiv_id(url: str) -> str | None:
@@ -17,35 +21,63 @@ def arxiv_id(url: str) -> str | None:
 
 
 class ExaDiscovery:
-    def __init__(self, primary, *, search, fetch, today: date, results: int = 10):
+    def __init__(self, primary, *, search, fetch, today: date, results: int = 10,
+                 queries: int = 1, lookback_days: int = 30, fetch_one=None, sleep=time.sleep):
         if not 1 <= results <= 25:
             raise ValueError("RADAR_EXA_RESULTS must be between 1 and 25")
+        if not 1 <= queries <= 3 or not 1 <= lookback_days <= 180:
+            raise ValueError("Exa requires 1–3 queries and a 1–180 day lookback")
         self.primary, self.search, self.fetch = primary, search, fetch
         self.today, self.results = today, results
+        self.queries, self.lookback_days = queries, lookback_days
+        self.fetch_one, self.sleep = fetch_one, sleep
 
     def recent(self, scope):
         original = self.primary.recent(scope)
         papers = {paper.arxiv_id: paper for paper in original.papers}
         cuts = Counter(original.cuts)
-        start = self.today - timedelta(days=30)
+        start = self.today - timedelta(days=self.lookback_days)
+        ids = set()
+        for index in range(min(self.queries, max(1, len(scope.terms)))):
+            terms = scope.terms[index::self.queries]
+            try:
+                response = self.search({
+                    "query": f"AI research {scope.name}: " + ", ".join(terms),
+                    "type": "auto", "category": "research paper",
+                    "includeDomains": ["arxiv.org"], "numResults": self.results,
+                    "startPublishedDate": f"{start.isoformat()}T00:00:00Z",
+                })
+                for result in response["results"][:self.results]:
+                    candidate = arxiv_id(result.get("url", ""))
+                    if candidate:
+                        ids.add(candidate)
+                    else:
+                        cuts["exa_invalid_source"] += 1
+            except Exception as error:
+                _log.warning("Exa query %s failed: %s, HTTP %s", index + 1,
+                             type(error).__name__, getattr(getattr(error, 'response', None), 'status_code', None))
+                cuts["exa_search_failed"] += 1
         try:
-            response = self.search({
-                "query": f"AI research {scope.name}: " + ", ".join(scope.terms),
-                "type": "auto", "category": "research paper",
-                "includeDomains": ["arxiv.org"], "numResults": self.results,
-                "startPublishedDate": f"{start.isoformat()}T00:00:00Z",
-            })
-            ids = set()
-            for result in response["results"][:self.results]:
-                candidate = arxiv_id(result.get("url", ""))
-                if candidate:
-                    ids.add(candidate)
-                else:
-                    cuts["exa_invalid_source"] += 1
             ids -= papers.keys()
             if ids:
                 url = ARXIV_ENDPOINT + "?" + urlencode({"id_list": ",".join(sorted(ids)), "max_results": len(ids)})
-                resolved = parse_feed(self.fetch(url))
+                try:
+                    resolved = parse_feed(self.fetch(url))
+                except Exception:
+                    if self.fetch_one is None:
+                        raise
+                    resolved = []
+                returned = {paper.arxiv_id for paper in resolved}
+                if self.fetch_one is not None:
+                    for index, missing in enumerate(sorted(ids - returned)):
+                        if index:
+                            self.sleep(3)
+                        try:
+                            paper = self.fetch_one(missing)
+                            if paper.arxiv_id == missing:
+                                resolved.append(paper)
+                        except Exception as error:
+                            _log.warning('arXiv abstract metadata unavailable for %s: %s', missing, type(error).__name__)
                 found = set()
                 for paper in resolved:
                     if paper.arxiv_id not in ids:
@@ -58,8 +90,10 @@ class ExaDiscovery:
                     else:
                         papers[paper.arxiv_id] = paper
                 cuts["exa_metadata_missing"] += len(ids - found)
-        except Exception:
+        except Exception as error:
             # Never log provider response bodies or credentials. Preserve the
             # primary discovery and mark the collection partial in the caller.
-            cuts["exa_search_failed"] += 1
+            _log.warning("Exa metadata resolution failed: %s, HTTP %s",
+                         type(error).__name__, getattr(getattr(error, 'response', None), 'status_code', None))
+            cuts["exa_metadata_failed"] += 1
         return Discovery(papers=list(papers.values()), cuts={k: v for k, v in cuts.items() if v})

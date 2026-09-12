@@ -1,7 +1,52 @@
 from pathlib import Path
+import json
 import pytest
 
 import radar.workflow as workflow
+
+
+@pytest.mark.parametrize('outcome,exit_code,ready', [
+    ('success', 0, True), ('partial', 1, True), ('failed', 1, False),
+    ('unconfigured', 0, True), ('running', 1, False),
+])
+def test_actions_publishes_completed_partial_results_but_blocks_failed_runs(
+    monkeypatch, tmp_path, outcome, exit_code, ready,
+):
+    monkeypatch.chdir(tmp_path)
+    output = tmp_path / 'outputs'
+    monkeypatch.setenv('GITHUB_OUTPUT', str(output))
+    def collect(argv):
+        Path('site').mkdir()
+        Path('site/collection.json').write_text(json.dumps({'outcome': outcome}))
+        return exit_code
+    monkeypatch.setattr(workflow, 'main', collect)
+    assert workflow.actions_main([]) == exit_code
+    assert f'publication_ready={str(ready).lower()}\n' in output.read_text()
+    assert f'collection_outcome={outcome if ready else "unknown"}\n' in output.read_text()
+
+
+def test_actions_cannot_reuse_previous_success_when_current_run_fails(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    output = tmp_path / 'outputs'
+    monkeypatch.setenv('GITHUB_OUTPUT', str(output))
+    Path('site').mkdir()
+    Path('site/collection.json').write_text('{"outcome":"success"}')
+    monkeypatch.setattr(workflow, 'main', lambda argv: 1)
+    assert workflow.actions_main([]) == 1
+    assert 'publication_ready=false' in output.read_text()
+
+
+def test_actions_dry_run_preserves_publication_metadata(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    output = tmp_path / 'outputs'
+    monkeypatch.setenv('GITHUB_OUTPUT', str(output))
+    Path('site').mkdir()
+    status = Path('site/collection.json')
+    status.write_text('{"outcome":"success"}')
+    monkeypatch.setattr(workflow, 'main', lambda argv: 0)
+    assert workflow.actions_main(['--dry-run']) == 0
+    assert status.read_text() == '{"outcome":"success"}'
+    assert not output.exists()
 
 
 def test_live_mode_without_credentials_fails_instead_of_publishing_sample(monkeypatch):
