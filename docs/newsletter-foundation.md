@@ -147,7 +147,8 @@ to validate the deeper report format. Reader recruitment, production signup
 hosting, DNS verification, and live email delivery are not completed by the
 local implementation.
 
-Accounts, saved papers, topic-specific editions, automatic bulk sending, and
+The [community](community.md) now uses GitHub accounts for public paper discussions.
+Separate Paperraft email accounts, saved papers, topic-specific editions, automatic bulk sending, and
 paper-version-aware regeneration remain later work. Existing deep reports are
 still reused by canonical arXiv ID; this change does not claim to detect and
 regenerate analyses when arXiv publishes a new version. Move operational state
