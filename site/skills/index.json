@@ -70,11 +70,67 @@
     "source": "https://arxiv.org/abs/2607.12599"
   },
   {
+    "arxiv_id": "2607.22389",
+    "title": "HiKV: Hierarchical Importance-Aware KV Cache with Hardware Acceleration for LLM Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-22389-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.22389"
+  },
+  {
+    "arxiv_id": "2607.24593",
+    "title": "PIVOT: Efficient Query-Group Indexing for Token-Level Sparse Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-24593-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.24593"
+  },
+  {
+    "arxiv_id": "2607.25291",
+    "title": "CoSA: Accelerating Long-Context Inference via Proxy-Kernel Co-Designed Sparse Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-25291-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.25291"
+  },
+  {
     "arxiv_id": "2607.25852",
     "title": "AngelSpec: Towards Real-World High Performance Inference with Speculative Decoding",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2607-25852-evidence.zip",
     "source": "https://arxiv.org/abs/2607.25852"
+  },
+  {
+    "arxiv_id": "2607.26475",
+    "title": "DualDecoder: Accelerate Long Context LLM Inference by Predictive Prefetch",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-26475-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.26475"
+  },
+  {
+    "arxiv_id": "2607.27269",
+    "title": "Beyond KV Reconstruction: Functional Reconstruction for MLA Draft Models in Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-27269-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.27269"
+  },
+  {
+    "arxiv_id": "2607.27692",
+    "title": "Recall Before You Rank: Similarity-Guided Top-$K$ Reuse for Efficient Long-Context Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-27692-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.27692"
+  },
+  {
+    "arxiv_id": "2607.27735",
+    "title": "A Sparse Glimpse of the Whole: Train-Free Self-Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2607-27735-evidence.zip",
+    "source": "https://arxiv.org/abs/2607.27735"
+  },
+  {
+    "arxiv_id": "2608.00808",
+    "title": "Turning Interaction History into Execution State: A Runtime Layer for Long-Horizon Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-00808-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.00808"
   },
   {
     "arxiv_id": "2608.01184",
@@ -84,6 +140,13 @@
     "source": "https://arxiv.org/abs/2608.01184"
   },
   {
+    "arxiv_id": "2608.01651",
+    "title": "Bole: Efficient Tree Speculation for Hybrid-Attention Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-01651-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.01651"
+  },
+  {
     "arxiv_id": "2608.04234",
     "title": "Multimodal Alignment Through Joint Kernel Entropic Gromov--Wasserstein Optimal Transport",
     "status": "indexed",
@@ -91,11 +154,39 @@
     "source": "https://arxiv.org/abs/2608.04234"
   },
   {
+    "arxiv_id": "2608.05013",
+    "title": "OneDayAgent: Towards a Long-Horizon Harness for Autonomous Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-05013-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.05013"
+  },
+  {
+    "arxiv_id": "2608.06909",
+    "title": "Long-Horizon Agent Trajectory Attribution: A Unified Benchmark and Fine-Grained Annotation Framework",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-06909-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.06909"
+  },
+  {
     "arxiv_id": "2608.07855",
     "title": "CommitKV: Lifecycle-Aware KV Cache Compression via Commit Transitions for Multi-Turn Agents",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2608-07855-evidence.zip",
     "source": "https://arxiv.org/abs/2608.07855"
+  },
+  {
+    "arxiv_id": "2608.08097",
+    "title": "OasisKV: Scaling In-Decode KV Cache Beyond HBM with Lookahead Sparse Prefetching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-08097-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.08097"
+  },
+  {
+    "arxiv_id": "2608.09291",
+    "title": "UnionSparse: An Index-Efficient Sparsity Framework for Low-Bit Sparse LLM Inference on Edge",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-09291-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.09291"
   },
   {
     "arxiv_id": "2608.10823",
@@ -112,11 +203,39 @@
     "source": "https://arxiv.org/abs/2608.14787"
   },
   {
+    "arxiv_id": "2608.15008",
+    "title": "Harness the Memory: A Holistic Evaluation of Memory Substrates in Memory Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-15008-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.15008"
+  },
+  {
     "arxiv_id": "2608.18182",
     "title": "Efficient INT8 Inference of Small NLP Models on Server CPUs with PyTorch Native Stack",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2608-18182-evidence.zip",
     "source": "https://arxiv.org/abs/2608.18182"
+  },
+  {
+    "arxiv_id": "2608.19072",
+    "title": "What is Missing from AI Post-Training AI: An Empirical Analysis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-19072-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.19072"
+  },
+  {
+    "arxiv_id": "2608.19758",
+    "title": "FlashPrefill V2: Block-Sparse Prefill Attention for Long-Context LLM Serving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-19758-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.19758"
+  },
+  {
+    "arxiv_id": "2608.20530",
+    "title": "LiLiCorr: Lightweight Likelihood Correlation of Parallel Drafts for Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-20530-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.20530"
   },
   {
     "arxiv_id": "2608.21223",
@@ -126,6 +245,55 @@
     "source": "https://arxiv.org/abs/2608.21223"
   },
   {
+    "arxiv_id": "2608.21690",
+    "title": "Context as an Environment: Programmatic Context Management for Long-Horizon Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-21690-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.21690"
+  },
+  {
+    "arxiv_id": "2608.21867",
+    "title": "MemGuard: Persisting Verifier Signals for LLM-Agent Memory Governance",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-21867-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.21867"
+  },
+  {
+    "arxiv_id": "2608.22793",
+    "title": "TRACE: A Self-Evolving Skill Bank for Consistent, Limit-Aware LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-22793-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.22793"
+  },
+  {
+    "arxiv_id": "2608.23552",
+    "title": "Prime Agent: A Self-Improving RLM Harness",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-23552-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.23552"
+  },
+  {
+    "arxiv_id": "2608.23635",
+    "title": "ToolRobustBench: Stage-Wise Perturbation Evaluation and Failure Diagnosis for Tool-Calling Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-23635-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.23635"
+  },
+  {
+    "arxiv_id": "2608.23953",
+    "title": "The Empire, Long Divided, Must Unite: Architectural Convergence in Three LLM Agent Harnesses",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-23953-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.23953"
+  },
+  {
+    "arxiv_id": "2608.24004",
+    "title": "AgentSpec: Speculative Decoding for Batch Inference of LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-24004-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.24004"
+  },
+  {
     "arxiv_id": "2608.24070",
     "title": "Compression Trinity: Exploring Sparsity, Quantization, and Low-Rank Approximations for LLM Compression",
     "status": "indexed",
@@ -133,10 +301,262 @@
     "source": "https://arxiv.org/abs/2608.24070"
   },
   {
+    "arxiv_id": "2608.24509",
+    "title": "PeakBench: Benchmarking Resource-Aware Tool Invocation in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-24509-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.24509"
+  },
+  {
+    "arxiv_id": "2608.24571",
+    "title": "Joint Optimization of Tool Creation and Use for Large Language Model Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-24571-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.24571"
+  },
+  {
+    "arxiv_id": "2608.24945",
+    "title": "FAMPWQ: Fisher Information-based Adaptive Mixed Precision Weight Quantization for Effective LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-24945-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.24945"
+  },
+  {
+    "arxiv_id": "2608.25053",
+    "title": "Hydra: Phase-Aware Workload Characterization of LLM Inference across Edge SoC Generations, Backends, and Quantization Levels",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-25053-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.25053"
+  },
+  {
+    "arxiv_id": "2608.26004",
+    "title": "AsymSpec: Context-Asymmetric Speculative Decoding for Agentic LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-26004-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.26004"
+  },
+  {
+    "arxiv_id": "2608.26480",
+    "title": "Zero-Shot Self-Orchestration with Ledger-Based Control for Improved LLM Coding Performance",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-26480-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.26480"
+  },
+  {
+    "arxiv_id": "2608.26546",
+    "title": "DuMateBench: Evaluating Autonomous Agents in Complex Real-World Workflows",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-26546-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.26546"
+  },
+  {
     "arxiv_id": "2608.27428",
     "title": "Stochastic Estimation of Transduced Language Models",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2608-27428-evidence.zip",
     "source": "https://arxiv.org/abs/2608.27428"
+  },
+  {
+    "arxiv_id": "2608.27969",
+    "title": "openJiuwen: Beyond Static Harnesses for Long-Horizon Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-27969-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.27969"
+  },
+  {
+    "arxiv_id": "2608.28003",
+    "title": "A Method for Layer Bit-Width Allocation in LLM Quantization via Performance Maximization Under a Quality-Degradation Constraint",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-28003-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.28003"
+  },
+  {
+    "arxiv_id": "2608.30041",
+    "title": "Reachability-Based Capability Confinement for LLM Agents under Indirect Prompt Injection",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-30041-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.30041"
+  },
+  {
+    "arxiv_id": "2608.30076",
+    "title": "Budget-Aware Compression Pipeline for Single-GPU LLM Inference: Methods, Trade-offs, and Coupling Effects",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-30076-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.30076"
+  },
+  {
+    "arxiv_id": "2608.30147",
+    "title": "CAST: Critique-Aware Supervision for Training Reliable Long-Horizon Tool-Calling Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-30147-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.30147"
+  },
+  {
+    "arxiv_id": "2608.30252",
+    "title": "Strong Drafts Need Compact Memories: Long-Context Speculative Decoding with Compressed KV Cache",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-30252-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.30252"
+  },
+  {
+    "arxiv_id": "2608.30701",
+    "title": "A Phased Workflow for Operating LLM-Based Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-30701-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.30701"
+  },
+  {
+    "arxiv_id": "2608.31057",
+    "title": "Measure Before You Manage: Evaluating Agent Working Memory in Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2608-31057-evidence.zip",
+    "source": "https://arxiv.org/abs/2608.31057"
+  },
+  {
+    "arxiv_id": "2609.00097",
+    "title": "Faster Than Flash: Exploiting Attention Sparsity for Efficient Long-Context Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-00097-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.00097"
+  },
+  {
+    "arxiv_id": "2609.00450",
+    "title": "HBQ: Hierarchical Scaling Block Quantization with Hardware-Efficiency-Aware Design for Accurate LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-00450-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.00450"
+  },
+  {
+    "arxiv_id": "2609.00749",
+    "title": "ContextPipe: Database-Inspired Context Assembly for Long-Horizon Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-00749-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.00749"
+  },
+  {
+    "arxiv_id": "2609.01068",
+    "title": "OUTLETS: Output-Length Prediction from Speculative Decoding Backbones",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-01068-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.01068"
+  },
+  {
+    "arxiv_id": "2609.01736",
+    "title": "Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-01736-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.01736"
+  },
+  {
+    "arxiv_id": "2609.02652",
+    "title": "Unfolding the Leech Lattice: Fused Multi-Shell Decoding and VRAM Layouts for 2-Bit LLM Weights",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-02652-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.02652"
+  },
+  {
+    "arxiv_id": "2609.03430",
+    "title": "Random Attention: Rethinking KV Cache Eviction for Efficient Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-03430-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.03430"
+  },
+  {
+    "arxiv_id": "2609.04244",
+    "title": "MonoMoE: An Efficient Fused Mega-kernel for Quantized MoE Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-04244-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.04244"
+  },
+  {
+    "arxiv_id": "2609.05019",
+    "title": "TROVE: Adaptive Agent Skill Orchestration via Trace-Grounded Route Validation and Editing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-05019-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.05019"
+  },
+  {
+    "arxiv_id": "2609.05081",
+    "title": "Deep Microcompression: Structured Pruning and Bit-packed Quantization for Microcontrollers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-05081-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.05081"
+  },
+  {
+    "arxiv_id": "2609.05736",
+    "title": "Beyond Prompts: Measuring and Optimizing LLM Tool-Agent Harnesses",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-05736-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.05736"
+  },
+  {
+    "arxiv_id": "2609.05774",
+    "title": "Inference-Time Graph Engineering for Multi-Agent LLM Workflows",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-05774-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.05774"
+  },
+  {
+    "arxiv_id": "2609.06063",
+    "title": "Explaining AI Agents Through Execution Traces",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-06063-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.06063"
+  },
+  {
+    "arxiv_id": "2609.06972",
+    "title": "AgentDrift: A Step-Labeled Benchmark of Injection-Hijacked LLM Agent Trajectories",
+    "status": "source_mapped",
+    "download": "/ai-radar/skills/paper-2609-06972-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.06972"
+  },
+  {
+    "arxiv_id": "2609.06974",
+    "title": "Train Overcomplete, Deploy Compact: Scaling Recovery Capacity for Structured LLM Pruning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-06974-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.06974"
+  },
+  {
+    "arxiv_id": "2609.07966",
+    "title": "MetaKV: Adaptive KV Cache Compression for Constrained LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-07966-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.07966"
+  },
+  {
+    "arxiv_id": "2609.08832",
+    "title": "Closing the Consistency Gap: Self-Evolving Agents That Learn to Stay on Course",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-08832-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.08832"
+  },
+  {
+    "arxiv_id": "2609.09153",
+    "title": "Procedural Graphs: Self-Evolving Execution Structures for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-09153-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.09153"
+  },
+  {
+    "arxiv_id": "2609.09338",
+    "title": "Osprey: Target-agnostic Pre-training Makes Stronger Drafters in Speculative Decoding",
+    "status": "source_mapped",
+    "download": "/ai-radar/skills/paper-2609-09338-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.09338"
+  },
+  {
+    "arxiv_id": "2609.09662",
+    "title": "PELM: Power Efficient On-Device LLM Inference with Speculative Decoding and Dynamic Voltage Frequency Scaling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-09662-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.09662"
+  },
+  {
+    "arxiv_id": "2609.11060",
+    "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+    "status": "source_mapped",
+    "download": "/ai-radar/skills/paper-2609-11060-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.11060"
   }
 ]

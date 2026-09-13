@@ -1,0 +1,137 @@
+{
+  "schema_version": 4,
+  "arxiv_id": "2609.11060",
+  "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+  "generated_at": "2026-09-12T23:58:31.000072+00:00",
+  "provider": "kimi",
+  "model": "kimi-k3",
+  "source_url": "https://arxiv.org/pdf/2609.11060",
+  "source": {
+    "pdf_sha256": "c1691a2906633643e8f1b1d0dead2cf47202682c4a1f9cef2d63475c7a7fc282",
+    "extracted_text_sha256": "3435d4856351212ead95889b0e776cf709cbb8050f3892a7d8d5afe57d4833d2",
+    "extractor": "pypdf",
+    "pages": 25,
+    "fallback_from": null,
+    "fallback_reason": null
+  },
+  "report": {
+    "one_sentence": "The paper addresses the failure of post-task memory curators to verify trajectory-derived lessons, and proposes giving an asynchronous curator agent read-only environment tools to check memories before committing them, reporting CLBench pass rate rising from 39% to 73% and task-agent cost falling from $3.38 to $1.68 versus a no-memory baseline.",
+    "problem": "Post-task memory curation in agent systems operates only over completed trajectories, which are partial and mistake-laden observations of the environment; the resulting records can memorize instance answers, assert unverifiable scope, or go stale after environment drift, forcing the task agent to spend its budget re-verifying memory.",
+    "mechanism": "The task agent, retriever, memory schema, and CRUD lifecycle are unchanged. After each task, a distiller compresses the raw trajectory, then a separate curator agent (the only memory writer) runs propose-probe-commit: it proposes candidate records, makes targeted read-only calls against the live environment (database queries or document/tool inspection) to verify correctness, scope, freshness, and procedure validity, then creates, narrows, updates, or deletes records. Probing adds only read-only tools and two prompt blocks to the curator; it runs off the task critical path and replaces task-time rediscovery with pre-validated memory.",
+    "evidence": [
+      {
+        "claim": "On CLBench (40-question drift schedule, GPT-5.4), environment-probed memory raises pass rate and reward over the no-memory baseline while reducing queries and cost.",
+        "result": "Pass 39% to 73%, reward 8.60 to 22.60, queries 8.8 to 4.7/question, task-agent cost $3.38 to $1.68",
+        "baseline": "GHCP (No Memory)",
+        "conditions": "GPT-5.4 task/distiller/curator, CLBench 40-question drift schedule, five paired seeded runs",
+        "source_page": 4,
+        "source_excerpt": "Pass rate rises from 39% to 61–73%, while total rewardrisesfrom8.60to20.00–22.60,or2.3–2.6×thebase- line.Thisisnotabrute-forceaccuracygain:queriesfallfrom 8.8 to 3.0–5.6 per question and task-agent cost falls from $3.38 to $1.68–$2.01."
+      },
+      {
+        "claim": "Environment probing improves over trajectory-only indexed memory on the same CLBench drift schedule, indicating write-time evidence quality rather than task-time capability drives the difference.",
+        "result": "Reward 20.00 to 22.60, queries 5.6 to 4.7, cost $1.99 to $1.68",
+        "baseline": "GHCP + Mem (trajectory-only curation)",
+        "conditions": "GPT-5.4, identical task-time model/tools/memory interface; only curator gains read-only environment tools",
+        "source_page": 5,
+        "source_excerpt": "Relative to trajectory-only memory, probing raises drift CLBench re- ward from 20.00 to 22.60, lowers queries from 5.6 to 4.7, and reduces task-agent cost from $1.99 to $1.68."
+      },
+      {
+        "claim": "On the no-drift 30-question CLBench schedule, probing achieves the highest mean reward on both Sonnet 4.6 and Opus 4.7, exceeding both paired baselines and trajectory-only memory.",
+        "result": "Sonnet 4.6: 0.748 vs 0.673 (Mem) and 0.327 baseline; Opus 4.7: 0.721 vs 0.696 and 0.458 baseline",
+        "baseline": "Paired GHCP (No Memory) and GHCP + Mem per model",
+        "conditions": "Fixed canonical 30-question no-drift order, five paired runs per model-memory comparison",
+        "source_page": 5,
+        "source_excerpt": "Sonnet 4.6 GHCP + Mem (w/ Env Probing)0.327±0.0550.748±0.030+0.421"
+      },
+      {
+        "claim": "Across six adapted APEX worlds, all 18 memory-versus-baseline reward comparisons are positive and probing gives the best reward gain per task-agent dollar in five of six worlds.",
+        "result": "All 18 gains positive; probing best reward/$ in 5 of 6 worlds; tool calls fall e.g. world 941eba66 from 71.6 to 19.3",
+        "baseline": "Three-run GHCP (No Memory) per world",
+        "conditions": "GPT-5.4, 90 adapted APEX management-consulting tasks, five runs per stateful configuration",
+        "source_page": 5,
+        "source_excerpt": "GHCP + Mem (w/ Env Probing) achieves the best task-agent reward gain per dollar in five of six worlds (Table 2); GHCP + Mem is marginally betterintheremainingworld."
+      },
+      {
+        "claim": "The probing advantage is heterogeneous: probing adds little or nothing where the trajectory already supports an actionable record, and the authors treat subgroup differences as mechanism interpretation rather than established effects.",
+        "result": "World 941eba66 changes by -0.04 for probing vs trajectory-only memory; intervals overlap",
+        "baseline": "GHCP + Mem",
+        "conditions": "APEX per-world comparison and no-drift cross-model comparison",
+        "source_page": 6,
+        "source_excerpt": "while941eba66 changes by−0.04(Table 2). Its additional no-drift gain is alsolargeronSonnet(+0.075)thanonOpus(+0.025)."
+      }
+    ],
+    "validation_tier": "api_or_cpu",
+    "evidence_tier": "api_or_cpu",
+    "infrastructure_basis": "inferred",
+    "software_setup": [
+      "standard_python",
+      "custom_runtime"
+    ],
+    "training_required": "inference_only",
+    "minimum_test": [
+      "Pick one of your own workloads with a stream of 20-40 related tasks sharing latent environment structure (e.g., recurring database or document corpus), including at least one unannounced drift event, and define a strict pass/fail grader.",
+      "Stand up two memory pipelines that are identical in task agent, retriever, memory schema, distiller, and CRUD policy; give only one curator a least-privilege read-only subset of the environment tools plus the two probe prompt blocks from Appendix D.3.",
+      "Run both conditions plus a no-memory baseline on the same seeded task order with a small number of runs (at least 3 paired runs), keeping task agent, model, and prompts fixed.",
+      "Measure pass rate, task-agent tool calls, and task-agent cost, with curator/probe usage tracked separately; check whether probe curation calls stay read-only and off the task budget.",
+      "Inspect the committed memory records in both arms: if probed records are not more executable (explicit joins, paths, current schema) than trajectory-only records, the mechanism is not operating as claimed.",
+      "The reported gain is disproven for your workload if probing does not improve reward or tool-call count over trajectory-only memory, or if probing cost/latency erases the task-agent savings."
+    ],
+    "main_risks": [
+      "All evaluation is on two benchmarks via a GitHub Copilot SDK harness; gains may not transfer to other agent stacks or task distributions.",
+      "The improvement over plain memory is modest and confidence intervals overlap in places; in one of six APEX worlds probing was slightly worse, and the authors explicitly treat heterogeneity as unresolved.",
+      "Requires a safe, least-privilege read-only environment surface for the curator; without one it degenerates to trajectory-only curation, and granting such access has security/auditing implications.",
+      "Curator, distiller, and probe costs are excluded from reported task-agent cost; total system cost including curation is not the headline metric and could offset savings.",
+      "Probing adds asynchronous compute after every task; latency and cost of the curation phase at production scale are not quantified in the main results.",
+      "Results depend on specific frontier models (GPT-5.4, Sonnet 4.6, Opus 4.7) and benchmark graders; weaker models may not probe effectively."
+    ],
+    "unanswered_questions": [
+      "What is the total end-to-end cost including distiller and curator/probe sessions, which the paper says are tracked separately but does not headline?",
+      "How many probe calls does the curator typically make per task, and what governance prevents read-only probes from leaking information or being abused?",
+      "Does the gain persist on non-benchmark, messier enterprise environments where read-only surfaces are incomplete?",
+      "How sensitive are results to the curator prompt and to the embedding retriever (intfloat/e5-base-v2)?",
+      "Would probing help when memory errors come from retrieval failure rather than record quality, which this design does not address?"
+    ],
+    "technical_core": {
+      "kind": "formula",
+      "summary": "Central equations selected by identifier and copied without alteration from the official TeX source.",
+      "walkthroughs": [
+        {
+          "status": "exact",
+          "role": "metric",
+          "latex": "r_i=p_i\\left(1-\\frac{q_i}{B}\\right).\n    \\label{eq:main-pass-discounted-reward}",
+          "source_page": 4,
+          "source_excerpt": "APEX uses five runs per stateful configuration and three stateless runs. We report run",
+          "plain_language": "This equation defines the metric used to evaluate the result.",
+          "variables": [],
+          "derivation_steps": [],
+          "worked_example": null,
+          "assumptions": []
+        },
+        {
+          "status": "exact",
+          "role": "baseline",
+          "latex": "\\tau_i=\\mathcal{A}_{\\theta}\n  (S_i;\\mathcal{T}_{E_i},\\mathcal{R}(\\cdot,\\mathcal{M}_{i-1})),\n  \\label{eq:main-task-agent}",
+          "source_page": 3,
+          "source_excerpt": "M i−1)returns a small set of records relevant to the task agent",
+          "plain_language": "This equation formalizes the baseline used in the comparison.",
+          "variables": [],
+          "derivation_steps": [],
+          "worked_example": null,
+          "assumptions": []
+        },
+        {
+          "status": "exact",
+          "role": "proposed_method",
+          "latex": "d_i=\\mathcal{D}_{\\psi}(\\tau_i).\n  \\label{eq:main-distillation}",
+          "source_page": 3,
+          "source_excerpt": "tasks. It receives the completed trajectory, terminal feedback, and relevant existing records. The curator",
+          "plain_language": "This equation formalizes the paper's proposed mechanism.",
+          "variables": [],
+          "derivation_steps": [],
+          "worked_example": null,
+          "assumptions": []
+        }
+      ]
+    }
+  }
+}

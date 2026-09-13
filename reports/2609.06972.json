@@ -1,0 +1,98 @@
+{
+  "schema_version": 4,
+  "arxiv_id": "2609.06972",
+  "title": "AgentDrift: A Step-Labeled Benchmark of Injection-Hijacked LLM Agent Trajectories",
+  "generated_at": "2026-09-13T00:01:25.547800+00:00",
+  "provider": "kimi",
+  "model": "kimi-k3",
+  "source_url": "https://arxiv.org/pdf/2609.06972",
+  "source": {
+    "pdf_sha256": "8265100357767f3cb8b8563952dda96f3018811b31f49d87aa73766161d53433",
+    "extracted_text_sha256": "f3ac58827c9ded386749eb09827ed82ed35c827619ed24723fe32a140794ea51",
+    "extractor": "pypdf",
+    "pages": 19,
+    "fallback_from": null,
+    "fallback_reason": null
+  },
+  "report": {
+    "one_sentence": "AgentDrift addresses the absence of step-level labeled data for indirect prompt injection in LLM agents by releasing 12,536 synthetic tool-call trajectories (71,024 steps) in which every step is labeled benign, injection point, hijacked, or failed injection, and demonstrates with a surface-feature logistic regression that only 55.4% of attacks (and only 8.2% of partial hijacks) can be detected without sequence modeling.",
+    "problem": "Existing indirect-prompt-injection benchmarks measure attack success rates against live agents and guard models judge whole traces, but no public corpus labels, step by step, where an injection enters a trajectory and which steps it corrupts, nor distinguishes resisted attacks from successful ones and from legitimate-but-suspicious content.",
+    "mechanism": "This is a benchmark dataset, not a detection method. A single open model (Llama-3.3-70B-Instruct, quantized) generates complete tool-call trajectories across five domains under category-specific protocols in which the label structure is specified at generation time and enforced by a closed-vocabulary structural validator implementing a regular label grammar (benign, full/partial/delayed hijack, failed attack, hard negative). Accepted trajectories are screened by an LLM judge (shown to be unreliable) and audited by hand on 1,200 trajectories. The dataset replaces trace-level or success-rate evaluation with per-step detection, localization, and attempt-versus-success tasks, with per-trajectory world context enabling world-grounded external-recipient features.",
+    "evidence": [
+      {
+        "claim": "The corpus contains 12,536 trajectories and 71,024 step labels across four categories and five domains, with all labels conforming to a stated regular grammar.",
+        "result": "12,536 trajectories; 71,024 steps; 4,000 benign / 5,536 attacked / 1,500 failed-attack / 1,500 hard-negative; 100% positional grammar adherence",
+        "baseline": "Prior resources (InjecAgent, AgentDojo, TraceSafe, StepShield, etc.) lack the combination of per-step injection labels, a resisted class, and hard negatives (Table I)",
+        "conditions": "Synthetic data from a single generator model; labels are protocol-specified, not independent human gold annotations",
+        "source_page": 1,
+        "source_excerpt": "We present AgentDrift, a benchmark of 12,536 synthetic tool-call trajectories over five agent domains in which every one of the 71,024 steps carries one of four labels: benign, injection point, hijacked, or failed injection."
+      },
+      {
+        "claim": "A surface-feature logistic regression baseline recovers only 55.4% of attacks, establishing that the benchmark cannot be solved without sequence modeling.",
+        "result": "Precision 0.778, recall 0.554, F1 0.647, AUROC 0.734; recall 88.0% full hijack, 8.2% partial hijack, 23.1% delayed execution; failed attacks flagged at 0.187 vs 0.105 benign",
+        "baseline": "Six-dimensional hand-crafted feature vector with logistic regression (the paper's own baseline, not an external method)",
+        "conditions": "Evaluated once on the released 1,881-trajectory test split; baseline has access to world-grounded external-recipient features",
+        "source_page": null,
+        "source_excerpt": ""
+      },
+      {
+        "claim": "World-identity leakage lets a trivial lookup predictor reach 86.1% binary accuracy on the default split, so uncontrolled results on this corpus are not evidence of injection detection.",
+        "result": "86.1% binary accuracy overall (93.3%–98.2% in four domains) vs 55.8% majority-class rate; 47.7% in email",
+        "baseline": "Majority-class baseline (55.8%)",
+        "conditions": "Lookup of identical world object in training split; caused by concurrent SLURM jobs creating separate world pools per category in four domains",
+        "source_page": 13,
+        "source_excerpt": "The predictor reaches 86.1% binary accuracy on the test split against a 55.8% majority-class rate, and between 93.3% and 98.2% in banking, web, coding, and medical"
+      },
+      {
+        "claim": "An LLM judge is an unreliable verifier of security labels: it rejected 99.6% of hard negatives as malicious, fooled by the surface cues the class exists to penalize.",
+        "result": "Screening pass rates: benign 89.6%, full hijack 3.6%, delayed execution 1.4%, hard negatives 0.4%; manual audit found 99.6% label correctness on 1,200 trajectories",
+        "baseline": "Programmatic grammar checks (100% adherence) and 1,200-trajectory manual audit (99.6% correct)",
+        "conditions": "Same model (Llama-3.3-70B) at temperature 0.1 with category-specific checklists; screening verdicts not used to filter the release",
+        "source_page": 10,
+        "source_excerpt": "the reviewer marked 1,494 of 1,500 as BAD because their observations “contain suspicious content” and “should be labeled as malicious”; that is, it was fooled by exactly the surface cues that the class exists to penalize"
+      },
+      {
+        "claim": "The corpus has measurable template concentration and attack-goal-family collapse that enable memorization shortcuts.",
+        "result": "28.9% of injected observations name an ext-audit.com address; ~75% of hard negatives mention $5,000, an in-domain audit@ address, or a transfer; external-recipient fraction is 0.47–0.57 across all six attack-goal families",
+        "baseline": "",
+        "conditions": "4-gram analysis over the released corpus; family tags released as metadata only, not certified classification targets",
+        "source_page": null,
+        "source_excerpt": ""
+      }
+    ],
+    "validation_tier": "api_or_cpu",
+    "evidence_tier": "cluster",
+    "infrastructure_basis": "explicit",
+    "software_setup": [
+      "standard_python"
+    ],
+    "training_required": "unknown",
+    "minimum_test": [
+      "Download the released corpus (CC BY 4.0, GitHub) and verify the counts and grammar claims directly: 12,536 trajectories, per-category label strings matching the stated regular languages, and the 70/15/15 split.",
+      "Reproduce the world-identity lookup check (Table XI) on the test split; if a world-lookup predictor does not reach ~86% binary accuracy on your copy, the leakage claim fails; if it does, apply world anonymization or a world-held-out split before any further evaluation.",
+      "Re-implement the six-feature logistic regression baseline (specified in Section IX-A, reproducible 'with a few lines of code') and confirm it recovers ~55% of attacks overall but under 25% on partial hijacks and delayed executions; if simple features solve those patterns, the paper's core difficulty claim fails.",
+      "Train a small sequence model (e.g., a short transformer or BiLSTM over the documented step linearization) on CPU or a single small GPU under the world-anonymized protocol; if it does not beat the surface baseline on partial-hijack and delayed-execution recall, the claimed need for sequence modeling is not demonstrated on your workload.",
+      "Spot-audit a random sample of attacked and hard-negative trajectories by hand against the category definitions to check whether the 99.6% label-correctness claim holds for your use case."
+    ],
+    "main_risks": [
+      "All 12,536 trajectories come from a single generator model, so a detector may learn the generator's stylistic fingerprint rather than injection semantics; transfer to production agent traces is untested.",
+      "World-identity leakage in four domains means results on the default split without anonymization or world-held-out splitting are not evidence of injection detection.",
+      "Template concentration (28.9% of injections naming one fictitious domain; ~75% of hard negatives sharing three motifs) permits memorization unless target domains and amounts are masked at test time.",
+      "Injections almost always fall at step 2 or 3 under fixed positional templates, enabling positional-prior shortcuts.",
+      "Labels are protocol-specified and structurally validated rather than independently human-annotated; the 99.6% correctness figure is an estimate from a 1,200-trajectory sample.",
+      "Short trajectories (3–11 steps), single agents, and no real agent traffic limit applicability to long-horizon or multi-agent settings."
+    ],
+    "unanswered_questions": [
+      "Does a sequence-aware detector trained on AgentDrift actually outperform the surface baseline under the world-anonymized and world-held-out protocols, and by how much on partial hijack and delayed execution?",
+      "Does training on this synthetic distribution transfer to real agent traces or to trajectories from other generators?",
+      "What inter-annotator agreement would human labeling of the injection index and hijacked span yield (listed as future work)?",
+      "Are the released GitHub artifacts (data files, tool pools, loader) complete and consistent with the paper's reported counts?",
+      "What compute budget is needed to train a competitive sequence model on the corpus (not reported; only the trivial baseline is evaluated)?"
+    ],
+    "technical_core": {
+      "kind": "evaluation_protocol",
+      "summary": "The technical core is the evaluation protocol, not a new formula.",
+      "walkthroughs": []
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-09-12",
+  "rule": "Actionable briefs; recent papers first, varied research areas; skip existing reports.",
+  "selected": [
+    {
+      "arxiv_id": "2609.11060",
+      "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+      "family": "memoria_e_contexto"
+    },
+    {
+      "arxiv_id": "2609.09338",
+      "title": "Osprey: Target-agnostic Pre-training Makes Stronger Drafters in Speculative Decoding",
+      "family": "decodificacao_especulativa"
+    },
+    {
+      "arxiv_id": "2609.06972",
+      "title": "AgentDrift: A Step-Labeled Benchmark of Injection-Hijacked LLM Agent Trajectories",
+      "family": "seguranca_e_guardrails"
+    }
+  ]
+}

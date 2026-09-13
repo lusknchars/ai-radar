@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2609.06972",
+  "title": "AgentDrift: A Step-Labeled Benchmark of Injection-Hijacked LLM Agent Trajectories",
+  "summary": "AgentDrift replaces whole-trace guard judgments and attack-success-only benchmarks with a step-labeled corpus (12,536 trajectories, 71,024 steps labeled benign, injection point, hijacked, or failed injection) for training and evaluating detectors of indirect prompt injection in tool-call trajectories. Adoption costs the integration of an offline evaluation harness against one's own agent traces plus detector development, since the paper provides data and a weak baseline rather than a deployable guard model. Key failure risks include domain mismatch with the five covered domains, synthetic-data artifacts the authors themselves document (template concentration, attack-goal-family collapse, world-identity leakage, an LLM judge fooled by hard negatives), and reduced validity against adaptive attackers once the corpus is public.",
+  "rationale": "The corpus is a free, API-compatible resource for evaluating injection defenses on constrained infrastructure, but its documented synthetic-data limitations and lack of a trained detector mean it must be validated against the reader's own agent workloads before informing production guardrails.",
+  "technique": "Step-labeled injection-hijack trajectory benchmark (AgentDrift)",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-09-07",
+  "as_of": "2026-09-13",
+  "editorial_status": "source_mapped",
+  "source_url": "https://arxiv.org/abs/2609.06972",
+  "independent_implementations": 4,
+  "total_implementations": 4,
+  "stars": 2,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The corpus contains 12,536 trajectories and 71,024 step labels across four categories and five domains, with all labels conforming to a stated regular grammar.",
+      "basis": "source_linked",
+      "result": "12,536 trajectories; 71,024 steps; 4,000 benign / 5,536 attacked / 1,500 failed-attack / 1,500 hard-negative; 100% positional grammar adherence",
+      "baseline": "Prior resources (InjecAgent, AgentDojo, TraceSafe, StepShield, etc.) lack the combination of per-step injection labels, a resisted class, and hard negatives (Table I)",
+      "conditions": "Synthetic data from a single generator model; labels are protocol-specified, not independent human gold annotations",
+      "source_url": "https://arxiv.org/pdf/2609.06972",
+      "source_page": 1,
+      "source_excerpt": "We present AgentDrift, a benchmark of 12,536 synthetic tool-call trajectories over five agent domains in which every one of the 71,024 steps carries one of four labels: benign, injection point, hijacked, or failed injection."
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "A surface-feature logistic regression baseline recovers only 55.4% of attacks, establishing that the benchmark cannot be solved without sequence modeling.",
+      "basis": "inferred",
+      "result": "Precision 0.778, recall 0.554, F1 0.647, AUROC 0.734; recall 88.0% full hijack, 8.2% partial hijack, 23.1% delayed execution; failed attacks flagged at 0.187 vs 0.105 benign",
+      "baseline": "Six-dimensional hand-crafted feature vector with logistic regression (the paper's own baseline, not an external method)",
+      "conditions": "Evaluated once on the released 1,881-trajectory test split; baseline has access to world-grounded external-recipient features",
+      "source_url": "https://arxiv.org/pdf/2609.06972",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-03",
+      "statement": "World-identity leakage lets a trivial lookup predictor reach 86.1% binary accuracy on the default split, so uncontrolled results on this corpus are not evidence of injection detection.",
+      "basis": "source_linked",
+      "result": "86.1% binary accuracy overall (93.3%–98.2% in four domains) vs 55.8% majority-class rate; 47.7% in email",
+      "baseline": "Majority-class baseline (55.8%)",
+      "conditions": "Lookup of identical world object in training split; caused by concurrent SLURM jobs creating separate world pools per category in four domains",
+      "source_url": "https://arxiv.org/pdf/2609.06972",
+      "source_page": 13,
+      "source_excerpt": "The predictor reaches 86.1% binary accuracy on the test split against a 55.8% majority-class rate, and between 93.3% and 98.2% in banking, web, coding, and medical"
+    },
+    {
+      "claim_id": "claim-04",
+      "statement": "An LLM judge is an unreliable verifier of security labels: it rejected 99.6% of hard negatives as malicious, fooled by the surface cues the class exists to penalize.",
+      "basis": "source_linked",
+      "result": "Screening pass rates: benign 89.6%, full hijack 3.6%, delayed execution 1.4%, hard negatives 0.4%; manual audit found 99.6% label correctness on 1,200 trajectories",
+      "baseline": "Programmatic grammar checks (100% adherence) and 1,200-trajectory manual audit (99.6% correct)",
+      "conditions": "Same model (Llama-3.3-70B) at temperature 0.1 with category-specific checklists; screening verdicts not used to filter the release",
+      "source_url": "https://arxiv.org/pdf/2609.06972",
+      "source_page": 10,
+      "source_excerpt": "the reviewer marked 1,494 of 1,500 as BAD because their observations “contain suspicious content” and “should be labeled as malicious”; that is, it was fooled by exactly the surface cues that the class exists to penalize"
+    },
+    {
+      "claim_id": "claim-05",
+      "statement": "The corpus has measurable template concentration and attack-goal-family collapse that enable memorization shortcuts.",
+      "basis": "inferred",
+      "result": "28.9% of injected observations name an ext-audit.com address; ~75% of hard negatives mention $5,000, an in-domain audit@ address, or a transfer; external-recipient fraction is 0.47–0.57 across all six attack-goal families",
+      "baseline": "",
+      "conditions": "4-gram analysis over the released corpus; family tags released as metadata only, not certified classification targets",
+      "source_url": "https://arxiv.org/pdf/2609.06972",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "inferred",
+      "finding": "Minimum useful test: API or CPU. Published evidence: cluster.",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "inferred",
+      "finding": "Reported setup: standard Python.",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "inferred",
+      "finding": "Paperraft defines a 5-steps falsification test. No reproduction is recorded.",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [
+    {
+      "risk_id": "risk-01",
+      "statement": "All 12,536 trajectories come from a single generator model, so a detector may learn the generator's stylistic fingerprint rather than injection semantics; transfer to production agent traces is untested.",
+      "basis": "inferred"
+    },
+    {
+      "risk_id": "risk-02",
+      "statement": "World-identity leakage in four domains means results on the default split without anonymization or world-held-out splitting are not evidence of injection detection.",
+      "basis": "inferred"
+    },
+    {
+      "risk_id": "risk-03",
+      "statement": "Template concentration (28.9% of injections naming one fictitious domain; ~75% of hard negatives sharing three motifs) permits memorization unless target domains and amounts are masked at test time.",
+      "basis": "inferred"
+    },
+    {
+      "risk_id": "risk-04",
+      "statement": "Injections almost always fall at step 2 or 3 under fixed positional templates, enabling positional-prior shortcuts.",
+      "basis": "inferred"
+    },
+    {
+      "risk_id": "risk-05",
+      "statement": "Labels are protocol-specified and structurally validated rather than independently human-annotated; the 99.6% correctness figure is an estimate from a 1,200-trajectory sample.",
+      "basis": "inferred"
+    },
+    {
+      "risk_id": "risk-06",
+      "statement": "Short trajectories (3–11 steps), single agents, and no real agent traffic limit applicability to long-horizon or multi-agent settings.",
+      "basis": "inferred"
+    }
+  ],
+  "minimum_test": [
+    "Download the released corpus (CC BY 4.0, GitHub) and verify the counts and grammar claims directly: 12,536 trajectories, per-category label strings matching the stated regular languages, and the 70/15/15 split.",
+    "Reproduce the world-identity lookup check (Table XI) on the test split; if a world-lookup predictor does not reach ~86% binary accuracy on your copy, the leakage claim fails; if it does, apply world anonymization or a world-held-out split before any further evaluation.",
+    "Re-implement the six-feature logistic regression baseline (specified in Section IX-A, reproducible 'with a few lines of code') and confirm it recovers ~55% of attacks overall but under 25% on partial hijacks and delayed executions; if simple features solve those patterns, the paper's core difficulty claim fails.",
+    "Train a small sequence model (e.g., a short transformer or BiLSTM over the documented step linearization) on CPU or a single small GPU under the world-anonymized protocol; if it does not beat the surface baseline on partial-hijack and delayed-execution recall, the claimed need for sequence modeling is not demonstrated on your workload.",
+    "Spot-audit a random sample of attacked and hard-negative trajectories by hand against the category definitions to check whether the 99.6% label-correctness claim holds for your use case."
+  ],
+  "open_questions": [
+    "Does a sequence-aware detector trained on AgentDrift actually outperform the surface baseline under the world-anonymized and world-held-out protocols, and by how much on partial hijack and delayed execution?",
+    "Does training on this synthetic distribution transfer to real agent traces or to trajectories from other generators?",
+    "What inter-annotator agreement would human labeling of the injection index and hijacked span yield (listed as future work)?",
+    "Are the released GitHub artifacts (data files, tool pools, loader) complete and consistent with the paper's reported counts?",
+    "What compute budget is needed to train a competitive sequence model on the corpus (not reported; only the trivial baseline is evaluated)?"
+  ],
+  "independent_tests": [],
+  "report_available": true,
+  "validation_tier": "api_or_cpu",
+  "evidence_tier": "cluster",
+  "infrastructure_basis": "explicit",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
