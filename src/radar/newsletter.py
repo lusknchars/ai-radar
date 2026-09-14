@@ -9,12 +9,23 @@ from html import escape
 from pathlib import Path
 
 from .briefs_english import is_portuguese
+from .builder_guides import plan_for_family
 from .config import PublicConfig, load_database_path, load_public_config
 from .selection import recent_papers
 from .site_data import SiteData
 from .store import Store
 
 UNSUBSCRIBE = "{{{RESEND_UNSUBSCRIBE_URL}}}"
+
+
+def _builder_cut(p) -> tuple[str, str, str, str]:
+    """Return a short, clearly labelled application prompt for one paper.
+
+    Area plans are deliberately framed as suggestions. They are not paper
+    findings and do not turn a brief into a recommendation.
+    """
+    plan = plan_for_family(p.familia)
+    return plan.scenario, plan.change, plan.measure, plan.decision
 
 
 @dataclass(frozen=True)
@@ -46,23 +57,41 @@ def build_issue(data: SiteData, week_end: date, config: PublicConfig, *,
     label = "[SAMPLE PREVIEW] " if preview else ""
     subject = f"{label}Paperraft: {len(selected)} papers worth reading · {week_end.isoformat()}"
     intro = ("Sample preview. This is not a current research newsletter." if preview else
-             "This week's research for engineers building with AI. "
+             "A short list for people building alone. Each paper comes with the "
+             "fastest useful question to test before you spend a week or rent a GPU. "
              "Claims below come from paper abstracts and have not been independently reproduced.")
     parts, text = [], [subject, "", intro, f"{start} to {week_end}", ""]
     for p in selected:
         url = f"{config.site_url.rstrip('/')}/papers/{p.arxiv_id}/"
         original = f"https://arxiv.org/abs/{p.arxiv_id}"
         signal = f"{p.independent_impls} independent implementations. Counts do not establish quality."
+        scenario, change, measure, decision = _builder_cut(p)
         parts.append(
             '<article style="padding:24px 0;border-top:1px solid #ddd">'
             f'<small>Published {escape(p.publicado)}</small>'
             f'<h2 style="font-size:21px;line-height:1.35">{escape(p.titulo)}</h2>'
             f'<p>{escape(p.resumo)}</p><p>{escape(p.porque)}</p>'
+            '<div style="margin:18px 0;padding:16px;background:#f7e8ed;border-left:3px solid #cb2957">'
+            '<p style="margin:0 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">'
+            'Builder\'s cut · area guidance</p>'
+            f'<p style="margin:0 0 8px"><strong>It may fit when:</strong> {escape(scenario)}</p>'
+            f'<p style="margin:0 0 8px"><strong>First move:</strong> {escape(change)}</p>'
+            f'<p style="margin:0 0 8px"><strong>Measure:</strong> {escape(measure)}</p>'
+            f'<p style="margin:0"><strong>Decision rule:</strong> {escape(decision)}</p>'
+            '</div>'
             f'<p style="font-size:12px">{escape(signal)}</p>'
             f'<a href="{escape(url)}" style="color:#cb2957">Read the research page</a>'
             f' · <a href="{escape(original)}">Original paper</a></article>'
         )
-        text.extend([p.titulo, p.resumo, p.porque, signal, url, original, ""])
+        text.extend([
+            p.titulo, p.resumo, p.porque,
+            "Builder's cut (area guidance)",
+            f"It may fit when: {scenario}",
+            f"First move: {change}",
+            f"Measure: {measure}",
+            f"Decision rule: {decision}",
+            signal, url, original, "",
+        ])
     html = (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'

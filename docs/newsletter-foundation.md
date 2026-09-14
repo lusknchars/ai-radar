@@ -3,6 +3,11 @@
 AI Radar serves engineers deciding which inference and agent papers deserve a
 closer look. The first publication is a weekly English email containing up to
 five relevant papers published during the previous Monday-to-Sunday window.
+It is written for solo builders: each item keeps the paper brief, then adds a
+short area-guidance block with a plausible product problem, the cheapest useful
+first move, the measurements to collect, and a decision rule. These prompts come
+from deterministic application plans. They are suggestions, not findings from
+the paper and not proof that a technique will work on a reader's product.
 The site continues to publish the complete archive daily.
 
 For local reading, run `python -m radar.preview` and open
