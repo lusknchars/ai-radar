@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS signup_limits (
     count INTEGER NOT NULL,
     expires INTEGER NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS signup_requests_expiry_idx
+    ON signup_requests (expires);
