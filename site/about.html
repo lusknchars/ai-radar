@@ -51,7 +51,7 @@ background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(238,238,238,.94))}
 .beam-input input{min-width:0;width:100%;min-height:44px;padding:0;border:0;background:transparent;
 color:var(--texto);font:300 16px var(--sans)}
 .beam-input input::placeholder{color:var(--fraco);opacity:1}
-.beam-input input:focus-visible{outline-offset:0;border-radius:4px}
+.beam-input input:focus-visible{outline:none}
 .beam-button{display:flex;flex-shrink:0;align-items:center;justify-content:center;
 min-height:44px;padding:10px 22px;border:0;border-radius:999px;
 background:linear-gradient(135deg,var(--acento),#a51c45);color:#fff;font:500 13px var(--sans);cursor:pointer;
@@ -78,6 +78,7 @@ mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
 @media(prefers-reduced-motion:reduce){.beam-border{animation:none;--beam-turn:45deg}
 .beam-button,.beam-button .beam-arrow{transition:none}.beam-input .beam-button:active,.beam-button:active .beam-arrow{transform:none}}
 @media(forced-colors:active){.beam-border{display:none}.beam-input{background:Field;border-color:FieldText}
+.beam-input:focus-within{outline:2px solid Highlight;outline-offset:3px}
 .beam-input input{color:FieldText}.beam-button{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
 .masthead{padding:64px 0 56px}.publication-head{max-width:980px}
 .publication-head .hero-copy{max-width:790px}
@@ -533,7 +534,7 @@ border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
 .research-jumps a:focus-visible,summary:focus-visible{
 background-color:rgba(203,41,87,.08);color:var(--acento)}
 .filtros input,.filtros select{transition:border-color 160ms ease-out,box-shadow 160ms ease-out}
-.filtros input:focus-visible,.filtros select:focus-visible{
+.filtros select:focus-visible{
 border-color:var(--acento);box-shadow:0 0 0 3px rgba(203,41,87,.12)}
 .sheen-button:focus-visible{filter:brightness(1.06)}
 .sheen-button:focus-visible svg{transform:translateX(2px)}
