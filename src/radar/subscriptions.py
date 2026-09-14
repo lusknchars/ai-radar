@@ -36,6 +36,12 @@ class SignupStore:
     def connection(self):
         conn = sqlite3.connect(self.path, timeout=10)
         conn.row_factory = sqlite3.Row
+        # WAL lets confirmation reads continue while a signup transaction is
+        # writing. The busy timeout turns short writer contention into a wait
+        # instead of an intermittent 500 response.
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA synchronous=NORMAL')
+        conn.execute('PRAGMA busy_timeout=10000')
         try:
             with conn:
                 yield conn

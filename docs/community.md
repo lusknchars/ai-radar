@@ -22,7 +22,9 @@ If a paper thread was created directly in GitHub before embedded comments were e
 
 ## Scope
 
-This version provides public discussions with GitHub identities, replies, reactions and GitHub moderation. It does not provide separate Paperraft email accounts, private messages or saved-paper lists. Those features would need a private transactional database and an account service.
+This version provides public discussions with GitHub identities, replies, reactions and GitHub moderation. The reading-room onboarding explains the three-step path: open GitHub, choose a paper, and share a reproducible observation. It does not provide separate Paperraft passwords, private messages or saved-paper lists. Those features would need a private transactional database and an account service.
+
+The scaling boundary is intentional. Static pages and GitHub Discussions absorb public reading and conversation traffic, while the optional signup service handles only short-lived confirmation records. Its SQLite store enables WAL and a busy timeout for small concurrent bursts. Before a larger subscriber base or multiple service instances, move the confirmation store to managed Postgres, keep the same double-opt-in contract, and add provider delivery metrics. Do not put discussion messages or GitHub access tokens in the research database.
 
 Validation covers stable paper mapping, HTML escaping, configuration isolation, no widget before activation, and browser search and loading failures. An embedded widget cannot be considered live until the GitHub app installation and a real sign-in test succeed.
 

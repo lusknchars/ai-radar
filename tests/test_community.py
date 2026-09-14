@@ -76,6 +76,8 @@ def test_reading_room_escapes_papers_and_links_to_their_discussion():
     assert '&lt;script&gt;alert(1)&lt;/script&gt;' in html
     assert 'href="/papers/2608.12345/#discussion"' in html
     assert 'Join with GitHub' in html and 'Create a GitHub account' in html
+    assert 'community-steps' in html
+    assert 'What would this change in my product?' in html
     assert 'name="password"' not in html
     sitemap = render_sitemap(CONFIG, paper_ids=[], report_ids=[], edition_days=[])
     assert 'https://papers.example/community/' in sitemap

@@ -94,3 +94,10 @@ def test_confirmation_removes_private_address_from_temporary_store(tmp_path):
     with store.connection() as conn:
         assert conn.execute('SELECT email FROM signup_requests').fetchone()[0] == ''
     assert tmp_path.joinpath('private.db').stat().st_mode & 0o777 == 0o600
+
+
+def test_signup_store_uses_concurrent_safe_sqlite_settings(tmp_path):
+    store = SignupStore(tmp_path / 'private.db')
+    with store.connection() as conn:
+        assert conn.execute('PRAGMA journal_mode').fetchone()[0].lower() == 'wal'
+        assert conn.execute('PRAGMA busy_timeout').fetchone()[0] == 10000
