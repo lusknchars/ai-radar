@@ -36,7 +36,7 @@ from .public_labels import (CORE_KIND_PHRASES,
 from .report import ReportDocument
 from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
-from .site_assets import PAPER_STACK_SCRIPT
+from .site_assets import BEAM_INPUT_SCRIPT, PAPER_STACK_SCRIPT
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
@@ -112,6 +112,9 @@ def _social_metadata(title: str, description: str, canonical_url: str,
     )
 
 
+_BEAM_BORDER = '<span class="beam-border mask-with-browser-support" aria-hidden="true"></span>'
+
+
 def _footer(public_config: PublicConfig) -> str:
     return (
         '<footer>'
@@ -141,14 +144,18 @@ def _nav(atual: str, public_config: PublicConfig) -> str:
     return (f'<nav class="{nav_class}" aria-label="Primary navigation">'
             f'<a class="publication-name" href="{escape(public_config.path())}">Paperraft</a>'
             f'<div class="nav-links">{links}</div></nav>'
-            f'<form class="paper-search" role="search" aria-label="All papers" '
+            f'<form class="paper-search beam-input" role="search" aria-label="All papers" '
             f'action="{escape(public_config.path("#acervo"))}" method="get">'
             '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" '
             'stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'
             '<circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4 4"></path></svg>'
             '<input type="search" name="q" aria-label="Search all papers" '
             'placeholder="Search papers, topics, or arXiv IDs" required maxlength="200">'
-            '<button type="submit">Search</button></form>'
+            '<button class="beam-button" type="submit"><span>Search</span>'
+            '<svg class="beam-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" '
+            'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+            '<path d="M4 12h16m-6-6 6 6-6 6"></path></svg></button>'
+            f'{_BEAM_BORDER}</form>'
             '<noscript><p class="search-help">Search needs JavaScript. '
             f'<a href="{escape(public_config.path("#acervo"))}">Browse the research index</a>.</p></noscript>')
 
@@ -586,8 +593,9 @@ def _secao_tabela(
         f'<select id="f-familia" data-filtro="familia">'
         f"{_opcoes(d.familias_presentes, ROTULOS_FAMILIA)}</select></div>"
         '<div><label for="f-busca">Search this index</label>'
+        '<div class="beam-input beam-input-compact">'
         '<input id="f-busca" type="search" data-busca maxlength="200" '
-        'placeholder="quantization, agent, cache..."></div>'
+        f'placeholder="quantization, agent, cache...">{_BEAM_BORDER}</div></div>'
         f'<div class="contagem"><span class="count-label">showing</span>'
         f'<span id="contador" role="status" aria-live="polite">{inicial} of {len(d.pontos)}</span></div>'
         "</div>"
@@ -795,7 +803,7 @@ def render_site(
         f'</div><script src="{escape(public_config.path("assets/d3-7.9.0.min.js"))}"></script>'
         f'<script src="{escape(public_config.path("assets/observable-plot-0.6.17.min.js"))}">'
         f'</script><script>{_BACKGROUND_JS}</script><script>{_JS}</script>'
-        f'<script>{_CHART_JS}</script></body></html>'
+        f'<script>{_CHART_JS}</script><script>{BEAM_INPUT_SCRIPT}</script></body></html>'
     )
 
 
@@ -861,7 +869,8 @@ def _pagina_estatica(titulo: str, atual: str, dia: str, corpo: str,
         f'{lead_figure}</div></header>'
         f'<main id="conteudo" class="{main_class}">{corpo}</main>'
         f'{_footer(public_config)}</div>{background}'
-        f'{enhancement}<script>{PAPER_STACK_SCRIPT}</script></body></html>'
+        f'{enhancement}<script>{PAPER_STACK_SCRIPT}</script>'
+        f'<script>{BEAM_INPUT_SCRIPT}</script></body></html>'
     )
 
 
@@ -1449,9 +1458,11 @@ def render_community(data: SiteData, public_config: PublicConfig) -> str:
         'or what it would take to try the method.</p></div>'
         '<div class="community-search" hidden>'
         '<label for="community-search">Find a paper</label>'
+        '<div class="beam-input">'
         '<input id="community-search" type="search" placeholder="Title, research area or arXiv ID" '
         'aria-controls="community-papers" autocomplete="off">'
-        '<button type="button" id="community-clear">Clear search</button></div>'
+        '<button class="beam-button beam-button-secondary" type="button" id="community-clear">Clear search</button>'
+        f'{_BEAM_BORDER}</div></div>'
         f'<p id="community-count" role="status" aria-live="polite">{len(papers)} papers</p>'
         f'<ul id="community-papers" class="community-papers">{"".join(rows)}</ul>'
         '<p id="community-empty" hidden>No papers match. Try another title, research area or arXiv ID.</p>'

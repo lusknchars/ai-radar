@@ -17,10 +17,37 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
 
-def verify(origin):
+def verify_beam(page, engine):
+    field = page.locator('.paper-search')
+    border = field.locator('.beam-border')
+    assert border.evaluate('el => getComputedStyle(el).animationName') == 'none'
+    assert border.evaluate('el => getComputedStyle(el).pointerEvents') == 'none'
+    # The decoration must not intercept padding clicks or cover keyboard focus.
+    field.click(position={'x': 4, 'y': field.bounding_box()['height'] / 2})
+    assert field.locator('input').evaluate('el => el === document.activeElement')
+    # macOS WebKit includes buttons in the Option+Tab traversal.
+    page.keyboard.press('Alt+Tab' if engine == 'webkit' else 'Tab')
+    button = field.locator('button')
+    assert button.evaluate('el => el === document.activeElement')
+    assert button.locator('.beam-arrow').evaluate('el => getComputedStyle(el).opacity') == '1'
+    assert button.evaluate('el => parseFloat(getComputedStyle(el).outlineWidth)') >= 2
+    page.emulate_media(reduced_motion='no-preference')
+    assert border.evaluate('el => getComputedStyle(el).animationDuration') == '5s'
+    before = border.evaluate('el => getComputedStyle(el).backgroundImage')
+    page.wait_for_function(
+        "before => getComputedStyle(document.querySelector('.paper-search .beam-border')).backgroundImage !== before",
+        arg=before)
+    assert border.evaluate('el => getComputedStyle(el).maskImage') != 'none'
+    page.emulate_media(reduced_motion='reduce')
+    assert border.evaluate('el => getComputedStyle(el).animationName') == 'none'
+    assert button.locator('.beam-arrow').evaluate('el => getComputedStyle(el).transitionDuration') == '0s'
+
+
+def verify(origin, engine):
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(
-            executable_path='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
+        browser = getattr(playwright, engine).launch(**(
+            {'executable_path': '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'}
+            if engine == 'chromium' else {}))
         for width in (360, 768, 1440):
             page = browser.new_page(viewport={'width': width, 'height': 1000},
                                     reduced_motion='reduce')
@@ -80,16 +107,18 @@ def verify(origin):
             box = page.locator('.paper-search').bounding_box()
             assert abs(box['x'] + box['width'] / 2 - width / 2) < 2
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
-            page.screenshot(path=f'/tmp/paperraft-search-{width}.png')
+            verify_beam(page, engine)
+            page.screenshot(path=f'/tmp/paperraft-search-{engine}-{width}.png')
             assert not errors, errors
             page.close()
         browser.close()
-    print('Search passed at 360, 768, and 1440px: cross-page, keyboard, query links, filters, empty states, and escaping.')
+    print(f'{engine}: search and beam animation passed at 360, 768, and 1440px, including reduced motion and keyboard focus.')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--origin')
+    parser.add_argument('--browser', choices=('chromium', 'webkit'), default='chromium')
     args = parser.parse_args()
     server = None
     try:
@@ -97,7 +126,7 @@ if __name__ == '__main__':
             server = ThreadingHTTPServer(('127.0.0.1', 0),
                                          partial(Handler, directory=str(ROOT / 'dist')))
             Thread(target=server.serve_forever, daemon=True).start()
-        verify(args.origin or f'http://127.0.0.1:{server.server_port}')
+        verify(args.origin or f'http://127.0.0.1:{server.server_port}', args.browser)
     finally:
         if server:
             server.shutdown()
