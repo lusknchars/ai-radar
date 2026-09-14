@@ -214,24 +214,29 @@ document.querySelectorAll('[data-aplicar]').forEach(function(b){
   });
 });
 
-// Filtro, busca e contagem. Tudo sobre `hidden` em linha: sem estado, sem
-// URL, sem framework. A contagem existe porque um filtro que devolve pouco e
-// indistinguivel de um filtro quebrado sem ela.
+// Filter the published index locally; the header's GET form links here with q.
 var filtros = {};
 var busca = '';
 var mostrarTodos = false;
 var corpo = document.querySelector('[data-paper-list]');
 var contador = document.getElementById('contador');
 
+function normalizarBusca(texto){
+  return texto.normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().trim();
+}
+
 function aplicar(){
   var linhas = document.querySelectorAll('.linha'), n = 0;
+  var termos = busca.split(/\\s+/).filter(Boolean);
   var recorteAtivo = busca || Object.keys(filtros).some(function(k){
     return Boolean(filtros[k]);
   });
   linhas.forEach(function(tr){
     var passa = Object.keys(filtros).every(function(k){
       return !filtros[k] || tr.getAttribute('data-' + k) === filtros[k];
-    }) && (!busca || tr.getAttribute('data-texto').indexOf(busca) !== -1);
+    }) && termos.every(function(termo){
+      return normalizarBusca(tr.getAttribute('data-texto')).indexOf(termo) !== -1;
+    });
     var dentroDoRecorte = mostrarTodos || recorteAtivo ||
       tr.getAttribute('data-inicial') !== 'oculta';
     tr.hidden = !(passa && dentroDoRecorte);
@@ -250,6 +255,8 @@ if (limpar) limpar.addEventListener('click', function(){
     b.setAttribute('aria-pressed', 'false');
   });
   if (campo) campo.value = '';
+  if (buscaGlobal) buscaGlobal.value = '';
+  atualizarBuscaURL('');
   aplicar();
   if (campo) campo.focus();
 });
@@ -269,10 +276,26 @@ document.querySelectorAll('[data-filtro]').forEach(function(s){
 });
 
 var campo = document.querySelector('[data-busca]');
+var buscaGlobal = document.querySelector('.paper-search input');
+function atualizarBuscaURL(valor){
+  var url = new URL(window.location.href);
+  if (valor) url.searchParams.set('q', valor);
+  else url.searchParams.delete('q');
+  window.history.replaceState(null, '', url);
+}
 if (campo) campo.addEventListener('input', function(){
-  busca = campo.value.trim().toLowerCase();
+  busca = normalizarBusca(campo.value);
+  if (buscaGlobal) buscaGlobal.value = campo.value;
+  atualizarBuscaURL(campo.value.trim());
   aplicar();
 });
+var buscaInicial = new URLSearchParams(window.location.search).get('q');
+if (campo && buscaInicial){
+  campo.value = buscaInicial.slice(0, 200);
+  if (buscaGlobal) buscaGlobal.value = campo.value;
+  busca = normalizarBusca(campo.value);
+  aplicar();
+}
 
 // Ordenacao por ATRIBUTO, nunca pelo texto da celula: "\u2014" e "2.3x" nao sao
 // numeros, e parsear o visivel quebraria calado nos dois.
@@ -556,6 +579,21 @@ a{color:inherit;text-decoration:none}
 border-bottom:1px solid var(--linha);font-family:var(--sans);font-size:13px}
 .nav a{color:var(--apagado);transition:color 160ms ease-out}
 .nav a:hover,.nav a[aria-current=page]{color:var(--texto)}
+.paper-search{display:flex;align-items:center;gap:12px;max-width:720px;
+margin:24px auto 0;padding:6px 6px 6px 18px;border:1px solid var(--linha-forte);
+border-radius:999px;background:rgba(238,238,238,.94)}
+.paper-search:focus-within{border-color:var(--acento)}
+.paper-search svg{width:20px;height:20px;flex:none;color:var(--fraco)}
+.paper-search input{min-width:0;width:100%;min-height:44px;border:0;background:transparent;
+color:var(--texto);font:300 16px var(--sans)}
+.paper-search input::placeholder{color:var(--fraco);opacity:1}
+.paper-search input:focus-visible{outline-offset:0;border-radius:4px}
+.paper-search button{min-height:44px;padding:10px 24px;border:0;border-radius:999px;
+background:var(--acento);color:white;font:500 13px var(--sans);cursor:pointer}
+.paper-search button:hover{background:#ac2148}
+.search-help{max-width:720px;margin:12px auto;font-size:13px}.search-help a{text-decoration:underline}
+@media(max-width:640px){.paper-search{gap:8px;padding-left:12px;margin-top:18px}
+.paper-search button{padding-inline:16px}.paper-search svg{width:18px;height:18px}}
 .masthead{padding:64px 0 56px}.publication-head{max-width:980px}
 .publication-head .hero-copy{max-width:790px}
 .static-masthead{padding:72px 0 48px}.static-masthead h1{max-width:22ch;

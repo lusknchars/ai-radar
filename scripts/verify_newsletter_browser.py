@@ -43,21 +43,22 @@ def main():
             dates = page.locator('.paper-entry:visible').evaluate_all(
                 '(rows) => rows.map(row => row.dataset.publicado)')
             assert dates == sorted(dates, reverse=True)
-            page.get_by_role('searchbox').fill('CommitKV')
+            search = page.get_by_role('searchbox', name='Search this index')
+            search.fill('CommitKV')
             assert page.locator('.paper-entry:visible').count() == 1
             assert page.locator('#contador').inner_text() == '1 of 20'
-            page.get_by_role('searchbox').fill('')
+            search.fill('')
             assert page.locator('.paper-entry:visible').count() == 20
-            page.get_by_role('searchbox').fill('not-a-real-research-topic-404')
+            search.fill('not-a-real-research-topic-404')
             assert page.locator('.paper-entry:visible').count() == 0
             assert page.get_by_text('No papers match your search.', exact=True).is_visible()
             page.get_by_role('button', name='Clear search and filters').click()
-            assert page.get_by_role('searchbox').input_value() == ''
+            assert search.input_value() == ''
             assert page.locator('.paper-entry:visible').count() == 20
-            assert page.get_by_role('searchbox').evaluate('(element) => element === document.activeElement')
-            page.get_by_role('searchbox').fill('speculative decoding')
+            assert search.evaluate('(element) => element === document.activeElement')
+            search.fill('speculative decoding')
             assert page.locator('.paper-entry[data-familia="decodificacao_especulativa"]:visible').count() > 0
-            page.get_by_role('searchbox').fill('')
+            search.fill('')
             assert page.locator('meta[property="og:image"]').get_attribute('content').endswith('/assets/social-card.png')
             for label in ('title', 'action'):
                 entry = page.locator('.paper-entry:visible').first

@@ -140,7 +140,17 @@ def _nav(atual: str, public_config: PublicConfig) -> str:
     nav_class = 'nav has-community' if public_config.community else 'nav'
     return (f'<nav class="{nav_class}" aria-label="Primary navigation">'
             f'<a class="publication-name" href="{escape(public_config.path())}">Paperraft</a>'
-            f'<div class="nav-links">{links}</div></nav>')
+            f'<div class="nav-links">{links}</div></nav>'
+            f'<form class="paper-search" role="search" aria-label="All papers" '
+            f'action="{escape(public_config.path("#acervo"))}" method="get">'
+            '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" '
+            'stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'
+            '<circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4 4"></path></svg>'
+            '<input type="search" name="q" aria-label="Search all papers" '
+            'placeholder="Search papers, topics, or arXiv IDs" required maxlength="200">'
+            '<button type="submit">Search</button></form>'
+            '<noscript><p class="search-help">Search needs JavaScript. '
+            f'<a href="{escape(public_config.path("#acervo"))}">Browse the research index</a>.</p></noscript>')
 
 
 def _sheen_content(label: str) -> str:
@@ -575,8 +585,8 @@ def _secao_tabela(
         f'<div><label for="f-familia">research area</label>'
         f'<select id="f-familia" data-filtro="familia">'
         f"{_opcoes(d.familias_presentes, ROTULOS_FAMILIA)}</select></div>"
-        '<div><label for="f-busca">search</label>'
-        '<input id="f-busca" type="search" data-busca '
+        '<div><label for="f-busca">Search this index</label>'
+        '<input id="f-busca" type="search" data-busca maxlength="200" '
         'placeholder="quantization, agent, cache..."></div>'
         f'<div class="contagem"><span class="count-label">showing</span>'
         f'<span id="contador" role="status" aria-live="polite">{inicial} of {len(d.pontos)}</span></div>'
