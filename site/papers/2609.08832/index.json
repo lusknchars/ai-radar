@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.08832",
   "title": "Closing the Consistency Gap: Self-Evolving Agents That Learn to Stay on Course",
   "summary": "Replaces repeated ad hoc prompt and retry tuning with a pipeline that diagnoses low-consistency trajectory steps, generates guidelines, and injects them as episodic memory into future runs. Costs extra API calls for multi-run consistency analysis plus guideline generation, a memory store, and retrieval/injection logic; per-run inference is otherwise unchanged. Can fail if guidelines overfit to observed flips and degrade out-of-distribution tasks, if the diagnosis attributes instability to the wrong step, or if injected guidelines conflict with task instructions.",

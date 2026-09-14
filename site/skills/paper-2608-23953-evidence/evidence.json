@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.23953",
   "title": "The Empire, Long Divided, Must Unite: Architectural Convergence in Three LLM Agent Harnesses",
   "summary": "This source-level study replaces ad hoc agent-loop implementations with a converged five-element harness design: a commoditised loop, an append-only replayable session record, model quirks kept as data, progressive context disclosure, and explicit extension seams. The cost is implementation effort: building the replayable record and extension seams adds engineering complexity, and the paper provides no measured performance benefit, only architectural evidence from three case harnesses. What can fail is that the convergence partly reflects diffusion and literal code reuse rather than independent validation, and the study identifies external verifiability as entirely absent, so provenance-sensitive deployments remain unaddressed by all examined designs.",

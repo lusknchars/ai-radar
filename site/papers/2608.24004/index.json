@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.24004",
   "title": "AgentSpec: Speculative Decoding for Batch Inference of LLM Agents",
   "summary": "AgentSpec replaces standard speculative decoding (e.g., Medusa/EAGLE-style drafting) in batched agent inference by isolating drafts to semantically coherent workflow segments and reallocating freed token budgets using agent-level information. It requires modifying or adopting a custom vLLM implementation, adding drafting complexity and dependence on the paper's code being released and maintained. It can fail if the agent workload lacks the assumed structural regularity, if acceptance rates drop on out-of-distribution tasks, or if batch sizes are small enough that conventional speculative decoding already performs adequately.",

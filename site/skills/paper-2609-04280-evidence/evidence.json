@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.04280",
   "title": "EVOHARNESSBENCH: Can Your Agents Keep Pace with an Evolving Harness?",
   "summary": "EvoHarnessBench replaces ad hoc or fixed-harness agent evaluation with a controlled benchmark of 17 multi-stage harness streams (802 tasks, 520 tools, 42 skills, 62 agents) that isolates retention and adaptation as tools, skills, and sub-agents are added. Adopting it costs evaluation compute and engineering to wire one's own agent stack into its verifier-based environments, and as a benchmark it delivers no direct capability gain. Its practical warning—that harness expansion alone can degrade previously solved tasks (harness-induced forgetting), and that self-evolving memory gains are inconsistent—can fail to transfer if the reader's harness, model, or task distribution differs from the benchmark's deterministic streams.",

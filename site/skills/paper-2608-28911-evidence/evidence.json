@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.28911",
   "title": "SemKV: Semantic Mixed-Precision KV Cache Quantization Guided by the Quality Cliff for Long-Context LLM Inference",
   "summary": "SemKV replaces uniform low-bit KV cache quantization and FP16 token pruning with full token retention plus two adjacent above-cliff precisions assigned by a model-internal importance score. The cost is a per-deployment calibration step to locate the quality cliff, mixed-precision packing and dequantization logic in the inference path, and storage overhead for scores and per-token precision assignments, all inference-time with no retraining. It can fail if the cliff shifts under a different model, quantizer, or serving regime (generation-time quantization, multi-turn dialogue), since the reported thresholds were validated on Llama-3.1-8B-Instruct and Mistral-7B, and the no-loss claim is statistical rather than a guarantee of per-example equivalence.",

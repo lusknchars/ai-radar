@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.00808",
   "title": "Turning Interaction History into Execution State: A Runtime Layer for Long-Horizon Coding Agents",
   "summary": "Ledger replaces the model's implicit inference of execution status from raw interaction history with a deterministic runtime layer that injects a compact state view into each prompt (inform) and intercepts commands to replay still-valid results or flag redundant work (govern), wrapping an unmodified agent. It costs no additional language-model calls and only the engineering effort of maintaining the ledger and its command-interception logic, with reported net cost reductions. It can fail when the ledger's staleness tracking misclassifies state, causing the govern path to return cached results that no longer reflect the repository or to suppress legitimately needed re-execution, and gains may not transfer to agent frameworks or task distributions unlike those evaluated.",

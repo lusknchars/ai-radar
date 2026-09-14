@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.09662",
   "title": "PELM: Power Efficient On-Device LLM Inference with Speculative Decoding and Dynamic Voltage Frequency Scaling",
   "summary": "The method replaces hardware-only DVFS power governing on mobile and edge SoCs by jointly tuning processor frequency, speculative decoding, and per-token verification depth so that easy tokens skip full-depth inference. It costs implementation complexity (a draft model, a verification-depth controller, and OS-level frequency control) and requires root or driver access to hardware DVFS interfaces that cloud GPUs and third-party APIs do not expose. It can fail under severe thermal constraints if the verification-depth policy mispredicts token difficulty, and the reported gains are measured on mobile platforms, so they do not transfer to a single 24 GB datacenter GPU deployment.",

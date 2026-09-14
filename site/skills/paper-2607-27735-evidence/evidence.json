@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2607.27735",
   "title": "A Sparse Glimpse of the Whole: Train-Free Self-Speculative Decoding",
   "summary": "SparseSpec-L replaces standard autoregressive decoding (and separate-draft-model speculative decoding) by drafting tokens from the target model itself using a dynamically sparsified, recallable KV cache, with an entropy-based controller choosing speculation length. It costs additional implementation complexity in the inference stack: per-head attention statistics must be captured during verification, the KV cache manager must support recall rather than permanent eviction, and an online controller adds per-step overhead; it requires no training and no extra model weights, fitting a single-GPU budget. It can fail when the workload is short-context (where sparse drafting offers little benefit), when marginal token acceptance drops below the relative drafting cost so that longer speculation reduces speedup, or when the serving framework in use (e.g., vLLM) cannot be modified to expose the required attention statistics and cache control.",

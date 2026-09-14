@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2607.26475",
   "title": "DualDecoder: Accelerate Long Context LLM Inference by Predictive Prefetch",
   "summary": "DualDecoder replaces existing sparse KV cache offloading systems (which keep large auxiliary retrieval-management states in GPU memory) by predicting the critical KV entries from the preceding speculated token and prefetching them from host memory via a dual-token decoding pipeline, layer-aware transfer schedule, and layer-scoped memory manager. The cost is added serving-stack complexity: a speculative decoding pipeline tightly coupled with PCIe transfer scheduling and custom memory management, with implementation effort that is non-trivial and not yet a standard library feature. It can fail if prefetch prediction accuracy degrades on workloads unlike the evaluated ones, if host-to-GPU bandwidth is insufficient to overlap transfers with compute, or if the auxiliary-state savings do not materialize at the reader's lower concurrency levels.",

@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.00749",
   "title": "ContextPipe: Database-Inspired Context Assembly for Long-Horizon Agents",
   "summary": "It replaces ad hoc prompt builders, scattered compaction routines, and per-provider cache workarounds with a unified five-phase pipeline (Plan, Bind, Optimize, Execute, Feedback) featuring a structured data-source catalog, a deterministic cache-aware optimizer, and an EXPLAIN ANALYZE trace for auditability and replay. The cost is substantial engineering complexity: the team must implement and maintain the catalog, optimizer, and tracing infrastructure, and the method measurably degrades the KV cache-hit ratio, which can erode token savings on byte-sensitive prompt-caching providers. It can fail if the optimizer's statistics or compaction decisions drop task-relevant history on long-horizon tasks, and the evidence base is a single preliminary evaluation on one benchmark subset, so gains may not transfer to the reader's workload.",

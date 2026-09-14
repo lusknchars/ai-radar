@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2607.27692",
   "title": "Recall Before You Rank: Similarity-Guided Top-$K$ Reuse for Efficient Long-Context Attention",
   "summary": "ReTopK replaces the per-token full-KV scoring and global Top-K selection step of dynamic sparse attention with a bounded per-head cache of historical query-support pairs: for each new query it retrieves similar cached queries, unions their supports with a recent window, and reranks only that compact candidate set with exact current-query scores, keeping the complete KV cache intact. The cost is extra memory for the query-support cache, the added complexity of similarity retrieval, similarity-based fallback to Exact Top-K, and periodic exact refreshes, plus the residual quality gap of approximate selection (0.50% perplexity increase at 128K, K=512). It can fail when query similarity does not predict support overlap, when the fallback triggers so often that the speedup vanishes, and because the reported gains cover only 16K-128K contexts on PG19/NIAH/LongBench and assume a Top-K attention stack already in production.",

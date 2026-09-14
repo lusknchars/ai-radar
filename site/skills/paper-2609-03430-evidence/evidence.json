@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.03430",
   "title": "Random Attention: Rethinking KV Cache Eviction for Efficient Reasoning",
   "summary": "Random Attention replaces score-based KV cache eviction policies (such as H2O-style importance scoring) with uniform random eviction within each attention head, while always retaining the prompt, eliminating all per-token scoring computation. It costs nothing in memory or latency beyond the eviction itself and adds almost no implementation complexity, since the selection signal is removed entirely; quality is reported to match the best prior evictor on reasoning workloads. It can fail on workloads where the reasoning trace does not restate needed information or where redundancy across heads is insufficient, and on non-reasoning tasks or cache configurations where the prompt is not the dominant fragile component, since the findings are validated on reasoning traces with long chains of thought.",

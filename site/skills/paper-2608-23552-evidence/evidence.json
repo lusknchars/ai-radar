@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.23552",
   "title": "Prime Agent: A Self-Improving RLM Harness",
   "summary": "Replaces ad hoc agent scaffolds and default vendor harnesses with a standardized harness combining a persistent IPython REPL (Recursive Language Model abstraction), continual preservation of histories, memories, skills, and subagent specs across trajectories, recursive subagents with agent-to-agent communication, and built-in execution, recovery, verification, and resource accounting. Costs include substantial test-time compute and token consumption from recursive context processing and multi-subagent coordination, plus engineering effort to integrate and maintain the harness and its daemon-backed sessions; API bills can grow sharply on long-horizon tasks. Can fail through compounding errors in self-directed subagent communication, persistence of corrupted memories or skills across trajectories, and benchmark gains (e.g., ARC-AGI-3) that may not transfer to the reader's specific production workloads.",
