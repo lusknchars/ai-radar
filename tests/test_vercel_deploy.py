@@ -33,10 +33,14 @@ def test_valid_access_can_be_checked_without_deploying(configured, monkeypatch):
     assert deploy_vercel.main(["--check-only"]) == 0
 
 
-def test_deploy_preserves_failure_and_uses_the_verified_team(configured, monkeypatch):
+def test_deploy_preserves_failure_and_uses_the_verified_project_link(configured, monkeypatch):
     monkeypatch.setattr(deploy_vercel, "urlopen", lambda *a, **kw: io.BytesIO(json.dumps({"id": "prj_test", "accountId": "team_test"}).encode()))
-    def deploy(command, check):
-        assert command[-4:] == ["--scope", "team_test", "--token", "private-test-value"]
+    def deploy(command, check, env):
+        # Global --scope forces account lookup, which project tokens cannot do.
+        assert "--scope" not in command
+        assert env["VERCEL_ORG_ID"] == "team_test"
+        assert env["VERCEL_PROJECT_ID"] == "prj_test"
+        assert command[-2:] == ["--token", "private-test-value"]
         return type("Result", (), {"returncode": 7})()
     monkeypatch.setattr(deploy_vercel.subprocess, "run", deploy)
     assert deploy_vercel.main([]) == 7
