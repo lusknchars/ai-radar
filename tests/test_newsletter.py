@@ -26,6 +26,9 @@ def test_new_paper_without_implementations_can_lead_the_weekly_issue():
     issue = build_issue(data(fresh, old, irrelevant), date(2026, 9, 6), DEFAULT_PUBLIC_CONFIG)
     assert issue.paper_ids == [fresh.arxiv_id]
     assert '/papers/2608.11111/' in issue.html
+    assert "Builder's cut" in issue.html
+    assert 'First move:' in issue.text
+    assert 'Decision rule:' in issue.text
     assert '{{{RESEND_UNSUBSCRIBE_URL}}}' in issue.html
 
 
