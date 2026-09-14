@@ -2,6 +2,13 @@
 
 AI research briefs for deciding what to read, test, and build.
 
+Paper pages include a possible product use and a downloadable first-test plan.
+Selected full-paper reviews explain benchmark definitions, relevant baselines,
+calculated differences, and limits before proposing a small product trial.
+Other pages keep these suggestions labeled as research-area guidance. See the
+[builder editorial guide](docs/builder-editorial.md) for the writing and review
+process. Test plans are also included in downloadable research skills.
+
 Paperraft is the public name of the project. The `ai-radar` repository, command
 names, storage keys, and existing URLs remain compatible.
 

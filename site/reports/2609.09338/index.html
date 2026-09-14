@@ -604,6 +604,18 @@ body:has(.research-page) .article-opening>h1{max-width:var(--reading-width);marg
 body:has(.research-page) .article-opening>h1{font-size:clamp(32px,4.4vw,52px);line-height:1.08}
 body:has(.research-page) .article-deck{max-width:var(--reading-width);margin:32px auto 0;
 font-size:clamp(18px,1.6vw,20px);line-height:1.7;letter-spacing:0}
+.research-page #for-builders h3,.research-page #try-it h3{font-size:20px;font-weight:500;margin:28px 0 10px}
+.builder-scenario{font-family:var(--editorial);font-size:26px;line-height:1.4}
+.benchmark-reading{padding:26px 0;border-bottom:1px solid var(--linha)}
+.benchmark-reading h3{font-family:var(--editorial);font-size:26px;font-weight:400;line-height:1.3;margin:0 0 14px}
+.benchmark-comparison{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:20px;margin:24px 0}
+.benchmark-comparison dt{font:400 11px/1.5 var(--mono);color:var(--fraco);margin-bottom:8px}
+.benchmark-comparison dd{font:400 28px/1.25 var(--editorial);margin:0;overflow-wrap:anywhere}
+.benchmark-comparison .benchmark-difference{font-size:22px;color:var(--acento)}
+.benchmark-scope,.builder-review-date{font-size:13px;color:var(--fraco);line-height:1.65}
+.builder-takeaway{padding-left:20px;border-left:2px solid #cb2957;margin-top:28px}
+.research-page #try-it .sheen-button{margin-top:20px}
+@media(max-width:520px){.benchmark-comparison{grid-template-columns:1fr 1fr;gap:16px}.benchmark-comparison>div:last-child{grid-column:1/-1}.builder-scenario{font-size:23px}}
 .paper-lead-image{margin:32px 0 0;min-width:0}
 .paper-lead-image a{display:flex;justify-content:center;padding:28px}
 .paper-lead-image img{display:block;width:auto;max-width:100%;height:auto;max-height:460px;

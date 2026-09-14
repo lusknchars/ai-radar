@@ -2,10 +2,9 @@
 
 The production archive is [paperaft.vercel.app](https://paperaft.vercel.app),
 in the `floater/paperaft` Vercel project. The local checkout is linked for CLI
-deployments. Automatic GitHub deployments require the account owner to add a
-GitHub login connection in Vercel, then connect `lusknchars/ai-radar` to this
-project. Until then, publish updates with `vercel deploy --prod` from a linked
-checkout.
+deployments. GitHub Actions can deploy through the CLI using a Vercel access
+token; this does not require Vercel's Git integration. The optional Git integration
+requires connecting the GitHub account and repository in Vercel.
 
 The Vercel build renders the saved publication database into `dist/` using the
 same renderer as GitHub Pages. It serves the archive at `/`, including paper
@@ -51,11 +50,11 @@ python -m http.server 8767 --bind 127.0.0.1 --directory dist
 ```
 
 Open `http://127.0.0.1:8767/`. Check a paper link, its JSON link, the methodology
-page, RSS, search, and the mobile layout. For the current 20-paper sample, the
-existing Playwright check can run against this URL:
+page, RSS, search, and the mobile layout. The browser layout check can run
+against this URL:
 
 ```bash
-python scripts/verify_newsletter_browser.py --url http://127.0.0.1:8767/
+python scripts/verify_paper_layout.py --origin http://127.0.0.1:8767
 ```
 
 From a Vercel-linked checkout, `vercel` creates a preview; `vercel --prod`
@@ -65,11 +64,24 @@ The local `.vercel/` project link is ignored by Git.
 
 ## Updating the archive
 
-The existing collection workflow remains in GitHub Actions. Vercel rebuilds
-from `data/radar-state.db` and committed `reports/` when the connected production
-branch changes. If the Git integration does not trigger for an automated digest
-commit, redeploy the latest commit from Vercel. A deployment alone does not
-refresh the source data. Builds fail if the publication database is missing.
+The collection workflow saves its database and reports before deploying to
+Vercel. `scripts/deploy_vercel.py` first checks access to the exact configured
+project and team. A rejected credential fails with an explicit error; publication
+failures are not silently treated as successful runs. GitHub Pages can still
+publish a usable archive after the Vercel step fails.
+
+Store `VERCEL_TOKEN` in GitHub Actions secrets, with access to the `floater`
+team and `paperaft` project. Set `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` as
+repository variables. Tokens belong in the secret form, never in a command
+committed to Git. Vercel documents [team-scoped access tokens](https://vercel.com/kb/guide/how-do-i-use-a-vercel-api-access-token).
+
+To recover a failed deployment, run **Publish Vercel** from the Actions page on
+`main`. Its default mode only checks credentials. After that passes, turn off
+**Check project access without deploying** to publish the latest saved archive.
+Both modes skip discovery, model calls, and notifications. They share the
+collector's concurrency group so they wait for an in-progress collection to
+finish. A deployment alone does not refresh source data, and builds fail when
+the publication database is missing.
 
 Configuration references: [Vercel build settings](https://vercel.com/docs/project-configuration/vercel-json),
 [system environment variables](https://vercel.com/docs/environment-variables/system-environment-variables),

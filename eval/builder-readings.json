@@ -1,0 +1,43 @@
+{
+  "purpose": "Fixed annotations from version-1 PDF tables, kept separate from editorial prose and calculated differences. No model experiment was run.",
+  "papers": [
+    {
+      "arxiv_id": "2609.11060",
+      "source": "https://arxiv.org/pdf/2609.11060v1#page=5",
+      "pdf_sha256": "c1691a2906633643e8f1b1d0dead2cf47202682c4a1f9cef2d63475c7a7fc282",
+      "table": "1a",
+      "passage": "No Memory: pass 39; Mem: pass 70, cost $1.99; Mem with Env Probing: pass 73, cost $1.68.",
+      "comparisons": [
+        {"index": 0, "before": 39, "after": 73, "unit": "percent", "page": 5, "difference": "+34 percentage points"},
+        {"index": 1, "before": 70, "after": 73, "unit": "percent", "page": 5, "difference": "+3 percentage points"},
+        {"index": 2, "before": 1.99, "after": 1.68, "unit": "USD", "page": 5, "difference": "-0.31 USD (-15.6%)"}
+      ],
+      "interpretation_limit": "Costs exclude distillation and curation. The probing-versus-Mem contrast isolates the extra check; the no-memory contrast does not."
+    },
+    {
+      "arxiv_id": "2609.09338",
+      "source": "https://arxiv.org/pdf/2609.09338v1#page=7",
+      "pdf_sha256": "1f3254967cf7b2c5412ec3712681c257814eed1065d46692a91498a6402619ec",
+      "table": "1 and 2",
+      "passage": "Llama mean AL: 2.45 / 2.97; throughput: 155.8 / 183.7. MiniMax MT-BENCH T/s: 214.4 / 201.6.",
+      "comparisons": [
+        {"index": 0, "before": 2.45, "after": 2.97, "unit": "tokens/step", "page": 7, "difference": "+0.52 tokens/step (+21.2%)"},
+        {"index": 1, "before": 155.8, "after": 183.7, "unit": "tokens/s", "page": 7, "difference": "+27.9 tokens/s (+17.9%)"},
+        {"index": 2, "before": 214.4, "after": 201.6, "unit": "tokens/s", "page": 7, "difference": "-12.8 tokens/s (-6.0%)"}
+      ],
+      "interpretation_limit": "AL, throughput, latency, and cost cannot be substituted. MT-Bench is a regression. GLM was not an evaluated target."
+    },
+    {
+      "arxiv_id": "2609.06972",
+      "source": "https://arxiv.org/pdf/2609.06972v1#page=14",
+      "pdf_sha256": "8265100357767f3cb8b8563952dda96f3018811b31f49d87aa73766161d53433",
+      "table": "XI and XIII",
+      "passage": "Majority-class baseline: 55.8%; world lookup: 86.1%. Attacked: 460 / 831, recall 0.554.",
+      "comparisons": [
+        {"index": 0, "before": 55.8, "after": 86.1, "unit": "percent", "page": 14, "difference": "+30.3 percentage points"},
+        {"index": 1, "before": null, "after": 55.4, "unit": "percent", "page": 14, "difference": "No matched comparison"}
+      ],
+      "interpretation_limit": "The identity shortcut is leakage, not security improvement. Recall is not accuracy and no alternative detector result is supplied here."
+    }
+  ]
+}

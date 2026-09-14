@@ -8,6 +8,7 @@ from shutil import copyfile, copytree
 import json
 
 from .config import PublicConfig, load_public_config
+from .builder_guides import apply_builder_review, render_application_plan
 from .community import COMMUNITY_SCRIPT
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
@@ -128,6 +129,9 @@ def publish_site(
             / f"{point.arxiv_id}.json")
         page = apply_exposure_edition(
             page, content_root / "exposures" / f"{point.arxiv_id}.json")
+        page = apply_builder_review(
+            page, content_root / "builders" / f"{point.arxiv_id}.json",
+            reports_by_id.get(point.arxiv_id))
         published_pages.append(page)
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
@@ -139,6 +143,8 @@ def publish_site(
             render_research_page(page, public_config, preview_pages=preview_pages), encoding="utf-8")
         (destination / "index.json").write_text(
             page.model_dump_json(indent=2), encoding="utf-8")
+        (destination / "try-it.md").write_text(
+            render_application_plan(page), encoding="utf-8")
 
     build_paper_skills(published_pages, root, base_path=public_config.base_path)
 

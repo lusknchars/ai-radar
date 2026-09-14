@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.24945",
   "title": "FAMPWQ: Fisher Information-based Adaptive Mixed Precision Weight Quantization for Effective LLM Inference",
   "summary": "Replaces uniform bit-width or heuristic-sensitivity weight quantization with layer-wise sensitivity measured by Fisher information and a reinforcement learning allocator that assigns per-layer bit-widths. Costs include a Fisher sensitivity estimation pass, training an RL allocator, and added deployment complexity from mixed-precision kernels, which may offset some memory savings relative to uniform low-bit formats. Can fail if Fisher estimates misrank sensitivity on the reader's domain data, if commodity GPU kernels lack efficient mixed-precision support (turning memory savings into latency regressions), or if the allocator's strategy does not transfer across models.",

@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.02652",
   "title": "Unfolding the Leech Lattice: Fused Multi-Shell Decoding and VRAM Layouts for 2-Bit LLM Weights",
   "summary": "The method supplies the missing multi-shell decoder for Leech-lattice 2-bit quantization, replacing a lookup-table decode with an offline-expanded, warp-divergence-free fused dequantize-plus-matvec kernel at 4.80 bits per weight in VRAM. It costs substantial quality (1.38x perplexity and 14.7 MMLU points at 4B, shrinking with scale) and its in-VRAM rate is far above the on-disk 2-bit rate because the 301-class codebook is too large for a lookup table. It can fail on adoption because the deployed QTIP trellis kernel already beats it 2.27x at near-equal fractions of byte bounds, and on a second memory hierarchy every lattice arm falls below FP16, so the speedup is hardware- and geometry-dependent.",

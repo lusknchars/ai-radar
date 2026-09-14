@@ -1,0 +1,52 @@
+{
+  "arxiv_id": "2609.06972",
+  "source_url": "https://arxiv.org/pdf/2609.06972v1",
+  "pdf_sha256": "8265100357767f3cb8b8563952dda96f3018811b31f49d87aa73766161d53433",
+  "report_sha256": "1864b7dba77939c0afc3f74d93e6a97429cdfe569dacd7ae0f9d3f54d571e243",
+  "reviewed_at": "2026-09-14",
+  "intro": "An agent can follow an instruction hidden in a document instead of its user's request. AgentDrift provides labeled synthetic examples for studying where that happens. Its most useful lesson for a builder is how an impressive evaluation score can come from recognizing the test data.",
+  "mechanism": "AgentDrift labels individual steps of synthetic tool-use histories. It supplies evaluation data, not a proven protective layer. Some examples contain attacks; others contain suspicious-looking but legitimate content.",
+  "method_page": 3,
+  "takeaway": "Treat this as an evaluation resource. The lookup result exposes a shortcut, while recall measures attacks caught by one simple detector. Those are different questions. One weak detector also does not prove that every non-sequential approach must fail.",
+  "comparisons": [
+    {
+      "title": "Accuracy that comes from a shortcut",
+      "definition": "Binary accuracy counts correctly classified attacked and non-attacked histories.",
+      "baseline_name": "Majority-class prediction",
+      "method_name": "World-identity lookup",
+      "before": 55.8,
+      "after": 86.1,
+      "unit": "percent",
+      "scope": "Default 1,881-trajectory test split. The lookup reuses world identities seen in training.",
+      "caveat": "This is leakage evidence, not a 30-point security improvement. A detector must be evaluated with identity shortcuts controlled.",
+      "source_page": 14,
+      "source_locator": "Table XI; explanation on page 13"
+    },
+    {
+      "title": "Attack recall is a different denominator",
+      "definition": "Recall is the share of actual attacks detected. Here the baseline catches 460 of 831.",
+      "baseline_name": "No alternative detector measured here",
+      "method_name": "Simple feature classifier",
+      "before": null,
+      "after": 55.4,
+      "unit": "percent",
+      "scope": "Single held-out test evaluation of a six-feature logistic regression.",
+      "caveat": "This is not overall accuracy. The partial-hijack subset has 8.2% recall, and benign histories have a 10.5% false-alarm rate.",
+      "source_page": 14,
+      "source_locator": "Table XIII"
+    }
+  ],
+  "plan": {
+    "scenario": "Possible product use: an assistant that reads customer uploads or fetched web pages before calling your APIs.",
+    "change": "Use the dataset to challenge your existing checks offline. Keep tools mocked so that a test cannot send messages, alter records, or expose real customer data.",
+    "baseline": "Your current detector against a small human-reviewed set. Separate real attack success, resisted attacks, and legitimate content that looks suspicious.",
+    "steps": [
+      "Fetch the official dataset linked by the paper, record its version and license, and inspect the label definitions. Start with a small sample of attacked and legitimate histories that resemble your workflow.",
+      "Split by world identity so the same world cannot appear in training and evaluation. Keep product test examples separate from any detector tuning. Check for repeated templates and names.",
+      "Replay the held-out cases through your existing checks with mocked tools. Record the exact step flagged, missed successful attacks, and legitimate actions blocked.",
+      "Only then compare a candidate detection change on the same cases. Manually review disagreements and repeat with held-out examples from your own agent before enabling enforcement."
+    ],
+    "measure": "Attack recall, false-positive rate on legitimate tasks, delay until detection, review burden, and detector cost. Keep denominators and attack types visible instead of reporting one overall score.",
+    "decision": "Keep a change only if it catches more consequential attacks within your preselected false-alarm and latency limits. Synthetic benchmark performance alone is not evidence that a production agent is protected."
+  }
+}

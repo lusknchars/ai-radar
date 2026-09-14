@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.19758",
   "title": "FlashPrefill V2: Block-Sparse Prefill Attention for Long-Context LLM Serving",
   "summary": "The method replaces dense FlashAttention during the prefill phase with a block-sparse attention operator that uses instantaneous pattern discovery, max-based dynamic thresholding, and a mean correction term, delivered as an SGLang-compatible backend with paged KV cache and continuous batching support. Adoption costs a custom kernel dependency tuned to FlashAttention-3/4-style implementations, integration effort into a serving framework, and approximation error at extreme sparsity that the mean correction only bounds rather than eliminates. It can fail through accuracy degradation on workloads whose attention patterns do not match the discovered sparsity, through hardware-specific kernel behavior validated primarily on H20 GPUs, and through FP8 quantization interacting poorly with the sparse approximation.",

@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2606.01774",
   "title": "FLARE: Diffusion for Hybrid Language Model",
   "summary": "Replaces purely autoregressive decoding with one checkpoint that switches between verified autoregressive decoding and parallel diffusion denoising. It requires conversion post-training on a hybrid autoregressive checkpoint, dedicated kernels, and high-quality transfer data, which the paper identifies as the dominant factor. Adoption depends on a strong starting checkpoint and suitable transfer data; the code and kernels are not yet mature infrastructure for direct use.",

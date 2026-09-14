@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.00097",
   "title": "Faster Than Flash: Exploiting Attention Sparsity for Efficient Long-Context Decoding",
   "summary": "It replaces metadata-indexed sparse-attention selection and the Flash Decoding kernel with a single fused kernel that performs content-aware block scanning via low-bit quantization (top-delta) and reuses the scan for computation. The cost is a custom fused-kernel integration and maintenance burden, extra low-bit scanning/block-filtering compute, and benefits that only materialize at genuinely long contexts that a 24 GB GPU can rarely host for larger models. It can fail when the quantized top-delta scan prunes blocks containing relevant tokens (degrading retrieval-heavy or sparsity-unfriendly inputs), when attention distributions are not sparse, or when the kernel does not support the target attention variant/hardware.",

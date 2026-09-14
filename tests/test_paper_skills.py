@@ -30,11 +30,15 @@ def test_skill_catalog_writes_installable_zip_with_structured_evidence(tmp_path)
         assert set(zipped.namelist()) == {
             "paper-2608-21223-evidence/SKILL.md",
             "paper-2608-21223-evidence/evidence.json",
+            "paper-2608-21223-evidence/TRY-IT.md",
         }
         assert "source-linked" in zipped.read(
             "paper-2608-21223-evidence/SKILL.md").decode()
         evidence = json.loads(zipped.read(
             "paper-2608-21223-evidence/evidence.json"))
+        plan = zipped.read("paper-2608-21223-evidence/TRY-IT.md").decode()
+        assert "No Paperraft experiment has been run" in plan
+        assert "## Record your result" in plan
     assert evidence["arxiv_id"] == paper.arxiv_id
     assert json.loads((tmp_path / "skills/index.json").read_text())[0]["download"] == \
         "/skills/paper-2608-21223-evidence.zip"

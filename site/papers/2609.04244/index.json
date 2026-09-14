@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2609.04244",
   "title": "MonoMoE: An Efficient Fused Mega-kernel for Quantized MoE Decoding",
   "summary": "MonoMoE replaces token-major grouped/batched GEMM pipelines for block-wise quantized MoE decode with a single persistent weight-major megakernel that fuses routing, top-k, quantization, both expert projections, activation, and reduction, avoiding expert-local token tiling and multi-launch overhead. The cost is substantial implementation complexity: generated per-model kernel specializations, offline schedule tuning, vLLM/FlashInfer integration, and reliance on Hopper-class FP8 tensor cores. It can fail if the reader's GPU lacks Hopper FP8 support (e.g., a 24 GB consumer or Ampere card), if model shapes fall outside the generated specializations, or if kernel bugs or accuracy drift emerge outside the evaluated configurations.",

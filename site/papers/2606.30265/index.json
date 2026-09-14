@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2606.30265",
   "title": "When Is a Draft Accepted? A Theory of Acceptance in Speculative Decoding",
   "summary": "Replaces classical stochastic analysis of speculative decoding with an acceptance theory for greedy decoding, relaxed acceptance, and candidate trees. It introduces a theoretical certification framework without new infrastructure, rather than a new acceleration method. It can inform implementation decisions but does not itself make a system faster; the analysis characterizes drafter-token acceptance and is evaluated on Qwen3 models.",

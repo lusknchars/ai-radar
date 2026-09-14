@@ -1,5 +1,83 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Possible product use: a SaaS data assistant that repeatedly looks up the same customer tables, then makes mistakes after a schema change.",
+    "change": "Add a background memory checker to a sandbox copy of that assistant. Keep customer data and memory isolated. Give the checker only the read access needed to validate a record, and keep the current memory pipeline available as a fallback.",
+    "baseline": "Run three conditions: no memory, your current memory, and the same memory with checking. Keep the answering model, tools, retrieval, and task order fixed.",
+    "steps": [
+      "Prepare 30 representative database questions with verified answers. Change a table name or data convention halfway through the sandbox sequence. Define a spending limit and an acceptable failure rate before testing.",
+      "Run each condition from a fresh environment and empty memory. Let memory persist within a run, never between conditions. Hide future questions from the checker.",
+      "Repeat at least three paired runs with matching question orders. Record answering, distillation, checking, and retrieval usage separately. This pilot size is a Paperraft suggestion, not the paper's evaluation protocol.",
+      "Inspect wrong answers and the memory records that caused them. Save per-task results and check whether new records remain correct after the environment changes."
+    ],
+    "measure": "Correct answers, unnecessary database calls, stale records, response latency, and total cost per successful task including failed attempts and all memory maintenance.",
+    "decision": "Keep checking only if it improves your chosen quality target at an acceptable total cost. If your goal is savings, the reduction in answering cost must exceed the added checking and maintenance cost. Use paired results to inspect variation; three pilot runs are not proof of a stable production gain."
+  },
+  "builder_review": {
+    "arxiv_id": "2609.11060",
+    "source_url": "https://arxiv.org/pdf/2609.11060v1",
+    "pdf_sha256": "c1691a2906633643e8f1b1d0dead2cf47202682c4a1f9cef2d63475c7a7fc282",
+    "report_sha256": "d3e79c64fda89a5a772fddfb0657c118cab8176be0d6de3659cacd7a26576aea",
+    "reviewed_at": "2026-09-14",
+    "intro": "An assistant can remember yesterday's mistake as confidently as yesterday's useful discovery. This study checks candidate memories against the working environment before saving them. For a small product, the question is whether that extra check earns back its cost.",
+    "mechanism": "After a task ends, a separate curator checks proposed memories with read-only tools before saving or revising them. The responding agent and its memory reader stay the same. The added work happens during memory maintenance.",
+    "method_page": 3,
+    "takeaway": "For an existing memory product, start with the comparison against ordinary memory. The no-memory headline includes the benefit of adding memory at all. The extra three percentage points do not establish a reliable product gain, and the reported task-agent bill leaves maintenance out.",
+    "comparisons": [
+      {
+        "title": "CLBench: the headline versus no memory",
+        "definition": "Pass rate is the share of database questions answered correctly.",
+        "baseline_name": "No memory",
+        "method_name": "Memory with probing",
+        "before": 39.0,
+        "after": 73.0,
+        "unit": "percent",
+        "scope": "40 questions with a schema change halfway through; GPT-5.4; five paired runs.",
+        "caveat": "This compares the whole memory system against no memory. It does not isolate the value of probing.",
+        "source_page": 5,
+        "source_locator": "Table 1a"
+      },
+      {
+        "title": "CLBench: the extra value of checking memory",
+        "definition": "Same pass metric, now against ordinary memory.",
+        "baseline_name": "Ordinary memory",
+        "method_name": "Memory with probing",
+        "before": 70.0,
+        "after": 73.0,
+        "unit": "percent",
+        "scope": "Same 40-question experiment. Reported 95% intervals are ±16 and ±5 percentage points.",
+        "caveat": "The intervals overlap. These means alone do not establish a reliable improvement from adding the checking step.",
+        "source_page": 5,
+        "source_locator": "Table 1a"
+      },
+      {
+        "title": "CLBench: whose cost went down?",
+        "definition": "Task-agent spending for the 40-question run, averaged across runs.",
+        "baseline_name": "Ordinary memory",
+        "method_name": "Memory with probing",
+        "before": 1.99,
+        "after": 1.68,
+        "unit": "USD",
+        "scope": "Task-response phase only. Distillation and memory curation are excluded.",
+        "caveat": "This is not total operating cost or cost per request. Any extra maintenance cost must be counted before claiming savings.",
+        "source_page": 5,
+        "source_locator": "Table 1a and caption"
+      }
+    ],
+    "plan": {
+      "scenario": "Possible product use: a SaaS data assistant that repeatedly looks up the same customer tables, then makes mistakes after a schema change.",
+      "change": "Add a background memory checker to a sandbox copy of that assistant. Keep customer data and memory isolated. Give the checker only the read access needed to validate a record, and keep the current memory pipeline available as a fallback.",
+      "baseline": "Run three conditions: no memory, your current memory, and the same memory with checking. Keep the answering model, tools, retrieval, and task order fixed.",
+      "steps": [
+        "Prepare 30 representative database questions with verified answers. Change a table name or data convention halfway through the sandbox sequence. Define a spending limit and an acceptable failure rate before testing.",
+        "Run each condition from a fresh environment and empty memory. Let memory persist within a run, never between conditions. Hide future questions from the checker.",
+        "Repeat at least three paired runs with matching question orders. Record answering, distillation, checking, and retrieval usage separately. This pilot size is a Paperraft suggestion, not the paper's evaluation protocol.",
+        "Inspect wrong answers and the memory records that caused them. Save per-task results and check whether new records remain correct after the environment changes."
+      ],
+      "measure": "Correct answers, unnecessary database calls, stale records, response latency, and total cost per successful task including failed attempts and all memory maintenance.",
+      "decision": "Keep checking only if it improves your chosen quality target at an acceptable total cost. If your goal is savings, the reduction in answering cost must exceed the added checking and maintenance cost. Use paired results to inspect variation; three pilot runs are not proof of a stable production gain."
+    }
+  },
   "arxiv_id": "2609.11060",
   "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
   "summary": "The method replaces a post-task memory curator that works only from completed trajectories with one that has least-privilege, read-only environment tools to verify, scope, and refresh candidate memories, requiring no retraining and no changes to the task agent, retriever, or memory schema. Costs are an additional asynchronous curator stage with its own inference spend and tool-call latency, plus engineering effort to expose auditable read-only world tools; task-agent cost reportedly falls, but total pipeline cost rises. It can fail if probing tools return misleading or partial environment state, if read-only permissions are misconfigured into a security risk, and because results come from a single GHCP-based harness on database and consulting tasks, gains may not transfer to other agent stacks or domains.",

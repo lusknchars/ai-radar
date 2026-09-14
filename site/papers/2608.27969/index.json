@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.27969",
   "title": "openJiuwen: Beyond Static Harnesses for Long-Horizon Coding Agents",
   "summary": "openJiuwen replaces ad-hoc, statically wired agent orchestration scripts with an open-source harness offering Rail-based capability composition (single agents, delegated sub-agents, Swarm Flow) and runtime-adaptive decisions on context, feedback, and task control around a fixed model policy. Costs include harness engineering complexity, migration of existing pipelines to its execution semantics, and additional orchestration-layer latency and token consumption from multi-agent coordination. It can fail when benchmark gains do not transfer to the reader's repositories or tasks, when adaptive runtime decisions destabilize on out-of-distribution evidence, and when sub-agent delegation inflates API costs without proportional quality improvement.",

@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2603.16925",
   "title": "Gaussian Process Regression-based Knowledge Distillation Framework for Simultaneous Prediction of Physical and Mechanical Properties of Epoxy Polymers",
   "summary": "Replaces separate property-prediction pipelines with one neural student distilled from GPR teachers using RDKit descriptors. It requires a GPR teacher per property, student training, and a curated experimental dataset covering 9 resins and 40 hardeners. Its molecular SMILES/RDKit inputs and materials-science task do not establish benefits for LLM or inference workloads.",

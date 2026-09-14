@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.26480",
   "title": "Zero-Shot Self-Orchestration with Ledger-Based Control for Improved LLM Coding Performance",
   "summary": "The method replaces single-pass LLM code generation with a manager-worker scaffold in which short worker calls share state through a filesystem ledger, requiring no training or per-benchmark tuning. It roughly triples the token bill per problem, though it can buy accuracy more cheaply than upgrading to a larger model and is self-hostable on a 24 GB GPU only via small open-weight workers such as Qwen-27B-class models. It can fail because gains are strongly model-conditional: some models show null or negative deltas (e.g., Qwen3.6-35B, -1 to -9 points with reasoning off), and large reasoning-enabled models gain little, so the extra token cost may buy nothing on a given workload.",

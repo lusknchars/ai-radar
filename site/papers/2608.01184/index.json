@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.01184",
   "title": "SAFE-Merge: Data-Free Continual Model Merging with General Knowledge Preservation",
   "summary": "Adds explicit protection for pretrained knowledge to task-merging methods through a sparse risk-aware mask and low-rank recovery. It requires offline merging computation but adds no inference cost to the resulting model. It matters primarily for people merging specialized models, often in vision or CLIP, and needs validation on their own models because the gains are relative to merging baselines.",

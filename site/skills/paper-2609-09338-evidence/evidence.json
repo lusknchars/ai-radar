@@ -1,5 +1,83 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Possible product use: a self-hosted writing or coding assistant where output generation is a measured bottleneck.",
+    "change": "Begin with an artifact check. Verify a usable drafter for your exact target and serving version. If none exists, record the adaptation work and budget before booking GPUs; a new target is an experiment of its own.",
+    "baseline": "The same target with speculation disabled, your current drafter if present, and the candidate drafter. Keep the GPU, precision, sampling, context, and request trace fixed.",
+    "steps": [
+      "Inspect the official repository linked by the paper for weights, license, target support, and pinned runtime instructions. Confirm whether you can reuse pretraining and what adaptation remains. Do not infer compatibility from model size.",
+      "Save 50 held-out product prompts with realistic input and output lengths. Include an unusual-domain slice and define quality, response-time, and cost limits before running. This is a proposed pilot size.",
+      "Once the artifact and budget checks pass, replay the same trace for each condition at low load and your expected concurrency. Repeat paired runs after warm-up, then inspect outputs for regressions.",
+      "Record both accepted draft length and end-to-end performance. Keep preparation, adaptation, idle GPU time, and serving costs in the result sheet. Preserve a configuration that disables the drafter."
+    ],
+    "measure": "First-token and completion latency, tokens per second, completed requests, output correctness, peak memory, and total cost per successful request. Report low-load and concurrent results separately.",
+    "decision": "Keep the drafter only if it improves the workload that matters while preserving quality and meeting latency limits. Divide setup cost by measured savings per request to estimate break-even traffic; if savings are zero or negative, there is no cost break-even. A pilot on another model does not validate GLM support."
+  },
+  "builder_review": {
+    "arxiv_id": "2609.09338",
+    "source_url": "https://arxiv.org/pdf/2609.09338v1",
+    "pdf_sha256": "1f3254967cf7b2c5412ec3712681c257814eed1065d46692a91498a6402619ec",
+    "report_sha256": "46754036f9c84e36ecadd9979a249d5df4889551fe34663caadd840d2da8a903",
+    "reviewed_at": "2026-09-14",
+    "intro": "A small draft model can suggest several tokens for a larger model to check together. Osprey studies how to make that drafter more useful across workloads. The practical question is whether a compatible checkpoint saves enough serving time to cover adaptation and integration.",
+    "mechanism": "Osprey pretrains a shallow draft model, then adapts it to a target model. The target still verifies proposed tokens. Reusing a compatible checkpoint matters because the preparation stage requires substantial compute.",
+    "method_page": 4,
+    "takeaway": "Try this only after checking target and runtime compatibility. The paper evaluates Qwen, Llama, and MiniMax targets; these results do not establish support or speedups for GLM-4.7-Flash. Table 10 on page 19 reports 576–3,040 H100-hours for pretraining, before target adaptation. Hardware-hours are not a rental quote.",
+    "comparisons": [
+      {
+        "title": "Accepted length: a diagnostic, not app speed",
+        "definition": "Mean draft tokens accepted per verification step.",
+        "baseline_name": "Reproduced EAGLE-3",
+        "method_name": "Osprey",
+        "before": 2.45,
+        "after": 2.97,
+        "unit": "tokens/step",
+        "scope": "Llama-3.3-70B-Instruct, five domains; SGLang, batch 1.",
+        "caveat": "Longer acceptance can help, but the draft model also takes time to run. Measure throughput separately.",
+        "source_page": 7,
+        "source_locator": "Table 1"
+      },
+      {
+        "title": "Throughput: tokens generated each second",
+        "definition": "Decoding throughput measures output rate in the tested serving configuration.",
+        "baseline_name": "Reproduced EAGLE-3",
+        "method_name": "Osprey",
+        "before": 155.8,
+        "after": 183.7,
+        "unit": "tokens/s",
+        "scope": "Same Llama comparison and serving setup.",
+        "caveat": "A throughput increase is not the same percentage reduction in response time or cost. Queueing, prompt processing, and utilization also matter.",
+        "source_page": 7,
+        "source_locator": "Table 1"
+      },
+      {
+        "title": "A regression hidden by the average",
+        "definition": "MT-Bench is the conversational slice of the MiniMax comparison.",
+        "baseline_name": "Public EAGLE-3",
+        "method_name": "Osprey",
+        "before": 214.4,
+        "after": 201.6,
+        "unit": "tokens/s",
+        "scope": "MiniMax-M2.5, FP8, batch 1; 64 prompts in this benchmark.",
+        "caveat": "Osprey is slower on this slice despite a higher overall mean. Use your own traffic mix.",
+        "source_page": 7,
+        "source_locator": "Table 2"
+      }
+    ],
+    "plan": {
+      "scenario": "Possible product use: a self-hosted writing or coding assistant where output generation is a measured bottleneck.",
+      "change": "Begin with an artifact check. Verify a usable drafter for your exact target and serving version. If none exists, record the adaptation work and budget before booking GPUs; a new target is an experiment of its own.",
+      "baseline": "The same target with speculation disabled, your current drafter if present, and the candidate drafter. Keep the GPU, precision, sampling, context, and request trace fixed.",
+      "steps": [
+        "Inspect the official repository linked by the paper for weights, license, target support, and pinned runtime instructions. Confirm whether you can reuse pretraining and what adaptation remains. Do not infer compatibility from model size.",
+        "Save 50 held-out product prompts with realistic input and output lengths. Include an unusual-domain slice and define quality, response-time, and cost limits before running. This is a proposed pilot size.",
+        "Once the artifact and budget checks pass, replay the same trace for each condition at low load and your expected concurrency. Repeat paired runs after warm-up, then inspect outputs for regressions.",
+        "Record both accepted draft length and end-to-end performance. Keep preparation, adaptation, idle GPU time, and serving costs in the result sheet. Preserve a configuration that disables the drafter."
+      ],
+      "measure": "First-token and completion latency, tokens per second, completed requests, output correctness, peak memory, and total cost per successful request. Report low-load and concurrent results separately.",
+      "decision": "Keep the drafter only if it improves the workload that matters while preserving quality and meeting latency limits. Divide setup cost by measured savings per request to estimate break-even traffic; if savings are zero or negative, there is no cost break-even. A pilot on another model does not validate GLM support."
+    }
+  },
   "arxiv_id": "2609.09338",
   "title": "Osprey: Target-agnostic Pre-training Makes Stronger Drafters in Speculative Decoding",
   "summary": "Osprey replaces target-specific drafter pretraining that consumes target hidden states and is distilled per target with a reusable pruned small-LM backbone plus lightweight per-target adaptation. It costs access to target hidden states and output distributions, pruning and restoration pretraining, vocabulary alignment and QKV expansion engineering, and extra drafter memory and serving complexity. It can fail where target internals are API-inaccessible, adaptation data mismatches production traffic, vocabulary or hidden-state alignment degrades acceptance, or domain shift again reduces acceptance length.",

@@ -9,6 +9,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from .builder_guides import BuilderPlan, BuilderReview, plan_for_family
 from .equations import EquationsStatus
 from .public_labels import (INFRASTRUCTURE_LABELS, SOFTWARE_SETUP_LABELS,
                             TRAINING_LABELS)
@@ -127,6 +128,8 @@ class ResearchPage(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     schema_version: Literal[1] = 1
+    builder_plan: BuilderPlan | None = None
+    builder_review: BuilderReview | None = None
     arxiv_id: str
     title: str
     summary: str
@@ -191,6 +194,11 @@ class ResearchPage(BaseModel):
             raise ValueError("selected equations status requires at least one equation")
         if self.equations_status != "selected" and self.equations:
             raise ValueError("only the selected status may carry equations")
+        if self.builder_review is not None:
+            if self.builder_review.arxiv_id != self.arxiv_id or not self.report_available:
+                raise ValueError("builder review requires the matching paper and a deep report")
+            if self.builder_plan != self.builder_review.plan:
+                raise ValueError("builder plan must match the reviewed proposal")
         return self
 
 
@@ -322,6 +330,7 @@ def build_research_page(
         infrastructure_basis = report.report.infrastructure_basis
 
     return ResearchPage(
+        builder_plan=plan_for_family(paper.familia),
         arxiv_id=paper.arxiv_id,
         title=paper.titulo,
         summary=paper.resumo,

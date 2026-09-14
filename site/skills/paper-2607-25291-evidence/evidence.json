@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2607.25291",
   "title": "CoSA: Accelerating Long-Context Inference via Proxy-Kernel Co-Designed Sparse Attention",
   "summary": "CoSA replaces dense self-attention (and prior two-stage proxy-mask sparse attention) with a kernel-aware proxy that orders KV page visits and an ordered-skipping kernel that drops additional blocks online using softmax statistics, all training-free. It costs integration of a custom attention kernel (distributed via Tencent AngelSlim), adds proxy-selection overhead per query, and requires no retraining or extra memory beyond standard paged KV cache. Under tight compute budgets the proxy can still drop salient blocks, and online skipping driven by softmax statistics risks compounding recall errors on workloads whose attention patterns differ from the evaluated benchmarks, so accuracy must be validated per model and task.",

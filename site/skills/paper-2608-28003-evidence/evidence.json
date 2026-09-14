@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2608.28003",
   "title": "A Method for Layer Bit-Width Allocation in LLM Quantization via Performance Maximization Under a Quality-Degradation Constraint",
   "summary": "Replaces uniform quantization schemes (GPTQ, AWQ) and sensitivity-blind bit allocation (MixLLM, TorchAO) with per-layer, per-block W8A8 precision assignment driven by a prior sensitivity profile (SA-PTQ) under an explicit quality-degradation budget. Costs include a sensitivity-profiling pass, a manual SmoothQuant implementation for TensorRT-LLM due to export failures, no INT8 path for lm_head, and integration effort tied to TensorRT-LLM's activation pass-through mode. Can fail because attention quantization slows execution at short context lengths, results are demonstrated only on Gemma-3-1B on an RTX 5090, and the achieved speedups depend on integer-arithmetic gains outweighing quantize/dequantize overhead, which may not transfer to other GPUs or models.",

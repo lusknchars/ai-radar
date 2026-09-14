@@ -1,0 +1,36 @@
+name: Publish Vercel
+
+on:
+  workflow_dispatch:
+    inputs:
+      check_only:
+        description: Check project access without deploying
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: radar-state
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: kimi
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Check access and publish saved archive
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: python scripts/deploy_vercel.py ${{ inputs.check_only && '--check-only' || '' }}

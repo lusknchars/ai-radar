@@ -33,6 +33,9 @@ def sample_papers():
                           if 'class="paper-lead-image"' not in page.read_text()), None)
     if without_image and without_image not in samples:
         samples.append(without_image)
+    for page in pages:
+        if 'class="benchmark-reading"' in page.read_text() and page not in samples:
+            samples.append(page)
     return samples
 
 
@@ -63,6 +66,14 @@ def verify(origin, screenshots):
                     description = heading.locator('.sub').bounding_box()
                     assert description['y'] >= title['y'] + title['height'] - 1
                 assert page.locator('.skill-download').first.get_attribute('href').endswith('.zip')
+                plan_link = page.locator('#try-it a[download]')
+                assert plan_link.count() == 1
+                plan = page.request.get(origin + plan_link.get_attribute('href'))
+                assert plan.status == 200 and '## Record your result' in plan.text()
+                assert 'No Paperraft experiment has been run' in plan.text()
+                if page.locator('#benchmark-reading').count() and width in (360, 1440):
+                    page.locator('#benchmark-reading').screenshot(
+                        path=str(screenshots / f'benchmarks-{paper.parent.name}-{width}.png'))
                 if page.locator('[data-paper-stack]').count():
                     page.locator('[data-stack-next]').click()
                     assert 'Page 2' in page.locator('[data-stack-status]').inner_text()

@@ -1,5 +1,19 @@
 {
   "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
   "arxiv_id": "2607.22389",
   "title": "HiKV: Hierarchical Importance-Aware KV Cache with Hardware Acceleration for LLM Decoding",
   "summary": "HiKV replaces the full dense KV cache with a two-stage compressed cache that first evicts unimportant tokens and then retains only significant elements of kept tokens. The headline gains depend on a dedicated reconfigurable-sorter accelerator, so on commodity GPUs only the token-eviction stage is reproducible in software, with the added runtime cost of importance scoring and sorting per decode step. Importance estimation can evict tokens needed later in generation, degrading long-context recall, and the reported accuracy and speed figures are tied to the co-designed hardware rather than to off-the-shelf inference stacks.",
