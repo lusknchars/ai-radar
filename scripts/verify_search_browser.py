@@ -58,11 +58,13 @@ def verify(origin):
             assert page.locator('.paper-entry:visible').count() > 0
             query = '<script>alert("paper")</script> & impossible-paper-404'
             local.fill(query)
+            page.wait_for_url(lambda url: parse_qs(urlsplit(url).query).get('q') == [query])
             assert parse_qs(urlsplit(page.url).query)['q'] == [query]
             page.reload()
             assert page.locator('.paper-entry:visible').count() == 0
             assert page.get_by_text('No papers match your search.', exact=True).is_visible()
             page.get_by_role('button', name='Clear search and filters').click()
+            page.wait_for_url(lambda url: 'q' not in parse_qs(urlsplit(url).query))
             assert local.input_value() == ''
             assert search.input_value() == ''
             assert 'q' not in parse_qs(urlsplit(page.url).query)
