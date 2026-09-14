@@ -8,6 +8,7 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from .public_research import ResearchPage
+from .builder_guides import render_application_plan
 
 
 def _safe_text(value: str, limit: int = 900) -> str:
@@ -88,9 +89,10 @@ def build_paper_skills(pages: list[ResearchPage], root: Path, *, base_path: str 
         (folder / "SKILL.md").write_text(skill, encoding="utf-8")
         (folder / "evidence.json").write_text(
             json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        (folder / "TRY-IT.md").write_text(render_application_plan(page), encoding="utf-8")
         archive = skills_root / f"{name}.zip"
         with ZipFile(archive, "w", ZIP_DEFLATED) as zipped:
-            for filename in ("SKILL.md", "evidence.json"):
+            for filename in ("SKILL.md", "evidence.json", "TRY-IT.md"):
                 info = ZipInfo(f"{name}/{filename}", date_time=(2026, 1, 1, 0, 0, 0))
                 info.compress_type = ZIP_DEFLATED
                 info.external_attr = 0o644 << 16

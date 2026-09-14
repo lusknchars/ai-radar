@@ -15,6 +15,7 @@ from html import escape
 from urllib.parse import urlencode
 
 from .config import DEFAULT_PUBLIC_CONFIG, PublicConfig, load_thresholds
+from .builder_guides import plan_for_family
 from .community import render_paper_discussion
 from .editorial import EXPOSURE_PROMPTS, reading_prompts
 from .formulas import FormulaWalkthrough, TechnicalCore
@@ -1098,7 +1099,10 @@ def _render_equations(page: ResearchPage) -> str:
 
 
 def _render_research_jumps(page: ResearchPage, *, community: bool = False) -> str:
-    links = [("decision", "shortlist reason")]
+    links = [("for-builders", "for solo builders")]
+    if page.builder_review:
+        links.append(("benchmark-reading", "results explained"))
+    links += [("try-it", "try the idea"), ("decision", "shortlist reason")]
     if page.equations_status == "selected":
         links.append(("equations", "equations"))
     links += [
@@ -1298,6 +1302,59 @@ def _render_risk_notes(page: ResearchPage) -> str:
     )
 
 
+def _render_builder_guide(page: ResearchPage, config: PublicConfig) -> str:
+    plan = page.builder_plan or plan_for_family(page.family)
+    review = page.builder_review
+    basis = (
+        'Paperraft interpretation of the full paper. The product example and test below are proposals.'
+        if review else
+        'A possible application for this research area. Paper-specific feasibility still needs a full-paper review.'
+    )
+    method = (
+        f'<p>{escape(review.mechanism)}</p>'
+        f'<a class="evidence-link" href="{escape(review.source_url)}#page={review.method_page}" '
+        'target="_blank" rel="noopener noreferrer">Read the method in the paper ↗</a>'
+        if review else f'<p>{escape(plan.change)}</p>'
+    )
+    application = _research_section(
+        "for-builders", "For solo builders", basis,
+        f'<p class="builder-scenario">{escape(plan.scenario)}</p>'
+        f'<h3>What you would change</h3>{method}')
+    benchmarks = ""
+    if review:
+        rows = []
+        for item in review.comparisons:
+            rows.append(
+                '<article class="benchmark-reading">'
+                f'<h3>{escape(item.title)}</h3><p>{escape(item.definition)}</p>'
+                '<dl class="benchmark-comparison">'
+                f'<div><dt>{escape(item.baseline_name)}</dt><dd>{escape(item.display(item.before))}</dd></div>'
+                f'<div><dt>{escape(item.method_name)}</dt><dd>{escape(item.display(item.after))}</dd></div>'
+                f'<div><dt>Difference</dt><dd class="benchmark-difference">{escape(item.difference)}</dd></div>'
+                '</dl>'
+                f'<p class="benchmark-scope">{escape(item.scope)}</p>'
+                f'<p>{escape(item.caveat)}</p>'
+                f'<a class="evidence-link" href="{escape(review.source_url)}#page={item.source_page}" '
+                f'target="_blank" rel="noopener noreferrer">{escape(item.source_locator)} · PDF page {item.source_page} ↗</a>'
+                '</article>')
+        benchmarks = _research_section(
+            "benchmark-reading", "What the results actually say",
+            "Author-reported measurements. Differences below are calculated from the displayed values; each comparison keeps its own metric and conditions.",
+            "".join(rows) + f'<p class="builder-takeaway">{escape(review.takeaway)}</p>'
+            f'<p class="builder-review-date">Source version reviewed {review.reviewed_at.isoformat()}. No experiment reproduced by Paperraft.</p>')
+    trial = _research_section(
+        "try-it", "Try the idea on your product",
+        "A proposed first test. Set your budget and success criteria before running it.",
+        f'<p>{escape(plan.change)}</p>'
+        f'<h3>Compare against</h3><p>{escape(plan.baseline)}</p>'
+        '<ol class="research-test">'
+        + "".join(f'<li>{escape(step)}</li>' for step in plan.steps) + '</ol>'
+        f'<h3>What to measure</h3><p>{escape(plan.measure)}</p>'
+        f'<h3>When to keep it</h3><p>{escape(plan.decision)}</p>'
+        f'<a class="sheen-button" download href="{escape(config.path(f"papers/{page.arxiv_id}/try-it.md"))}">Download test plan ↓</a>')
+    return application + benchmarks + trial
+
+
 def render_research_page(
     page: ResearchPage,
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
@@ -1359,7 +1416,6 @@ def render_research_page(
     ) if public_config.community else ''
     corpo = (
         '<article class="research-page">'
-        f'{_render_decision_snapshot(page)}'
         '<div class="research-actions">'
         f'{_research_page_action(page, public_config)}'
         f'<a href="{escape(page.source_url)}" target="_blank" '
@@ -1367,8 +1423,9 @@ def render_research_page(
         f'<a href="{escape(json_href)}">View page data (JSON)</a>'
         f'<a class="sheen-button skill-download" download href="{escape(skill_href)}">Download research skill ↓</a>'
         f'{discussion_action}</div>'
-        f'{_render_paper_stack(page, public_config, preview_pages)}'
         f'{_render_research_jumps(page, community=bool(public_config.community))}'
+        f'{_render_builder_guide(page, public_config)}'
+        f'{_render_decision_snapshot(page)}'
         '<section id="decision" class="research-section">'
         '<div class="section-head"><h2>Why it was shortlisted</h2>'
         '<p class="sub">The technical change, research area, and reason it '
@@ -1391,6 +1448,7 @@ def render_research_page(
         'Missing analysis never counts as evidence of safety.</p></div>'
         f'{_render_exposure_map(page)}</section>'
         f'{detail_sections}{_render_reading_guide(page)}{independent_tests}'
+        f'{_render_paper_stack(page, public_config, preview_pages)}'
         '<aside id="signal" class="research-signal-note" aria-label="Discovery signal">'
         '<span>Discovery signal</span>'
         f'<p>{page.independent_implementations} independent implementations '
@@ -1405,7 +1463,8 @@ def render_research_page(
         f"{page.title} · Research brief · Paperraft", "acervo", page.as_of,
         corpo, heading=page.title,
         kicker=f"{status} · arXiv {page.arxiv_id} · updated {page.as_of}",
-        deck=page.summary, back_href=public_config.path("#acervo"),
+        deck=page.builder_review.intro if page.builder_review else page.summary,
+        back_href=public_config.path("#acervo"),
         lead_figure=(
             '<figure class="paper-lead-image">'
             f'<a href="https://arxiv.org/pdf/{escape(page.arxiv_id)}#page=1" '
@@ -1416,7 +1475,8 @@ def render_research_page(
             '<span>Page 1. Select the image to read the PDF.</span></figcaption></figure>'
             if preview_pages else ""
         ),
-        description=page.summary, canonical_url=canonical,
+        description=page.builder_review.intro if page.builder_review else page.summary,
+        canonical_url=canonical,
         shared_assets=True, public_config=public_config,
         extra_style=(
             math_font_face(public_config.path("assets/fonts/stix-two-math.woff2"))
@@ -1519,7 +1579,8 @@ def _render_paper_stack(page: ResearchPage, config: PublicConfig, count: int) ->
         f'<p>Preview the first {count} pages of the original PDF. '
         'Click the stack to turn the page.</p>'
         '<p>The downloadable skill includes <code>SKILL.md</code> and '
-        '<code>evidence.json</code>, with recorded findings and unanswered checks.</p>'
+        '<code>evidence.json</code>, with recorded findings and unanswered checks. '
+        '<code>TRY-IT.md</code> adds a product test plan and a blank results sheet.</p>'
         '<p class="sub">A reading aid for your agent. Findings still need validation.</p>'
         '<div class="paper-stack-controls">'
         '<button type="button" data-stack-prev aria-label="Previous preview page">←</button>'

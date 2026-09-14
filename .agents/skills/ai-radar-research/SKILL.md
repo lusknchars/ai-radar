@@ -27,6 +27,7 @@ Inspect `git status --short` before edits. Load only the branch needed:
 | Persistent memory or the Mem0 comparison | `docs/research/2026-09-11-memory-layers.md`; load its benchmark/audit links when needed |
 | Experiment preparation, execution or result review | `docs/engineering-validation.md`, selected `experiments/` plan and adapter, plus [experiment rules](references/experiment-rules.md) |
 | Public research-page changes or readiness claims | `src/radar/public_research.py`, `src/radar/public_labels.py`, `src/radar/public_research_eval.py` |
+| Writing for builders, explaining benchmark gains, or adding application plans | `docs/builder-editorial.md`, `src/radar/builder_guides.py`, and the selected `content/builders/` review |
 
 Before acting, resolve the intended workload, requested deliverable, last
 supported evidence state, and remaining unknowns. Prefer current plans, code,
