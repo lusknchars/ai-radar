@@ -740,7 +740,7 @@ justify-content:space-between;max-width:480px;padding:10px 0;border-bottom:1px s
 .nav .publication-name{margin-right:auto;font:500 25px var(--editorial);letter-spacing:-.04em;color:var(--texto)}
 body:has(.research-page) #fundo{opacity:.16}
 .research-page .section-head h2{margin:0;font-size:27px;line-height:1.15}
-.research-page .section-head{align-items:start}
+.research-page .section-head{grid-template-columns:minmax(0,1fr);gap:12px;align-items:start}
 .research-page .section-head .sub{font-size:13px;line-height:1.55}
 .reading-guide-note{font-size:13px;color:var(--fraco);margin:0 0 24px}
 .reading-prompts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
@@ -875,6 +875,23 @@ color:var(--acento);font:500 9px var(--mono)}.research-questions{padding-left:20
 .research-independent-tests p{margin:0;color:var(--fraco)}.research-provenance{
 max-width:68ch;margin:44px 0 0;padding-top:18px;border-top:1px solid var(--linha);
 color:var(--apagado);font:9px/1.7 var(--mono);letter-spacing:.04em}
+/* Paper articles share a centered frame, with a narrower column for reading. */
+body:has(.research-page){--paper-width:920px;--reading-width:720px}
+body:has(.research-page) .article-masthead,
+.article-page:has(>.research-page){max-width:var(--paper-width);margin-inline:auto}
+.research-page .research-actions{justify-content:center}
+.research-page .research-section,
+.research-page>.equation-note,
+.research-page>.research-signal-note,
+.research-page>.research-provenance,
+.research-page+.community-discussion{max-width:var(--reading-width);margin-inline:auto}
+.research-page .research-section:is(#equations,#exposure,#reading-guide){max-width:none}
+.research-page :is(#equations,#exposure,#reading-guide)>.section-head,
+.research-page :is(.exposure-provenance,.reading-guide-note){max-width:var(--reading-width);margin-inline:auto}
+.research-page .research-section>p:not(.exposure-provenance):not(.reading-guide-note),
+.research-page .section-head .sub,
+.research-page :is(.research-claims,.research-risks,.research-test,.research-questions,.research-independent-tests)>li{max-width:none}
+.research-page+.community-discussion .section-head{grid-template-columns:minmax(0,1fr);gap:12px}
 .edicoes{list-style:none;padding:0;margin:24px 0}.edicoes li{padding:14px 0;
 border-bottom:1px solid var(--linha);font-family:var(--mono);font-size:12px}
 .report-progress{position:fixed;inset:0 0 auto;z-index:40;height:2px;pointer-events:none}
