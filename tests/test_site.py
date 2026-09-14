@@ -97,6 +97,17 @@ def test_a_edicao_se_identifica_como_recorte_diario(dados):
     assert "<title>Paperraft · Edition 2026-08-30</title>" in html
 
 
+def test_global_search_from_static_pages_targets_configured_archive():
+    from radar.config import PublicConfig
+
+    config = PublicConfig(repository="reader/radar", base_path="/radar",
+                          site_url="https://example.com/radar")
+    html = render_about("2026-09-14", papers=2, edicoes=1, public_config=config)
+    assert 'role="search" aria-label="All papers" action="/radar/#acervo" method="get"' in html
+    assert 'name="q" aria-label="Search all papers"' in html
+    assert '<button type="submit">Search</button>' in html
+
+
 def test_o_indice_de_edicoes_usa_urls_estaveis():
     html = render_editions(["2026-08-29", "2026-08-30"], "2026-08-30")
     assert "/ai-radar/edicoes/2026-08-29/" in html
