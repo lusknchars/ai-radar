@@ -13,6 +13,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, quote
 from urllib.request import Request, urlopen
 
+VERCEL_CLI_VERSION = "59.16.0"
 
 class DeploymentError(RuntimeError):
     pass
@@ -64,14 +65,18 @@ def main(argv=None) -> int:
     except DeploymentError as exc:
         print(f"::error::{exc}")
         return 1
-    print("Vercel project access verified.")
+    print("Vercel project access verified.", flush=True)
     if args.check_only:
         print("Credential check complete. No deployment or collection started.")
         return 0
+    # Linked deploy support for project-scoped tokens landed in 56.3.1.
+    # Global --scope performs a user lookup; pass the verified link via env.
     return subprocess.run([
-        "npx", "--yes", "vercel@54.12.2", "deploy", "--prod", "--yes",
-        "--scope", team, "--token", token,
-    ], check=False).returncode
+        "npx", "--yes", f"vercel@{VERCEL_CLI_VERSION}", "deploy", "--prod", "--yes",
+        "--token", token,
+    ], check=False, env={
+        **os.environ, "VERCEL_ORG_ID": team, "VERCEL_PROJECT_ID": project,
+    }).returncode
 
 
 if __name__ == "__main__":

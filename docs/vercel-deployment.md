@@ -70,6 +70,14 @@ project and team. A rejected credential fails with an explicit error; publicatio
 failures are not silently treated as successful runs. GitHub Pages can still
 publish a usable archive after the Vercel step fails.
 
+The CLI version in `scripts/deploy_vercel.py` supports project-scoped tokens.
+Vercel added linked-project deployment support in [56.3.1](https://github.com/vercel/vercel/releases/tag/vercel%4056.3.1).
+The former 54.12.2 pin failed while fetching account details even though the
+token could read Paperraft's project. Keep the verified project/team IDs in the
+environment; global `--scope` triggers an account lookup that restricted tokens
+cannot satisfy. A successful project preflight is not proof that an older CLI
+can deploy with the same credential.
+
 Store `VERCEL_TOKEN` in GitHub Actions secrets, with access to the `floater`
 team and `paperaft` project. Set `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` as
 repository variables. Tokens belong in the secret form, never in a command
