@@ -105,7 +105,7 @@ def test_global_search_from_static_pages_targets_configured_archive():
     html = render_about("2026-09-14", papers=2, edicoes=1, public_config=config)
     assert 'role="search" aria-label="All papers" action="/radar/#acervo" method="get"' in html
     assert 'name="q" aria-label="Search all papers"' in html
-    assert '<button type="submit">Search</button>' in html
+    assert '<button class="beam-button" type="submit"><span>Search</span>' in html
 
 
 def test_o_indice_de_edicoes_usa_urls_estaveis():
