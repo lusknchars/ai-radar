@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.15039",
+  "title": "SpliTEE: Improving LLM Inference on Trusted Hardware with Differentially Private GPU Outsourcing",
+  "summary": "Replaces running the full LLM inside a slow CPU-based trusted execution environment (or Slalom-style encrypted outsourcing) with a split architecture where privacy-sensitive computations run in the TEE and linear layers are outsourced to an untrusted GPU protected by differentially private noise calibrated via global sensitivity analysis. The costs are the DP noise (bounded by epsilon, with a derived floating-point error bound), a measured prompt-reconstruction risk of nearly 80% accuracy on unmasked intermediates if masking is omitted, and a hard dependency on Intel TDX-capable hardware plus a split-execution engineering stack. Adoption can fail because the reader lacks TDX hardware, the method only protects prompts against an untrusted inference provider (irrelevant when self-hosting on one's own GPU), and DP masking adds latency and potential accuracy degradation that must be validated per workload.",
+  "rationale": "The technique addresses confidential inference on untrusted infrastructure and requires Intel TDX hardware the reader does not have, and a self-hosted 24 GB GPU already keeps prompts on-premise, so it is relevant to monitor but not adoptable in the reader's current production setting.",
+  "technique": "Split TEE/GPU inference with differentially private masking",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "observar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.15039",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces running the full LLM inside a slow CPU-based trusted execution environment (or Slalom-style encrypted outsourcing) with a split architecture where privacy-sensitive computations run in the TEE and linear layers are outsourced to an untrusted GPU protected by differentially private noise calibrated via global sensitivity analysis. The costs are the DP noise (bounded by epsilon, with a derived floating-point error bound), a measured prompt-reconstruction risk of nearly 80% accuracy on unmasked intermediates if masking is omitted, and a hard dependency on Intel TDX-capable hardware plus a split-execution engineering stack. Adoption can fail because the reader lacks TDX hardware, the method only protects prompts against an untrusted inference provider (irrelevant when self-hosting on one's own GPU), and DP masking adds latency and potential accuracy degradation that must be validated per workload.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15039",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Split execution is nearly 2x faster than fully CPU-based inference inside Intel TDX and 5-15 seconds faster per run than encryption-based Slalom, while achieving higher accuracy; prompt reconstruction is bounded to no more information than an unrelated prompt.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15039",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

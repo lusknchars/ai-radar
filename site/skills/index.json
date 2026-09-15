@@ -490,6 +490,13 @@
     "source": "https://arxiv.org/abs/2609.04280"
   },
   {
+    "arxiv_id": "2609.04298",
+    "title": "Harbor Adapters and Harbor-Index: Infrastructure and a Curated Meta-Dataset for Large-Scale Agentic Evaluation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-04298-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.04298"
+  },
+  {
     "arxiv_id": "2609.05019",
     "title": "TROVE: Adaptive Agent Skill Orchestration via Trace-Grounded Route Validation and Editing",
     "status": "indexed",
@@ -579,5 +586,145 @@
     "status": "source_mapped",
     "download": "/ai-radar/skills/paper-2609-11060-evidence.zip",
     "source": "https://arxiv.org/abs/2609.11060"
+  },
+  {
+    "arxiv_id": "2609.11687",
+    "title": "Structured Transforms for Low-Overhead Quantization of Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-11687-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.11687"
+  },
+  {
+    "arxiv_id": "2609.11716",
+    "title": "Why Does Post-Training Quantization Work?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-11716-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.11716"
+  },
+  {
+    "arxiv_id": "2609.12208",
+    "title": "Vortex: Bridging Extreme Compression and Efficient LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-12208-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.12208"
+  },
+  {
+    "arxiv_id": "2609.12310",
+    "title": "ESTS at WMT26: Routing-Informed Expert Pruning for Model Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-12310-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.12310"
+  },
+  {
+    "arxiv_id": "2609.12412",
+    "title": "HoliBench: A Cross-Platform Benchmarking and Deployment Toolkit for Foundation Models in CPS-IoT Applications",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-12412-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.12412"
+  },
+  {
+    "arxiv_id": "2609.12550",
+    "title": "Quality-Constrained Routing over a Fixed Pool of Quantized Mixture-of-Experts Instances",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-12550-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.12550"
+  },
+  {
+    "arxiv_id": "2609.12923",
+    "title": "Dissecting GPU Utilization for LLM Inference on Nvidia Hopper",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-12923-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.12923"
+  },
+  {
+    "arxiv_id": "2609.13031",
+    "title": "Attention Quantization for Tabular Foundation Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-13031-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.13031"
+  },
+  {
+    "arxiv_id": "2609.13045",
+    "title": "Kraken: LLM-based Speech-to-Speech Translation via Low-bitrate VQ and Dual-path Source Conditioning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-13045-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.13045"
+  },
+  {
+    "arxiv_id": "2609.13500",
+    "title": "One Spectrum, Two Resources: Data-Memory Scaling in Autoregressive Prediction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-13500-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.13500"
+  },
+  {
+    "arxiv_id": "2609.13947",
+    "title": "Hardware-Aware Learned Representation Compression for Distributed In-Sensor Vision",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-13947-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.13947"
+  },
+  {
+    "arxiv_id": "2609.14146",
+    "title": "When Faster VLA Deployment Changes Closed-Loop Behavior: Task Success-Latency Analysis of SmolVLA Across PyTorch and ONNX Variants",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14146-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14146"
+  },
+  {
+    "arxiv_id": "2609.14187",
+    "title": "Entropy-Punctured Bloom Filters for Memory-Efficient Machine Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14187-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14187"
+  },
+  {
+    "arxiv_id": "2609.14706",
+    "title": "WaterKron and FlipFlop Hessian: Information-Theoretically Grounded Quantization with Kronecker-factored Hessians",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14706-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14706"
+  },
+  {
+    "arxiv_id": "2609.14762",
+    "title": "TriCalRAG: A Three-Strategy, Retrieval-Augmented Benchmark for On-Premise LLM-Based Root Cause Analysis in AIOps",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14762-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14762"
+  },
+  {
+    "arxiv_id": "2609.14864",
+    "title": "GGUF-Metadata Prediction of Single-Sequence llama.cpp Throughput Across Three Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14864-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14864"
+  },
+  {
+    "arxiv_id": "2609.15030",
+    "title": "Validating Hybrid-State Cache Recovery for GLM-5.3-Flash with vLLM and LMCache",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15030-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15030"
+  },
+  {
+    "arxiv_id": "2609.15039",
+    "title": "SpliTEE: Improving LLM Inference on Trusted Hardware with Differentially Private GPU Outsourcing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15039-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15039"
+  },
+  {
+    "arxiv_id": "2609.15627",
+    "title": "DeepSeek-V4-Flash on AMD gfx90a: Correctness Recovery and Inference Performance Engineering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15627-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15627"
+  },
+  {
+    "arxiv_id": "2609.15950",
+    "title": "Privacy-Aligned Personalized Federated Learning with Compact Adaptation and Variable-Length Gaussian Communication",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15950-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15950"
   }
 ]

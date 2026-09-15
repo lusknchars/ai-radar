@@ -644,6 +644,11 @@ body:has(.research-page) .article-deck{margin-top:26px}}
 .community-welcome{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:48px;margin:8px 0 60px}
 .community-welcome h2{font:500 31px/1.2 var(--editorial);margin:0 0 18px}
 .community-welcome p{max-width:62ch;color:var(--fraco);font-size:14px;line-height:1.8}
+.community-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;list-style:none;padding:0;margin:26px 0 8px;max-width:760px}
+.community-steps li{display:grid;gap:5px;padding:15px 14px;border-top:2px solid var(--acento);background:#f7e8ed}
+.community-steps span{font:500 10px var(--mono);letter-spacing:.12em;color:var(--acento)}
+.community-steps strong{font:500 14px var(--sans)}
+.community-steps small{font:12px/1.5 var(--sans);color:var(--fraco)}
 .community-links{display:flex;gap:14px 24px;align-items:center;flex-wrap:wrap;margin:24px 0}
 .community-links a:not(.sheen-button),.community-forum-link>a{text-decoration:underline;text-underline-offset:4px;font-size:13px}
 .community-forum-link{border-left:2px solid var(--acento);padding:4px 0 4px 26px;align-self:start}
@@ -666,4 +671,4 @@ body:has(.research-page) .article-deck{margin-top:26px}}
 .community-load:hover{background:#ac2148}.community-load:disabled{opacity:.6;cursor:wait}
 .community-status{font-size:13px;color:var(--fraco)}
 .giscus{margin-top:22px}.giscus-frame{width:100%;border:0}
-@media(max-width:700px){.community-welcome{grid-template-columns:1fr;gap:28px}.community-forum-link{padding-left:18px}.community-papers h3{font-size:22px}.community-search{grid-template-columns:1fr}.community-search button{justify-self:start}.community-links{align-items:flex-start}.community-discussion{padding:38px 0}}
+@media(max-width:700px){.community-welcome{grid-template-columns:1fr;gap:28px}.community-forum-link{padding-left:18px}.community-papers h3{font-size:22px}.community-search{grid-template-columns:1fr}.community-search button{justify-self:start}.community-links{align-items:flex-start}.community-discussion{padding:38px 0}.community-steps{grid-template-columns:1fr;gap:10px}}

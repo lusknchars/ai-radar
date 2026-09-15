@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.11687",
+  "title": "Structured Transforms for Low-Overhead Quantization of Language Models",
+  "summary": "The method replaces dense random orthogonal transforms in Kashin-decomposition quantization with a sign-randomized DCT, cutting per-iteration cost from O(N^2) to O(N log N), and replaces multi-restart k-means with a greedy alternating-update algorithm with closed-form cluster initialization. Cost is a JAX-based one-shot compression pass composed with OPTQ-style error compensation and QuIP-style preprocessing; the paper claims competitiveness only at 4-bit per channel, with no reported accuracy gain over existing PTQ methods. The main failure risk after adoption is practical: the two 2-bit factor codes per channel require native-2-bit hardware or custom kernels to realize memory and speed benefits, so on a single 24 GB GPU with standard kernels the effective benefit may be limited to the 4-bit regime where OPTQ-class methods already suffice.",
+  "rationale": "Post-training quantization is directly relevant to running LLMs on a 24 GB GPU, but the paper's advantage is robustness and compression speed rather than a quantified quality gain, so it merits small-scale validation against GPTQ/OPTQ baselines on the reader's specific models rather than immediate adoption.",
+  "technique": "Kashin-DCT 2-bit structured weight quantization",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-10",
+  "as_of": "2026-09-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.11687",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces dense random orthogonal transforms in Kashin-decomposition quantization with a sign-randomized DCT, cutting per-iteration cost from O(N^2) to O(N log N), and replaces multi-restart k-means with a greedy alternating-update algorithm with closed-form cluster initialization. Cost is a JAX-based one-shot compression pass composed with OPTQ-style error compensation and QuIP-style preprocessing; the paper claims competitiveness only at 4-bit per channel, with no reported accuracy gain over existing PTQ methods. The main failure risk after adoption is practical: the two 2-bit factor codes per channel require native-2-bit hardware or custom kernels to realize memory and speed benefits, so on a single 24 GB GPU with standard kernels the effective benefit may be limited to the 4-bit regime where OPTQ-class methods already suffice.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.11687",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Competitive with OPTQ, QuIP, QuIP-RG, and a QuIP# variant at 4-bit per channel on OPT, Llama-2, and Pythia, with favorable wall-clock scaling; remains numerically stable on stress cases (Pythia-6.9B, Mistral-7B) where QuIP variants diverge or produce NaNs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.11687",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
