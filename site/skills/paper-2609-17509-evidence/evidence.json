@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.17509",
+  "title": "LACE: Layer-Wise Compression for Dynamic Frame Rate Codecs",
+  "summary": "LACE replaces single shared segmentation boundaries in dynamic frame-rate neural audio codecs with an independent compression step at each quantization layer, plus union alignment and boundary anchors so layer token streams stay duration-consistent for TTS. The cost is added codec complexity: per-layer compression modules and alignment logic must be trained and maintained, and adoption requires integrating the ESPnet3 codec recipe and retraining or fine-tuning the codec and downstream TTS model. It can fail if layer-specific boundaries interact poorly with an existing TTS stack, if reconstruction gains do not transfer to your data domain beyond LibriTTS, or if the alignment mechanisms erode the frame-rate reduction under different speech characteristics.",
+  "rationale": "The method is directly relevant to TTS production efficiency and is released in ESPnet3, but its benefits are workload- and domain-dependent, so it should be validated on the reader's own codec and TTS pipeline before adoption.",
+  "technique": "Layer-wise dynamic frame-rate audio codec",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-15",
+  "as_of": "2026-09-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.17509",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 669,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "LACE replaces single shared segmentation boundaries in dynamic frame-rate neural audio codecs with an independent compression step at each quantization layer, plus union alignment and boundary anchors so layer token streams stay duration-consistent for TTS. The cost is added codec complexity: per-layer compression modules and alignment logic must be trained and maintained, and adoption requires integrating the ESPnet3 codec recipe and retraining or fine-tuning the codec and downstream TTS model. It can fail if layer-specific boundaries interact poorly with an existing TTS stack, if reconstruction gains do not transfer to your data domain beyond LibriTTS, or if the alignment mechanisms erode the frame-rate reduction under different speech characteristics.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17509",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Better rate-quality tradeoff than prior dynamic frame rate methods on reconstruction, and improved TTS inference efficiency with competitive synthesis quality on LibriTTS; no multiplicative factor is reported in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17509",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

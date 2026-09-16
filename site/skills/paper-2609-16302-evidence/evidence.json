@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.16302",
+  "title": "Assurance Envelopes for Autonomous Coding Agents: Minimum-Cost Evidence for Software Change",
+  "summary": "The method replaces the ad-hoc choice between reloading all prior engineering evidence (tests, type checks, proofs, static analyses) or discarding it, by computing a minimum-cost subset of evidence whose forward-chaining closure over a typed inference graph re-establishes the properties a code change must preserve. The cost is building and maintaining the typed inference graph from prior agent-run artifacts, specifying per-task obligations, and running a CP-SAT solver plus closure validation; solve time is small in practice (median under 20 ms at 500-evidence graphs) but the approach presumes obligations are known, which the authors state remains an open problem. It can fail when no subset of current evidence re-establishes a required property (the envelope does not exist), when graphs contain many alternative derivations per target (solver timeouts at far smaller sizes), or when obligations are mis-specified, since correctness depends entirely on the graph and requirements supplied to it.",
+  "rationale": "The technique is a bounded optimization formulation demonstrated only on small frozen artifacts, with obligation discovery and downstream agent benefit explicitly left open, so it is relevant to agentic coding practice but not yet a deployable production component.",
+  "technique": "Minimum-cost assurance envelope selection via CP-SAT",
+  "family": "agentes_de_codigo",
+  "recommendation": "observar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.16302",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 13,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces the ad-hoc choice between reloading all prior engineering evidence (tests, type checks, proofs, static analyses) or discarding it, by computing a minimum-cost subset of evidence whose forward-chaining closure over a typed inference graph re-establishes the properties a code change must preserve. The cost is building and maintaining the typed inference graph from prior agent-run artifacts, specifying per-task obligations, and running a CP-SAT solver plus closure validation; solve time is small in practice (median under 20 ms at 500-evidence graphs) but the approach presumes obligations are known, which the authors state remains an open problem. It can fail when no subset of current evidence re-establishes a required property (the envelope does not exist), when graphs contain many alternative derivations per target (solver timeouts at far smaller sizes), or when obligations are mis-specified, since correctness depends entirely on the graph and requirements supplied to it.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.16302",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

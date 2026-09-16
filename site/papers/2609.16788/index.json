@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.16788",
+  "title": "Noise2Noise Revisited: Training Pair Distributions Dominate Loss Choice in Self-Supervised Denoising",
+  "summary": "The paper shows that in Noise2Noise-style clean-reference-free denoising, matching the training pair distribution to the target sensor noise replaces both clean ground-truth supervision and careful loss-function tuning as the dominant design decision. The cost is acquiring representative noisy-noisy pairs from the deployment domain (e.g., real camera data), plus a standard small denoiser training run that fits easily on a single 24 GB GPU; loss choice between L1 and L2 is nearly free either way. It fails when domain-matched noisy pairs cannot be collected, since a mismatched synthetic noise model caps gains at a few dB regardless of loss.",
+  "rationale": "This is a classical image-denoising result rather than an LLM inference or agent technique, so it only matters to the reader if their production workload includes sensor or image denoising without clean references; in that case the actionable rule is to invest in domain-matched noisy pair collection, not loss selection.",
+  "technique": "Noise2Noise self-supervised denoising with matched pair distribution",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-09-15",
+  "as_of": "2026-09-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.16788",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The paper shows that in Noise2Noise-style clean-reference-free denoising, matching the training pair distribution to the target sensor noise replaces both clean ground-truth supervision and careful loss-function tuning as the dominant design decision. The cost is acquiring representative noisy-noisy pairs from the deployment domain (e.g., real camera data), plus a standard small denoiser training run that fits easily on a single 24 GB GPU; loss choice between L1 and L2 is nearly free either way. It fails when domain-matched noisy pairs cannot be collected, since a mismatched synthetic noise model caps gains at a few dB regardless of loss.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.16788",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On SIDD validation blocks, N2N retrained on SIDD's own noisy pairs (never reading ground truth) gains 9.4 to 11.0 dB PSNR over the noisy input, versus only 0.8 to 3.7 dB for synthetic-Gaussian-trained N2N, and outperforms BM3D; the L1-vs-L2 loss choice contributes under 1 dB.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.16788",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
