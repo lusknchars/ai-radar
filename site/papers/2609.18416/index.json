@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.18416",
+  "title": "Gradient Descent with Stochastic Subspaces via Persistence of Memory",
+  "summary": "The method replaces standard stochastic subspace descent (SSD), in which each step optimizes within a freshly sampled random subspace, with subspaces generated under the guidance of a vector only weakly correlated with the gradient, refreshed at wide intervals rather than every iteration; in sparse or minibatch-structured problems this guidance vector is claimed to be cheaply obtainable from problem structure. The cost is maintaining and periodically refreshing the guidance vector, implementing a custom optimizer rather than using standard SGD/Adam, and accepting a local Hessian-eigenvector alignment assumption whose once-for-all guidance computation only holds near the optimum. It can fail if the guidance vector loses its weak gradient correlation between refreshes, if the objective lacks the sparsity or minibatch structure the cheap-guidance constructions rely on, or if behavior outside the analyzed local neighborhood does not match the theoretical guarantees.",
+  "rationale": "The contribution is primarily theoretical, with convergence guarantees rather than validated empirical speedups on standard deep learning workloads, so adopting it would require a custom optimizer implementation and workload-specific validation that a constrained team is not positioned to undertake first.",
+  "technique": "Memory-guided stochastic subspace gradient descent",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-17",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.18416",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces standard stochastic subspace descent (SSD), in which each step optimizes within a freshly sampled random subspace, with subspaces generated under the guidance of a vector only weakly correlated with the gradient, refreshed at wide intervals rather than every iteration; in sparse or minibatch-structured problems this guidance vector is claimed to be cheaply obtainable from problem structure. The cost is maintaining and periodically refreshing the guidance vector, implementing a custom optimizer rather than using standard SGD/Adam, and accepting a local Hessian-eigenvector alignment assumption whose once-for-all guidance computation only holds near the optimum. It can fail if the guidance vector loses its weak gradient correlation between refreshes, if the objective lacks the sparsity or minibatch structure the cheap-guidance constructions rely on, or if behavior outside the analyzed local neighborhood does not match the theoretical guarantees.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.18416",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.18417",
+  "title": "Dependency-Aware Trajectory Refinement for Efficient Multi-Turn Agent Fine-Tuning",
+  "summary": "The method replaces fine-tuning on raw multi-turn agent trajectories with fine-tuning on trajectories pruned via an LLM-annotated round-level dependency DAG that removes redundant rounds such as failed tool calls, parallel sub-queries, and verification-only steps. The cost is an extra offline annotation and refinement pipeline (LLM calls to construct the DAG, plus optional rephrasing), with no added inference-time overhead and roughly 40% fewer inference tokens for the deployed agent. It can fail if the LLM annotator misidentifies which rounds are load-bearing and deletes context the model actually needed, if the benchmark gains do not transfer to the reader's domain, or if the training distribution becomes mismatched with the longer, noisier trajectories seen at deployment.",
+  "rationale": "The gains are validated only on multi-modal QA benchmarks with the authors' annotation pipeline, so a constrained-infrastructure team fine-tuning agents should pilot it on their own trajectory data rather than adopt it unconditionally.",
+  "technique": "Dependency-DAG trajectory refinement for agent SFT",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-17",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.18417",
+  "independent_implementations": 3,
+  "total_implementations": 5,
+  "stars": 136,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces fine-tuning on raw multi-turn agent trajectories with fine-tuning on trajectories pruned via an LLM-annotated round-level dependency DAG that removes redundant rounds such as failed tool calls, parallel sub-queries, and verification-only steps. The cost is an extra offline annotation and refinement pipeline (LLM calls to construct the DAG, plus optional rephrasing), with no added inference-time overhead and roughly 40% fewer inference tokens for the deployed agent. It can fail if the LLM annotator misidentifies which rounds are load-bearing and deletes context the model actually needed, if the benchmark gains do not transfer to the reader's domain, or if the training distribution becomes mismatched with the longer, noisier trajectories seen at deployment.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.18417",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to +1.7pp accuracy over vanilla SFT (+5.7pp over an LLM-deletion baseline) across four multi-modal QA benchmarks, while reducing per-sample inference messages by up to ~40% and inference tokens by up to ~48%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.18417",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

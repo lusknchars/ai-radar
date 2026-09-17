@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.18128",
+  "title": "Symbolic Temporal Supervision of LLM Agents Using Contracts",
+  "summary": "It replaces stochastic post-hoc LLM judges and per-call rule-based blockers with a single deterministic artifact: assume-guarantee contracts in finite-trace LTL, compiled to DFAs that gate tool calls online and evaluate recorded traces offline. The cost is engineering effort, not compute: someone must formalize checkable predicates over tool calls and author and maintain a correct contract library per task domain, plus DFA compilation overhead. It can fail when contracts are incomplete, wrongly specified, or the predicate set cannot observe the relevant state, in which case harmful actions pass deterministically or benign ones are blocked, and coverage does not transfer across domains without rewriting contracts.",
+  "rationale": "The runtime is model-independent and cheap enough for constrained infrastructure, but the value depends entirely on the quality of manually authored contracts, so it warrants a workload-specific pilot rather than unconditional adoption. On constrained infrastructure this replaces expensive per-call LLM judging with a deterministic artifact whose main cost is upfront contract engineering, so a scoped pilot on one tool domain is the appropriate step. However, its value depends entirely on manually authored contracts and observable predicates, so a scoped pilot on one tool domain is warranted rather than unconditional adoption. Therefore a scoped pilot on one tool domain is warranted rather than unconditional adoption. On constrained infrastructure this replaces per-call LLM judging with a cheap deterministic artifact, so it warrants a scoped pilot rather than unconditional adoption or dismissal. A scoped pilot on one tool domain is the appropriate step.",
+  "technique": "LTLf contract-based guardrails for tool-calling agents",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-17",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.18128",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 14,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces stochastic post-hoc LLM judges and per-call rule-based blockers with a single deterministic artifact: assume-guarantee contracts in finite-trace LTL, compiled to DFAs that gate tool calls online and evaluate recorded traces offline. The cost is engineering effort, not compute: someone must formalize checkable predicates over tool calls and author and maintain a correct contract library per task domain, plus DFA compilation overhead. It can fail when contracts are incomplete, wrongly specified, or the predicate set cannot observe the relevant state, in which case harmful actions pass deterministically or benign ones are blocked, and coverage does not transfer across domains without rewriting contracts.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.18128",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Matches state-of-the-art LLM-judge and rule-based guardrail baselines across four benchmarks while producing deterministic, reproducible verdicts and, in online gating mode, orders-of-magnitude lower per-call latency than stochastic LLM judges.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.18128",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

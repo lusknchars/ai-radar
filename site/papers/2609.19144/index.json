@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.19144",
+  "title": "A Zeroth-Order Paradigm for LLM Preference Alignment",
+  "summary": "ComPO replaces differentiable preference losses such as DPO with a zeroth-order scheme that extracts directional updates from pairwise comparison oracles, plus an online variant using unlabeled generations for reverse-KL control against a reference policy. It costs an oracle/comparison step per pair and additional implementation complexity beyond standard DPO pipelines, while claiming similar or better efficiency since no differentiable preference loss is optimized on the pairs. It can fail if the comparison oracle is incompatible with the latent reward objective, if gradient-sparsity or local-coverage assumptions do not hold on the reader's data, and the convergence and performance guarantees are conditional on those assumptions.",
+  "rationale": "The method targets a real DPO failure mode (likelihood displacement) and runs at small fine-tuning scale, but its guarantees are assumption-laden and the win-rate gains need validation on the reader's own preference data before production adoption.",
+  "technique": "Zeroth-order comparison-based preference optimization (ComPO)",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-17",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.19144",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ComPO replaces differentiable preference losses such as DPO with a zeroth-order scheme that extracts directional updates from pairwise comparison oracles, plus an online variant using unlabeled generations for reverse-KL control against a reference policy. It costs an oracle/comparison step per pair and additional implementation complexity beyond standard DPO pipelines, while claiming similar or better efficiency since no differentiable preference loss is optimized on the pairs. It can fail if the comparison oracle is incompatible with the latent reward objective, if gradient-sparsity or local-coverage assumptions do not hold on the reader's data, and the convergence and performance guarantees are conditional on those assumptions.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19144",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reports improvements over existing direct alignment methods (e.g., DPO-style) on Mistral, Llama, Gemma-2, Qwen3, and Gemma-3, including length-controlled win rates, with diagnostics consistent with mitigated likelihood displacement; no single quantified factor is given in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19144",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
