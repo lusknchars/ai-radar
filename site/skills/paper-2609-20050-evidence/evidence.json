@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.20050",
+  "title": "The Missing Complement: State-Conditioned Minimal Sufficient Evidence for Coding Agents",
+  "summary": "It replaces per-passage similarity ranking and reranking in coding-agent retrieval with a set-construction policy: three semantic calls propose a jointly sufficient evidence set, search for what the current agent state still lacks, and return 4-8 intact source units within a 6,144-token budget. The cost is three sequential LLM-class semantic calls per retrieval step plus agent-state capture infrastructure, which adds latency and API spend relative to a single embedding query, and the operating configuration must be fixed on calibration data. It can fail when the captured state does not reflect what the decision actually requires, when repositories fall outside the 45-repository calibration distribution, and because the reported gains come from a single 500-state benchmark whose sufficiency annotations may not transfer to other codebases or executors.",
+  "rationale": "The method is feasible on a single 24 GB GPU or via APIs and addresses a real limitation of rank-based RAG for coding agents, but its gains are demonstrated on one benchmark family with benchmark-specific calibration, so workload-specific validation is required before production adoption.",
+  "technique": "State-conditioned minimal sufficient evidence retrieval",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-09-17",
+  "as_of": "2026-09-18",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.20050",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 14,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces per-passage similarity ranking and reranking in coding-agent retrieval with a set-construction policy: three semantic calls propose a jointly sufficient evidence set, search for what the current agent state still lacks, and return 4-8 intact source units within a 6,144-token budget. The cost is three sequential LLM-class semantic calls per retrieval step plus agent-state capture infrastructure, which adds latency and API spend relative to a single embedding query, and the operating configuration must be fixed on calibration data. It can fail when the captured state does not reflect what the decision actually requires, when repositories fall outside the 45-repository calibration distribution, and because the reported gains come from a single 500-state benchmark whose sufficiency annotations may not transfer to other codebases or executors.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20050",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On SERBench, MSS-Complement recovers a complete evidence set for 73.0% of states at five items and 80.6% at eight, versus 61.4% and 72.4% for Qwen3 embedding with reranking; from frozen repository source with no gold-derived pool the lead is 5.0 points; on AMA-Bench it uses a 76.2% smaller answer prompt with accuracy 2.08 points above the benchmark's memory agent; removing one required evidence group costs 12.3 and 11.1 points of repair-localization precision.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20050",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

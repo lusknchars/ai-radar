@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.19880",
+  "title": "D-Quant: Driftable Entropy Coding for KV Cache Quantization",
+  "summary": "D-Quant replaces fixed-width KV cache quantization with entropy-coded representations whose variable-length outputs are converted, via a drift mechanism, into fixed-size bitstreams so attention kernels retain regular memory access and parallel dequantization. It costs implementation complexity: rotation and normalization of KV values, custom dequantization kernels handling the drifted fixed-size streams, and potential dequantization latency if kernel integration is not optimized. It can fail if the near-normal distributional assumptions do not hold across models or layers, if the drift overhead erodes the bit savings over simpler 4-bit or 8-bit baselines, or if no maintained kernel exists for the reader's inference stack.",
+  "rationale": "The method targets the reader's actual constraint of fitting longer contexts on a single 24 GB GPU, but with no quantified results in the abstract and a custom kernel requirement, it warrants small-scale validation against established KV quantization baselines before production adoption.",
+  "technique": "Entropy-coded KV cache quantization with drift mechanism",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-09-17",
+  "as_of": "2026-09-18",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.19880",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 124,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "D-Quant replaces fixed-width KV cache quantization with entropy-coded representations whose variable-length outputs are converted, via a drift mechanism, into fixed-size bitstreams so attention kernels retain regular memory access and parallel dequantization. It costs implementation complexity: rotation and normalization of KV values, custom dequantization kernels handling the drifted fixed-size streams, and potential dequantization latency if kernel integration is not optimized. It can fail if the near-normal distributional assumptions do not hold across models or layers, if the drift overhead erodes the bit savings over simpler 4-bit or 8-bit baselines, or if no maintained kernel exists for the reader's inference stack.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19880",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
