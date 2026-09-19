@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.17981",
+  "title": "Encoder Awakening via Adapters: Effective Domain-Adaptive Fine-tuning of Speech-LLMs",
+  "summary": "It replaces direct joint fine-tuning of a Speech-LLM (or LoRA-only LLM adaptation) with a two-stage procedure: first train lightweight adapters inserted into each frozen speech-encoder layer, then jointly fine-tune the whole model with LoRA on the LLM. The cost is an extra training stage, modest additional adapter parameters in the encoder, and a more complex pipeline than a single LoRA pass; it presumes an existing Speech-LLM checkpoint and target-domain labeled audio. It can fail if the target domain is not acoustic-shifted (e.g., the gap is lexical or semantic rather than child/dialectal acoustics), if very limited target data overfits the encoder adapters, or if the base model is not an encoder-projector-LLM ASR stack, making the method inapplicable.",
+  "rationale": "The two-stage adapter recipe is feasible on a single 24 GB GPU for encoder-scale models and addresses a real failure mode (encoder under-adaptation under domain shift), but the quality gain is unquantified in the abstract and only relevant if the reader actually deploys Speech-LLM ASR on shifted acoustic domains.",
+  "technique": "Encoder adapter pre-training plus LoRA joint fine-tuning for ASR",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.17981",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 1,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces direct joint fine-tuning of a Speech-LLM (or LoRA-only LLM adaptation) with a two-stage procedure: first train lightweight adapters inserted into each frozen speech-encoder layer, then jointly fine-tune the whole model with LoRA on the LLM. The cost is an extra training stage, modest additional adapter parameters in the encoder, and a more complex pipeline than a single LoRA pass; it presumes an existing Speech-LLM checkpoint and target-domain labeled audio. It can fail if the target domain is not acoustic-shifted (e.g., the gap is lexical or semantic rather than child/dialectal acoustics), if very limited target data overfits the encoder adapters, or if the base model is not an encoder-projector-LLM ASR stack, making the method inapplicable.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17981",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "EAVA consistently outperforms vanilla fine-tuning and other baselines, achieving new state-of-the-art performance on three domain-shifted ASR datasets (child and dialectal speech); no numeric margin is stated in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17981",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

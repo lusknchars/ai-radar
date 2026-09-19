@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.19607",
+  "title": "DeltaSelect: Affordable A/B Testing for Coding Agents",
+  "summary": "DeltaSelect replaces running full coding-agent benchmark suites during development with a fixed, budget-selected subset of tasks whose single-run results correlate with full-benchmark performance, mapping fractional verifier scores to a common scale via linear regression. It costs the one-time resampling analysis and harness alignment work, plus the risk that only a minority of tasks are reliable proxies (19.5% in the cited analysis), so the usable subset may be small. It can fail when the production harness diverges from the benchmark harness, when the task subset stops tracking full-benchmark performance as the agent changes, or when per-run variance makes baseline-versus-candidate differences statistically indistinguishable, as the paper's own score comparison (p=0.326) illustrates.",
+  "rationale": "The method is open-source and directly targets cheap repeated comparisons on a constrained budget, but its validity is workload- and harness-specific, so the reader should validate correlation on their own tasks before relying on it for production decisions.",
+  "technique": "Budget-constrained benchmark subset selection for agent A/B testing",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-09-17",
+  "as_of": "2026-09-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.19607",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DeltaSelect replaces running full coding-agent benchmark suites during development with a fixed, budget-selected subset of tasks whose single-run results correlate with full-benchmark performance, mapping fractional verifier scores to a common scale via linear regression. It costs the one-time resampling analysis and harness alignment work, plus the risk that only a minority of tasks are reliable proxies (19.5% in the cited analysis), so the usable subset may be small. It can fail when the production harness diverges from the benchmark harness, when the task subset stops tracking full-benchmark performance as the agent changes, or when per-run variance makes baseline-versus-candidate differences statistically indistinguishable, as the paper's own score comparison (p=0.326) illustrates.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19607",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "In a 13-evaluation case study the adopted agent version cost 58.1% less than the initial version (USD 1.75 vs 4.18, p=0.008) with a higher but not statistically significant calibrated score (42.36% vs 36.46%, p=0.326); total recorded evaluation cost was USD 27.86.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19607",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

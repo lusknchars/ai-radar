@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.19242",
+  "title": "Block Parallelism For Efficient Distributed Long-Context Diffusion Language Model Training",
+  "summary": "CSBP replaces context parallelism for block diffusion language model training, which shards the combined clean-plus-corrupted sequence by position, by assigning each corrupted-block computation to one rank and sharding only the shared clean prefix across ranks, keeping corrupted K/V and their gradients local. It requires a multi-GPU distributed setup (8-16 datacenter-class GPUs), a block-diffusion training workload, and adoption of the authors' training stack, adding a new parallelism dimension and implementation complexity. It can fail to transfer if the reader does not train BDLMs, if context lengths are far below 256K where communication savings dominate, or if the Turbo-dLLM codebase does not support the reader's model architecture.",
+  "rationale": "The method targets multi-node distributed training of block diffusion models at 256K-1M context, which is infeasible on a single 24 GB GPU and irrelevant to API-based or inference-only production work, though it is worth tracking if BDLMs become an adoption target.",
+  "technique": "Block parallelism for block diffusion LM training",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.19242",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "CSBP replaces context parallelism for block diffusion language model training, which shards the combined clean-plus-corrupted sequence by position, by assigning each corrupted-block computation to one rank and sharding only the shared clean prefix across ranks, keeping corrupted K/V and their gradients local. It requires a multi-GPU distributed setup (8-16 datacenter-class GPUs), a block-diffusion training workload, and adoption of the authors' training stack, adding a new parallelism dimension and implementation complexity. It can fail to transfer if the reader does not train BDLMs, if context lengths are far below 256K where communication savings dominate, or if the Turbo-dLLM codebase does not support the reader's model architecture.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19242",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On 16 H200 GPUs at 256K context, context-sharded block parallelism improves throughput over the best context-parallel baseline by 1.18-1.45x for SFT and 1.27-1.33x for autoregressive-to-BDLM conversion, with 1.61x full-model speedup at 512K and 2.48-7.59x for DFlash2 speculative-decoder training at 512K-1M context.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.19242",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -798,6 +798,27 @@
     "source": "https://arxiv.org/abs/2609.16305"
   },
   {
+    "arxiv_id": "2609.16367",
+    "title": "FINNAS: FINN-Guided Hardware-Aware NAS and Pruning for FPGA Jet Substructure Classification",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16367-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16367"
+  },
+  {
+    "arxiv_id": "2609.16391",
+    "title": "Where Post-Training Quantization Breaks Text Embedders: A Measured Map Across Four Embedder Families",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16391-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16391"
+  },
+  {
+    "arxiv_id": "2609.16403",
+    "title": "Implementing a White-Box Undetectable Backdoor for Random Fourier Features",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16403-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16403"
+  },
+  {
     "arxiv_id": "2609.16436",
     "title": "Interpreting and Steering LLM Agents for Social Simulations",
     "status": "indexed",
@@ -805,11 +826,32 @@
     "source": "https://arxiv.org/abs/2609.16436"
   },
   {
+    "arxiv_id": "2609.16446",
+    "title": "Adaptive Bayesian Partner Selection for Federated Clinical Centers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16446-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16446"
+  },
+  {
+    "arxiv_id": "2609.16450",
+    "title": "Early-Bird Decoding: Accelerating Diffusion LLMs with Learnable Block Sizes and Parallel Sampling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16450-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16450"
+  },
+  {
     "arxiv_id": "2609.16461",
     "title": "Protocol-Preserving Context Trimming for Agentic Workflows: Benefits, Failure Regimes, and Budget Guardrails",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-16461-evidence.zip",
     "source": "https://arxiv.org/abs/2609.16461"
+  },
+  {
+    "arxiv_id": "2609.16485",
+    "title": "Certified Inference and Training for Deep Equilibrium Networks: A Continuation Framework with Polynomial Complexity Guarantees",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16485-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16485"
   },
   {
     "arxiv_id": "2609.16617",
@@ -1008,6 +1050,90 @@
     "source": "https://arxiv.org/abs/2609.17515"
   },
   {
+    "arxiv_id": "2609.17652",
+    "title": "Fathom: Per-Query Read Depth for Sparse Decoding over Offloaded KV Caches",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17652-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17652"
+  },
+  {
+    "arxiv_id": "2609.17698",
+    "title": "A Large-Scale Empirical Study of Quality Assurance Practices and Gaps in AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17698-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17698"
+  },
+  {
+    "arxiv_id": "2609.17759",
+    "title": "Derivative-Free Structured Updates for Muon",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17759-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17759"
+  },
+  {
+    "arxiv_id": "2609.17786",
+    "title": "FairCompressAgent: An Agentic Framework for Fairness-Aware Model Compression for FPGA Deployment",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17786-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17786"
+  },
+  {
+    "arxiv_id": "2609.17815",
+    "title": "Principled Koopman Representations with Kalman Inference for Efficient Time-Series Prediction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17815-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17815"
+  },
+  {
+    "arxiv_id": "2609.17817",
+    "title": "Reflections on Trusting Trust, Revisited: Contaminating Self-Modifying AI Coding Agents with Poisoned Benchmarks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17817-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17817"
+  },
+  {
+    "arxiv_id": "2609.17848",
+    "title": "SFT or RL for Tool-Calling Agents? A Controlled Study Across Data, Method, and Scale",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17848-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17848"
+  },
+  {
+    "arxiv_id": "2609.17885",
+    "title": "ERPBench: A State-Grounded Evaluation Paradigm for Computer-Use Agents in Enterprise Software",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17885-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17885"
+  },
+  {
+    "arxiv_id": "2609.17943",
+    "title": "ASPIRE: Asynchronous Batched Self-Speculative Decoding for Long-Context LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17943-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17943"
+  },
+  {
+    "arxiv_id": "2609.17981",
+    "title": "Encoder Awakening via Adapters: Effective Domain-Adaptive Fine-tuning of Speech-LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17981-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17981"
+  },
+  {
+    "arxiv_id": "2609.17984",
+    "title": "TuiML: Machine Learning for AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17984-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17984"
+  },
+  {
+    "arxiv_id": "2609.17985",
+    "title": "RideWay: Benchmarking Efficient Task Completion for Tool-Using Language Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17985-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17985"
+  },
+  {
     "arxiv_id": "2609.17989",
     "title": "Whom Do AI Agents Work For? Role Assignment Induces Sponsorship Bias in LLM Recommenders",
     "status": "indexed",
@@ -1015,11 +1141,39 @@
     "source": "https://arxiv.org/abs/2609.17989"
   },
   {
+    "arxiv_id": "2609.17995",
+    "title": "QuanText: Protecting Dataset-Level Secrets in Textual Data Sharing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17995-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17995"
+  },
+  {
+    "arxiv_id": "2609.18005",
+    "title": "A Calibrated Instrument for Measuring How Inference Optimizations Affect Output Quality",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-18005-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.18005"
+  },
+  {
+    "arxiv_id": "2609.18077",
+    "title": "vidax: A Unified JAX Framework for Video Generative Models on Accelerator Meshes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-18077-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.18077"
+  },
+  {
     "arxiv_id": "2609.18094",
     "title": "Agora: Git as Shared Memory for Collective AutoResearch",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-18094-evidence.zip",
     "source": "https://arxiv.org/abs/2609.18094"
+  },
+  {
+    "arxiv_id": "2609.18110",
+    "title": "SSD-LLaMA: SSD-Native Inference for Trillion-Parameter MoE at 1+ Token/s on a Consumer PC",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-18110-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.18110"
   },
   {
     "arxiv_id": "2609.18112",
@@ -1288,6 +1442,41 @@
     "source": "https://arxiv.org/abs/2609.19145"
   },
   {
+    "arxiv_id": "2609.19203",
+    "title": "Position: It is Time to Virtualize Foundation Models with a Self-evolving Operating System Layer",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19203-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19203"
+  },
+  {
+    "arxiv_id": "2609.19207",
+    "title": "MeshKV: A Network-on-Chip KV Cache Fabric for Scalable Transformer Decoding Accelerators",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19207-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19207"
+  },
+  {
+    "arxiv_id": "2609.19213",
+    "title": "Layer-wise Curriculum Learning for Efficient LLM Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19213-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19213"
+  },
+  {
+    "arxiv_id": "2609.19226",
+    "title": "PAPC: Platform Mediation for Privacy-Propagation Externalities in AI-Mediated Workflows",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19226-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19226"
+  },
+  {
+    "arxiv_id": "2609.19242",
+    "title": "Block Parallelism For Efficient Distributed Long-Context Diffusion Language Model Training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19242-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19242"
+  },
+  {
     "arxiv_id": "2609.19243",
     "title": "Randomized SVD Approximations for Spectral Co-Clustering of Word-Document Matrices",
     "status": "indexed",
@@ -1295,11 +1484,102 @@
     "source": "https://arxiv.org/abs/2609.19243"
   },
   {
+    "arxiv_id": "2609.19244",
+    "title": "Characterizing Web Search by Conversational LLM Agents: From Search Decisions and Strategies to Results and Responses",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19244-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19244"
+  },
+  {
+    "arxiv_id": "2609.19334",
+    "title": "A frontend-backend architecture for tool calls in full-duplex speech models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19334-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19334"
+  },
+  {
     "arxiv_id": "2609.19383",
     "title": "FCx: An algorithm for finding Feasible Counterfactual Explanations",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-19383-evidence.zip",
     "source": "https://arxiv.org/abs/2609.19383"
+  },
+  {
+    "arxiv_id": "2609.19391",
+    "title": "MAGS: Multi-agent Auto-formalization Guarantees Safety for Agentic Outputs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19391-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19391"
+  },
+  {
+    "arxiv_id": "2609.19425",
+    "title": "Closed-World Resolution Against Tool Hallucination in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19425-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19425"
+  },
+  {
+    "arxiv_id": "2609.19465",
+    "title": "Compositional Reasoning in Language Models under Reinforcement Learning Post-Training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19465-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19465"
+  },
+  {
+    "arxiv_id": "2609.19472",
+    "title": "Safety Beyond the Interface: Detecting Harm via Latent States in Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19472-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19472"
+  },
+  {
+    "arxiv_id": "2609.19502",
+    "title": "Reputation as Community Memory for the Agentic Web",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19502-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19502"
+  },
+  {
+    "arxiv_id": "2609.19524",
+    "title": "A Unified Evaluation Framework for Trustworthy Large Language Models, Agentic AI, and Multimodal Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19524-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19524"
+  },
+  {
+    "arxiv_id": "2609.19526",
+    "title": "Self Improvement via Fast Tree-search",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19526-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19526"
+  },
+  {
+    "arxiv_id": "2609.19587",
+    "title": "Red-Teaming Auto Mode: Improving Blocking Classifiers Against Malign Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19587-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19587"
+  },
+  {
+    "arxiv_id": "2609.19607",
+    "title": "DeltaSelect: Affordable A/B Testing for Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19607-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19607"
+  },
+  {
+    "arxiv_id": "2609.19630",
+    "title": "From Intent to Action: Benchmarking LLM Safety in Vehicle Voice Command Authorization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19630-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19630"
+  },
+  {
+    "arxiv_id": "2609.19656",
+    "title": "Self-Evolving Search Index",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19656-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19656"
   },
   {
     "arxiv_id": "2609.19657",

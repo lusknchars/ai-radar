@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.17652",
+  "title": "Fathom: Per-Query Read Depth for Sparse Decoding over Offloaded KV Caches",
+  "summary": "Fathom replaces fixed-width key scans (Double Sparsity, Loki, SparQ) in top-k sparse attention over host-memory-offloaded KV caches with a per-query variable bit-depth read over bit-plane-organized 4-bit keys, where a reverse water-filling rule allocates bits across channels by variance-weighted importance. It costs little in storage since it reuses the 4-bit K copy a quantized serving stack already holds, but adds channel-major bit-plane layout and per-query bit-budget computation to the decode path, and quality depends on the bit budget chosen. It can fail to deliver any benefit when the index is GPU-resident, as the authors state the method is not faster in that case, and its gains are demonstrated only at very long contexts with many concurrent sessions where host-memory scan traffic is the bottleneck.",
+  "rationale": "The method targets a bottleneck (host-memory scan traffic at million-token, multi-session scale) that a constrained-infrastructure practitioner is unlikely to hit, and it explicitly provides no speedup when the KV index fits in GPU memory, so adoption is premature until such workloads exist.",
+  "technique": "Per-query bit-depth key scan for offloaded KV caches",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-09-15",
+  "as_of": "2026-09-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.17652",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Fathom replaces fixed-width key scans (Double Sparsity, Loki, SparQ) in top-k sparse attention over host-memory-offloaded KV caches with a per-query variable bit-depth read over bit-plane-organized 4-bit keys, where a reverse water-filling rule allocates bits across channels by variance-weighted importance. It costs little in storage since it reuses the 4-bit K copy a quantized serving stack already holds, but adds channel-major bit-plane layout and per-query bit-budget computation to the decode path, and quality depends on the bit budget chosen. It can fail to deliver any benefit when the index is GPU-resident, as the authors state the method is not faster in that case, and its gains are demonstrated only at very long contexts with many concurrent sessions where host-memory scan traffic is the bottleneck.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17652",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At one million tokens on Qwen3-8B, a decode step is 1.67x faster in GPU time than 136-bit scans (Double Sparsity, Loki, SparQ r=32); at SparQ's 68-bit read budget it reads 18% fewer bytes with lower attention error on six of seven settings, and matches the most accurate 136-bit scan's step agreement at 92 bits.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.17652",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
