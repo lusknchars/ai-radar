@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.15066",
+  "title": "Salesforce Koa: An Enterprise Language Model for Agentic Tool Use",
+  "summary": "This method replaces prompt engineering and supervised fine-tuning for tool-use behavior with RL post-training (GRPO) on a 120B open-weight model, using rewards grounded in simulated multi-turn workflow tasks derived from declarative agent specifications. The cost is substantial: reinforcement-learning post-training of a 120B-parameter model, plus a simulation and reward-verification pipeline, is far beyond a single 24 GB GPU and requires dedicated training infrastructure. What can fail is reward misspecification—models can overfit to synthetic persona-conditioned simulations and tool-call success signals that do not match real production workflows, degrading general-purpose behavior.",
+  "rationale": "The training recipe is out of reach for constrained infrastructure, but the specification-to-simulation-to-reward design pattern is worth tracking as a template for evaluating and improving tool use with smaller models or API-based agents.",
+  "technique": "Specification-driven GRPO post-training for agentic tool use",
+  "family": "uso_de_ferramenta",
+  "recommendation": "observar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.15066",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This method replaces prompt engineering and supervised fine-tuning for tool-use behavior with RL post-training (GRPO) on a 120B open-weight model, using rewards grounded in simulated multi-turn workflow tasks derived from declarative agent specifications. The cost is substantial: reinforcement-learning post-training of a 120B-parameter model, plus a simulation and reward-verification pipeline, is far beyond a single 24 GB GPU and requires dedicated training infrastructure. What can fail is reward misspecification—models can overfit to synthetic persona-conditioned simulations and tool-call success signals that do not match real production workflows, degrading general-purpose behavior.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15066",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Improves over the open-weight Nemotron-3-Super-120B base across public tool-use, agentic-reasoning, and CRM benchmarks, with clearest gains on multi-turn tool use, and surpasses a strong proprietary baseline while remaining below frontier models; no quantified factor is given in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15066",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

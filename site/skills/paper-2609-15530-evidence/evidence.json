@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.15530",
+  "title": "Option-Aware Retrieval and Task-Specific VLM Adaptation for Medical VQA",
+  "summary": "Replaces prompting an off-the-shelf VLM (with or without retrieved in-context examples) with a small LoRA adapter trained on task-specific multiple-choice data; semantic option-text retrieval and confidence-gated override are shown to contribute at most one case of accuracy once the adapter is fixed. Cost is a single LoRA fine-tuning run feasible on one 24 GB GPU, plus offline inference with no serving changes; dropping retrieval simplifies the pipeline at negligible accuracy loss (93.5% at k=0 versus 94.0% at k=3). It can fail on open-ended generation: both organizer open-ended scores were below the off-the-shelf baseline (ground-truth agreement 1.245 vs 1.588, visual accuracy 1.995 vs 2.696 out of 4), indicating the adapter trades generative answer quality for classification-style accuracy.",
+  "rationale": "A cheap LoRA adapter delivers the entire measured MCQ gain on a single GPU, while the retrieval and gating machinery is empirically unnecessary and can be omitted.",
+  "technique": "Task-specific LoRA adaptation of a VLM for medical VQA",
+  "family": "treino_eficiente",
+  "recommendation": "adotar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.15530",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces prompting an off-the-shelf VLM (with or without retrieved in-context examples) with a small LoRA adapter trained on task-specific multiple-choice data; semantic option-text retrieval and confidence-gated override are shown to contribute at most one case of accuracy once the adapter is fixed. Cost is a single LoRA fine-tuning run feasible on one 24 GB GPU, plus offline inference with no serving changes; dropping retrieval simplifies the pipeline at negligible accuracy loss (93.5% at k=0 versus 94.0% at k=3). It can fail on open-ended generation: both organizer open-ended scores were below the off-the-shelf baseline (ground-truth agreement 1.245 vs 1.588, visual accuracy 1.995 vs 2.696 out of 4), indicating the adapter trades generative answer quality for classification-style accuracy.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15530",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "MCQ accuracy of 93.20% on the organizer's pre-evaluation versus 29.43% for the off-the-shelf reference baseline (94.0% on the internal 200-case holdout), attributed primarily to the LoRA adapter rather than to retrieval.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15530",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

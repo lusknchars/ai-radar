@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.14872",
+  "title": "AgentKV: Phase-Aware KV Eviction for Agentic LLMs",
+  "summary": "The method replaces recency-based KV eviction scoring (as in R-KV and Tri-attention) with scoring against a union of per-phase query buffers (think, act, tool, others), plus a persistent multi-turn serving path that compresses KV state across turns and compacts retained pages online. Costs include maintaining the phase query buffers, online page compaction overhead, and integration into a custom SGLang-based serving path rather than a drop-in library change. It can fail if phase-conditioned query subspaces are less separable on the reader's workloads than on the paper's benchmarks, if phase boundaries are misidentified in real traces, or if the 1.80x figure (an upper bound) does not transfer to different models, budgets, or turn structures.",
+  "rationale": "The gains are quantified and relevant to a 24 GB GPU serving setup, but adoption requires a modified serving stack and workload-specific validation before production use.",
+  "technique": "Phase-aware KV eviction for agentic workloads",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.14872",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 2,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces recency-based KV eviction scoring (as in R-KV and Tri-attention) with scoring against a union of per-phase query buffers (think, act, tool, others), plus a persistent multi-turn serving path that compresses KV state across turns and compacts retained pages online. Costs include maintaining the phase query buffers, online page compaction overhead, and integration into a custom SGLang-based serving path rather than a drop-in library change. It can fail if phase-conditioned query subspaces are less separable on the reader's workloads than on the paper's benchmarks, if phase boundaries are misidentified in real traces, or if the 1.80x figure (an upper bound) does not transfer to different models, budgets, or turn structures.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.14872",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 1.80x output-token throughput over full-KV SGLang, plus average task-score gains of 5.5 points over R-KV and 5.3 over Tri-attention across two models, six domains, and three KV budgets.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.14872",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

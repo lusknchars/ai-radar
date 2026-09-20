@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.15134",
+  "title": "HazardAuditor: From Executable Threats to Safer Computer-Use Agents",
+  "summary": "HazardAuditor replaces static prompt-and-response guard models with a generative guard trained on normalized execution events from heterogeneous computer-use agents, using GuardPO to optimize at the sequence level instead of token level. Using the released guard model for inference is feasible on a single 24 GB GPU, but reproducing the training pipeline requires sandboxed execution environments for multiple agent frameworks, event normalization infrastructure, and post-training compute that exceed a constrained budget. The guard can fail on hazard types absent from its execution traces, on agent frameworks whose interaction patterns differ from the four normalized during training, and through false negatives on novel runtime behaviors that static verdicts cannot anticipate.",
+  "rationale": "The released guard model can be evaluated as an inference-only safety layer at small scale, but its value depends on how closely the reader's agent stack and hazard distribution match the training frameworks, so workload-specific validation is required before production adoption.",
+  "technique": "Execution-grounded guard model with GuardPO training",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.15134",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 19,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "HazardAuditor replaces static prompt-and-response guard models with a generative guard trained on normalized execution events from heterogeneous computer-use agents, using GuardPO to optimize at the sequence level instead of token level. Using the released guard model for inference is feasible on a single 24 GB GPU, but reproducing the training pipeline requires sandboxed execution environments for multiple agent frameworks, event normalization infrastructure, and post-training compute that exceed a constrained budget. The guard can fail on hazard types absent from its execution traces, on agent frameworks whose interaction patterns differ from the four normalized during training, and through false negatives on novel runtime behaviors that static verdicts cannot anticipate.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15134",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Improves safety-classification accuracy by up to 16.5 percentage points over the strongest prior guard across multiple benchmarks and heterogeneous computer-use systems.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15134",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

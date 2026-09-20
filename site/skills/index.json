@@ -693,11 +693,32 @@
     "source": "https://arxiv.org/abs/2609.14762"
   },
   {
+    "arxiv_id": "2609.14815",
+    "title": "A Functional SVD Framework for Regularized Multivariate Functional PCA with Dual Penalization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14815-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14815"
+  },
+  {
+    "arxiv_id": "2609.14850",
+    "title": "Self-Orchestrating Language Models: Leveraging Semantic Dependence for Efficient Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14850-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14850"
+  },
+  {
     "arxiv_id": "2609.14864",
     "title": "GGUF-Metadata Prediction of Single-Sequence llama.cpp Throughput Across Three Systems",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-14864-evidence.zip",
     "source": "https://arxiv.org/abs/2609.14864"
+  },
+  {
+    "arxiv_id": "2609.14872",
+    "title": "AgentKV: Phase-Aware KV Eviction for Agentic LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14872-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14872"
   },
   {
     "arxiv_id": "2609.15030",
@@ -707,11 +728,151 @@
     "source": "https://arxiv.org/abs/2609.15030"
   },
   {
+    "arxiv_id": "2609.15037",
+    "title": "MoARa: Module-Aware Rank Allocation and Structure-Preserving Decomposition for Low-Rank LLM Pre-training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15037-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15037"
+  },
+  {
     "arxiv_id": "2609.15039",
     "title": "SpliTEE: Improving LLM Inference on Trusted Hardware with Differentially Private GPU Outsourcing",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-15039-evidence.zip",
     "source": "https://arxiv.org/abs/2609.15039"
+  },
+  {
+    "arxiv_id": "2609.15054",
+    "title": "BusMA: A Bus Communication Substrate for Multi-Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15054-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15054"
+  },
+  {
+    "arxiv_id": "2609.15066",
+    "title": "Salesforce Koa: An Enterprise Language Model for Agentic Tool Use",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15066-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15066"
+  },
+  {
+    "arxiv_id": "2609.15079",
+    "title": "Translating the Translator: Decomposing the Cost of English-Forced Inter-Agent Communication",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15079-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15079"
+  },
+  {
+    "arxiv_id": "2609.15096",
+    "title": "OpenAI4S: Code as Action, Science as Sessions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15096-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15096"
+  },
+  {
+    "arxiv_id": "2609.15134",
+    "title": "HazardAuditor: From Executable Threats to Safer Computer-Use Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15134-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15134"
+  },
+  {
+    "arxiv_id": "2609.15137",
+    "title": "SparseTalk - Sparsifying 3D Gaussian Language Fields for Efficient 3D Visual Question Answering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15137-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15137"
+  },
+  {
+    "arxiv_id": "2609.15152",
+    "title": "PACE: Progressive Angular-to-Norm Contrastive Embedding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15152-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15152"
+  },
+  {
+    "arxiv_id": "2609.15188",
+    "title": "MUSE: A Theory-Harnessed Story Engine for Vibe Narrativizing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15188-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15188"
+  },
+  {
+    "arxiv_id": "2609.15293",
+    "title": "Why LLM Agents Collapse Without Oversight: The Enforcement Gap as the Mechanism Behind Emergence World Failures",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15293-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15293"
+  },
+  {
+    "arxiv_id": "2609.15296",
+    "title": "Reason What Matters: Retrieval-Grounded Reasoning for Universal Multimodal Embeddings",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15296-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15296"
+  },
+  {
+    "arxiv_id": "2609.15309",
+    "title": "When Agents Slow Down: Understanding LLM Agents' Test-Time Strategies via Elo-per-token Analysis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15309-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15309"
+  },
+  {
+    "arxiv_id": "2609.15319",
+    "title": "Clean Scores, Buried Evidence, and Confident Wrong: A Receipt-Based Audit of Frontier Agentic QA",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15319-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15319"
+  },
+  {
+    "arxiv_id": "2609.15408",
+    "title": "MarKey: Marginal Utility Guided Greedy Keyframe Selection for Long Video Understanding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15408-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15408"
+  },
+  {
+    "arxiv_id": "2609.15467",
+    "title": "Turkish MMLU Pro: Traceable Option Augmentation and Its Validity Limits in Turkish Multiple-Choice Evaluation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15467-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15467"
+  },
+  {
+    "arxiv_id": "2609.15504",
+    "title": "How Lossless Is Lossless Speculative Decoding? The Role of Numerical Precision in Orthrus",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15504-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15504"
+  },
+  {
+    "arxiv_id": "2609.15528",
+    "title": "To Each Language Its Tokenizer: Modular Tokenizers for Efficient Multilingual LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15528-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15528"
+  },
+  {
+    "arxiv_id": "2609.15530",
+    "title": "Option-Aware Retrieval and Task-Specific VLM Adaptation for Medical VQA",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15530-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15530"
+  },
+  {
+    "arxiv_id": "2609.15620",
+    "title": "Where to Compute and How to Interact: Operator-Readable Adaptation with Gauge-Aware Transport",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15620-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15620"
+  },
+  {
+    "arxiv_id": "2609.15624",
+    "title": "Beyond AI Literacy: A Structured Review and Exploratory Meta-Analysis of Measures for Competent Generative-AI Use",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15624-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15624"
   },
   {
     "arxiv_id": "2609.15627",
@@ -721,11 +882,81 @@
     "source": "https://arxiv.org/abs/2609.15627"
   },
   {
+    "arxiv_id": "2609.15643",
+    "title": "Principal-timestep Restricted Init via Sparse Matrix-decomposition in Flow-matching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15643-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15643"
+  },
+  {
+    "arxiv_id": "2609.15726",
+    "title": "Bench2Dex: Benchmarking Visuo-Tactile Bimanual Dexterous Manipulation Across Dexterous Hands",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15726-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15726"
+  },
+  {
+    "arxiv_id": "2609.15779",
+    "title": "EvoOntology: A Self-Evolving Ontology Layer for Data Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15779-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15779"
+  },
+  {
+    "arxiv_id": "2609.15871",
+    "title": "LLM-Based Schema-Aware Split Learning for Privacy-Preserving Mental Distress Prediction Across Heterogeneous Surveys",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15871-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15871"
+  },
+  {
+    "arxiv_id": "2609.15877",
+    "title": "Using Agentic AI for contextualized and multifaceted code review at Ericsson",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15877-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15877"
+  },
+  {
+    "arxiv_id": "2609.15938",
+    "title": "HypoEvolve: Genetic Algorithms Enable Multi-Agent LLMs to Discover Scientific Hypotheses",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15938-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15938"
+  },
+  {
     "arxiv_id": "2609.15950",
     "title": "Privacy-Aligned Personalized Federated Learning with Compact Adaptation and Variable-Length Gaussian Communication",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-15950-evidence.zip",
     "source": "https://arxiv.org/abs/2609.15950"
+  },
+  {
+    "arxiv_id": "2609.15973",
+    "title": "Discovery Foundation Models: Toward Open-Ended Discovery Intelligence",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15973-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15973"
+  },
+  {
+    "arxiv_id": "2609.15982",
+    "title": "The Router Within: Eliciting Native Skill Routing from a Frozen LLM",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15982-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15982"
+  },
+  {
+    "arxiv_id": "2609.16085",
+    "title": "Is INT8 Portable? A Cross-Platform Measurement Study of Quantized Inference on Embedded and Automotive Accelerators",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16085-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16085"
+  },
+  {
+    "arxiv_id": "2609.16091",
+    "title": "Distilling Foundation Models for Agentic What-If Reasoning:Cost, Latency, and Governance in a Hybrid LLM+SLM Architecture",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16091-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16091"
   },
   {
     "arxiv_id": "2609.16096",
@@ -740,6 +971,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-16098-evidence.zip",
     "source": "https://arxiv.org/abs/2609.16098"
+  },
+  {
+    "arxiv_id": "2609.16161",
+    "title": "LLM Inference in a Flash!",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16161-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16161"
+  },
+  {
+    "arxiv_id": "2609.16170",
+    "title": "Skeletal Prototypes on Iterative Nerve Expansions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16170-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16170"
   },
   {
     "arxiv_id": "2609.16183",
@@ -796,6 +1041,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-16305-evidence.zip",
     "source": "https://arxiv.org/abs/2609.16305"
+  },
+  {
+    "arxiv_id": "2609.16358",
+    "title": "EBL: Efficient Broad Learning for Distributed Adaptive Harmonic Analysis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16358-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16358"
+  },
+  {
+    "arxiv_id": "2609.16363",
+    "title": "FSNIC: A Low-Latency Flow-Based Intrusion Detection Architecture for FPGA SmartNICs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-16363-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.16363"
   },
   {
     "arxiv_id": "2609.16367",
@@ -1050,11 +1309,25 @@
     "source": "https://arxiv.org/abs/2609.17515"
   },
   {
+    "arxiv_id": "2609.17632",
+    "title": "EvolveTrade: Experience-Driven Policy Refinement for Self-Evolving LLM Trading Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17632-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17632"
+  },
+  {
     "arxiv_id": "2609.17652",
     "title": "Fathom: Per-Query Read Depth for Sparse Decoding over Offloaded KV Caches",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-17652-evidence.zip",
     "source": "https://arxiv.org/abs/2609.17652"
+  },
+  {
+    "arxiv_id": "2609.17695",
+    "title": "GraphEcho: Structural Redundancy and Evidence Provenance in LLM Graph Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-17695-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.17695"
   },
   {
     "arxiv_id": "2609.17698",
@@ -1734,6 +2007,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-20186-evidence.zip",
     "source": "https://arxiv.org/abs/2609.20186"
+  },
+  {
+    "arxiv_id": "2609.20301",
+    "title": "AgentPProf: Semantic Profiler for Long Horizon AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20301-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20301"
   },
   {
     "arxiv_id": "2609.20441",

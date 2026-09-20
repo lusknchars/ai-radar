@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.15137",
+  "title": "SparseTalk - Sparsifying 3D Gaussian Language Fields for Efficient 3D Visual Question Answering",
+  "summary": "Replaces dense semantic embeddings (tens of thousands per scene) in 3D Gaussian language fields with a few hundred tokens selected via object-based spatial-semantic sparsification that distributes budget across detected object instances. Costs an object-detection and token-selection preprocessing step and a modest accuracy drop at aggressive budgets, with benefits limited to inference memory and throughput rather than training. Can fail when the object detector misses small or atypical objects relevant to a question, when scene statistics differ from ScanNet-style indoor benchmarks, or when budgets below ~256 tokens discard needed context.",
+  "rationale": "The 125-fold memory reduction is substantial, but the method applies only to teams already deploying 3D Gaussian language-field VQA systems, a niche workload the constrained-infrastructure reader likely does not have in production.",
+  "technique": "Object-based sparsification of 3D Gaussian language fields",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-09-14",
+  "as_of": "2026-09-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.15137",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces dense semantic embeddings (tens of thousands per scene) in 3D Gaussian language fields with a few hundred tokens selected via object-based spatial-semantic sparsification that distributes budget across detected object instances. Costs an object-detection and token-selection preprocessing step and a modest accuracy drop at aggressive budgets, with benefits limited to inference memory and throughput rather than training. Can fail when the object detector misses small or atypical objects relevant to a question, when scene statistics differ from ScanNet-style indoor benchmarks, or when budgets below ~256 tokens discard needed context.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15137",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At a 256-token budget, SparseTalk retains 0.80% of SplatTalk's 32,076-token inference input and 0.332% of the dense field's Gaussian embeddings, reducing decoded-feature memory 125-fold while retaining strong ScanQA and MV-ScanQA VQA accuracy.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.15137",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
