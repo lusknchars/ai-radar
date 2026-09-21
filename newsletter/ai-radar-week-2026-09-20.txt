@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-09-20
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-09-14 to 2026-09-20
+
+RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents
+RecreationWorld replaces ad hoc, single-modality CUA evaluation with a five-platform benchmark where a running reference application acts as an oracle for hidden behavioral tests. Adoption costs substantial infrastructure: reproducible Ubuntu, macOS, Windows, Android, and Web environments, a unified GUI-plus-code harness, and trajectory generation at scale, none of which fits a single 24 GB GPU or a limited cloud budget. It can fail as a decision signal because reference-grounded assertions may overfit to the frozen test suites, and the low 2.8% full-pass rate indicates the benchmark mainly discriminates frontier-scale agents rather than small-team systems.
+The framework is a benchmark and training-environment suite whose value depends on multi-platform infrastructure and large-scale trajectory generation that the reader's constrained setup cannot support, so it is worth tracking but not adopting.
+Builder's cut (area guidance)
+It may fit when: An agent looks good in demos, but you cannot tell which product tasks it fails.
+First move: Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.
+Measure: Agreement with human review, missed failures, false alarms, and evaluation cost per task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+3 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.22000/
+https://arxiv.org/abs/2609.22000
+
+NemotronLabs VoiceChat: An Open Full-duplex Speech-to-Speech Model with Tool Calling Capabilities
+The technique replaces the conventional cascaded voice-agent pipeline (streaming ASR, LLM with tool calling, and TTS chained as separate services) with a single unified full-duplex speech-to-speech model that handles interruption, backchanneling, and function calls natively. It costs the deployment burden of a multi-component streaming model (speech encoder, decoder LM, RNN-T branch, streaming TTS decoder) whose total footprint is not stated in the abstract and may exceed a single 24 GB GPU, plus the engineering cost of integrating streaming audio I/O and tool runtimes. It can fail on tool execution specifically, since the authors state argument accuracy and end-to-end tool execution remain areas for improvement, and any regression in full-duplex timing degrades conversational quality in ways the text-only stack would not.
+The reader's constrained infrastructure and production focus make a newly released open full-duplex speech model with unverified local resource requirements and known tool-execution weaknesses something to track rather than deploy or validate immediately.
+Builder's cut (area guidance)
+It may fit when: An assistant chooses the wrong API or sends arguments your product cannot use.
+First move: Apply the proposed tool-selection or argument-generation change in a sandbox.
+Measure: Correct completed actions, invalid calls, retries, latency, and cost per completed task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.21967/
+https://arxiv.org/abs/2609.21967
+
+CodeMidas: Scaling Agentic Coding RL Environments from Code Itself
+The method replaces RL environment construction that depends on development artifacts (issues, commits) with an agentic pipeline that derives behavioral specifications, tests, and validated tasks directly from source code. It costs substantial agentic compute at every construction stage plus the infrastructure to run GRPO training on a large model, which exceeds a single 24 GB GPU and a limited budget. It can fail through unreliable auto-generated verifiers, tasks that pass spuriously under repeated rollouts, and quality degradation if the execution-based filtering is insufficient.
+The value of this paper is a scalable recipe for producing RL training tasks, but adopting it requires environment-building fleets and RL training runs that constrained infrastructure cannot support, so the reader should track it rather than deploy it.
+Builder's cut (area guidance)
+It may fit when: Your coding assistant makes changes that still need substantial repair before merging.
+First move: Try the technique on held-out issues from a repository with reliable tests.
+Measure: Correct patches, regression failures, human repair time, and total cost per accepted change.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.22068/
+https://arxiv.org/abs/2609.22068
+
+ArenaFlow: From Trajectory Ranking to Hierarchical Credit Propagation for Open-Ended Agent RL
+ArenaFlow replaces single trajectory-level scalar rewards in open-ended agent RL with tournament-based relative ranking, reflective step-level credit propagation, and a utility-maintained skill memory used as a policy prior. It costs substantial extra inference per training iteration (pairwise tournament comparisons plus structured reflective LLM evaluations), a full RL training loop, and engineering for skill storage, attribution, pruning, and retrieval, all of which exceed a single 24 GB GPU and a limited API budget. It can fail through judge-induced reward bias in pairwise evaluation, misattributed credit to spurious pivotal steps, and skill-memory drift if utility estimates reward frequent-but-low-value skills.
+The method addresses a real problem but presupposes RL training infrastructure, heavy judge-model inference, and unquantified gains that a constrained team cannot validate or operate today.
+Builder's cut (area guidance)
+It may fit when: Start with one repeated product task that has a measurable failure or cost.
+First move: Read the methods and identify one change you can isolate in that workflow.
+Measure: Successful outcomes, response time, human rework, and total cost per successful task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.21378/
+https://arxiv.org/abs/2609.21378
+
+Bayesian Belief Layer for Controllable Opinion Dynamics in LLM Agents
+It replaces implicit, in-context opinion revision in LLM-agent social simulations with an explicit probabilistic belief layer in which each stance is a probability updated by one Bayesian step per utterance and a single prior-strength parameter kappa controls stubbornness. The cost is minimal compute (no training, one Bayesian update per utterance) but added architectural complexity: belief state must be maintained and injected into prompts separately from generation, decoupling what agents believe from how they speak. It can fail if the language round-trip distorts prescribed kappa on untested models, if per-model stance biases surfaced by the layer dominate the dynamics, or if FJ-style dynamics are not the correct model for the target social phenomenon.
+The method is cheap and API-compatible, making it directly usable on constrained infrastructure, but its value is specific to social-simulation and opinion-dynamics workloads, so adoption should follow validation on the reader's own models and scenarios.
+Builder's cut (area guidance)
+It may fit when: A workflow needs specialist review, but extra agents may add more cost than useful work.
+First move: Test the proposed division of work against a single-agent implementation.
+Measure: Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+0 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.21997/
+https://arxiv.org/abs/2609.21997
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
