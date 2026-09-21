@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.14985",
+  "title": "Converting Sequenced Fuzzy Cognitive Maps to Causal Virtual Worlds with Large Video Generators",
+  "summary": "The method replaces hand-authored scripting and storyboarding of video scenes with an orchestrated pipeline in which a fuzzy cognitive map encodes causal rules, its feedback dynamics are converted into if-then meta-rules, an LLM writes a script from them, and a large video model renders each scene. It costs nothing locally in model training but depends entirely on paid third-party APIs (Gemini 3.1, Veo 3.1), adds the complexity of authoring and validating an FCM per world, and offers no measurable quality, speed, or cost advantage over direct prompting. Failure modes include an incorrectly specified FCM producing incoherent causal sequences, the LLM mis-translating meta-rules into the script, and the video generator not preserving causal or entity consistency across scenes, none of which are evaluated in the paper.",
+  "rationale": "The paper demonstrates a single qualitative dolphin-shark example with no benchmarks, ablations, or production-relevant metrics, so there is no validated basis for adoption in a constrained-infrastructure engineering practice.",
+  "technique": "FCM-guided LLM-to-video causal world generation",
+  "family": "orquestracao_multiagente",
+  "recommendation": "nao_aplica",
+  "published": "2026-09-14",
+  "as_of": "2026-09-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.14985",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces hand-authored scripting and storyboarding of video scenes with an orchestrated pipeline in which a fuzzy cognitive map encodes causal rules, its feedback dynamics are converted into if-then meta-rules, an LLM writes a script from them, and a large video model renders each scene. It costs nothing locally in model training but depends entirely on paid third-party APIs (Gemini 3.1, Veo 3.1), adds the complexity of authoring and validating an FCM per world, and offers no measurable quality, speed, or cost advantage over direct prompting. Failure modes include an incorrectly specified FCM producing incoherent causal sequences, the LLM mis-translating meta-rules into the script, and the video generator not preserving causal or entity consistency across scenes, none of which are evaluated in the paper.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.14985",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

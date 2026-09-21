@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.20888",
+  "title": "Elastic Threshold Attention: Learned Contextual Sparsity for Long-Context Decoding",
+  "summary": "ETA replaces fixed-heuristic sparse attention (and dense FlashAttention decoding) with per-query learned thresholds that hard-prune KV blocks, trained via multiplicative suppression of sub-threshold logits rather than token deletion. The cost is substantial: the policy must be learned during pretraining, inference requires a custom Triton decode kernel, and deployment-quality thresholds need offline per-domain calibration to remove predictor overhead. It can fail on workloads unlike the training distribution, where predicted thresholds may prune context needed for retrieval or reasoning, and the reported quality parity is demonstrated only at 1.45B scale, so transfer to larger or API-served models is unverified.",
+  "rationale": "The reader cannot pretrain models and relies on existing checkpoints or APIs, so an architecture that must be trained from scratch is not adoptable now, but the calibration-and-kernel pattern is worth tracking as sparse long-context serving matures.",
+  "technique": "Learned threshold-based sparse KV attention",
+  "family": "kernels_e_atencao",
+  "recommendation": "observar",
+  "published": "2026-09-16",
+  "as_of": "2026-09-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.20888",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 120,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ETA replaces fixed-heuristic sparse attention (and dense FlashAttention decoding) with per-query learned thresholds that hard-prune KV blocks, trained via multiplicative suppression of sub-threshold logits rather than token deletion. The cost is substantial: the policy must be learned during pretraining, inference requires a custom Triton decode kernel, and deployment-quality thresholds need offline per-domain calibration to remove predictor overhead. It can fail on workloads unlike the training distribution, where predicted thresholds may prune context needed for retrieval or reasoning, and the reported quality parity is demonstrated only at 1.45B scale, so transfer to larger or API-served models is unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20888",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 2.5x wall-clock decode speedup over FlashAttention-2 on sequences up to 512K tokens, at ~38% active decode density with quality matching dense attention on a 1.45B pretrained model.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20888",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.21704",
+  "title": "SpecQuant: Speculative Decoding with Multi-Parent Quantization for Adaptive LLM Inference",
+  "summary": "SpecQuant replaces separate-draft-model speculative decoding and single-precision serving by deriving INT4, FP8, and FP16 variants from one shared-weight base model and routing queries to a variant by predicted complexity. It costs the engineering effort of building and serving multiple quantized variants plus a complexity router, and it accepts up to roughly 2% accuracy loss on harder tasks where lightweight variants are selected. It can fail when the complexity predictor misroutes complex reasoning or long-context queries to low-precision variants, when INT4 quality degrades on domains outside the evaluated benchmarks, or when token acceptance between variants falls short of the assumed rate and erases the speedup.",
+  "rationale": "The framework is training-free and targets consumer-scale hardware, matching the reader's constraints, but the claimed speedup is benchmark-specific and depends on router accuracy and workload mix, so it requires validation on the reader's own traffic before production adoption.",
+  "technique": "Multi-parent quantized speculative decoding with complexity routing",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-09-18",
+  "as_of": "2026-09-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.21704",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 120,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SpecQuant replaces separate-draft-model speculative decoding and single-precision serving by deriving INT4, FP8, and FP16 variants from one shared-weight base model and routing queries to a variant by predicted complexity. It costs the engineering effort of building and serving multiple quantized variants plus a complexity router, and it accepts up to roughly 2% accuracy loss on harder tasks where lightweight variants are selected. It can fail when the complexity predictor misroutes complex reasoning or long-context queries to low-precision variants, when INT4 quality degrades on domains outside the evaluated benchmarks, or when token acceptance between variants falls short of the assumed rate and erases the speedup.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.21704",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "35-43% inference speedups with less than 2% accuracy degradation on MMLU, AlpacaEval, and GSM8K using Qwen2.5-based models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.21704",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

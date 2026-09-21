@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.20995",
+  "title": "Voice-Light: A Full-Duplex Cascaded Voice Agent with Causal Turn-Taking and Speculative Generation",
+  "summary": "This replaces a half-duplex ASR-LLM-TTS pipeline with a cascaded full-duplex stack combining streaming ASR with a shared causal adapter, speculative private response generation, reversible playback, concurrent tool calls with bridge speech, and browser acknowledgments that gate durable history. The cost is substantial integration complexity: shared encoders, playback reversal, concurrency control, and history-authority logic must all be engineered and maintained, with latency gains unproven against a controlled baseline. The learned turn-taking model failed its own locked evaluation (12.53% end-of-turn recall), so the system depends on a heuristic Silero timing policy that can still cut off speakers (2.70% false-cutoff rate) and may misbehave on real user populations.",
+  "rationale": "The architecture is implementable on a single GPU or via APIs and addresses a real production problem, but the latency evidence is a three-session instrumented case study and the learned turn-taking component demonstrably underperformed, so adoption should follow workload-specific validation.",
+  "technique": "Full-duplex cascaded voice agent with speculative responses",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-09-17",
+  "as_of": "2026-09-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.20995",
+  "independent_implementations": 2,
+  "total_implementations": 4,
+  "stars": 678,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces a half-duplex ASR-LLM-TTS pipeline with a cascaded full-duplex stack combining streaming ASR with a shared causal adapter, speculative private response generation, reversible playback, concurrent tool calls with bridge speech, and browser acknowledgments that gate durable history. The cost is substantial integration complexity: shared encoders, playback reversal, concurrency control, and history-authority logic must all be engineered and maintained, with latency gains unproven against a controlled baseline. The learned turn-taking model failed its own locked evaluation (12.53% end-of-turn recall), so the system depends on a heuristic Silero timing policy that can still cut off speakers (2.70% false-cutoff rate) and may misbehave on real user populations.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20995",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "758 ms median from final VAD endpoint to first server audio across 36 measured turns in three operator-run sessions; 21 of 36 turns below 800 ms. A learned end-of-turn checkpoint achieved only 12.53% recall versus 95.60% for a Silero timing policy, so the deployed system keeps a hybrid controller.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.20995",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

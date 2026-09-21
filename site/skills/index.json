@@ -686,11 +686,25 @@
     "source": "https://arxiv.org/abs/2609.14706"
   },
   {
+    "arxiv_id": "2609.14759",
+    "title": "Refusal Reads Only a Slice of What the Model Knows: Harm-Keyed Routing and Its Exceptions Across Model Families",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14759-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14759"
+  },
+  {
     "arxiv_id": "2609.14762",
     "title": "TriCalRAG: A Three-Strategy, Retrieval-Augmented Benchmark for On-Premise LLM-Based Root Cause Analysis in AIOps",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-14762-evidence.zip",
     "source": "https://arxiv.org/abs/2609.14762"
+  },
+  {
+    "arxiv_id": "2609.14795",
+    "title": "Mind Which Bird You Favour: Parameterizing Adequacy-Fluency Balance in Meta-Evaluation of Machine Translation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14795-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14795"
   },
   {
     "arxiv_id": "2609.14815",
@@ -719,6 +733,41 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-14872-evidence.zip",
     "source": "https://arxiv.org/abs/2609.14872"
+  },
+  {
+    "arxiv_id": "2609.14985",
+    "title": "Converting Sequenced Fuzzy Cognitive Maps to Causal Virtual Worlds with Large Video Generators",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14985-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14985"
+  },
+  {
+    "arxiv_id": "2609.14987",
+    "title": "ActGuard: Pre-execution Action Auditing against Indirect Prompt Injection in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14987-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14987"
+  },
+  {
+    "arxiv_id": "2609.14992",
+    "title": "MTAC-IFBench: Benchmarking Instruction-Following in Multi-Turn Agentic Coding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-14992-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.14992"
+  },
+  {
+    "arxiv_id": "2609.15011",
+    "title": "Semantic-TVM: Structure-Preserving Trustworthy Virtual Memory for Memory-Augmented and Tool-Using Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15011-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15011"
+  },
+  {
+    "arxiv_id": "2609.15013",
+    "title": "Overflip: Repetition-Induced Label Flips in Guardrail Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-15013-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.15013"
   },
   {
     "arxiv_id": "2609.15030",
@@ -1694,6 +1743,13 @@
     "source": "https://arxiv.org/abs/2609.19083"
   },
   {
+    "arxiv_id": "2609.19122",
+    "title": "Training-Adaptive Convolutional Sparse Coding via Information Bottleneck for Robust Visual Representation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-19122-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.19122"
+  },
+  {
     "arxiv_id": "2609.19125",
     "title": "Affora: A Design System for Agent-Friendly Interfaces",
     "status": "indexed",
@@ -2126,5 +2182,229 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-20822-evidence.zip",
     "source": "https://arxiv.org/abs/2609.20822"
+  },
+  {
+    "arxiv_id": "2609.20883",
+    "title": "Sparse Priors for Efficient Distribution Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20883-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20883"
+  },
+  {
+    "arxiv_id": "2609.20888",
+    "title": "Elastic Threshold Attention: Learned Contextual Sparsity for Long-Context Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20888-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20888"
+  },
+  {
+    "arxiv_id": "2609.20957",
+    "title": "An Approximate Queueing Model of LLM Inference Serving for SLO-Driven Autoscaling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20957-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20957"
+  },
+  {
+    "arxiv_id": "2609.20981",
+    "title": "CaLR: Causal Latent Revision for Robust Diffusion Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20981-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20981"
+  },
+  {
+    "arxiv_id": "2609.20995",
+    "title": "Voice-Light: A Full-Duplex Cascaded Voice Agent with Causal Turn-Taking and Speculative Generation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20995-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20995"
+  },
+  {
+    "arxiv_id": "2609.20997",
+    "title": "MOSAIC-SR: Transformer-Guided Symbolic Regression for Scientific Equation Recovery",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-20997-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.20997"
+  },
+  {
+    "arxiv_id": "2609.21039",
+    "title": "Stiefel-AdamW: Geometry-Aware AdamW for Linear Factorization Blocks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21039-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21039"
+  },
+  {
+    "arxiv_id": "2609.21109",
+    "title": "Talk to Me, Jarvis: An Open-Source Edge-Deployable Voice Assistant Framework for Autonomous Racecars",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21109-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21109"
+  },
+  {
+    "arxiv_id": "2609.21126",
+    "title": "Layerwise Decoupling for Stable Structured Sparsification of Fully Connected Layers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21126-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21126"
+  },
+  {
+    "arxiv_id": "2609.21137",
+    "title": "A Multi-Engine Dataflow for MoE Decoding on Scratchpad-Based Tensor Accelerators",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21137-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21137"
+  },
+  {
+    "arxiv_id": "2609.21145",
+    "title": "Scaling Forced Alignment to End-User Devices",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21145-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21145"
+  },
+  {
+    "arxiv_id": "2609.21157",
+    "title": "Can Agents Design Better Chips with a Higher Level Abstraction?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21157-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21157"
+  },
+  {
+    "arxiv_id": "2609.21172",
+    "title": "TierKV: Long-Context On-Device LLMs via Predictive Multi-Tier KV Caching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21172-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21172"
+  },
+  {
+    "arxiv_id": "2609.21257",
+    "title": "Verify, Don't Trust: Agentic Model Development for Video Discovery Retrieval at Scale",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21257-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21257"
+  },
+  {
+    "arxiv_id": "2609.21267",
+    "title": "Efficient Benchmarking in Production: A Study of an Evolving LLM Agent",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21267-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21267"
+  },
+  {
+    "arxiv_id": "2609.21341",
+    "title": "What Stops a Small Language Model From Driving a Database Agent",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21341-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21341"
+  },
+  {
+    "arxiv_id": "2609.21378",
+    "title": "ArenaFlow: From Trajectory Ranking to Hierarchical Credit Propagation for Open-Ended Agent RL",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21378-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21378"
+  },
+  {
+    "arxiv_id": "2609.21450",
+    "title": "Understanding LLM Quantization through Activation-Guided Compensation and Orthogonal Residuals",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21450-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21450"
+  },
+  {
+    "arxiv_id": "2609.21484",
+    "title": "HE-Guardrail: A Homomorphic Guardrail Against Jailbreak Attacks for Encrypted Large Language Model Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21484-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21484"
+  },
+  {
+    "arxiv_id": "2609.21523",
+    "title": "What Must Survive? Exact Task-Information--State Frontiers for Resource-Sufficient Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21523-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21523"
+  },
+  {
+    "arxiv_id": "2609.21562",
+    "title": "GameLogicBench: Evaluating Coding Agents on Runtime Game Logic with Tick-Level State Assertions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21562-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21562"
+  },
+  {
+    "arxiv_id": "2609.21567",
+    "title": "Weighted Quantum Signal Processing: Low-Depth Polynomial Approximation with Applications to Kolmogorov-Arnold Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21567-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21567"
+  },
+  {
+    "arxiv_id": "2609.21664",
+    "title": "Multi-Domain Clustering via Measure Quantization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21664-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21664"
+  },
+  {
+    "arxiv_id": "2609.21686",
+    "title": "CIPL: A Channel-Aware Framework for Recoverable Privacy Leakage in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21686-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21686"
+  },
+  {
+    "arxiv_id": "2609.21704",
+    "title": "SpecQuant: Speculative Decoding with Multi-Parent Quantization for Adaptive LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21704-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21704"
+  },
+  {
+    "arxiv_id": "2609.21827",
+    "title": "RheoSampling: Resolving the One-Hot Dilemma in Stochastic Dynamic-Tree Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21827-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21827"
+  },
+  {
+    "arxiv_id": "2609.21841",
+    "title": "EnterpriseVal: Quantifying the Efficacy, Reliability and Value of Generative AI in the Enterprise",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21841-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21841"
+  },
+  {
+    "arxiv_id": "2609.21940",
+    "title": "AutoViewMem: Self-Configuring Orthogonal Views for Conversational Long-Term Memory",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21940-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21940"
+  },
+  {
+    "arxiv_id": "2609.21967",
+    "title": "NemotronLabs VoiceChat: An Open Full-duplex Speech-to-Speech Model with Tool Calling Capabilities",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21967-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21967"
+  },
+  {
+    "arxiv_id": "2609.21997",
+    "title": "Bayesian Belief Layer for Controllable Opinion Dynamics in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-21997-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.21997"
+  },
+  {
+    "arxiv_id": "2609.22000",
+    "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-22000-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.22000"
+  },
+  {
+    "arxiv_id": "2609.22068",
+    "title": "CodeMidas: Scaling Agentic Coding RL Environments from Code Itself",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-22068-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.22068"
   }
 ]

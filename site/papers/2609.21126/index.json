@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.21126",
+  "title": "Layerwise Decoupling for Stable Structured Sparsification of Fully Connected Layers",
+  "summary": "The method replaces joint, coupled penalization of all layers with a sequential layerwise scheme that extracts shallow two-layer subnetworks, normalizes inner weights, and applies a structured group penalty to prune neurons and reduce layer width. The cost is additional implementation complexity in the projected/proximal formulation and an offline pruning pass per layer, with no claimed reduction in inference latency or deployment memory unless the pruned widths are exploited by downstream kernels. It can fail when the activation is not positively homogeneous (the equivalence proof depends on this), when regularization strengths transfer poorly across architectures, or when structured width reduction in FFNs does not translate into actual hardware speedup.",
+  "rationale": "Structured pruning of FFNs is directly applicable on a single 24 GB GPU and the OPT-1.3B evidence is relevant to LLM deployment, but the robustness claim is qualitative and validated at small scale, so the reader should validate accuracy-versus-width trade-offs on their own workload before adopting it in production.",
+  "technique": "Layerwise decoupled structured pruning of fully connected layers",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-09-17",
+  "as_of": "2026-09-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.21126",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces joint, coupled penalization of all layers with a sequential layerwise scheme that extracts shallow two-layer subnetworks, normalizes inner weights, and applies a structured group penalty to prune neurons and reduce layer width. The cost is additional implementation complexity in the projected/proximal formulation and an offline pruning pass per layer, with no claimed reduction in inference latency or deployment memory unless the pruned widths are exploited by downstream kernels. It can fail when the activation is not positively homogeneous (the equivalence proof depends on this), when regularization strengths transfer poorly across architectures, or when structured width reduction in FFNs does not translate into actual hardware speedup.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.21126",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The authors report a wider usable range of the regularization strength and a lower rate of catastrophic over-pruning than the tested joint baseline while maintaining comparable accuracy, demonstrated in controlled studies and on the feed-forward layers of OPT-1.3B; no multiplicative speedup, memory, or accuracy figure is given.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.21126",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
