@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.24797",
+  "title": "Complex KDA: Understanding and Enhancing the Expressivity of Kimi Delta Attention",
+  "summary": "CKDA replaces a single-transition delta-rule linear RNN layer (and the rank-2 DeltaProduct_2 construction) with a Kimi Delta Attention transition whose gate range is extended to [-1,1] and whose beta coefficient is extended to [0,2], achieving 2D-rotation expressivity in one diagonal-plus-rank-one update instead of two. It costs no extra rank or asymptotic compute over KDA and keeps updates non-expansive and stable, but it requires retraining from scratch with modified parameterizations and ranges, so it cannot be applied to existing pretrained checkpoints. It can fail on workloads where the added state-tracking expressivity is irrelevant, since language-modeling gains over a standard KDA baseline are negligible and the main benefits appear on state-tracking and length-extrapolation tasks.",
+  "rationale": "The code and models are public and the method fits a 24 GB GPU budget, but the benefit over the KDA baseline is confined to state-tracking and extrapolation tasks, so adoption should follow a workload-specific small-scale experiment rather than a direct production switch.",
+  "technique": "Complex KDA: extended-range delta-rule linear attention",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-22",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.24797",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "CKDA replaces a single-transition delta-rule linear RNN layer (and the rank-2 DeltaProduct_2 construction) with a Kimi Delta Attention transition whose gate range is extended to [-1,1] and whose beta coefficient is extended to [0,2], achieving 2D-rotation expressivity in one diagonal-plus-rank-one update instead of two. It costs no extra rank or asymptotic compute over KDA and keeps updates non-expansive and stable, but it requires retraining from scratch with modified parameterizations and ranges, so it cannot be applied to existing pretrained checkpoints. It can fail on workloads where the added state-tracking expressivity is irrelevant, since language-modeling gains over a standard KDA baseline are negligible and the main benefits appear on state-tracking and length-extrapolation tasks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24797",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Combining both range extensions yields the strongest length extrapolation among tested KDA settings on S3, S4, and periodic audio continuation; language modeling performance is comparable to the KDA baseline and above Transformers and other linear RNNs, with no multiplicative factor reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24797",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
