@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.26474",
+  "title": "PP-Net: A Hybrid Physical-Prior Neural Network for Scattered Light Removal in Biomedical Images on Embedded Devices",
+  "summary": "PP-Net replaces generic end-to-end learning-based restoration models for biomedical scattered-light removal with a three-stage pipeline (denoising, physics-based scattering-map estimation, guided refinement) trained via progressive synthetic-to-real transfer to avoid paired ground truth. The cost is a multi-component architecture with a staged training strategy, and deployment targets Rockchip RKNN embedded NPUs with INT8 quantization rather than datacenter GPUs, so the 200 ms latency figure does not transfer to the reader's hardware. It can fail on real biomedical domains far from the synthetic training distribution, the gains on unpaired real data are measured only by the no-reference NIQE metric, and PSNR/SSIM improvements on synthetic benchmarks may not reflect diagnostic-quality preservation.",
+  "rationale": "The method addresses a narrow biomedical-imaging restoration problem on embedded NPUs, so it is relevant only if the reader's production work involves microscopic or endoscopic image enhancement at the edge, not general constrained-infrastructure LLM or model deployment.",
+  "technique": "Physics-prior hybrid network for image descattering",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-09-22",
+  "as_of": "2026-09-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.26474",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "PP-Net replaces generic end-to-end learning-based restoration models for biomedical scattered-light removal with a three-stage pipeline (denoising, physics-based scattering-map estimation, guided refinement) trained via progressive synthetic-to-real transfer to avoid paired ground truth. The cost is a multi-component architecture with a staged training strategy, and deployment targets Rockchip RKNN embedded NPUs with INT8 quantization rather than datacenter GPUs, so the 200 ms latency figure does not transfer to the reader's hardware. It can fail on real biomedical domains far from the synthetic training distribution, the gains on unpaired real data are measured only by the no-reference NIQE metric, and PSNR/SSIM improvements on synthetic benchmarks may not reflect diagnostic-quality preservation.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.26474",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On joint noise-and-scattering degradation, PSNR improves by more than 10.8 dB and SSIM by more than 0.62 over representative baselines; on real W2S biomedical images, average NIQE drops 43.3%; INT8-quantized edge inference runs at about 200 ms per 512x512 image on RKNN hardware.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.26474",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

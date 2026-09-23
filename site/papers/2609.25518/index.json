@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.25518",
+  "title": "Matryoshka attribution: Learning to attribute language model outputs to representations and weights",
+  "summary": "Matryoshka Attribution replaces gradient-based, causal-intervention, and conventional learnable-mask attribution methods with a single mask trained across randomised sparsity levels using a differentiable sigmoid top-k operator, yielding an ordering of components by attribution score. The cost is an additional training loop per model and task (including RL against judge scores for the weight-attribution variant), plus engineering effort to integrate masking into the target model's forward pass; compute is modest enough that the 8B-scale demonstration is plausible on a single 24 GB GPU. It can fail if learned masks optimise the supervised objective without isolating genuinely causal computations, if circuits do not transfer beyond the training tasks, and the refusal-removal result is a single-model finding whose effect on safety-relevant behaviour requires independent evaluation before any production reliance.",
+  "rationale": "The method is computationally accessible at 8B scale and offers a validated, benchmark-leading attribution tool, but its production value for a small team depends on whether they actually need circuit-level interpretability or targeted weight editing, so it warrants a scoped pilot rather than adoption.",
+  "technique": "Mask-learned attribution via differentiable sigmoid top-k",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-09-22",
+  "as_of": "2026-09-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.25518",
+  "independent_implementations": 0,
+  "total_implementations": 3,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Matryoshka Attribution replaces gradient-based, causal-intervention, and conventional learnable-mask attribution methods with a single mask trained across randomised sparsity levels using a differentiable sigmoid top-k operator, yielding an ordering of components by attribution score. The cost is an additional training loop per model and task (including RL against judge scores for the weight-attribution variant), plus engineering effort to integrate masking into the target model's forward pass; compute is modest enough that the 8B-scale demonstration is plausible on a single 24 GB GPU. It can fail if learned masks optimise the supervised objective without isolating genuinely causal computations, if circuits do not transfer beyond the training tasks, and the refusal-removal result is a single-model finding whose effect on safety-relevant behaviour requires independent evaluation before any production reliance.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25518",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Ranks first on the Mechanistic Interpretability Benchmark leaderboard; restoring 1% of Llama 3.1 8B Instruct's weights to base-model state removed refusals while maintaining capabilities (per the authors).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25518",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

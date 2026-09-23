@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.26708",
+  "title": "Train Where the Quantized Model Goes: On-Policy Distillation for Low-Bit Reasoning",
+  "summary": "The method adds an on-policy distillation stage on top of a quantization-aware distillation (QAD) checkpoint: the low-bit student generates through its deployed quantized forward path and is trained with token-level teacher signals plus task-verifier rewards on its own prefixes, replacing purely teacher-forced QAD fine-tuning. It costs a training pipeline with a frozen full-precision teacher in memory, student sampling during training, and verifier infrastructure, so it requires more compute and engineering than off-the-shelf PTQ methods such as GPTQ or AWQ, though the resulting 24 GB-class deployment cost is unchanged. It can fail if the teacher is unavailable or too large for the budget, if verifier rewards are gameable or absent for the target task, or if on-policy training destabilizes the short-form capabilities QAD had already restored.",
+  "rationale": "The paper addresses a real failure mode (repetition loops in low-bit long-form reasoning) and reports large retention gains, but adopting it requires a QAD-plus-OPD training pipeline and a full-precision teacher, so a constrained team should validate it on their own quantized model and tasks before committing rather than relying on off-the-shelf PTQ defaults.",
+  "technique": "On-policy distillation for sub-3-bit quantized LLMs",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-22",
+  "as_of": "2026-09-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.26708",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 2,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method adds an on-policy distillation stage on top of a quantization-aware distillation (QAD) checkpoint: the low-bit student generates through its deployed quantized forward path and is trained with token-level teacher signals plus task-verifier rewards on its own prefixes, replacing purely teacher-forced QAD fine-tuning. It costs a training pipeline with a frozen full-precision teacher in memory, student sampling during training, and verifier infrastructure, so it requires more compute and engineering than off-the-shelf PTQ methods such as GPTQ or AWQ, though the resulting 24 GB-class deployment cost is unchanged. It can fail if the teacher is unavailable or too large for the budget, if verifier rewards are gameable or absent for the target task, or if on-policy training destabilizes the short-form capabilities QAD had already restored.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.26708",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Raises average BF16 performance retention from 35% to 70% on MATH-500 and from 66% to 91% on HumanEval at 2.79 and 1.88 effective bits, relative to quantization-aware distillation alone; point improvements, not a multiplicative factor.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.26708",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

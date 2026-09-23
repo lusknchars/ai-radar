@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.25498",
+  "title": "Universal Fractal Natural Language Decision Map: Real-Time Edge Triage Across Heterogeneous Domains",
+  "summary": "The method replaces small LLM or classifier-based runtime triage (Boolean, categorical, ordinal decisions) with a deterministic engine that maps 24-byte coordinate seeds through Mandelbrot-set escape dynamics, requiring no stored weights and running on CPUs or microcontrollers. Cost is near-zero memory and single-digit-millisecond CPU latency, but adoption requires trusting a proprietary hosted runtime (answerr.me) and a non-standard decision mechanism with no published training or validation methodology. Failure risks are substantial: the accuracy, robustness, and benchmark claims are self-reported on an unverified suite, the prompt-injection claim carries a Wilson interval up to 30.8% (tiny sample), and there is no established theory linking fractal escape dynamics to generalizable language understanding, so accuracy on the reader's own domain is unpredictable.",
+  "rationale": "The claims are extraordinary relative to the mechanism described, the benchmarks are self-hosted and not independently reproducible, and the security evidence is statistically weak, so an engineer should monitor for independent replication rather than commit production traffic.",
+  "technique": "Weightless fractal-dynamics decision engine for edge triage",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.25498",
+  "independent_implementations": 4,
+  "total_implementations": 4,
+  "stars": 6,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces small LLM or classifier-based runtime triage (Boolean, categorical, ordinal decisions) with a deterministic engine that maps 24-byte coordinate seeds through Mandelbrot-set escape dynamics, requiring no stored weights and running on CPUs or microcontrollers. Cost is near-zero memory and single-digit-millisecond CPU latency, but adoption requires trusting a proprietary hosted runtime (answerr.me) and a non-standard decision mechanism with no published training or validation methodology. Failure risks are substantial: the accuracy, robustness, and benchmark claims are self-reported on an unverified suite, the prompt-injection claim carries a Wilson interval up to 30.8% (tiny sample), and there is no established theory linking fractal escape dynamics to generalizable language understanding, so accuracy on the reader's own domain is unpredictable.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25498",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Claims 2.5x throughput acceleration (3.31 ms latency) after pruning 45.8% of escape iterations, plus 92.6% macro-accuracy (95% CI [90.8%, 94.1%]) across 1,150+ decisions and 7.08 ms median CPU latency with 0 bytes VRAM.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25498",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
