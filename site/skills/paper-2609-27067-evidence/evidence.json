@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.27067",
+  "title": "ChipMEM: Verification-Grounded Memory for EDA Agents",
+  "summary": "ChipMEM replaces experience distillation based on model self-assessment with a memory layer that stores skills only after synthesis, simulation, or formal verification passes, plus a Bayesian ranker of recovery strategies conditioned on error types. The cost is additional infrastructure: persistent skill storage, verified-trace bookkeeping, hierarchical Beta statistics per tool call, and an adapter per agent domain, with inference latency increasing from memory retrieval and ranking. It can fail when verification signals are too sparse to populate the library, when held-out tasks diverge from the errors the Beta estimates were built on, or when frozen procedural skills overfit the training distribution and misguide revision on novel designs.",
+  "rationale": "The gains are modest task-completion improvements specific to EDA tool-use workloads, so a reader building RTL or testbench agents should validate transfer on their own designs before adopting, while the technique is irrelevant outside that domain.",
+  "technique": "Verification-grounded procedural and Bayesian memory for EDA agents",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-09-22",
+  "as_of": "2026-09-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.27067",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ChipMEM replaces experience distillation based on model self-assessment with a memory layer that stores skills only after synthesis, simulation, or formal verification passes, plus a Bayesian ranker of recovery strategies conditioned on error types. The cost is additional infrastructure: persistent skill storage, verified-trace bookkeeping, hierarchical Beta statistics per tool call, and an adapter per agent domain, with inference latency increasing from memory retrieval and ranking. It can fail when verification signals are too sparse to populate the library, when held-out tasks diverge from the errors the Beta estimates were built on, or when frozen procedural skills overfit the training distribution and misguide revision on novel designs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27067",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On RTLRewriter-Bench, equivalence-passing outputs rise from 35/54 to 39/54 and mean area improvement from 5.66% to 8.69% (49-design short suite); on held-out CVDP tasks, 20/20 accepted versus 18/20 without memory.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27067",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

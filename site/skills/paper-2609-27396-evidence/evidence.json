@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.27396",
+  "title": "When Parallel Drafter Meets Parallel Speculative Decoding",
+  "summary": "DPara replaces the serialized draft phase of DSpark-style speculative decoding and the guess-and-fallback mechanism of prior parallel speculative decoding by precomputing draft representations for every acceptance boundary on a diffusion backbone while the target verifies, leaving only a lightweight autoregressive head on the critical path. It requires a diffusion backbone drafter plus an extra AR head, adding implementation complexity and draft-model memory on top of the target model, and has been demonstrated only on Qwen3-8B/14B. It can fail if no compatible pretrained parallel drafter exists for the reader's production model, since adopting it likely requires training or sourcing a diffusion drafter rather than plugging into an off-the-shelf checkpoint.",
+  "rationale": "The 3.2-3.5x latency gain is meaningful on a single 24 GB GPU, but the method depends on a diffusion parallel drafter that is demonstrated only on two Qwen3 models and is not yet available as reusable tooling, so it is worth tracking rather than adopting or testing now.",
+  "technique": "Diffusion-based parallel speculative decoding with precomputed boundary representations",
+  "family": "decodificacao_especulativa",
+  "recommendation": "observar",
+  "published": "2026-09-23",
+  "as_of": "2026-09-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.27396",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DPara replaces the serialized draft phase of DSpark-style speculative decoding and the guess-and-fallback mechanism of prior parallel speculative decoding by precomputing draft representations for every acceptance boundary on a diffusion backbone while the target verifies, leaving only a lightweight autoregressive head on the critical path. It requires a diffusion backbone drafter plus an extra AR head, adding implementation complexity and draft-model memory on top of the target model, and has been demonstrated only on Qwen3-8B/14B. It can fail if no compatible pretrained parallel drafter exists for the reader's production model, since adopting it likely requires training or sourcing a diffusion drafter rather than plugging into an off-the-shelf checkpoint.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27396",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Average speedups of 3.21x (Qwen3-8B) and 3.52x (Qwen3-14B) over autoregressive decoding across seven math, coding, and chat benchmarks, exceeding serial and parallel speculative decoding baselines.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27396",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

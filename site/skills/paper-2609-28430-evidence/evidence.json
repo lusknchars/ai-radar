@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.28430",
+  "title": "Cross-Scale Transfer Learning for Depression Severity Prediction: From PHQ-8 to HAMD-17 Across Languages and Clinical Paradigms",
+  "summary": "The method replaces training a clinical severity regressor from scratch (or target-only fine-tuning) by sequentially adapting LoRA adapters: first on a larger English PHQ-8 corpus, then on a small target-language HAMD-17 corpus with a reinitialised scale-specific regression head. Cost is low and fits the reader's constraints: two short LoRA fine-tuning runs on sub-2B models, feasible on a single 24 GB GPU, with added pipeline complexity of a two-stage protocol and cross-dataset alignment. It can fail because the evidence is a single-site exploratory study of 100 target sessions: gains are within run-to-run variance in some ablations, the contributions of scale, language, and paradigm shifts are not disentangled, and shuffled-label controls showing partial gains suggest the improvement may partly reflect generic adaptation rather than aligned supervision.",
+  "rationale": "The approach is cheap enough to reproduce on a single 24 GB GPU and shows the best point estimates for small-domain regression transfer, but the single-site, exploratory evaluation and ambiguous ablations require workload-specific validation before production adoption.",
+  "technique": "Sequential LoRA cross-scale transfer for severity regression",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-23",
+  "as_of": "2026-09-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.28430",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces training a clinical severity regressor from scratch (or target-only fine-tuning) by sequentially adapting LoRA adapters: first on a larger English PHQ-8 corpus, then on a small target-language HAMD-17 corpus with a reinitialised scale-specific regression head. Cost is low and fits the reader's constraints: two short LoRA fine-tuning runs on sub-2B models, feasible on a single 24 GB GPU, with added pipeline complexity of a two-stage protocol and cross-dataset alignment. It can fail because the evidence is a single-site exploratory study of 100 target sessions: gains are within run-to-run variance in some ablations, the contributions of scale, language, and paradigm shifts are not disentangled, and shuffled-label controls showing partial gains suggest the improvement may partly reflect generic adaptation rather than aligned supervision.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28430",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On the 100-sample Chinese HAMD-17 target, sequential DAIC-WOZ-to-PDCH LoRA transfer outperforms target-only training and non-LLM baselines, achieving MAE/RMSE/macro-F1 of 4.96/6.59/0.36 (Qwen3-0.6B) and 4.38/5.62/0.46 (Qwen3-1.7B); no multiplicative improvement factor is reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28430",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
