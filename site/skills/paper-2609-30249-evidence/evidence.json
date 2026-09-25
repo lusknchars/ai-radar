@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.30249",
+  "title": "RAPID: Robot Agentic Programming from Demonstrations",
+  "summary": "RAPID replaces hand-written robot task programs and classical imitation-learning policies with an agentic loop in which an LLM coding agent infers a testable task specification, action primitives, and a verification environment from a single visual demonstration, then iteratively generates and refines an object-centric relational program using trajectory optimization. The cost is a bespoke robotics stack: action primitives, an interactive simulator or physical arm for execution feedback, and trajectory-optimization infrastructure, none of which run on a single 24 GB GPU workstation alone. Failure modes include incorrect inferred task specifications, verification environments that pass programs which fail on the real robot, and poor transfer to tasks whose geometry or contacts differ from the demonstration.",
+  "rationale": "The method targets contact-rich robot manipulation rather than the reader's language-model production workload, and adopting it requires robotic hardware, simulators, and primitives that constrained infrastructure does not provide.",
+  "technique": "Agentic robot code generation from one demonstration",
+  "family": "agentes_de_codigo",
+  "recommendation": "observar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.30249",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 11,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RAPID replaces hand-written robot task programs and classical imitation-learning policies with an agentic loop in which an LLM coding agent infers a testable task specification, action primitives, and a verification environment from a single visual demonstration, then iteratively generates and refines an object-centric relational program using trajectory optimization. The cost is a bespoke robotics stack: action primitives, an interactive simulator or physical arm for execution feedback, and trajectory-optimization infrastructure, none of which run on a single 24 GB GPU workstation alone. Failure modes include incorrect inferred task specifications, verification environments that pass programs which fail on the real robot, and poor transfer to tasks whose geometry or contacts differ from the demonstration.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30249",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

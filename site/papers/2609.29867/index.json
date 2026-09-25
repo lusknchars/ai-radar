@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.29867",
+  "title": "Does per-frame early exit pay? A compute-matched study of dynamic depth for on-device speech enhancement",
+  "summary": "It replaces separately trained fixed-depth speech enhancement models with one causally supervised multi-depth model whose heads are fine-tuned so deeper outputs are never worse, deployed as multiple static int8 graphs selected per frame by a lightweight policy. The cost is the multi-exit training protocol, maintaining several NPU graphs instead of one, a 2.2% latency overhead from graph splitting, and a small policy runtime on a companion core. It can fail when the target hardware cannot run the policy cheaply, when the monotonicity fine-tuning does not transfer to new data distributions, or when frame-level exit decisions introduce quality variance that static models would not exhibit.",
+  "rationale": "The results are validated only on microcontroller-scale speech enhancement, so the method is directly relevant only if the reader ships on-device audio models, though the train-once-derive-many-static-models pattern is worth tracking as a transferable efficiency technique.",
+  "technique": "Compute-matched dynamic depth (early exit) for on-device speech enhancement",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.29867",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces separately trained fixed-depth speech enhancement models with one causally supervised multi-depth model whose heads are fine-tuned so deeper outputs are never worse, deployed as multiple static int8 graphs selected per frame by a lightweight policy. The cost is the multi-exit training protocol, maintaining several NPU graphs instead of one, a 2.2% latency overhead from graph splitting, and a small policy runtime on a companion core. It can fail when the target hardware cannot run the policy cheaply, when the monotonicity fine-tuning does not transfer to new data distributions, or when frame-level exit decisions introduce quality variance that static models would not exhibit.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29867",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 0.11 higher PESQ at equivalent compute, and matching the best PESQ at 30% less compute; the dynamic enhancer stays on the same int8 latency-quality frontier as static models on an STM32N6, with 26 us per frame policy overhead and 2.2% graph-splitting latency overhead.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29867",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.30059",
+  "title": "KernelOPT: Dispatch-Aware Agentic Search for GPU Kernel Optimization",
+  "summary": "The method replaces manual tuning of torch.compile-generated Triton sub-kernels with five profiling-guided LLM agents that rewrite kernels while preserving vendor library calls, then re-stitch and verify the model end-to-end through a four-gate cascade. Its costs are LLM API or inference spend for the search agents, profiling and multi-seed verification compute on a local GPU, and the engineering complexity of integrating a multi-agent pipeline into the build process; the claimed gains are benchmark geomeans, not guarantees for a given production model. It can fail to find any passing candidate (improving only 12 of 50 Level-3 problems), and correctness or performance regressions may slip through on workloads whose numerical behavior differs from the verification suite, though the baseline-preserving fallback limits downside.",
+  "rationale": "The approach is directly runnable on a single 24 GB GPU with API-based LLMs and carries a safe fallback, but its benchmark-reported speedups must be validated on the reader's own models before production adoption.",
+  "technique": "Multi-agent LLM optimization of compiler-generated Triton kernels",
+  "family": "kernels_e_atencao",
+  "recommendation": "testar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.30059",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces manual tuning of torch.compile-generated Triton sub-kernels with five profiling-guided LLM agents that rewrite kernels while preserving vendor library calls, then re-stitch and verify the model end-to-end through a four-gate cascade. Its costs are LLM API or inference spend for the search agents, profiling and multi-seed verification compute on a local GPU, and the engineering complexity of integrating a multi-agent pipeline into the build process; the claimed gains are benchmark geomeans, not guarantees for a given production model. It can fail to find any passing candidate (improving only 12 of 50 Level-3 problems), and correctness or performance regressions may slip through on workloads whose numerical behavior differs from the verification suite, though the baseline-preserving fallback limits downside.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30059",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Geometric mean speedups over torch.compile of 1.40x (KernelBench Level 1, 51/100 problems improved), 1.15x (Level 2), and 1.07x (Level 3), with fallback to the compiler baseline when verification fails.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30059",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

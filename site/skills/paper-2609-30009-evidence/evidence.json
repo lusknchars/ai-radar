@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.30009",
+  "title": "Automated Regulatory Compliance Question Answering in Financial Services with Domain-Adapted Retrieval-Augmented Generation",
+  "summary": "Replaces off-the-shelf dense or BM25 retrieval and prompted compact LLMs with a LegalBERT retriever tuned via entailment reformulation, contrastive in-batch negatives, and BM25 score fusion, plus optional RAFT-LoRA on a quantized 2B-12B generator, all feasible on a single 24 GB GPU. Costs include three retriever fine-tuning stages, labeled domain data for entailment and contrastive tuning, hybrid-fusion serving complexity, and per-domain RAFT adaptation. It can fail on domain transfer (no generalization to Australian case law), and RePASs gains do not demonstrate grounding: a closed-book model scored within 0.011 RePASs while citing nothing and misstating obligations, so a dedicated grounding evaluation must be built before production trust.",
+  "rationale": "The pipeline runs within a single 24 GB GPU and shows a large measured retrieval gain, but the unverified grounding and failed cross-jurisdiction transfer mean it should be validated on the reader's own corpus with a grounding evaluation before adoption.",
+  "technique": "Three-stage domain-adapted RAG for regulatory QA",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.30009",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces off-the-shelf dense or BM25 retrieval and prompted compact LLMs with a LegalBERT retriever tuned via entailment reformulation, contrastive in-batch negatives, and BM25 score fusion, plus optional RAFT-LoRA on a quantized 2B-12B generator, all feasible on a single 24 GB GPU. Costs include three retriever fine-tuning stages, labeled domain data for entailment and contrastive tuning, hybrid-fusion serving complexity, and per-domain RAFT adaptation. It can fail on domain transfer (no generalization to Australian case law), and RePASs gains do not demonstrate grounding: a closed-book model scored within 0.011 RePASs while citing nothing and misstating obligations, so a dedicated grounding evaluation must be built before production trust.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30009",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The staged retriever raises Recall@10 on ObliQA from 0.256 to 0.774 (a 3.0x improvement), exceeding BM25 (0.678) and E5-large-v2 (0.758); RAFT-LoRA improves RePASs for every adaptable 2B-12B generator under 4-bit quantization, though RePASs does not measure grounding.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30009",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
