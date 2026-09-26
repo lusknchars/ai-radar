@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.28757",
+  "title": "Small yet Assistive: Spatially-Aware Post-Training for Low Vision",
+  "summary": "Replaces reliance on large cloud-hosted VLMs for accessibility-grade scene description by post-training a 500M decoder VLM with teacher-student distillation, GRPO with a composite spatial/hazard reward, and a final lightweight finetune to repair forgetting. Costs a multi-stage post-training pipeline (distillation data, RL reward design, an extra recovery finetune, mixed-precision quantization) plus benchmark validation, rather than foundation-model training compute. Can fail through catastrophic forgetting between stages, reward hacking of the composite BLV metric, and latency or accuracy degradation on weaker mobile hardware than the tested device.",
+  "rationale": "The recipe fits constrained infrastructure since it post-trains an existing small open model instead of training from scratch, but its multi-stage RL pipeline and domain-specific reward require validation on the reader's own workload before production adoption.",
+  "technique": "BLV-focused post-training: distillation plus GRPO on small VLM",
+  "family": "destilacao",
+  "recommendation": "testar",
+  "published": "2026-09-23",
+  "as_of": "2026-09-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.28757",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 125,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces reliance on large cloud-hosted VLMs for accessibility-grade scene description by post-training a 500M decoder VLM with teacher-student distillation, GRPO with a composite spatial/hazard reward, and a final lightweight finetune to repair forgetting. Costs a multi-stage post-training pipeline (distillation data, RL reward design, an extra recovery finetune, mixed-precision quantization) plus benchmark validation, rather than foundation-model training compute. Can fail through catastrophic forgetting between stages, reward hacking of the composite BLV metric, and latency or accuracy degradation on weaker mobile hardware than the tested device.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28757",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Versus the baseline 500M model: +101.5% on OCR-Bench, +44.2% TextVQA accuracy, +19.3% Spatial and +14.8% Social scores on BLV captioning; ~450 MB quantized model running offline on a mid-range Android phone.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28757",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

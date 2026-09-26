@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A multi-step product task fails because the agent loses track of dependencies.",
+    "change": "Try the proposed planning step on tasks with checkable intermediate outcomes.",
+    "baseline": "The same agent solving the same tasks without the new planning step.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task completion, unnecessary steps, planning tokens, response time, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.29444",
+  "title": "IterSynth: Rethinking Deep Search Agents via Role-Decoupled Iterative Synthesis",
+  "summary": "Replaces single-policy ReAct-style agents, where one model interleaves planning, evidence handling, and synthesis over an accumulating context, with an alternating Planner and Synthesizer that maintain a compact evolving summary as the persistent search state. As a prompting paradigm it costs additional LLM calls per turn (planner plus synthesizer) and requires summarization logic; the trained variant requires RL (RDPO) with rubric-based turn-level rewards, which is a non-trivial training pipeline. It can fail through summary drift, where early synthesis errors or omitted evidence persist in the summary state and misdirect subsequent planning, and gains on proprietary models are asserted without quantified margins in the abstract.",
+  "rationale": "The prompting variant is deployable on third-party APIs without training and may improve deep-search quality over ReAct, but its unquantified proprietary-model gains and added per-turn cost warrant workload-specific validation before production adoption.",
+  "technique": "Role-decoupled planner-synthesizer iterative search",
+  "family": "planejamento_e_decomposicao",
+  "recommendation": "testar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.29444",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 137,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces single-policy ReAct-style agents, where one model interleaves planning, evidence handling, and synthesis over an accumulating context, with an alternating Planner and Synthesizer that maintain a compact evolving summary as the persistent search state. As a prompting paradigm it costs additional LLM calls per turn (planner plus synthesizer) and requires summarization logic; the trained variant requires RL (RDPO) with rubric-based turn-level rewards, which is a non-trivial training pipeline. It can fail through summary drift, where early synthesis errors or omitted evidence persist in the summary state and misdirect subsequent planning, and gains on proprietary models are asserted without quantified margins in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29444",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "IterSynth-8B averages 50.7 across five deep-search benchmarks, +4.2% over the strongest prior <=8B agent; zero-shot prompting gains over ReAct on frontier proprietary models are reported but not quantified in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29444",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

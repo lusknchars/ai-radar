@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.29051",
+  "title": "From Self-Distillation to Self-Practice: Privileged Information for Multi-Turn Agents",
+  "summary": "PSP replaces on-policy self-distillation, in which token-level supervision from a privileged-information teacher causes the student to act confidently without the underlying information, with a sampler-side intervention: an analyzer model writes a short per-task instruction when rollouts mostly fail, the task is resampled with that instruction in context, and training proceeds with an unchanged GRPO objective. The cost is an additional analyzer model and a second sampling pass per failing task, plus the existing infrastructure for GRPO-based RL post-training on multi-turn agent benchmarks. It can fail if the analyzer's instructions are inaccurate or unhelpful, if the workload lacks a clear failure signal to trigger instruction injection, or if the team's pipeline cannot support on-policy RL rollouts within a 24 GB GPU budget without API-based student models.",
+  "rationale": "The method targets a real failure mode of self-distillation and plugs into an existing GRPO loop at modest extra cost, but its benefits are demonstrated only on specific agentic benchmarks, so a constrained team should validate it on their own task distribution before adopting it as default practice.",
+  "technique": "Privileged Self-Practice: PI in sampler, not loss",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.29051",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 135,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "PSP replaces on-policy self-distillation, in which token-level supervision from a privileged-information teacher causes the student to act confidently without the underlying information, with a sampler-side intervention: an analyzer model writes a short per-task instruction when rollouts mostly fail, the task is resampled with that instruction in context, and training proceeds with an unchanged GRPO objective. The cost is an additional analyzer model and a second sampling pass per failing task, plus the existing infrastructure for GRPO-based RL post-training on multi-turn agent benchmarks. It can fail if the analyzer's instructions are inaccurate or unhelpful, if the workload lacks a clear failure signal to trigger instruction injection, or if the team's pipeline cannot support on-policy RL rollouts within a 24 GB GPU budget without API-based student models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29051",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 65% improvement in task-goal completion on AppWorld and up to 61% improvement in resolved rate on SWE-bench Verified over baselines, consistently outperforming plain GRPO across three student models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29051",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

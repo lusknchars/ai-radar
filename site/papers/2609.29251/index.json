@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.29251",
+  "title": "Policy as Code: A Coroutine-Bridge Harness for Fast-Reasoning Reliability on CAR-bench",
+  "summary": "It replaces the conventional next-action agent loop, in which each round of tool results costs one model call, with a harness where the model emits a Python program that blocks and resumes in place across tool exchanges, collapsing multi-turn tasks to a median of two model calls and letting deterministic policies live as code rather than prompt rules. Costs are primarily engineering complexity: a coroutine bridge between model output and the tool executor, sandboxing of model-generated code, and reliance on a static byte-identical prompt whose cache benefits evaporate if the prompt is edited. Failures after adoption include incorrect or unsafe model-generated code executing in the tool layer, tasks that do not decompose into a single blocking program, and reduced effectiveness on models too weak to write correct multi-step control flow in one shot.",
+  "rationale": "The design requires no training or extra hardware, works through third-party APIs including fast inference providers, and directly reduces model-call count, latency, and cached input cost on tool-using workloads.",
+  "technique": "Code-emitting coroutine agent harness",
+  "family": "uso_de_ferramenta",
+  "recommendation": "adotar",
+  "published": "2026-09-24",
+  "as_of": "2026-09-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.29251",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 125,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces the conventional next-action agent loop, in which each round of tool results costs one model call, with a harness where the model emits a Python program that blocks and resumes in place across tool exchanges, collapsing multi-turn tasks to a median of two model calls and letting deterministic policies live as code rather than prompt rules. Costs are primarily engineering complexity: a coroutine bridge between model output and the tool executor, sandboxing of model-generated code, and reliance on a static byte-identical prompt whose cache benefits evaporate if the prompt is edited. Failures after adoption include incorrect or unsafe model-generated code executing in the tool layer, tasks that do not decompose into a single blocking program, and reduced effectiveness on models too weak to write correct multi-step control flow in one shot.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29251",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "60.0% Pass^3 on the hidden CAR-bench evaluation, 4.5x the organizer baseline, at the lowest estimated cost and fastest median task latency (3.14 s) of any entry above that baseline.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.29251",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

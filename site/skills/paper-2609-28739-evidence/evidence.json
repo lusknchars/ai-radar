@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.28739",
+  "title": "Temporal Taxation Compounds Under Post-Training Compression of Whisper Models",
+  "summary": "This replaces the common practice of auditing ASR fairness only at full precision with a requirement to re-audit the exact compressed artifact (pruned, quantized, or distilled) that will ship. The cost is additional evaluation compute on demographic-sliced benchmarks such as Fair-Speech, Common Voice, and AfriSpeech-200, plus potential rollback of a compression choice; no extra training infrastructure is needed. Failure modes include deploying 50% Wanda pruning or INT4 quantization that sharply widens error gaps for Black/AA and West African speakers, relying on beam search as a fix when it only partly mitigates the gap, and assuming distillation is universally safe when exceptions concentrate on specific teacher-student pairs.",
+  "rationale": "The reader can run these audits on a single 24 GB GPU at negligible cost, and the paper shows compression choices already plausible in their stack can silently concentrate transcription burden on specific demographic groups, so workload-specific validation before deployment is warranted.",
+  "technique": "Fairness re-auditing of compressed ASR models",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-09-23",
+  "as_of": "2026-09-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.28739",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces the common practice of auditing ASR fairness only at full precision with a requirement to re-audit the exact compressed artifact (pruned, quantized, or distilled) that will ship. The cost is additional evaluation compute on demographic-sliced benchmarks such as Fair-Speech, Common Voice, and AfriSpeech-200, plus potential rollback of a compression choice; no extra training infrastructure is needed. Failure modes include deploying 50% Wanda pruning or INT4 quantization that sharply widens error gaps for Black/AA and West African speakers, relying on beam search as a fix when it only partly mitigates the gap, and assuming distillation is universally safe when exceptions concentrate on specific teacher-student pairs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28739",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "50% Wanda pruning of Whisper-large-v3 more than doubles the worst-vs-best demographic WER gap on Fair-Speech (+111% relative increase in correction time per minute of speech); INT4 HQQ quantization multiplies catastrophic transcript loops on West African accents by 5–7x; distillation narrows demographic gaps in 21 of 27 settings.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28739",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

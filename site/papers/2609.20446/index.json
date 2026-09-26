@@ -22,13 +22,13 @@
   "family": "agentes_de_codigo",
   "recommendation": "testar",
   "published": "2026-09-17",
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-26",
   "editorial_status": "indexed",
   "source_url": "https://arxiv.org/abs/2609.20446",
   "independent_implementations": 0,
-  "total_implementations": 0,
-  "stars": 0,
-  "citations": null,
+  "total_implementations": 1,
+  "stars": 6,
+  "citations": 0,
   "claims": [
     {
       "claim_id": "claim-01",
