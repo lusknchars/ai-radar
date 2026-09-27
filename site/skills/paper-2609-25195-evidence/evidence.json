@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.25195",
+  "title": "Qwen-Audio-Agent Technical Report",
+  "summary": "The method replaces a single-context voice agent that executes tool calls synchronously within the dialogue loop with a foreground-background split: a frontend agent handles conversation and simple direct calls while a backend agent executes delegated multi-step tasks under an orchestration runtime that tracks task state and decouples speech interruption from task cancellation. The cost is substantial architectural complexity: a persistent runtime for task state and authorization flows, adapters for frontend models, backend agents, and clients, plus memory and event infrastructure, all of which must be engineered and maintained rather than downloaded. What can fail is delegation-routing quality, since the reported gains depend on the frontend correctly choosing between direct and delegated execution, and the evidence base is a single small in-house benchmark with no public evaluation, so results may not transfer to other domains or models.",
+  "rationale": "The architecture is implementable with third-party APIs and a single GPU, but the claimed gains come only from a small proprietary benchmark, so the routing policy and runtime must be validated on the reader's own workload before production adoption.",
+  "technique": "Foreground-background voice agent with async task delegation",
+  "family": "orquestracao_multiagente",
+  "recommendation": "testar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.25195",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces a single-context voice agent that executes tool calls synchronously within the dialogue loop with a foreground-background split: a frontend agent handles conversation and simple direct calls while a backend agent executes delegated multi-step tasks under an orchestration runtime that tracks task state and decouples speech interruption from task cancellation. The cost is substantial architectural complexity: a persistent runtime for task state and authorization flows, adapters for frontend models, backend agents, and clients, plus memory and event infrastructure, all of which must be engineered and maintained rather than downloaded. What can fail is delegation-routing quality, since the reported gains depend on the frontend correctly choosing between direct and delegated execution, and the evidence base is a single small in-house benchmark with no public evaluation, so results may not transfer to other domains or models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25195",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On an in-house 134-case cockpit benchmark, mixed execution reaches 91.04% task success versus 72.39% (direct-only) and 80.60% (all-delegated), and reduces mean task execution latency by 26.73% and 30.91% relative to those baselines on matched successful turns.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25195",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

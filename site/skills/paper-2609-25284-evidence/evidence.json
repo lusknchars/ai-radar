@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A multi-step product task fails because the agent loses track of dependencies.",
+    "change": "Try the proposed planning step on tasks with checkable intermediate outcomes.",
+    "baseline": "The same agent solving the same tasks without the new planning step.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task completion, unnecessary steps, planning tokens, response time, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.25284",
+  "title": "When LLM Agents Fail to Read the Room: ReAdapt for Relational Social Reasoning",
+  "summary": "ReAdapt replaces the standard ReAct agent loop, in which observations inform the next action only implicitly, with an explicit structured social state (goal, belief, relationship, norm, disclosure) that is updated after each tool call and emits a policy operation (continue, switch, abandon, clarify) before action selection. It costs an extra typed state-update and policy-emission step per observation, adding prompt tokens and latency per step, plus the engineering complexity of maintaining and serializing the state schema. It can fail if the relational state is populated incorrectly or if the policy operations misfire, and the gains are demonstrated only on a synthetic benchmark with a single model, so transfer to real social data and other models is unverified.",
+  "rationale": "The technique is implementable with a single API model and adds only prompt-level state tracking, but its benefits are shown solely on one synthetic social-reasoning benchmark with one model, so the reader should validate it on their own agent workloads before adopting it.",
+  "technique": "Structured relational-state adaptation for ReAct agents",
+  "family": "planejamento_e_decomposicao",
+  "recommendation": "testar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.25284",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ReAdapt replaces the standard ReAct agent loop, in which observations inform the next action only implicitly, with an explicit structured social state (goal, belief, relationship, norm, disclosure) that is updated after each tool call and emits a policy operation (continue, switch, abandon, clarify) before action selection. It costs an extra typed state-update and policy-emission step per observation, adding prompt tokens and latency per step, plus the engineering complexity of maintaining and serializing the state schema. It can fail if the relational state is populated incorrectly or if the policy operations misfire, and the gains are demonstrated only on a synthetic benchmark with a single model, so transfer to real social data and other models is unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25284",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "With Gemini-3-Flash on n=150 queries per task, warm-introduction accuracy rises from 37% to 51% (+14 points) and reaction-selection accuracy from 69% to 77% (+8 points); oracle regret falls from 0.260 to 0.152 and 0.095 to 0.053.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.25284",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

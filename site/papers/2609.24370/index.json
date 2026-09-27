@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.24370",
+  "title": "Prescriptive SVD-Inspired Attention via Spectral Energy Retention",
+  "summary": "The method replaces the standard dense query-key score computation with an SVD-inspired learned diagonal spectrum, then prescribes pruning low-energy spectral directions in the attention-score pathway. The cost is a modified attention layer requiring training with the spectral parametrization plus a diagnosis-intervention-verification workflow, in exchange for only 2.6–4.3% parameter and 2.8–5.4% estimated MAC reductions. Evidence is limited to small vision benchmarks on modest models, so the accuracy neutrality may not transfer to large language models or other production workloads, and estimated MAC savings may not materialize as wall-clock latency without kernel support for the reduced score structure.",
+  "rationale": "The reported efficiency gains are marginal, validated only on small image-classification tasks, and the technique requires adopting a nonstandard attention layer, so it is not yet justified for production adoption on constrained infrastructure.",
+  "technique": "Spectral energy retention in SVD-inspired attention",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.24370",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces the standard dense query-key score computation with an SVD-inspired learned diagonal spectrum, then prescribes pruning low-energy spectral directions in the attention-score pathway. The cost is a modified attention layer requiring training with the spectral parametrization plus a diagnosis-intervention-verification workflow, in exchange for only 2.6–4.3% parameter and 2.8–5.4% estimated MAC reductions. Evidence is limited to small vision benchmarks on modest models, so the accuracy neutrality may not transfer to large language models or other production workloads, and estimated MAC savings may not materialize as wall-clock latency without kernel support for the reduced score structure.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24370",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "rho=0.90 retention removes 24.5–53.7% of attention-score directions, reduces parameters by 2.6–4.3% and estimated MACs by 2.8–5.4%, with paired mean accuracy change of -0.03 to +0.05 percentage points over three seeds on FashionMNIST, CIFAR-10, CIFAR-100, and Food-101.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24370",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

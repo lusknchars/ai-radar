@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.24298",
+  "title": "KV-COBRA: KV Cache Compression via Co-Optimized Bit-Rank Allocation",
+  "summary": "KV-COBRA replaces uniform rank and bit-width assignment across attention heads with a per-head allocator that balances low-rank truncation loss against scalar quantization loss and redistributes the bit budget across heads, aided by a Hadamard rotation and attention-KL-ordered SVD bases. It costs a one-time per-model calibration (SVD, head-wise distortion estimation, allocation solve) plus implementation complexity for mixed-rank, mixed-bit kernels; runtime overhead is stated as zero per token. It can fail if the distortion model mispredicts downstream task sensitivity, if the gains concentrate at extreme bit-rates the reader does not need, or if mixed per-head configurations lack efficient kernel support on a single 24 GB GPU.",
+  "rationale": "The method directly addresses KV-cache memory limits relevant to long-context inference on a single GPU, but it requires calibration and custom per-head rank/bit handling whose real benefit must be validated on the reader's specific models and workloads.",
+  "technique": "Per-head co-optimized rank and bit-width KV allocation",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-09-21",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.24298",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "KV-COBRA replaces uniform rank and bit-width assignment across attention heads with a per-head allocator that balances low-rank truncation loss against scalar quantization loss and redistributes the bit budget across heads, aided by a Hadamard rotation and attention-KL-ordered SVD bases. It costs a one-time per-model calibration (SVD, head-wise distortion estimation, allocation solve) plus implementation complexity for mixed-rank, mixed-bit kernels; runtime overhead is stated as zero per token. It can fail if the distortion model mispredicts downstream task sensitivity, if the gains concentrate at extreme bit-rates the reader does not need, or if mixed per-head configurations lack efficient kernel support on a single 24 GB GPU.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24298",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Smallest accuracy degradation among evaluated KV-compression methods at low bit-rates (0.5-4 bits per dimension) on perplexity, zero-shot, and long-context benchmarks, with no per-token overhead; no multiplicative factor reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.24298",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

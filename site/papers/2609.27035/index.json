@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.27035",
+  "title": "Reinforcement Learning with Decomposed Subtasks",
+  "summary": "RLDS replaces the single scalar trajectory advantage in GRPO with Subtask-Decomposed Advantage Estimation: trajectory reward is split into per-subtask shares on a fixed taxonomy, group-relative advantages are computed per subtask, and per-token credit is concentrated near reflection steps marking consequential subtask execution. The cost is a fixed reflect-and-grade overhead per rollout and the need to define a subtask taxonomy plus reflection instrumentation, which long rollouts can amortize but short ones may not. It can fail when the task's subtasks are homogeneous or diagnostics predict low heterogeneity, as on HotpotQA and DeepResearch where gains were within noise, leaving only added complexity.",
+  "rationale": "The method is implementable at small scale on GRPO-style fine-tuning, but the paper itself shows gains only on high-heterogeneity tasks, so the reader must validate heterogeneity on their own workload before adoption.",
+  "technique": "Subtask-decomposed advantage for GRPO (RLDS/SDAE)",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-22",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.27035",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RLDS replaces the single scalar trajectory advantage in GRPO with Subtask-Decomposed Advantage Estimation: trajectory reward is split into per-subtask shares on a fixed taxonomy, group-relative advantages are computed per subtask, and per-token credit is concentrated near reflection steps marking consequential subtask execution. The cost is a fixed reflect-and-grade overhead per rollout and the need to define a subtask taxonomy plus reflection instrumentation, which long rollouts can amortize but short ones may not. It can fail when the task's subtasks are homogeneous or diagnostics predict low heterogeneity, as on HotpotQA and DeepResearch where gains were within noise, leaving only added complexity.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27035",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On ScienceWorld +11.5 points (95% CI [+9.8, +13.3]) and FrozenLake +9.8 points ([+7.0, +12.8]) over scalar GRPO, with -10.9% wall-clock per step on ScienceWorld; gains within noise on HotpotQA and DeepResearch, so benefit is conditional on subtask heterogeneity.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.27035",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

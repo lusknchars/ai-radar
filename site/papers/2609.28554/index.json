@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A multi-step product task fails because the agent loses track of dependencies.",
+    "change": "Try the proposed planning step on tasks with checkable intermediate outcomes.",
+    "baseline": "The same agent solving the same tasks without the new planning step.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task completion, unnecessary steps, planning tokens, response time, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.28554",
+  "title": "Pistis Technical Report",
+  "summary": "The IDRL paradigm replaces isolated or static-joint distillation and reinforcement learning post-training with an interleaved loop, but reproducing it requires large-scale multimodal SFT plus RL infrastructure that exceeds a single 24 GB GPU and a limited cloud budget. The PAH component replaces manual agent-harness tuning with iterative automatic optimization of the inference scaffold, costing engineering complexity and added harness-evaluation cycles rather than model updates, and is the only part feasible for this reader to prototype. Harness-level optimization can overfit to the evaluation tasks it is iterated against, and IDRL results may not transfer to smaller or differently trained base models.",
+  "rationale": "The core contribution requires foundation-model post-training at 9B-27B scale that the reader cannot execute, while the harness-optimization idea, though adoptable in principle, is unquantified and should be validated before production reliance.",
+  "technique": "Interleaved Distillation-RL post-training with auto harness optimization",
+  "family": "planejamento_e_decomposicao",
+  "recommendation": "observar",
+  "published": "2026-09-23",
+  "as_of": "2026-09-27",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.28554",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The IDRL paradigm replaces isolated or static-joint distillation and reinforcement learning post-training with an interleaved loop, but reproducing it requires large-scale multimodal SFT plus RL infrastructure that exceeds a single 24 GB GPU and a limited cloud budget. The PAH component replaces manual agent-harness tuning with iterative automatic optimization of the inference scaffold, costing engineering complexity and added harness-evaluation cycles rather than model updates, and is the only part feasible for this reader to prototype. Harness-level optimization can overfit to the evaluation tasks it is iterated against, and IDRL results may not transfer to smaller or differently trained base models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.28554",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
