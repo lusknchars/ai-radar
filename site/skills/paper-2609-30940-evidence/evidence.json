@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.30940",
+  "title": "Financial Fragility in Societies of LLM Agents: Coordination Failures and Stabilizing Mechanisms",
+  "summary": "The paper contributes FRAIL, a controlled evaluation framework, rather than a production method: it replaces informal single-agent safety testing with multi-agent simulations of bank runs, debt rollover, and crowdfunding, and tests three stabilizing mechanisms (compensated commitments, centralized commitment agreements, participant-led coalitions). Adoption costs are API spend on multi-agent simulation episodes across seven models plus engineering effort to encode interaction mechanisms, with no reduction in production inference cost. Results are setting-specific: no mechanism dominates across financial structures, baseline failure rates of 77% (bank runs) and 83% (debt rollover) are environment artifacts rather than production guarantees, and findings from simulated LLM societies may not transfer to real deployments.",
+  "rationale": "This is a research evaluation framework whose value is diagnostic insight for teams deploying LLM agents in financial settings, not a technique that improves production speed, cost, or quality, so it warrants monitoring rather than adoption.",
+  "technique": "System-level financial safety evaluation for LLM agent societies",
+  "family": "orquestracao_multiagente",
+  "recommendation": "observar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.30940",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The paper contributes FRAIL, a controlled evaluation framework, rather than a production method: it replaces informal single-agent safety testing with multi-agent simulations of bank runs, debt rollover, and crowdfunding, and tests three stabilizing mechanisms (compensated commitments, centralized commitment agreements, participant-led coalitions). Adoption costs are API spend on multi-agent simulation episodes across seven models plus engineering effort to encode interaction mechanisms, with no reduction in production inference cost. Results are setting-specific: no mechanism dominates across financial structures, baseline failure rates of 77% (bank runs) and 83% (debt rollover) are environment artifacts rather than production guarantees, and findings from simulated LLM societies may not transfer to real deployments.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30940",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

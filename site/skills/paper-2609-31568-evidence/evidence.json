@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.31568",
+  "title": "DeepEdu-v1: Efficient and Scalable Agentic LLMs for Vietnamese Education",
+  "summary": "The method replaces per-sub-chunk token selection in long-context inference and gradient-based fine-tuning for domain adaptation with per-cluster selection plus a curated playbook accumulated from verified past interactions. It requires building and maintaining a custom inference path on top of vLLM and an agentic curation pipeline, adding engineering complexity and dependence on interaction logs whose quality determines playbook value. It can fail on short or atypical contexts where clustering assumptions break, on benchmarks outside the tested financial-reasoning and interactive-agent tracks, and if the playbook accumulates unverified or drifted local knowledge.",
+  "rationale": "The TTFT and KV-related gains target exactly the reader's consumer-GPU constraint, but the improvements are reported on specific long-context and agentic benchmarks, so the reader should validate them against their own tutoring or retrieval workloads before production adoption.",
+  "technique": "Cluster-granularity token selection with self-improving agentic playbook",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.31568",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces per-sub-chunk token selection in long-context inference and gradient-based fine-tuning for domain adaptation with per-cluster selection plus a curated playbook accumulated from verified past interactions. It requires building and maintaining a custom inference path on top of vLLM and an agentic curation pipeline, adding engineering complexity and dependence on interaction logs whose quality determines playbook value. It can fail on short or atypical contexts where clustering assumptions break, on benchmarks outside the tested financial-reasoning and interactive-agent tracks, and if the playbook accumulates unverified or drifted local knowledge.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31568",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Nearly 2x TTFT speedup over standard vLLM serving; 7.7x fewer retrieval calls than a selective-attention baseline with ~35% prefill latency reduction; agentic accuracy rises from 70.0% to 79.5%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31568",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

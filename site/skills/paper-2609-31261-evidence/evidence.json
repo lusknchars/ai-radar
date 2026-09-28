@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.31261",
+  "title": "MoSAR: Mixture of Semantic Attention Regimes for Learning Adaptive and Approximable Attention Geometries",
+  "summary": "MoSAR replaces fixed positional attention biases (RoPE, ALiBi, or hand-designed sparse patterns) with input-conditioned routers that learn a mixture of short, medium, and global decay regimes after positional encoding. It must be learned during pretraining, so adopting it costs a full training run and adds router parameters and routing complexity per layer, with the promised inference savings depending on discretizing the learned geometry into top-1 routing. It can fail if the learned low-reach geometry does not transfer to tasks requiring genuine long-range retrieval, and the 500M-scale evidence may not predict behavior at production model sizes.",
+  "rationale": "The method requires training a model from scratch to learn the attention geometry, which exceeds the reader's no-foundation-model-training constraint, so it is worth monitoring until pretrained checkpoints or fine-tuning-compatible variants exist.",
+  "technique": "Learned mixture of attention decay regimes (MoSAR)",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.31261",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MoSAR replaces fixed positional attention biases (RoPE, ALiBi, or hand-designed sparse patterns) with input-conditioned routers that learn a mixture of short, medium, and global decay regimes after positional encoding. It must be learned during pretraining, so adopting it costs a full training run and adds router parameters and routing complexity per layer, with the promised inference savings depending on discretizing the learned geometry into top-1 routing. It can fail if the learned low-reach geometry does not transfer to tasks requiring genuine long-range retrieval, and the 500M-scale evidence may not predict behavior at production model sizes.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31261",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "In matched 500M-parameter pretraining, MoSAR improves perplexity over dense RoPE at the training context length and achieves the best extrapolation perplexity among evaluated variants, including ALiBi; the learned geometry remains stable under top-1 discretization. No multiplicative factor is reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31261",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

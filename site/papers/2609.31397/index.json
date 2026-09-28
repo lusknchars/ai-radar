@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.31397",
+  "title": "Intent2Tc: Automated Intent-to-Traffic Control Translation with Language Models",
+  "summary": "The method replaces manual translation of business-level QoS intents into Linux tc configurations, using a closed-loop LLM pipeline with an AQM digital twin, critique-driven refinement, and RAG-based knowledge reuse. Costs include building and maintaining the digital-twin semantic model, metadata extraction, and retrieval infrastructure, plus per-intent LLM inference, though RAG reduces token consumption and lets compact models such as Phi-4-mini run on constrained hardware. Failures can include semantically plausible but incorrect tc rules passing validation, digital-twin model mismatch with real link behavior, retrieval of stale or wrong prior configurations, and degradation on intents outside the evaluated traffic-shaping distribution.",
+  "rationale": "The pipeline runs with API models or small local models and shows a plausible path to automating tc generation, but the reader must validate correctness and safety of generated network configurations on their own intents and infrastructure before production use.",
+  "technique": "LLM-driven intent-to-tc translation with RAG and digital twin",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.31397",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces manual translation of business-level QoS intents into Linux tc configurations, using a closed-loop LLM pipeline with an AQM digital twin, critique-driven refinement, and RAG-based knowledge reuse. Costs include building and maintaining the digital-twin semantic model, metadata extraction, and retrieval infrastructure, plus per-intent LLM inference, though RAG reduces token consumption and lets compact models such as Phi-4-mini run on constrained hardware. Failures can include semantically plausible but incorrect tc rules passing validation, digital-twin model mismatch with real link behavior, retrieval of stale or wrong prior configurations, and degradation on intents outside the evaluated traffic-shaping distribution.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31397",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On 100 RFC 9315 traffic-shaping intents, Claude Sonnet-4.6 reaches 0.98 semantic similarity, 1.0 semantic unit coverage, and 0.045 normalized edit distance; RAG reduces token consumption and latency and lets Phi-4-mini approach larger-model performance, with no multiplicative factor stated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31397",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

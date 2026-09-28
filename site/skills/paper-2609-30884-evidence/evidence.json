@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.30884",
+  "title": "CacheReforge: Bounded Recovery for Stale KV Caches under Evolving Adapters",
+  "summary": "CacheReforge replaces the binary choice between reusing stale KV caches after a LoRA adapter update (which distorts outputs) and recomputing the full affected suffix, by treating caches as layerwise mixed-version objects and selecting per-layer reuse, bounded recomputation, or full suffix recovery via sensitivity calibration and drift tracking. It costs additional bookkeeping: per-layer adapter anchors, calibrated sensitivity scores, accumulated drift state, and executable restart boundaries must be maintained and computed, and a small fraction of layers (5.44% in the reported setting) is still recomputed. It can fail when cumulative tail influence is underestimated, causing bounded recovery to stop short of the true functional recomputation horizon and silently degrade fidelity, and its calibration may not transfer to other model families, adapters, or update schedules.",
+  "rationale": "The technique is directly implementable on a single GPU serving adapter-based models, but its benefit only materializes if the reader's production workload involves frequently updated adapters over long cached contexts, so workload-specific validation is required before adoption.",
+  "technique": "Version-aware bounded recovery of stale KV caches",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.30884",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "CacheReforge replaces the binary choice between reusing stale KV caches after a LoRA adapter update (which distorts outputs) and recomputing the full affected suffix, by treating caches as layerwise mixed-version objects and selecting per-layer reuse, bounded recomputation, or full suffix recovery via sensitivity calibration and drift tracking. It costs additional bookkeeping: per-layer adapter anchors, calibrated sensitivity scores, accumulated drift state, and executable restart boundaries must be maintained and computed, and a small fraction of layers (5.44% in the reported setting) is still recomputed. It can fail when cumulative tail influence is underestimated, causing bounded recovery to stop short of the true functional recomputation horizon and silently degrade fidelity, and its calibration may not transfer to other model families, adapters, or update schedules.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30884",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces mean KL divergence by 92.4% relative to stale cache reuse while recomputing only 5.44% of layers and cutting cache-maintenance time by 93.2% relative to fresh full prefill, on Qwen2.5-1.5B/7B with continual LoRA updates and 16K-context HotpotQA/2WikiMQA workloads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.30884",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

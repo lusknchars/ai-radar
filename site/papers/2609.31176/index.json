@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.31176",
+  "title": "Semantic Navigation for Issue Localization in Code Repository",
+  "summary": "SemNav replaces ad-hoc agent search over raw source—where the agent manually resolves references, re-reads entire files, and revises candidates without recorded evidence—with deterministic retrieval seeding, language-server-resolved navigation, issue-conditioned semantic summaries, and a persistent evidence-tracking workspace. Costs include standing up a language server per repository, building and maintaining the semantic graph and card generation pipeline, and additional LLM calls for card creation and workspace updates, all adding engineering complexity beyond a plain tool-calling loop. It can fail when language-server resolution is incomplete (dynamic dispatch, macros, cross-language code), when semantic cards mischaracterize entity relevance and bias pruning, and its small-model gains may not transfer to larger proprietary models already strong at localization.",
+  "rationale": "The approach targets exactly the reader's setting (small models via local GPU or API, no training) and shows its largest gains with a 4B model, but the reported improvements require validating the indexing and card-generation pipeline on the reader's own repositories and languages before production adoption.",
+  "technique": "Semantic navigation graph for repository issue localization",
+  "family": "agentes_de_codigo",
+  "recommendation": "testar",
+  "published": "2026-09-25",
+  "as_of": "2026-09-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.31176",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SemNav replaces ad-hoc agent search over raw source—where the agent manually resolves references, re-reads entire files, and revises candidates without recorded evidence—with deterministic retrieval seeding, language-server-resolved navigation, issue-conditioned semantic summaries, and a persistent evidence-tracking workspace. Costs include standing up a language server per repository, building and maintaining the semantic graph and card generation pipeline, and additional LLM calls for card creation and workspace updates, all adding engineering complexity beyond a plain tool-calling loop. It can fail when language-server resolution is incomplete (dynamic dispatch, macros, cross-language code), when semantic cards mischaracterize entity relevance and bias pruning, and its small-model gains may not transfer to larger proprietary models already strong at localization.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31176",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "File Hit@10 improves from 68.33% to 82.67% with Gemma 4B on SWE-bench Lite/PLocBench; Semantic Cards cut working-context load by 48.2% versus full-source reading; downstream issue resolution rises from 44.00% to 52.33%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.31176",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
