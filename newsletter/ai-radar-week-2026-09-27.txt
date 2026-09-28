@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-09-27
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-09-21 to 2026-09-27
+
+EAServe: Encode-Aware Disaggregated Serving for Multimodal Large Language Models
+EAServe replaces naive disaggregated Encode-Prefill-Decode serving (or monolithic MLLM serving in vLLM/Dynamo) by treating the Encode stage as the control point for request admission, prefill placement, and GPU sharing, with micro-batching, partial prefill offload onto the encode GPU, and dynamic SM partitioning plus a TPE-based configuration search. The cost is substantial engineering complexity: it requires a multi-GPU disaggregated deployment, per-stage capacity profiling, SM-level partitioning support, and a Bayesian auto-selection layer, none of which maps onto a single 24 GB GPU or API-only setup. It can fail when workload modality mix or load shifts invalidate the profiled configuration, when SM co-location introduces interference that violates SLOs, or when the operator lacks the multi-GPU infrastructure the method presupposes.
+The technique is a multi-GPU serving-systems optimization whose entire premise (disaggregated EPD pools and SM co-location) is inapplicable to a single-GPU or API-based production setup, so the reader should track it only for future scaling.
+Builder's cut (area guidance)
+It may fit when: Your inference service slows down when several customers send requests together.
+First move: Replay a recorded request trace with only the proposed serving policy changed.
+Measure: Requests meeting your latency target, throughput, failures, and cost per successful request.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.31551/
+https://arxiv.org/abs/2609.31551
+
+AgentWorld: Benchmarking Long-Horizon Collaboration of Multi-agent LLMs
+AgentWorld replaces short-horizon, competitive, or single-agent benchmarks with 100 human-annotated MMORPG tasks requiring 3-20 agents over 50+ interaction rounds, plus a Causal Collaboration Effectiveness metric that attributes outcomes to individual agent actions. It costs nothing in model deployment but requires standing up the sandbox environment and running many API calls per task, which strains a limited cloud budget for routine evaluation. It can fail as a production decision tool because MMORPG task performance may not transfer to the reader's actual domain, and the benchmark itself shows frontier models solve only 52.0% of tasks, so low scores may reflect environment difficulty rather than actionable signal about a specific deployment.
+This is an evaluation benchmark rather than a production technique, so it is relevant context for assessing multi-agent systems but not something to adopt or test against constrained-infrastructure workloads.
+Builder's cut (area guidance)
+It may fit when: An agent looks good in demos, but you cannot tell which product tasks it fails.
+First move: Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.
+Measure: Agreement with human review, missed failures, false alarms, and evaluation cost per task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.31590/
+https://arxiv.org/abs/2609.31590
+
+AgentRecommender: LLM Agents Enable Customizable Recommender Systems on the User Side
+The method replaces conventionally trained, platform-side recommender models (which require user interaction data and platform cooperation) with an LLM agent that uses its internal knowledge and investigation capability to build a personalized, user-side recommender without additional training data. The cost is recurring LLM inference, likely via paid third-party APIs given the reader's constraints, plus prompt and orchestration engineering, with latency per recommendation far above a served classical ranker. It can fail through hallucinated or stale item knowledge, inconsistent personalization quality across users, uncontrolled API costs at scale, and dependence on the agent's ability to access and browse candidate content, which platforms may restrict.
+The abstract reports no quantified evaluation and the approach is an application pattern rather than an efficiency technique, so it is worth tracking but not yet validated for production adoption.
+Builder's cut (area guidance)
+It may fit when: Start with one repeated product task that has a measurable failure or cost.
+First move: Read the methods and identify one change you can isolate in that workflow.
+Measure: Successful outcomes, response time, human rework, and total cost per successful task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.31166/
+https://arxiv.org/abs/2609.31166
+
+Towards Mitigating Fabricated Consensus: The Active Provenance Gate for Multi-Agent Debate Synthesis
+The APG replaces uncontrolled post-debate summarization in multi-agent debate pipelines with a verification layer that audits each claim against the debate log, self-corrects, blocks unsupported claims, and emits divergence reports instead of fabricated consensus. It costs an extra verification and self-correction pass over the debate logs, adding latency, API or compute spend per synthesis, and implementation complexity for claim-level grounding checks. It can fail if the auditing model misjudges provenance, either blocking legitimate consensus or passing subtly unsupported claims, and the evidence comes from crisis simulations whose transfer to the reader's domain is unproven.
+The method is implementable on constrained infrastructure as an additional LLM verification stage, but its fidelity gains are demonstrated only in crisis simulations, so workload-specific validation is required before production adoption.
+Builder's cut (area guidance)
+It may fit when: A workflow needs specialist review, but extra agents may add more cost than useful work.
+First move: Test the proposed division of work against a single-agent implementation.
+Measure: Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.31422/
+https://arxiv.org/abs/2609.31422
+
+Prompt Injection Detection for Email Agents Through Attack Chain Modeling
+The framework replaces single-stage binary malicious-text classification with a multi-component pipeline: a text detector, per-stage verifiers, rule-based risk signals, user-intent/action consistency checks, and a logistic decision policy. It costs training data with derived attack-chain labels (including hard benign examples), integration of several verification stages into the agent's tool-use path, and added latency per screened email. It can fail under distribution shift (the paper shows random splits substantially overestimate robustness), early attack stages are less predictable than tool-argument stages, and the absolute F1 of 0.406 under the strict policy leaves both missed attacks and false alarms in deployment.
+The staged consistency checks and hard-benign training are implementable on constrained infrastructure and address a real production risk for email agents, but the modest absolute F1 and demonstrated transfer degradation require workload-specific validation before adoption.
+Builder's cut (area guidance)
+It may fit when: An agent reads external documents or tool responses that may contain malicious instructions.
+First move: Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.
+Measure: Successful attacks missed, legitimate actions blocked, detection delay, and review cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2609.30657/
+https://arxiv.org/abs/2609.30657
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
