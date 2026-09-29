@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35188",
+  "title": "Beneath the Tokens: A Performance Engineering Study of Multi-Token Prediction in GPU-Accelerated LLM Inference",
+  "summary": "The method replaces single-token autoregressive decoding with a two-token multi-token prediction step whose proposals are verified by the target model, amortizing GPU executions (56.4-78.1% fewer CUDA Graph replays per token) at the cost of a longer per-iteration execution path with additional proposal, sampling, gather, and reduction kernels. The dominant MTP GEMM kernel is not faster than the autoregressive GEMV and both approach the A10G memory-bandwidth limit, so the gain comes purely from fewer sequential model invocations. Adoption can fail if acceptance rates drop on the production workload, if the deployed model lacks a trained MTP head, or under concurrent-request batching, which the single-request benchmark does not evaluate.",
+  "rationale": "The speedup is demonstrated on hardware comparable to the reader's 24 GB GPU, but it was measured only in single-request settings and requires a model with an MTP head, so workload-specific validation is needed before production adoption.",
+  "technique": "Two-token multi-token prediction (MTP) decoding",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35188",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces single-token autoregressive decoding with a two-token multi-token prediction step whose proposals are verified by the target model, amortizing GPU executions (56.4-78.1% fewer CUDA Graph replays per token) at the cost of a longer per-iteration execution path with additional proposal, sampling, gather, and reduction kernels. The dominant MTP GEMM kernel is not faster than the autoregressive GEMV and both approach the A10G memory-bandwidth limit, so the gain comes purely from fewer sequential model invocations. Adoption can fail if acceptance rates drop on the production workload, if the deployed model lacks a trained MTP head, or under concurrent-request batching, which the single-request benchmark does not evaluate.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35188",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "1.91x to 2.19x output throughput across prompts and 10.0-14.2% lower time to first output versus autoregressive decoding on a single A10G, with median acceptance length of 2.370-2.595 tokens per verification iteration.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35188",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

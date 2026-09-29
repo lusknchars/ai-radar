@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35628",
+  "title": "Arbitrary-Accuracy Neural Approximation with Optimal Neuron Count and Near-Optimal Bit Complexity",
+  "summary": "This is an approximation-theory result, not an inference method: it replaces nothing in production, but theoretically replaces large trained networks with closed-form constructions of d+1 hidden neurons using a custom activation combining floor and exponential functions plus explicit grid addressing. The cost is that the construction encodes quantized function values as weights rather than learning them, requires a nonstandard fixed activation unavailable in mainstream frameworks, and its uniform-norm guarantees say nothing about trainability, gradient behavior, or generalization from data. It can fail in practice because the exponentially large weight encodings (O(ε^{-d/α}) grid cells) suffer from curse-of-dimensionality storage and numerical precision limits, making the networks unrealizable at useful accuracies on a 24 GB GPU.",
+  "rationale": "The paper establishes theoretical lower bounds on network size and encoding complexity but offers no trainable, framework-compatible method that a constrained-infrastructure engineer could deploy or benchmark against standard models.",
+  "technique": "Minimal-neuron universal approximation via exotic activation",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35628",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is an approximation-theory result, not an inference method: it replaces nothing in production, but theoretically replaces large trained networks with closed-form constructions of d+1 hidden neurons using a custom activation combining floor and exponential functions plus explicit grid addressing. The cost is that the construction encodes quantized function values as weights rather than learning them, requires a nonstandard fixed activation unavailable in mainstream frameworks, and its uniform-norm guarantees say nothing about trainability, gradient behavior, or generalization from data. It can fail in practice because the exponentially large weight encodings (O(ε^{-d/α}) grid cells) suffer from curse-of-dimensionality storage and numerical precision limits, making the networks unrealizable at useful accuracies on a 24 GB GPU.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35628",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Proves d+1 hidden neurons is the exact minimum for arbitrary-accuracy approximation of multivariate Hölder functions, with bit complexity O(ε^{-d/α} log(1/ε)) matching the metric-entropy lower bound up to a logarithmic factor.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35628",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

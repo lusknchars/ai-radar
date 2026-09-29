@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35232",
+  "title": "Beyond Selection: Token Parameterization for Extreme Visual Token Compression",
+  "summary": "Braco replaces token pruning and learned resamplers for visual-token compression with a lightweight coder combining transform-basis truncation, fixed basis-coordinate embeddings, budget-dependent orthogonal re-parameterization, and pooled spatial residual tokens. Cost is integration and retraining or adaptation of the VLM pipeline around the coder, plus an accuracy-efficiency trade-off that the paper reports as favorable only down to roughly 23x-64x compression. It can fail on tasks requiring fine-grained visual grounding (OCR, dense captioning, small-object detection) where extreme token budgets destroy spatial detail, and the claimed frontier may not transfer to backbones or benchmarks outside those evaluated.",
+  "rationale": "The method is lightweight and directly relevant to single-GPU VLM deployment, but its accuracy claims are paper-reported and workload-dependent, so the reader should validate it on their own vision-language tasks before production adoption.",
+  "technique": "Token parameterization for visual-token compression (Braco)",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35232",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Braco replaces token pruning and learned resamplers for visual-token compression with a lightweight coder combining transform-basis truncation, fixed basis-coordinate embeddings, budget-dependent orthogonal re-parameterization, and pooled spatial residual tokens. Cost is integration and retraining or adaptation of the VLM pipeline around the coder, plus an accuracy-efficiency trade-off that the paper reports as favorable only down to roughly 23x-64x compression. It can fail on tasks requiring fine-grained visual grounding (OCR, dense captioning, small-object detection) where extreme token budgets destroy spatial detail, and the claimed frontier may not transfer to backbones or benchmarks outside those evaluated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35232",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to ~36% end-to-end speedup with matched or improved accuracy at 23x-64x compression; 95.2% of uncompressed accuracy at 144x while cutting prefill FLOPs by 84.2%-86.7%, with 16.6x/78.8x lower compressor latency/FLOPs than prior methods.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35232",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

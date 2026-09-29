@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35465",
+  "title": "Tetra: Serving Leech-Lattice Quantized LLMs at 2.7 Bits per Parameter",
+  "summary": "Tetra replaces conventional 2-bit codebook lookup or load-time code expansion with a Golay-code trellis codebook decoded inside the matvec kernel via six table loads, enabling roughly 2.7-bit end-to-end model storage on a single 24 GB GPU. It costs a retraining pass of one scale per matrix row, 4-bit storage for the most quantization-sensitive matrices and embeddings, a custom serving engine, and measurable quality loss (up to 9.6 GSM8K points at 4B versus FP16). It can fail through engine immaturity or limited model coverage, through workloads (reasoning, code, long context) where the accuracy gap at sub-3-bit widths is larger than on the reported benchmarks, and through speed regressions relative to mature 4-bit runtimes, since its 57-114 tok/s figures come only from the authors' engine on an L40S.",
+  "rationale": "The 2x memory reduction over 4-bit AWQ directly fits a single 24 GB GPU, but the nontrivial quality degradation and dependence on a bespoke engine require validation on the reader's own tasks before production adoption.",
+  "technique": "Leech-lattice trellis quantization with in-kernel decoding",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35465",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Tetra replaces conventional 2-bit codebook lookup or load-time code expansion with a Golay-code trellis codebook decoded inside the matvec kernel via six table loads, enabling roughly 2.7-bit end-to-end model storage on a single 24 GB GPU. It costs a retraining pass of one scale per matrix row, 4-bit storage for the most quantization-sensitive matrices and embeddings, a custom serving engine, and measurable quality loss (up to 9.6 GSM8K points at 4B versus FP16). It can fail through engine immaturity or limited model coverage, through workloads (reasoning, code, long context) where the accuracy gap at sub-3-bit widths is larger than on the reported benchmarks, and through speed regressions relative to mature 4-bit runtimes, since its 57-114 tok/s figures come only from the authors' engine on an L40S.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35465",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Whole-model files at 2.70-2.73 bits per parameter versus 4-bit AWQ at 5.3-6.0 bits per parameter (roughly 2x smaller), with MMLU scores 2.46-4.76 points below AWQ and GSM8K losses of 3.26-9.63 points versus FP16; at 4B, MMLU is 23.6 points above llama.cpp's IQ2_XXS at 2.48 bits.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35465",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

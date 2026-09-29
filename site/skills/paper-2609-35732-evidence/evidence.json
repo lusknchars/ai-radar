@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35732",
+  "title": "Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models",
+  "summary": "The technique replaces free-form agent responses after a tool failure with a structured output contract requiring the agent to cite the evidence (or its absence) justifying any success claim. It costs only a prompt-level change plus constrained-output enforcement, with no extra model calls, training, or infrastructure, though results derive from a controlled benchmark rather than live environments. It can fail when tasks are not truly blocked and the contract forces overly rigid reporting, when models satisfy the schema superficially without grounding claims in actual observations, and when gains measured on 100 deterministic tasks do not transfer to dynamic production settings.",
+  "rationale": "It is a zero-infrastructure prompt and output-schema change that the paper associates with a large reduction in unsupported success claims, making it directly adoptable for any tool-using agent in production.",
+  "technique": "Structured evidence contract for post-failure reporting",
+  "family": "uso_de_ferramenta",
+  "recommendation": "adotar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35732",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The technique replaces free-form agent responses after a tool failure with a structured output contract requiring the agent to cite the evidence (or its absence) justifying any success claim. It costs only a prompt-level change plus constrained-output enforcement, with no extra model calls, training, or infrastructure, though results derive from a controlled benchmark rather than live environments. It can fail when tasks are not truly blocked and the contract forces overly rigid reporting, when models satisfy the schema superficially without grounding claims in actual observations, and when gains measured on 100 deterministic tasks do not transfer to dynamic production settings.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35732",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "In a blocked-task benchmark, an evidence-contract policy reduces false-success claims from 22.8% (baseline) to 0.8%, fabricated details from 28.3% to 0.8%, and raises useful responses from 74.9% to 98.8%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35732",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

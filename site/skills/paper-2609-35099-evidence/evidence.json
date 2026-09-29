@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35099",
+  "title": "E3J: An Efficient and Open-Source Backend for Euclidean Equivariant Operations on GPU and TPU",
+  "summary": "E3J replaces e3nn-jax or the proprietary cuEquivariance backend for E(3)-equivariant tensor products and message passing in JAX-based geometric deep learning, such as MACE interatomic potentials. It costs migration of the equivariant operations layer to the e3j API and ties the stack to JAX plus its CUDA/Pallas kernels, with no reported accuracy or memory penalty. It can fail if the workload is not equivariant (making it irrelevant), if the team's models are PyTorch-based, or if kernel coverage lags for less common irreps layouts outside the benchmarked operations.",
+  "rationale": "For the subset of constrained-infrastructure teams running JAX equivariant models (e.g., MLIPs) on a single GPU, it is an open-source drop-in backend with credible speedups, but adoption is only justified after validating it against the reader's specific operations and framework.",
+  "technique": "Open-source equivariant CUDA/Pallas kernel backend for JAX",
+  "family": "kernels_e_atencao",
+  "recommendation": "testar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35099",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "E3J replaces e3nn-jax or the proprietary cuEquivariance backend for E(3)-equivariant tensor products and message passing in JAX-based geometric deep learning, such as MACE interatomic potentials. It costs migration of the equivariant operations layer to the e3j API and ties the stack to JAX plus its CUDA/Pallas kernels, with no reported accuracy or memory penalty. It can fail if the workload is not equivariant (making it irrelevant), if the team's models are PyTorch-based, or if kernel coverage lags for less common irreps layouts outside the benchmarked operations.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35099",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 34% speed-up over cuEquivariance on MACE water box NPT simulation; over 80% of H100 peak memory bandwidth on tensor products; more than 2x forward throughput on message-passing convolutions versus prior backends; up to ~10x e3nn-jax on TPUv6e.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35099",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.35259",
+  "title": "On-Policy or Off-Policy Learning? A Systematic Study of Distillation Dynamics",
+  "summary": "This is not a new algorithm but a systematic comparison that replaces the default assumption that on-policy rollouts are inherently preferable for distillation; it shows token-level KL direction and learning rate, not rollout policy, are the dominant levers for performance, coverage, and forgetting. It costs no additional infrastructure beyond standard SFT/distillation on a single GPU, but requires deliberate selection of KL direction and learning rate rather than pipeline defaults. It can fail if reverse KL is paired with off-policy (teacher-generated) rollouts, which the paper shows is a substantially more sensitive combination, or if gains expected from on-policy data are assumed to survive later RLVR stages.",
+  "rationale": "For a constrained team doing distillation fine-tuning, the actionable finding is that cheap off-policy forward-KL distillation is robust and learning rate tuning matters more than expensive on-policy rollouts, but the recommendation to validate on their own tasks makes this a workload-specific test rather than blind adoption.",
+  "technique": "Controlled on/off-policy distillation via token-level KL",
+  "family": "destilacao",
+  "recommendation": "testar",
+  "published": "2026-09-28",
+  "as_of": "2026-09-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.35259",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is not a new algorithm but a systematic comparison that replaces the default assumption that on-policy rollouts are inherently preferable for distillation; it shows token-level KL direction and learning rate, not rollout policy, are the dominant levers for performance, coverage, and forgetting. It costs no additional infrastructure beyond standard SFT/distillation on a single GPU, but requires deliberate selection of KL direction and learning rate rather than pipeline defaults. It can fail if reverse KL is paired with off-policy (teacher-generated) rollouts, which the paper shows is a substantially more sensitive combination, or if gains expected from on-policy data are assumed to survive later RLVR stages.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35259",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Forward KL gives stable, strong task performance across rollout policies; on-policy data improves generalisation to harder Countdown variants under both KL directions, though the advantage does not reliably persist after subsequent RLVR.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.35259",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -4366,5 +4366,285 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-31600-evidence.zip",
     "source": "https://arxiv.org/abs/2609.31600"
+  },
+  {
+    "arxiv_id": "2609.35083",
+    "title": "Continuous Variational Synthesis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35083-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35083"
+  },
+  {
+    "arxiv_id": "2609.35099",
+    "title": "E3J: An Efficient and Open-Source Backend for Euclidean Equivariant Operations on GPU and TPU",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35099-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35099"
+  },
+  {
+    "arxiv_id": "2609.35139",
+    "title": "CacheRepair: Learning to Repair Cross-Chunk Context in RAG for KV Cache Fusion",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35139-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35139"
+  },
+  {
+    "arxiv_id": "2609.35188",
+    "title": "Beneath the Tokens: A Performance Engineering Study of Multi-Token Prediction in GPU-Accelerated LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35188-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35188"
+  },
+  {
+    "arxiv_id": "2609.35232",
+    "title": "Beyond Selection: Token Parameterization for Extreme Visual Token Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35232-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35232"
+  },
+  {
+    "arxiv_id": "2609.35259",
+    "title": "On-Policy or Off-Policy Learning? A Systematic Study of Distillation Dynamics",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35259-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35259"
+  },
+  {
+    "arxiv_id": "2609.35260",
+    "title": "Latency and accuracy tradeoffs in Spiking Neural Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35260-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35260"
+  },
+  {
+    "arxiv_id": "2609.35316",
+    "title": "Reliability Engineering for AI Systems: Challenges, Methods, and Directions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35316-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35316"
+  },
+  {
+    "arxiv_id": "2609.35328",
+    "title": "Hyper Algorithm Design Agent: Evolving Learnable Optimizer from Zero",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35328-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35328"
+  },
+  {
+    "arxiv_id": "2609.35336",
+    "title": "TMCS: Tool-Grounded Multi-Agent Reasoning for Compositional Chemical Problem Solving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35336-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35336"
+  },
+  {
+    "arxiv_id": "2609.35352",
+    "title": "Fiona: Accelerating FHE Inference with Packing-Aware Ternary Weights",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35352-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35352"
+  },
+  {
+    "arxiv_id": "2609.35357",
+    "title": "Do Coding Agents Reuse Existing Code or Reinvent the Wheel?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35357-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35357"
+  },
+  {
+    "arxiv_id": "2609.35366",
+    "title": "Planarian: Managing Agent State with Statepoints",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35366-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35366"
+  },
+  {
+    "arxiv_id": "2609.35367",
+    "title": "From Input to Output: A Flexible Agent for Dual-End Interpretation of Sparse Autoencoder Features",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35367-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35367"
+  },
+  {
+    "arxiv_id": "2609.35375",
+    "title": "From Pixel to Poses: Object-centric Tool Manipulation Learning from Human Demonstrations",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35375-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35375"
+  },
+  {
+    "arxiv_id": "2609.35381",
+    "title": "MCP Error Messages Written for Developers Hurt the Most Capable Agents Most",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35381-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35381"
+  },
+  {
+    "arxiv_id": "2609.35425",
+    "title": "Semantic Prefix Oracles for LLM Decoding: Contracts and Differential Validation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35425-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35425"
+  },
+  {
+    "arxiv_id": "2609.35427",
+    "title": "LLMs are General Asynchronous Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35427-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35427"
+  },
+  {
+    "arxiv_id": "2609.35463",
+    "title": "A.D.A.M.O. (Agent for language-Driven Actions with Multimodal Observations): A Visual-Symbolic Framework for Virtual Humans",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35463-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35463"
+  },
+  {
+    "arxiv_id": "2609.35465",
+    "title": "Tetra: Serving Leech-Lattice Quantized LLMs at 2.7 Bits per Parameter",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35465-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35465"
+  },
+  {
+    "arxiv_id": "2609.35502",
+    "title": "Structured Latent Modeling for Supervised Multimodal Information Decomposition",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35502-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35502"
+  },
+  {
+    "arxiv_id": "2609.35530",
+    "title": "AutoRef: Harness Optimization for Agentic Multi-Reference Image Generation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35530-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35530"
+  },
+  {
+    "arxiv_id": "2609.35532",
+    "title": "ARISE: Adapting to Evolving Capability Gaps in Agentic Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35532-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35532"
+  },
+  {
+    "arxiv_id": "2609.35540",
+    "title": "Continuous Context Management",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35540-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35540"
+  },
+  {
+    "arxiv_id": "2609.35557",
+    "title": "The Compiler May Read It, the Agent May Not: Keeping Part of a Research Code Away from a Coding Agent",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35557-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35557"
+  },
+  {
+    "arxiv_id": "2609.35559",
+    "title": "From Search to Research: Exploring Search Scaling in Autonomous Quantitative Factor Mining",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35559-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35559"
+  },
+  {
+    "arxiv_id": "2609.35578",
+    "title": "FactorEngram: Factorized N-gram Memory with Basis-Level Gating for Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35578-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35578"
+  },
+  {
+    "arxiv_id": "2609.35579",
+    "title": "Output-aware Residual Stream Pruning for Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35579-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35579"
+  },
+  {
+    "arxiv_id": "2609.35591",
+    "title": "Language Models Act on Hidden Valence",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35591-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35591"
+  },
+  {
+    "arxiv_id": "2609.35596",
+    "title": "SEABench: Benchmarking Endogenous Misalignment In Self-Evolving Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35596-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35596"
+  },
+  {
+    "arxiv_id": "2609.35598",
+    "title": "Learning Conditional Expectation Operators via Functional Newton Updates",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35598-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35598"
+  },
+  {
+    "arxiv_id": "2609.35614",
+    "title": "EvE: An Alternate Optimizer to Adam",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35614-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35614"
+  },
+  {
+    "arxiv_id": "2609.35621",
+    "title": "Cartridges++: KV Cache Compression without Off-Context Derailment",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35621-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35621"
+  },
+  {
+    "arxiv_id": "2609.35628",
+    "title": "Arbitrary-Accuracy Neural Approximation with Optimal Neuron Count and Near-Optimal Bit Complexity",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35628-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35628"
+  },
+  {
+    "arxiv_id": "2609.35629",
+    "title": "SANTA++: Sampling Attention through Representative Keys",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35629-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35629"
+  },
+  {
+    "arxiv_id": "2609.35639",
+    "title": "GPUPhysBench: Benchmarking Coding Agents for Correct and Efficient GPU Physics Simulation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35639-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35639"
+  },
+  {
+    "arxiv_id": "2609.35732",
+    "title": "Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35732-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35732"
+  },
+  {
+    "arxiv_id": "2609.35738",
+    "title": "Harness Learning Enables Generalizable Test-Time Adaptation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35738-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35738"
+  },
+  {
+    "arxiv_id": "2609.35750",
+    "title": "KV-streams for Efficient Compaction in Agentic Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35750-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35750"
+  },
+  {
+    "arxiv_id": "2609.35760",
+    "title": "TokenCast: Forecasting Token Consumption During LLM Agent Execution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-35760-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.35760"
   }
 ]
