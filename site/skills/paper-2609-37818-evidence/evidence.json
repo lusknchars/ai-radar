@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.37818",
+  "title": "Thinking in Depth, Speaking Directly: Recurrent Latent Reasoning for Paralinguistically Grounded Spoken Dialogue",
+  "summary": "LoopSLM replaces explicit chain-of-thought generation in speech-language models with a looped decoder block that refines hidden states latently, plus a two-stage training scheme separating reasoning from response learning so inference runs directly without CoT. The cost is architectural and training: it is not a bolt-on, it requires fine-tuning a speech model with looped blocks on a paralinguistically grounded dialogue dataset (EchoMind), and the published gains come from training on that specific setup rather than from a reproducible recipe or released weights you can apply to an existing deployment. Failure modes include the looped hidden states silently failing to ground on acoustic cues (the paper's own framing of the perception-reasoning gap suggests this failure is subtle and benchmark-dependent), and generalization beyond EchoMind-style empathetic dialogue is unproven outside the reported general-audio results.",
+  "rationale": "The technique requires training a custom looped speech model on a specialized dataset rather than being adoptable on a single 24 GB GPU or via API, so the reader should track it and revisit once checkpoints or a reproducible recipe exist.",
+  "technique": "Recurrent latent reasoning for spoken dialogue (LoopSLM)",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-09-29",
+  "as_of": "2026-09-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.37818",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "LoopSLM replaces explicit chain-of-thought generation in speech-language models with a looped decoder block that refines hidden states latently, plus a two-stage training scheme separating reasoning from response learning so inference runs directly without CoT. The cost is architectural and training: it is not a bolt-on, it requires fine-tuning a speech model with looped blocks on a paralinguistically grounded dialogue dataset (EchoMind), and the published gains come from training on that specific setup rather than from a reproducible recipe or released weights you can apply to an existing deployment. Failure modes include the looped hidden states silently failing to ground on acoustic cues (the paper's own framing of the perception-reasoning gap suggests this failure is subtle and benchmark-dependent), and generalization beyond EchoMind-style empathetic dialogue is unproven outside the reported general-audio results.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37818",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "64.5% fewer tokens at half the latency versus a CoT-SFT baseline, and 34x lower latency than Qwen3-Omni-Thinking while scoring higher on most empathetic reply metrics; +20 points reasoning accuracy over CoT-SFT.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37818",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

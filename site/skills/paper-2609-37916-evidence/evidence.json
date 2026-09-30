@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.37916",
+  "title": "RLX: A Unified Multi-Backend Tensor Compiler and Distributed Runtime in Rust",
+  "summary": "RLX replaces a split stack of Python framework graphs, vendor backends, and separate deployment runtimes with one Rust compiler/runtime IR that legalizes each operator to native, common-IR, or rewritten lowerings across many devices. The cost is adopting a Rust-centric toolchain, trusting a broad multi-backend matrix, accepting possible legalization failures as hard compilation errors, and validating quantized/AMP/PTQ/QAT parity outside the paper's reference checks. It can fail where an operator has no legal lowering for the target backend, where CUDA/ROCm/Metal behavior differs from the published single-host p50 results, or where ecosystem gaps make PyTorch/TensorRT/ONNX tooling operationally safer despite lower peak speed.",
+  "rationale": "The claimed latency gain is relevant to a single-GPU or API-constrained team, but the breadth of backends and hard legalization contract require a narrow benchmark on the reader's exact model, dtype, backend, and failure-handling path before production displacement.",
+  "technique": "Unified Rust tensor compiler and runtime",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-09-29",
+  "as_of": "2026-09-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.37916",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RLX replaces a split stack of Python framework graphs, vendor backends, and separate deployment runtimes with one Rust compiler/runtime IR that legalizes each operator to native, common-IR, or rewritten lowerings across many devices. The cost is adopting a Rust-centric toolchain, trusting a broad multi-backend matrix, accepting possible legalization failures as hard compilation errors, and validating quantized/AMP/PTQ/QAT parity outside the paper's reference checks. It can fail where an operator has no legal lowering for the target backend, where CUDA/ROCm/Metal behavior differs from the published single-host p50 results, or where ecosystem gaps make PyTorch/TensorRT/ONNX tooling operationally safer despite lower peak speed.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37916",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On all-MiniLM-L6-v2, RLX-Metal reports 16.6 ms at batch 32 versus PyTorch-MPS 26.7 ms, about 1.61x faster; MNIST graph-fused MLP throughput is 946,487 img/s versus NumPy+BLAS 787,349 img/s, about 1.20x.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37916",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

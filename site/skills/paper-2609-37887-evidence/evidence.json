@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.37887",
+  "title": "Behavioral Capacity Certificates for Quantized Language Models",
+  "summary": "The method replaces direct weight-code complexity bounds and Hessian-guided bit-width selection with a behavioral capacity measure over full implementations (weights, scales, activation and cache rules), plus a forward-only screen and margin-certified pruning or sign-flips that provably preserve declared predictions. Cost is validation and preprocessing compute for the screen and certificates, which the paper argues is below Hessian-based selection and remains feasible on a single GPU for models up to roughly 7B active parameters; the population-loss bound itself requires computing the certificate, which adds analysis overhead without changing inference cost. What can fail is that the certificate is only as useful as its validation cost allows (the break-even law can rule out the saving), the prediction-preservation guarantees hold probabilistically on new text rather than universally, and the nonvacuous bounds for complete decoders have been demonstrated only on models up to 1.7B-7B scale, leaving applicability to larger production models unverified.",
+  "rationale": "The practical components (cheap bit-width screening, certified pruning, and the keys-over-values cache precision finding) are deployable on one 24 GB GPU and plausibly improve quantization decisions, but the certificate machinery is new and needs workload-specific validation before replacing established mixed-precision quantization tooling.",
+  "technique": "Behavioral capacity certificates for quantized LLMs",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-29",
+  "as_of": "2026-09-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.37887",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces direct weight-code complexity bounds and Hessian-guided bit-width selection with a behavioral capacity measure over full implementations (weights, scales, activation and cache rules), plus a forward-only screen and margin-certified pruning or sign-flips that provably preserve declared predictions. Cost is validation and preprocessing compute for the screen and certificates, which the paper argues is below Hessian-based selection and remains feasible on a single GPU for models up to roughly 7B active parameters; the population-loss bound itself requires computing the certificate, which adds analysis overhead without changing inference cost. What can fail is that the certificate is only as useful as its validation cost allows (the break-even law can rule out the saving), the prediction-preservation guarantees hold probabilistically on new text rather than universally, and the nonvacuous bounds for complete decoders have been demonstrated only on models up to 1.7B-7B scale, leaving applicability to larger production models unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37887",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Forward-only screening selects per-layer bit-widths with quality comparable to Hessian-guided selection at lower preprocessing cost; at equal KV-cache memory, higher key than value precision yields lower NLL, higher prediction agreement, and a tighter complexity bound, with no quantified factor stated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37887",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

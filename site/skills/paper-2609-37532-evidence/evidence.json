@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.37532",
+  "title": "DScale: Scaling Block-Diffusion Speculative Decoding with Adaptive Verification",
+  "summary": "DScale replaces uniform-truncation verification in block-diffusion speculative decoding with path-aware tiles, dynamic verify-length packing, fixed-address graph-reusing workspaces, and a 112K-parameter acceptance predictor, while preserving drafter weights and full draft length. The cost is systems complexity: it requires an existing block-diffusion speculative decoding stack (it is benchmarked only against DFlash/DSpark/Domino on A100-40GB with Qwen3 models), plus integration of the predictor and custom workspace/graph management, not a drop-in change to standard autoregressive serving. It can fail if the reader's workload is autoregressive rather than block-diffusion, if acceptance behavior shifts on domains outside the four evaluated datasets (the predictor is frozen per target), or if the engineering cost of reimplementing the scheduling and graph-reuse machinery exceeds the throughput benefit at the reader's concurrency levels.",
+  "rationale": "The gains are measured on a single 40GB GPU with 4B-8B models at concurrency 8-32, which matches constrained infrastructure, but the method only applies if the reader already runs or is willing to adopt block-diffusion speculative decoding, so workload-specific validation on that stack is required before production commitment.",
+  "technique": "Adaptive verification for block-diffusion speculative decoding",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-09-29",
+  "as_of": "2026-09-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.37532",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DScale replaces uniform-truncation verification in block-diffusion speculative decoding with path-aware tiles, dynamic verify-length packing, fixed-address graph-reusing workspaces, and a 112K-parameter acceptance predictor, while preserving drafter weights and full draft length. The cost is systems complexity: it requires an existing block-diffusion speculative decoding stack (it is benchmarked only against DFlash/DSpark/Domino on A100-40GB with Qwen3 models), plus integration of the predictor and custom workspace/graph management, not a drop-in change to standard autoregressive serving. It can fail if the reader's workload is autoregressive rather than block-diffusion, if acceptance behavior shifts on domains outside the four evaluated datasets (the predictor is frozen per target), or if the engineering cost of reimplementing the scheduling and graph-reuse machinery exceeds the throughput benefit at the reader's concurrency levels.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37532",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Geometric-mean throughput gains of 43.9% (Qwen3-8B) and 48.8% (Qwen3-4B) over DFlash, 22.2-37.7% over DSpark, and 24.4-32.0% over Domino across four datasets at concurrency 8-32; complete decode-step time on GSM8K decreases by 30.8-52.5% relative to DFlash.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.37532",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
