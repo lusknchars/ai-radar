@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.39601",
+  "title": "GroundingPI: A Grounding Foundation Model towards Physical Intelligence with Visual Primitives",
+  "summary": "GroundingPI replaces general-purpose vision-language and video-generation backbones inside VLA and world-action pipelines with a 4B model pretrained specifically to emit points and boxes as quantized coordinates. The cost is the full training stack the reader cannot afford: multimodal and spatial pretraining, supervised fine-tuning, and GRPO reinforcement learning over dedicated data engines, plus integration work to swap the perception backbone of an existing manipulation or driving stack; inference of a 4B model is feasible on one 24 GB GPU only if weights are released. What can fail is generalization to the reader's own sensors, robots, and domains, since the reported gains are benchmark-specific and the model may inherit grounding errors in clutter, tiny-object cases, or real-world distribution shift not covered by RoboTwin, RoboCasa, or nuScenes.",
+  "rationale": "The method's value depends on pretrained weights and a training recipe requiring data engines and RL infrastructure beyond a constrained team's budget, so the reader should track a potential release rather than commit to adoption.",
+  "technique": "Grounding foundation model as visual backbone for robotics",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-09-30",
+  "as_of": "2026-10-01",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.39601",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 214,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "GroundingPI replaces general-purpose vision-language and video-generation backbones inside VLA and world-action pipelines with a 4B model pretrained specifically to emit points and boxes as quantized coordinates. The cost is the full training stack the reader cannot afford: multimodal and spatial pretraining, supervised fine-tuning, and GRPO reinforcement learning over dedicated data engines, plus integration work to swap the perception backbone of an existing manipulation or driving stack; inference of a 4B model is feasible on one 24 GB GPU only if weights are released. What can fail is generalization to the reader's own sensors, robots, and domains, since the reported gains are benchmark-specific and the model may inherit grounding errors in clutter, tiny-object cases, or real-world distribution shift not covered by RoboTwin, RoboCasa, or nuScenes.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.39601",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On RoboTwin 2.0 out-of-distribution settings, GroundingPI as a visual backbone outperforms every evaluated mainstream backbone by up to 24.8% relative to the strongest baseline; it also averages 73.68% across 34 grounding benchmarks versus 71.54% for GPT-6 Astra.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.39601",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
