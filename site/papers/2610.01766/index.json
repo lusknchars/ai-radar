@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.01766",
+  "title": "VideoEvolve: Evolving Agent Harnesses for Video Temporal Grounding",
+  "summary": "VideoEvolve replaces manual, expert-driven refinement of agent workflows and prompt instructions around frozen video-language models with an automated evolutionary loop that edits harness code and instructions using execution feedback and validation. Its cost is the evolution compute: repeated candidate evaluation over video benchmarks, which means many frozen-model inference passes per iteration, plus engineering effort to define the Cloze-Structured Harness Representation and validation pipeline for a new task. It can fail if the search overfits to the validation split, if evolved code branches do not transfer across datasets or base models (the paper itself notes code-level benefits vary by evaluation setting), or if the evaluation budget is too small for the search to converge.",
+  "rationale": "The method is relevant to teams using frozen third-party video-language models, but its unquantified gains, non-trivial search compute, and setting-dependent code improvements require validation on the reader's own workload before production adoption.",
+  "technique": "Automated evolution of agent harnesses for video grounding",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-02",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.01766",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "VideoEvolve replaces manual, expert-driven refinement of agent workflows and prompt instructions around frozen video-language models with an automated evolutionary loop that edits harness code and instructions using execution feedback and validation. Its cost is the evolution compute: repeated candidate evaluation over video benchmarks, which means many frozen-model inference passes per iteration, plus engineering effort to define the Cloze-Structured Harness Representation and validation pipeline for a new task. It can fail if the search overfits to the validation split, if evolved code branches do not transfer across datasets or base models (the paper itself notes code-level benefits vary by evaluation setting), or if the evaluation budget is too small for the search to converge.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.01766",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The abstract reports improved temporal-grounding performance across multiple benchmarks, with instruction refinement identified as a consistent source of gains, but provides no quantified figure.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.01766",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

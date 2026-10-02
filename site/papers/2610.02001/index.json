@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.02001",
+  "title": "Mingbird: A Local-First Agent Harness Enabling Small Open Models to Complete Real Tasks",
+  "summary": "Replaces cloud-oriented agent harnesses (e.g., goose, opencode) with a Windows/Ollama local-first harness whose ten mechanisms (net-zero prefill budget, finish gate re-reading the task, signature-level loop detection) target small-model failure forms for 2-9B models on a single 24 GB-class machine. Costs are integration effort with a Windows/Ollama-specific stack, additional guard logic per task step (latency and maintenance complexity), and reliance on a young third-party tool rather than an established framework. Can fail because the headline gains rest on a self-built benchmark with single-trial scoring, same-night replication variance equals the nominal ablation deltas, and the mechanism-level attribution is reported as directional only, so results may not transfer to other models, tasks, or operating environments.",
+  "rationale": "The approach directly targets the reader's constrained setting (small open models, one GPU, no training), but the evidence is a self-built single-machine benchmark whose measured noise rivals the claimed per-mechanism effects, so a small workload-specific pilot is warranted before production adoption.",
+  "technique": "Local-first agent harness compensating small-model failure modes",
+  "family": "recuperacao_de_falha",
+  "recommendation": "testar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-02",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.02001",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces cloud-oriented agent harnesses (e.g., goose, opencode) with a Windows/Ollama local-first harness whose ten mechanisms (net-zero prefill budget, finish gate re-reading the task, signature-level loop detection) target small-model failure forms for 2-9B models on a single 24 GB-class machine. Costs are integration effort with a Windows/Ollama-specific stack, additional guard logic per task step (latency and maintenance complexity), and reliance on a young third-party tool rather than an established framework. Can fail because the headline gains rest on a self-built benchmark with single-trial scoring, same-night replication variance equals the nominal ablation deltas, and the mechanism-level attribution is reported as directional only, so results may not transfer to other models, tasks, or operating environments.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02001",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On the authors' self-built LRAB benchmark (4 harnesses x 4 open models x 18 tasks), Mingbird scores 0.886 overall versus 0.631 for goose, 0.479 for opencode, and 0.405 for agent-mini; on tau2-bench it totals 0.856 versus 0.791 and 0.737. Single-machine, single-trial scoring; ablation deltas are within same-night replication noise (up to 0.069), and only the completion-guard comparison shows a paired +0.10 across three replications.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02001",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
