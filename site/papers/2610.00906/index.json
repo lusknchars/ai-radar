@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.00906",
+  "title": "ActiveSaddler: Automated Curriculum Learning for Agent Harness Optimization",
+  "summary": "It replaces the fixed, pre-selected scenario order used to generate feedback during automated harness optimization with a non-stationary bandit curriculum that abstracts failures into reusable arms, estimates their learning-progress utility, and balances revisiting known weaknesses against exploring new scenarios. It costs additional infrastructure for clustering execution failures into patterns, maintaining utility estimates per arm, and running exploration episodes that do not directly target known weaknesses, on top of the underlying optimizer's API spend. It can fail when failure-pattern abstraction is too coarse or noisy to be reusable, when utility estimates mis-rank patterns on small feedback samples, or when the evaluation benchmarks' diversity (GAIA2, Terminal-Bench) does not match the reader's task distribution.",
+  "rationale": "The method is API-compatible and requires no model training, but its gains are demonstrated only within a full harness-optimization loop on two benchmarks, so a team must validate that adaptive curricula beat a fixed scenario set on its own workload before adopting it.",
+  "technique": "Adaptive curriculum for LLM agent harness optimization",
+  "family": "recuperacao_de_falha",
+  "recommendation": "testar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.00906",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 14,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces the fixed, pre-selected scenario order used to generate feedback during automated harness optimization with a non-stationary bandit curriculum that abstracts failures into reusable arms, estimates their learning-progress utility, and balances revisiting known weaknesses against exploring new scenarios. It costs additional infrastructure for clustering execution failures into patterns, maintaining utility estimates per arm, and running exploration episodes that do not directly target known weaknesses, on top of the underlying optimizer's API spend. It can fail when failure-pattern abstraction is too coarse or noisy to be reusable, when utility estimates mis-rank patterns on small feedback samples, or when the evaluation benchmarks' diversity (GAIA2, Terminal-Bench) does not match the reader's task distribution.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00906",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Improves test Pass@1 by 4.4 points on GAIA2 and 7.5 points on Terminal-Bench 2.0 versus the same harness optimizer with a fixed pre-optimization scenario order.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00906",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

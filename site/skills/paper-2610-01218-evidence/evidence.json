@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.01218",
+  "title": "AGO AI Quality Gate: Evidence-First Release Decisions for Retrieval-Augmented Generation",
+  "summary": "The framework replaces point-estimate metric checks and unvalidated LLM judges with a four-state decision model (including explicit missing-data and judge-error outcomes), layered deterministic/local/LLM scoring, a stratified beta-binomial regression-risk gate, and mandatory judge meta-evaluation before the judge influences release decisions. It costs implementation complexity, per-engagement judge validation against labeled data, and additional evaluation compute on every release cycle, all feasible on a single GPU or via APIs. It can fail if the judge is validated on a public benchmark but degrades on the target domain, since per-domain AUROC varies widely, and the gate still permits 22%-35% unsafe promotion under regression rather than eliminating it.",
+  "rationale": "The approach is implementable with API judges and modest compute, but its central finding is that judge quality is domain-dependent, so the reader must validate it on their own RAG workload before relying on it for release decisions.",
+  "technique": "Evidence-first RAG release quality gate",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.01218",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 125,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The framework replaces point-estimate metric checks and unvalidated LLM judges with a four-state decision model (including explicit missing-data and judge-error outcomes), layered deterministic/local/LLM scoring, a stratified beta-binomial regression-risk gate, and mandatory judge meta-evaluation before the judge influences release decisions. It costs implementation complexity, per-engagement judge validation against labeled data, and additional evaluation compute on every release cycle, all feasible on a single GPU or via APIs. It can fail if the judge is validated on a public benchmark but degrades on the target domain, since per-domain AUROC varies widely, and the gate still permits 22%-35% unsafe promotion under regression rather than eliminating it.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.01218",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Under regression, a decision-grade gate profile reduces unsafe promotion to 22.2%-35.1%, versus 29.3%-41.8% for a naive gate; judge quality itself varies sharply (AUROC 0.603 for gpt-4.1-nano vs 0.783 for gpt-4o on RAGBench, with per-domain range 0.62-0.88).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.01218",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

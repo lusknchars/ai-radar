@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.00979",
+  "title": "RISED: RubrIcs for agentic multi-environment Selection and sElf-Distillation",
+  "summary": "RISED replaces scalar-reward-only group-relative RL (GRPO-style) data allocation in multi-environment agent training with LLM-judge rubric tagging that guides prompt-group selection and on-policy self-distillation, using positive rubrics as privileged teacher context and negative rubrics to steer rollouts away from failure modes. It costs an additional LLM judge pass over every rollout, a distillation teacher forward pass, and the full multi-environment RL training loop, which already exceeds a single 24 GB GPU budget for meaningful model backbones. The rubric judge can mislabel behaviours, the shared rubric vocabulary may fail to capture environment-specific failures, and self-distillation on privileged context can entrench judge biases rather than genuine capability gains.",
+  "rationale": "The method addresses RL training of generalist agents, which the reader cannot run on constrained infrastructure, though the rubric-as-feedback idea is worth monitoring for later fine-tuning work.",
+  "technique": "Rubric-guided data selection and self-distillation for multi-environment RL",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.00979",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 131,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RISED replaces scalar-reward-only group-relative RL (GRPO-style) data allocation in multi-environment agent training with LLM-judge rubric tagging that guides prompt-group selection and on-policy self-distillation, using positive rubrics as privileged teacher context and negative rubrics to steer rollouts away from failure modes. It costs an additional LLM judge pass over every rollout, a distillation teacher forward pass, and the full multi-environment RL training loop, which already exceeds a single 24 GB GPU budget for meaningful model backbones. The rubric judge can mislabel behaviours, the shared rubric vocabulary may fail to capture environment-specific failures, and self-distillation on privileged context can entrench judge biases rather than genuine capability gains.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00979",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "RISED achieves the highest mean pass rate across environments and ranks first or second in every individual environment across model backbones; no numeric factor is given in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00979",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

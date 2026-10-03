@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.00382",
+  "title": "On the Relationship between Model Quantization and Model Inversion Attacks",
+  "summary": "It replaces standard post-training quantization with a bit-allocation and scale/rounding optimization scheme (Fisher-type sensitivity proxy, activation range calibration, task-recovery and geometry-retention objectives) designed to degrade model inversion attacks while preserving task accuracy. The cost is additional PTQ optimization complexity and a measurable utility loss, roughly 2.5 to 5 accuracy points in the reported biometric benchmarks. It can fail against attack families not evaluated, since the defense is demonstrated mainly on RL-MIA and BREP-MI over face, palmprint, and iris recognition, and the privacy gain is entangled with quantization sensitivity that varies by dataset and bit-width, particularly around 4 bits.",
+  "rationale": "The method runs as post-training quantization on a single GPU and is directly relevant if the reader deploys quantized models over sensitive biometric or personal data, but the privacy benefit must be validated against the reader's own data distribution and threat model before adoption.",
+  "technique": "Privacy-aware post-training quantization against inversion attacks",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-30",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.00382",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces standard post-training quantization with a bit-allocation and scale/rounding optimization scheme (Fisher-type sensitivity proxy, activation range calibration, task-recovery and geometry-retention objectives) designed to degrade model inversion attacks while preserving task accuracy. The cost is additional PTQ optimization complexity and a measurable utility loss, roughly 2.5 to 5 accuracy points in the reported biometric benchmarks. It can fail against attack families not evaluated, since the defense is demonstrated mainly on RL-MIA and BREP-MI over face, palmprint, and iris recognition, and the privacy gain is entangled with quantization sensitivity that varies by dataset and bit-width, particularly around 4 bits.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00382",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On ResNet-50 Palm at 4 bits, RL-MIA strict attack success drops from 54% to 26% while accuracy falls from 99.01% to 96.55% versus FP32; with SSD on Iris at 4.5 bits, BREP-MI strict success drops from 63.33% to 37.33% with accuracy falling from 92.8% to 87.6%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00382",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

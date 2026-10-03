@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.00610",
+  "title": "Explainable Suicide Risk Assessment on Social Media with Multi-Task QLoRA",
+  "summary": "The method replaces full fine-tuning of large instruct models with 4-bit QLoRA adapters trained under an answer-masked causal-LM objective, plus per-task aggregation (probability averaging, cross-fold consensus, rate-matched calibration) instead of a single uniform decoding scheme. The cost is substantial engineering complexity: three distinct training configurations, cross-validation folds, and calibration pipelines, and the 32B/72B ensemble used for the top result exceeds a 24 GB GPU budget and would require API access or smaller model substitution. What can fail is that multi-task training gains are task-dependent (three-task training helped Task 1a but hurt Task 2), ensemble gains depend on complementary errors that may not hold for other model pairs, and a small team may not recoup the calibration overhead on a different dataset.",
+  "rationale": "QLoRA multi-task fine-tuning fits constrained infrastructure, but the reported gains are modest and task-specific, and the best configuration relies on models too large for a 24 GB GPU, so adoption requires workload-specific validation at smaller scale.",
+  "technique": "Multi-task QLoRA fine-tuning with task-specific output aggregation",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-09-30",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.00610",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces full fine-tuning of large instruct models with 4-bit QLoRA adapters trained under an answer-masked causal-LM objective, plus per-task aggregation (probability averaging, cross-fold consensus, rate-matched calibration) instead of a single uniform decoding scheme. The cost is substantial engineering complexity: three distinct training configurations, cross-validation folds, and calibration pipelines, and the 32B/72B ensemble used for the top result exceeds a 24 GB GPU budget and would require API access or smaller model substitution. What can fail is that multi-task training gains are task-dependent (three-task training helped Task 1a but hurt Task 2), ensemble gains depend on complementary errors that may not hold for other model pairs, and a small team may not recoup the calibration overhead on a different dataset.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00610",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Composite leaderboard score of 0.7738 (0.8089 on Task 1, 0.6919 on Task 2); probability averaging improved classification when component models had complementary errors.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00610",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

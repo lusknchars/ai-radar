@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.00980",
+  "title": "Can AI Scientists Coordinate at Runtime?",
+  "summary": "RAC replaces fixed design-time orchestration workflows with runtime agent selection from existing hosts, scoped work contracts, and artifact-grounded verification. It costs an additional coordination layer (selection, contracts, verification) at execution time, which under host-calibrated budgets consumed resources and lowered mean scores relative to runtime selection alone. It can fail when verification overhead exhausts constrained budgets, when the single-seed exploratory findings do not transfer to other hosts or benchmarks, or when added coordination degrades outcomes below native execution, as occurred for some hosts.",
+  "rationale": "The evidence is a single-seed exploratory study with mixed, host-dependent results, so runtime selection is worth a small-scale pilot but the full contract-and-verification stack is not yet justified for constrained-budget production use.",
+  "technique": "Runtime agent coordination for AI scientists",
+  "family": "orquestracao_multiagente",
+  "recommendation": "testar",
+  "published": "2026-10-01",
+  "as_of": "2026-10-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.00980",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 12,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RAC replaces fixed design-time orchestration workflows with runtime agent selection from existing hosts, scoped work contracts, and artifact-grounded verification. It costs an additional coordination layer (selection, contracts, verification) at execution time, which under host-calibrated budgets consumed resources and lowered mean scores relative to runtime selection alone. It can fail when verification overhead exhausts constrained budgets, when the single-seed exploratory findings do not transfer to other hosts or benchmarks, or when added coordination degrades outcomes below native execution, as occurred for some hosts.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00980",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Runtime agent selection yields the highest observed mean score on ResearchClawBench for each of three AI-scientist hosts (Agent Laboratory, EvoScientist, ARK) relative to native execution; adding contracts and verification reduces these means, with host-dependent outcomes.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.00980",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
