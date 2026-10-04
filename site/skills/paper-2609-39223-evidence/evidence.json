@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.39223",
+  "title": "QATFactory: A Versatile, Deployment-Aligned Framework for Quantization-aware Training and Distillation of LLMs",
+  "summary": "The method replaces post-training quantization (PTQ) with quantization-aware distillation that simulates the deployment format while computing in BF16, so no FP4-native training hardware is needed and checkpoints export directly to vLLM or llama.cpp. The cost is a training run with a teacher model, a token budget that favors long sequences, and format-dependent hyperparameter choices (weights-only fake quantization for NVFP4 versus weights-plus-activations for MXFP4), plus engineering complexity beyond a one-shot PTQ pass. It can fail if the 24 GB GPU cannot hold even a LoRA-based QAD setup for the target model, if the chosen training configuration mismatches the deployment format, or if the quality gain does not justify training cost for models where PTQ is already acceptable.",
+  "rationale": "The framework runs on BF16 hardware without FP4 Tensor Cores and supports LoRA-based training, making small-model QAD plausibly feasible on one 24 GB GPU, but the quality gain over PTQ is workload- and format-dependent and must be validated on the reader's own model before production adoption.",
+  "technique": "Deployment-aligned quantization-aware distillation for FP4 formats",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-09-30",
+  "as_of": "2026-10-04",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.39223",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces post-training quantization (PTQ) with quantization-aware distillation that simulates the deployment format while computing in BF16, so no FP4-native training hardware is needed and checkpoints export directly to vLLM or llama.cpp. The cost is a training run with a teacher model, a token budget that favors long sequences, and format-dependent hyperparameter choices (weights-only fake quantization for NVFP4 versus weights-plus-activations for MXFP4), plus engineering complexity beyond a one-shot PTQ pass. It can fail if the 24 GB GPU cannot hold even a LoRA-based QAD setup for the target model, if the chosen training configuration mismatches the deployment format, or if the quality gain does not justify training cost for models where PTQ is already acceptable.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.39223",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Qwen3.5-9B, QAD reaches 68.9% average accuracy under NVFP4 and 66.0% under MXFP4, versus best PTQ results of 65.4% and 56.4%; longer 32K training sequences add 1.9 points over 4K sequences at equal token budget.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.39223",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

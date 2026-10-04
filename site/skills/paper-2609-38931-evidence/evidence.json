@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2609.38931",
+  "title": "Adaptive Self-Consistency: From Black-Box Sampling to Distribution-Valued Feedback",
+  "summary": "It replaces black-box self-consistency (sampling many full trajectories and majority-voting final answers) with a sequential stopping rule that exploits the per-trajectory answer softmax distribution, stopping as soon as the modal answer is certified at a target confidence. The cost is implementation complexity: it requires access to final-answer log-probabilities from the model, a sequential (non-parallel) sampling loop, and a betting-style stopping rule rather than a fixed sample count. It can fail when the serving stack does not expose answer-token log-probabilities (many third-party APIs restrict or omit them), when the assumed distribution-valued observation model is mismatched to the actual decoding setup, and sequential stopping adds scheduling overhead relative to batched parallel sampling.",
+  "rationale": "The method directly cuts inference cost for readers already using self-consistency, but its dependence on exposed log-probabilities and sequential sampling requires validation against the reader's actual serving stack and workload before adoption.",
+  "technique": "Adaptive self-consistency with distribution-valued feedback (ASC-D)",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-09-30",
+  "as_of": "2026-10-04",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2609.38931",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces black-box self-consistency (sampling many full trajectories and majority-voting final answers) with a sequential stopping rule that exploits the per-trajectory answer softmax distribution, stopping as soon as the modal answer is certified at a target confidence. The cost is implementation complexity: it requires access to final-answer log-probabilities from the model, a sequential (non-parallel) sampling loop, and a betting-style stopping rule rather than a fixed sample count. It can fail when the serving stack does not expose answer-token log-probabilities (many third-party APIs restrict or omit them), when the assumed distribution-valued observation model is mismatched to the actual decoding setup, and sequential stopping adds scheduling overhead relative to batched parallel sampling.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.38931",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "ASC-D uses 46.4-95.6% fewer reasoning trajectories than answer-only adaptive self-consistency baselines on MMLU-Redux, with the highest fixed-budget correct-certification rate across three open-source models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2609.38931",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
