@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.02945",
+  "title": "Continual Graph Memory for Mathematical Research Agents",
+  "summary": "The method replaces ad hoc transcript- or summary-based context management in long-horizon agentic search with an evolvable graph memory that stores facts, plans, and counterexamples with explicit relational edges, plus dependency-aware retrieval, an evidence-sensitive curator, and scoped recall of prior negative results. The cost is substantial engineering complexity in building and maintaining the graph memory and curator, plus the large inference budget implied by many agents running frontier models in parallel over extended periods, which is incompatible with a single 24 GB GPU or a limited API budget. Failure modes include curator errors that corrupt the research frontier or distill incorrect lessons, retrieval that surfaces stale or invalid intermediate statements, and re-proving overhead that grows with graph size; results also transfer only to domains with verifiable intermediate structure like formal mathematics.",
+  "rationale": "The demonstrated gains depend on frontier-model agent harnesses running many agents for extended periods, a cost and infrastructure profile the reader cannot support, so the technique is worth tracking rather than adopting.",
+  "technique": "Continual graph memory for agent proof search",
+  "family": "memoria_e_contexto",
+  "recommendation": "observar",
+  "published": "2026-10-02",
+  "as_of": "2026-10-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.02945",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces ad hoc transcript- or summary-based context management in long-horizon agentic search with an evolvable graph memory that stores facts, plans, and counterexamples with explicit relational edges, plus dependency-aware retrieval, an evidence-sensitive curator, and scoped recall of prior negative results. The cost is substantial engineering complexity in building and maintaining the graph memory and curator, plus the large inference budget implied by many agents running frontier models in parallel over extended periods, which is incompatible with a single 24 GB GPU or a limited API budget. Failure modes include curator errors that corrupt the research frontier or distill incorrect lessons, retrieval that surfaces stale or invalid intermediate statements, and re-proving overhead that grows with graph size; results also transfer only to domains with verifiable intermediate structure like formal mathematics.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02945",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The paper reports closure on all ten First Proof Second Batch research tasks and autonomous solutions to the Jamison caterpillar conjecture and Erdős Problems 289, 348, and 488, but provides no quantified improvement factor against a baseline system.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02945",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

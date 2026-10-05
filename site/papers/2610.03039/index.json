@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.03039",
+  "title": "HyperThink: Text-to-Parameter Hypernetworks for Efficient Reasoning",
+  "summary": "HyperThink replaces test-time long chain-of-thought decoding with a single query-conditioned parameter update: a hypernetwork predicts a vector-quantized update to a small subset of the base LLM's weights, after which the adapted model emits a concise solution without an intermediate trace. The cost is an offline training pipeline that trains the hypernetwork end-to-end on the base model's own outputs, added serving complexity (per-query weight adaptation and a quantized decoder), and a likely quality ceiling relative to full thinking traces outside the near-non-thinking regime where gains are claimed to be strongest. Failure modes include the quantized update patterns not transferring to out-of-distribution queries, degradation on problems that genuinely require extended deliberation, and engineering risk in applying per-request parameter updates correctly under concurrent serving.",
+  "rationale": "The method requires training a custom hypernetwork and adopting a nonstandard per-query weight-adaptation serving path with no quantified results in the abstract, so it warrants monitoring rather than adoption or small-scale testing given a 24 GB GPU and a small team.",
+  "technique": "Text-to-parameter hypernetwork replacing reasoning traces",
+  "family": "destilacao",
+  "recommendation": "observar",
+  "published": "2026-10-02",
+  "as_of": "2026-10-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.03039",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "HyperThink replaces test-time long chain-of-thought decoding with a single query-conditioned parameter update: a hypernetwork predicts a vector-quantized update to a small subset of the base LLM's weights, after which the adapted model emits a concise solution without an intermediate trace. The cost is an offline training pipeline that trains the hypernetwork end-to-end on the base model's own outputs, added serving complexity (per-query weight adaptation and a quantized decoder), and a likely quality ceiling relative to full thinking traces outside the near-non-thinking regime where gains are claimed to be strongest. Failure modes include the quantized update patterns not transferring to out-of-distribution queries, degradation on problems that genuinely require extended deliberation, and engineering risk in applying per-request parameter updates correctly under concurrent serving.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.03039",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

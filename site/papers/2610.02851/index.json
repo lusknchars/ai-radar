@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.02851",
+  "title": "ByteSplat: Efficient Distributed 3D Gaussian Splatting Training via Intra- and Inter-GPU communication reduction",
+  "summary": "ByteSplat replaces standard multi-GPU 3DGS training, in which forward and backward rasterization run as separate kernels with redundant off-chip memory access and dense partial-gradient exchange, with a fused rasterization kernel, shared-memory-aware Gaussian pruning, and sparse-gradient compaction for inter-GPU aggregation. The costs are implementation complexity (custom fused CUDA kernels, encoder/decoder kernels), increased on-chip storage pressure that must be managed by hardware-aware pruning, and dependence on a multi-GPU setup. The technique can fail if on-chip memory limits force pruning that degrades reconstruction quality, if gradient sparsity is low so communication savings shrink, or if the custom kernels are unavailable or unsupported on the user's hardware.",
+  "rationale": "The method targets multi-GPU distributed 3DGS training and delivers its reported gains on eight GPUs, so a reader with one 24 GB GPU or API access cannot reproduce the benefit, though the fused-rasterization and pruning ideas are worth monitoring if a single-GPU variant emerges.",
+  "technique": "Communication-reduced distributed 3D Gaussian Splatting training",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-10-02",
+  "as_of": "2026-10-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.02851",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ByteSplat replaces standard multi-GPU 3DGS training, in which forward and backward rasterization run as separate kernels with redundant off-chip memory access and dense partial-gradient exchange, with a fused rasterization kernel, shared-memory-aware Gaussian pruning, and sparse-gradient compaction for inter-GPU aggregation. The costs are implementation complexity (custom fused CUDA kernels, encoder/decoder kernels), increased on-chip storage pressure that must be managed by hardware-aware pruning, and dependence on a multi-GPU setup. The technique can fail if on-chip memory limits force pruning that degrades reconstruction quality, if gradient sparsity is low so communication savings shrink, or if the custom kernels are unavailable or unsupported on the user's hardware.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02851",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 6.1x training speedup on eight GPUs, with 63.4% less intra-GPU off-chip traffic and 65.8% less backward inter-GPU communication volume, while preserving reconstruction quality.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.02851",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -6046,5 +6046,285 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-02206-evidence.zip",
     "source": "https://arxiv.org/abs/2610.02206"
+  },
+  {
+    "arxiv_id": "2610.02851",
+    "title": "ByteSplat: Efficient Distributed 3D Gaussian Splatting Training via Intra- and Inter-GPU communication reduction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02851-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02851"
+  },
+  {
+    "arxiv_id": "2610.02875",
+    "title": "Query-aware routing for Cross-lingual performance gains in Encoders",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02875-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02875"
+  },
+  {
+    "arxiv_id": "2610.02882",
+    "title": "DyRA: Dynamic Residual Approximation for Efficient Matrix Multiplication in DNNs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02882-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02882"
+  },
+  {
+    "arxiv_id": "2610.02907",
+    "title": "Do ResNets Route? Sparse Interaction Experts in Residual Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02907-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02907"
+  },
+  {
+    "arxiv_id": "2610.02920",
+    "title": "HASTE: Evolving Agent Harnesses Against Emerging Attacks Using Sparse Evidence",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02920-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02920"
+  },
+  {
+    "arxiv_id": "2610.02945",
+    "title": "Continual Graph Memory for Mathematical Research Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02945-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02945"
+  },
+  {
+    "arxiv_id": "2610.02951",
+    "title": "Dynamic Expert Pruning for Multi-Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02951-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02951"
+  },
+  {
+    "arxiv_id": "2610.02952",
+    "title": "GTDD: Generative Test-Driven Development for AI Coding Agents with Adversarial Testing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02952-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02952"
+  },
+  {
+    "arxiv_id": "2610.02953",
+    "title": "SlimKV: Joint Token-Feature KV Cache Compression with Reconstruction-Free Beacon Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02953-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02953"
+  },
+  {
+    "arxiv_id": "2610.02994",
+    "title": "Sentry: Learning to Recover from LLM Agent Failures at Test Time",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-02994-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.02994"
+  },
+  {
+    "arxiv_id": "2610.03007",
+    "title": "AvoKV-E: Payload-Aware KV Cache Eviction for Long Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03007-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03007"
+  },
+  {
+    "arxiv_id": "2610.03014",
+    "title": "Beyond Predefined Sinks: Security-Aware Dependency Analysis for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03014-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03014"
+  },
+  {
+    "arxiv_id": "2610.03020",
+    "title": "DyadMem: A Long-Term Memory Benchmark of How Agents Work with Users",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03020-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03020"
+  },
+  {
+    "arxiv_id": "2610.03027",
+    "title": "Tailoring the Quantization Space for 1-Bit KV Cache Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03027-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03027"
+  },
+  {
+    "arxiv_id": "2610.03036",
+    "title": "WebFovea: When the Model Is Right but the Click Is Wrong -- Reliable Round Trips for Vision-Based Web Agents on Live Websites",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03036-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03036"
+  },
+  {
+    "arxiv_id": "2610.03039",
+    "title": "HyperThink: Text-to-Parameter Hypernetworks for Efficient Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03039-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03039"
+  },
+  {
+    "arxiv_id": "2610.03055",
+    "title": "hacktrace: behavior-supervised detection of reward hacking during code generation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03055-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03055"
+  },
+  {
+    "arxiv_id": "2610.03056",
+    "title": "MOF-VERIFY: A Failure-Aware Agentic Harness for MOF Hypothesis Verification",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03056-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03056"
+  },
+  {
+    "arxiv_id": "2610.03089",
+    "title": "Securing Computer-Use Agents Against Branch Steering Attacks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03089-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03089"
+  },
+  {
+    "arxiv_id": "2610.03102",
+    "title": "Ask, Relax, or Act? Evaluating Actionable Indeterminacy in LLM Preference Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03102-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03102"
+  },
+  {
+    "arxiv_id": "2610.03109",
+    "title": "Emergent Structure in the Marginal Attention Space of Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03109-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03109"
+  },
+  {
+    "arxiv_id": "2610.03117",
+    "title": "Exploring the Trade-Off Between Structured Pruning and Fault Tolerance in Deep Neural Networks for Space Applications",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03117-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03117"
+  },
+  {
+    "arxiv_id": "2610.03127",
+    "title": "Coverage You Can Steer: Online Conformal Calibration for RL-Driven Hardware-Aware NAS",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03127-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03127"
+  },
+  {
+    "arxiv_id": "2610.03135",
+    "title": "Page-EntroKV: Hardware-Aligned, Entropy-Weighted KV-Cache Eviction under Grouped-Query Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03135-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03135"
+  },
+  {
+    "arxiv_id": "2610.03174",
+    "title": "FinNextAssist: Towards Professional Financial Deep Research Assistant",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03174-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03174"
+  },
+  {
+    "arxiv_id": "2610.03195",
+    "title": "Source Preference in the Wild: How LLM Agents Favor Items by Source, and How to Reduce It",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03195-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03195"
+  },
+  {
+    "arxiv_id": "2610.03198",
+    "title": "KV$^2$: A Self-Refining KV Cache",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03198-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03198"
+  },
+  {
+    "arxiv_id": "2610.03213",
+    "title": "Toward SLM-based agentic task-tool intent matching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03213-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03213"
+  },
+  {
+    "arxiv_id": "2610.03223",
+    "title": "AdaStep: Adaptive Step Credit Weighting for Agentic Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03223-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03223"
+  },
+  {
+    "arxiv_id": "2610.03226",
+    "title": "D2K-Bench: Can LLM Agents Turn Expert Designs into Efficient GPU Kernels?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03226-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03226"
+  },
+  {
+    "arxiv_id": "2610.03286",
+    "title": "VenusRL: A Fully Disaggregated Agentic RL System with Priority Scheduling and Scalable Interaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03286-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03286"
+  },
+  {
+    "arxiv_id": "2610.03303",
+    "title": "S$^{2}$-PINN: Stochastic Separable Physics-Informed Neural Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03303-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03303"
+  },
+  {
+    "arxiv_id": "2610.03315",
+    "title": "Lightweight, Rubric-Guided Trajectory Evaluation for Production AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03315-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03315"
+  },
+  {
+    "arxiv_id": "2610.03356",
+    "title": "ReFract: Benchmarking Perspective Awareness in Language Model Agents with Text World Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03356-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03356"
+  },
+  {
+    "arxiv_id": "2610.03389",
+    "title": "From Patching to Pruning Visual Computation in Vision Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03389-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03389"
+  },
+  {
+    "arxiv_id": "2610.03394",
+    "title": "EdgeAgent: Orchestrating On-Device LLM inference for End-User Multi-Agent Systems on CPU-GPU Unified Memory Architectures",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03394-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03394"
+  },
+  {
+    "arxiv_id": "2610.03402",
+    "title": "16-bit Precision of Convolutional Neural Networks on Microcontroller Units for 8-bit Costs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03402-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03402"
+  },
+  {
+    "arxiv_id": "2610.03448",
+    "title": "Passing the Test You Trained On: Re-evaluating Prompt-Injection Detectors for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03448-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03448"
+  },
+  {
+    "arxiv_id": "2610.03524",
+    "title": "From Benchmarks to Production: A Text-to-SQL System for Complex Financial Data",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03524-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03524"
+  },
+  {
+    "arxiv_id": "2610.03695",
+    "title": "Language Models that Play Chess and Explain Their Moves",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-03695-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.03695"
   }
 ]

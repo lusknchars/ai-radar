@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.03695",
+  "title": "Language Models that Play Chess and Explain Their Moves",
+  "summary": "The method replaces prompting a general-purpose LM for domain reasoning with a hybrid architecture in which a silent expert encoder (here a chess engine) is fused into an instruction-tuned LM via cross-attention, followed by an iterative loop where the model's own analyses of candidate continuations are consolidated and distilled back into its weights. The cost is substantial: access to a pretrained expert encoder, a question-answering curriculum for cross-attention training, and repeated fine-tuning rounds of a multi-billion-parameter model, which exceeds a single 24 GB GPU for full replication though the distillation loop alone could be run on smaller models or via APIs. It can fail when no silent expert encoder exists for the target domain, when the QA curriculum fails to extract the right concepts from encoder representations, or when the self-generated explanations reinforce errors across iterations rather than improving them.",
+  "rationale": "The full pipeline requires resources beyond the reader's constraints, but the natural-language analog of the Bellman update—analyzing candidate outcomes and distilling the consolidation back into the model—is a transferable, API-feasible recipe worth small-scale validation in domains with verifiable feedback.",
+  "technique": "Cross-attention expert encoder with iterative self-distillation",
+  "family": "destilacao",
+  "recommendation": "testar",
+  "published": "2026-10-02",
+  "as_of": "2026-10-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.03695",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces prompting a general-purpose LM for domain reasoning with a hybrid architecture in which a silent expert encoder (here a chess engine) is fused into an instruction-tuned LM via cross-attention, followed by an iterative loop where the model's own analyses of candidate continuations are consolidated and distilled back into its weights. The cost is substantial: access to a pretrained expert encoder, a question-answering curriculum for cross-attention training, and repeated fine-tuning rounds of a multi-billion-parameter model, which exceeds a single 24 GB GPU for full replication though the distillation loop alone could be run on smaller models or via APIs. It can fail when no silent expert encoder exists for the target domain, when the QA curriculum fails to extract the right concepts from encoder representations, or when the self-generated explanations reinforce errors across iterations rather than improving them.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.03695",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Over seven distillation iterations, playing strength improved by more than 900 Elo points (1782 to 2697), surpassing frontier models on playing strength and puzzle accuracy despite three orders of magnitude fewer parameters.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.03695",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
