@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.06597",
+  "title": "Can Agent Harnesses and Inference Engines Hear Each Other? The HEAR Protocol for Agentic LLM Serving",
+  "summary": "HEAR replaces the standard one-directional request/response interface between agent frameworks and inference engines with a bidirectional protocol exposing workflow intent (context lifecycles, dependencies) and engine state (queues, KV-cache pressure) to enable cache-aware and workload-aware scheduling. It costs integration effort on both sides: the harness must emit structured workflow metadata and the engine must expose runtime state and act on it, so it requires control over a modified or compatible self-hosted inference stack. It can fail when workloads lack the concurrency or prefix-reuse patterns the coordination exploits, when the engine ignores or misinterprets hints, or when the reader uses third-party APIs where the engine side is entirely inaccessible.",
+  "rationale": "The gains are demonstrated only on self-hosted, memory-constrained, concurrent serving with a HEAR-instrumented engine (Mooncake), which a single-GPU or API-only setup cannot currently provide.",
+  "technique": "Harness-engine coordination protocol (HEAR) for agentic serving",
+  "family": "serving_e_batching",
+  "recommendation": "observar",
+  "published": "2026-10-05",
+  "as_of": "2026-10-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.06597",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 139,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "HEAR replaces the standard one-directional request/response interface between agent frameworks and inference engines with a bidirectional protocol exposing workflow intent (context lifecycles, dependencies) and engine state (queues, KV-cache pressure) to enable cache-aware and workload-aware scheduling. It costs integration effort on both sides: the harness must emit structured workflow metadata and the engine must expose runtime state and act on it, so it requires control over a modified or compatible self-hosted inference stack. It can fail when workloads lack the concurrency or prefix-reuse patterns the coordination exploits, when the engine ignores or misinterprets hints, or when the reader uses third-party APIs where the engine side is entirely inaccessible.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06597",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "1.61x batch speedup and 2.23x lower median TTFT on SCBench; 1.23x and 2.45x end-to-end speedups on BrowseComp-Plus and DeepResearchBench, with no reported task-quality degradation",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06597",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

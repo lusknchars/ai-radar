@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.06617",
+  "title": "RealtimeWAM: One-Step Asynchronous World Action Models",
+  "summary": "RealtimeWAM replaces multi-step action denoising and sequential video-then-action expert execution in World Action Models with Teacher-Anchored Consistency Distillation for one-step action generation and Cross-Expert Wavefront Pipelining that overlaps experts via block-wise KV-cache sharing. It costs a distillation training stage against a frozen teacher, requires an existing MoT-based WAM (e.g., Fast-WAM) as base, and adds synchronization logic between experts; quality risk is bounded at under 1% on the reported benchmarks. Failure modes include reliance on teacher rollout endpoints that may not transfer to out-of-distribution tasks or other WAM architectures, and the 25x figure is measured on H100, so speedups on a 24 GB consumer GPU are unverified.",
+  "rationale": "The method targets robot manipulation World Action Models and presupposes a trained video-generation-based WAM pipeline, which exceeds the reader's constrained infrastructure and typical LLM-serving workloads, so monitoring is appropriate rather than adoption.",
+  "technique": "One-step consistency-distilled asynchronous world action model",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-10-05",
+  "as_of": "2026-10-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.06617",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RealtimeWAM replaces multi-step action denoising and sequential video-then-action expert execution in World Action Models with Teacher-Anchored Consistency Distillation for one-step action generation and Cross-Expert Wavefront Pipelining that overlaps experts via block-wise KV-cache sharing. It costs a distillation training stage against a frozen teacher, requires an existing MoT-based WAM (e.g., Fast-WAM) as base, and adds synchronization logic between experts; quality risk is bounded at under 1% on the reported benchmarks. Failure modes include reliance on teacher rollout endpoints that may not transfer to out-of-distribution tasks or other WAM architectures, and the 25x figure is measured on H100, so speedups on a 24 GB consumer GPU are unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06617",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Approximately 25x end-to-end speedup on H100 with less than 1% performance drop across LIBERO, LIBERO-Plus, and RoboTwin benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06617",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

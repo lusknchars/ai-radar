@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.06401",
+  "title": "RAISED: Self-Distillation for Robustness to Prompt Injection in LLM Agents",
+  "summary": "RAISED replaces prior training-time prompt-injection defenses (e.g., adversarial fine-tuning) with a self-generation plus self-distillation pipeline in which the student matches the teacher's clean-context behavior on both clean and injected trajectories. It costs a full fine-tuning cycle on the target model, including synthetic tool-use scenario generation and teacher inference, which exceeds a 24 GB single-GPU budget for production-scale models and cannot be applied to API-only models. If adopted, failures include residual injection success against attack distributions not covered by the self-generated scenarios, and capability drift if the self-distillation data underrepresents benign tool-output-conditioned steps.",
+  "rationale": "The defense requires fine-tuning the deployed model, which is infeasible for API-only models and impractical at production scale on one 24 GB GPU, so the reader should track it but adopt inference-time injection mitigations meanwhile.",
+  "technique": "Self-distillation for prompt-injection robustness",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "observar",
+  "published": "2026-10-05",
+  "as_of": "2026-10-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.06401",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 11,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RAISED replaces prior training-time prompt-injection defenses (e.g., adversarial fine-tuning) with a self-generation plus self-distillation pipeline in which the student matches the teacher's clean-context behavior on both clean and injected trajectories. It costs a full fine-tuning cycle on the target model, including synthetic tool-use scenario generation and teacher inference, which exceeds a 24 GB single-GPU budget for production-scale models and cannot be applied to API-only models. If adopted, failures include residual injection success against attack distributions not covered by the self-generated scenarios, and capability drift if the self-distillation data underrepresents benign tool-output-conditioned steps.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06401",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Substantially reduces attack success rate of prompt injections in tool responses while preserving utility on agentic and general-purpose benchmarks; no quantified figures appear in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06401",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

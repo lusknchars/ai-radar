@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.06454",
+  "title": "AgentPrivArena: Evaluating and Auditing Real-world AI Agent Privacy",
+  "summary": "AgentPrivArena replaces outcome-only privacy evaluation of LLM agents (final-response leakage checks on simulated trajectories) with a reproducible environment using real MCP tools and self-hosted services, plus AgentPrivAudit, a runtime monitor that flags unnecessary data access during multi-step execution. Adoption costs infrastructure to self-host the evaluation services, integration of the runtime auditor into the agent loop (adding per-step monitoring overhead), and engineering effort to define trajectory-level access policies; it requires no GPU capacity beyond what the deployed agent already uses. It can fail if the auditor's notion of 'unnecessary access' miscalibrates against the team's actual tasks, producing false positives that block legitimate tool calls or false negatives that miss context-dependent leaks, and findings from its specific MCP tool suite may not transfer to a different production toolset.",
+  "rationale": "The reader runs API-based agents in production and can pilot runtime privacy auditing at small scale, but the framework's metrics and tool coverage require validation against the reader's own workflows before adoption.",
+  "technique": "Trajectory-level privacy auditing for tool-using agents",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-05",
+  "as_of": "2026-10-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.06454",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "AgentPrivArena replaces outcome-only privacy evaluation of LLM agents (final-response leakage checks on simulated trajectories) with a reproducible environment using real MCP tools and self-hosted services, plus AgentPrivAudit, a runtime monitor that flags unnecessary data access during multi-step execution. Adoption costs infrastructure to self-host the evaluation services, integration of the runtime auditor into the agent loop (adding per-step monitoring overhead), and engineering effort to define trajectory-level access policies; it requires no GPU capacity beyond what the deployed agent already uses. It can fail if the auditor's notion of 'unnecessary access' miscalibrates against the team's actual tasks, producing false positives that block legitimate tool calls or false negatives that miss context-dependent leaks, and findings from its specific MCP tool suite may not transfer to a different production toolset.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06454",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

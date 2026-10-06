@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.06817",
+  "title": "Paradee: Distilling Kokoro-82M into an 8M-Parameter Single-Voice Text-to-Speech Model",
+  "summary": "It replaces direct deployment of the 82M-parameter, 54-voice Kokoro teacher with an 8.07M-parameter, single-voice student trained separately on the teacher's saved durations, pitch, energy, and phoneme features, then quantized to int8 (8.5 MB). The cost is a teacher-synthesized training corpus, one distillation run per voice, a small quality gap (4.41 vs 4.52 UTMOS), and a phase-locking post-filter added to fix a residual buzz. It can fail if multiple voices are required, if the single target voice does not match the product's needs, or if the phase artifact reappears under acoustic conditions the filter does not cover.",
+  "rationale": "For a team with one GPU or CPU-only production targets, an 8.5 MB model with released code and weights that runs 25x faster than real time on one CPU thread is immediately deployable, provided a single voice is acceptable.",
+  "technique": "Teacher-student distillation of a TTS model into a single-voice int8 student",
+  "family": "destilacao",
+  "recommendation": "adotar",
+  "published": "2026-10-05",
+  "as_of": "2026-10-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.06817",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces direct deployment of the 82M-parameter, 54-voice Kokoro teacher with an 8.07M-parameter, single-voice student trained separately on the teacher's saved durations, pitch, energy, and phoneme features, then quantized to int8 (8.5 MB). The cost is a teacher-synthesized training corpus, one distillation run per voice, a small quality gap (4.41 vs 4.52 UTMOS), and a phase-locking post-filter added to fix a residual buzz. It can fail if multiple voices are required, if the single target voice does not match the product's needs, or if the phase artifact reappears under acoustic conditions the filter does not cover.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06817",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The distilled 8.07M model has 10x fewer parameters, needs 15x less compute than Kokoro-82M, runs 25x faster than real time on one CPU thread, and scores 4.41 UTMOS versus the teacher's 4.52.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.06817",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
