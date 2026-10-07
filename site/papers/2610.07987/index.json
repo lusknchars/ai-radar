@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07987",
+  "title": "VisionWeave: Weaving Elastic Visual Representations as a Native Capability of MLLMs",
+  "summary": "The method replaces dense fixed-size patch token encoding, and static downsampling or token pruning, with a learned gated spatial pooler plus granularity router that allocates coarse or fine visual tokens per region inside a shared MRoPE coordinate system. The cost is that this is a native model capability established through large-scale end-to-end self-distillation training (over 30K A100 GPU-hours on a 27B model), not an inference-time drop-in; adopting it requires either training such a model or using released weights, and quality retention is 98.9% rather than 100%. It can fail on workloads whose visual content distribution differs from the training data, causing the router to misallocate granularity, and benefits vanish if no compatible trained checkpoint exists for the reader's chosen base model.",
+  "rationale": "The gains are strong but the technique must be trained into the model at frontier scale, which the reader cannot do with one 24 GB GPU, so the practical path is to wait for released checkpoints or third-party API exposure.",
+  "technique": "Elastic visual token granularity routing in MLLMs",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-07",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07987",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces dense fixed-size patch token encoding, and static downsampling or token pruning, with a learned gated spatial pooler plus granularity router that allocates coarse or fine visual tokens per region inside a shared MRoPE coordinate system. The cost is that this is a native model capability established through large-scale end-to-end self-distillation training (over 30K A100 GPU-hours on a 27B model), not an inference-time drop-in; adopting it requires either training such a model or using released weights, and quality retention is 98.9% rather than 100%. It can fail on workloads whose visual content distribution differs from the training data, causing the router to misallocate granularity, and benefits vanish if no compatible trained checkpoint exists for the reader's chosen base model.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07987",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On SGLang, 2.3x throughput gain with 54.4% lower mean TTFT and 60.6% lower mean TPOT; 43.0% average token savings while retaining 98.9% of native performance across eight benchmarks, versus 88% for fixed-50% token pruning baselines.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07987",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

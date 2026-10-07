@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.08669",
+  "title": "MemFLoRA: Memory-Floor LoRA for CNN Adaptation at the Edge",
+  "summary": "MemFLoRA replaces standard LoRA-style CNN fine-tuning, in which full-width layer inputs must be saved for the backward pass, with a low-rank adapter that freezes the down-projection, trains only a scale-matched up-projection, and uses eval-mode backbone normalization so that backward computation depends only on the low-rank branch. The cost is a restricted trainable parameterization (a fixed down-projection and modified normalization behavior), a custom training implementation, and validation limited to small CNNs on HAR classification tasks rather than mainstream vision workloads. It can fail if the frozen random down-projection underfits a given domain shift, if eval-mode batch normalization statistics mismatch the adapted data distribution, or if the approach is assumed to transfer to larger vision models or transformer backbones without evidence.",
+  "rationale": "The method targets on-device CNN adaptation, a niche the reader may not operate in, and its evidence base is narrow HAR experiments, so it merits monitoring rather than adoption in production LLM or general vision practice.",
+  "technique": "Activation-memory-floor LoRA for CNN edge fine-tuning",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-07",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.08669",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MemFLoRA replaces standard LoRA-style CNN fine-tuning, in which full-width layer inputs must be saved for the backward pass, with a low-rank adapter that freezes the down-projection, trains only a scale-matched up-projection, and uses eval-mode backbone normalization so that backward computation depends only on the low-rank branch. The cost is a restricted trainable parameterization (a fixed down-projection and modified normalization behavior), a custom training implementation, and validation limited to small CNNs on HAR classification tasks rather than mainstream vision workloads. It can fail if the frozen random down-projection underfits a given domain shift, if eval-mode batch normalization statistics mismatch the adapted data distribution, or if the approach is assumed to transfer to larger vision models or transformer backbones without evidence.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.08669",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces saved-activation memory by 98.5–98.7% and peak training-state memory by 94.9–97.3% relative to full fine-tuning, while matching or exceeding CNN PEFT baselines on three HAR datasets and two CNN backbones.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.08669",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

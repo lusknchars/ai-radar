@@ -4368,6 +4368,13 @@
     "source": "https://arxiv.org/abs/2609.31600"
   },
   {
+    "arxiv_id": "2609.32459",
+    "title": "Beyond the Model: Demystifying Harness Effects in Software Engineering Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-32459-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.32459"
+  },
+  {
     "arxiv_id": "2609.35083",
     "title": "Continuous Variational Synthesis",
     "status": "indexed",
@@ -4926,6 +4933,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2609-38169-evidence.zip",
     "source": "https://arxiv.org/abs/2609.38169"
+  },
+  {
+    "arxiv_id": "2609.38201",
+    "title": "TomasuLLM: Out-of-Order Speculative Execution for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2609-38201-evidence.zip",
+    "source": "https://arxiv.org/abs/2609.38201"
   },
   {
     "arxiv_id": "2609.38795",
@@ -6606,5 +6620,145 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-06843-evidence.zip",
     "source": "https://arxiv.org/abs/2610.06843"
+  },
+  {
+    "arxiv_id": "2610.07940",
+    "title": "Hybrid Latent Attention for Looped Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-07940-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.07940"
+  },
+  {
+    "arxiv_id": "2610.07987",
+    "title": "VisionWeave: Weaving Elastic Visual Representations as a Native Capability of MLLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-07987-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.07987"
+  },
+  {
+    "arxiv_id": "2610.08049",
+    "title": "A Riemannian Geometry for Low-rank Adaptation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08049-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08049"
+  },
+  {
+    "arxiv_id": "2610.08082",
+    "title": "POLAR: Ontology-Guided Risk Prevention for Tool-Calling LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08082-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08082"
+  },
+  {
+    "arxiv_id": "2610.08164",
+    "title": "Align, Then Correct: Training-Free Two-Stage Low-Rank Compensation for Extremely Quantized Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08164-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08164"
+  },
+  {
+    "arxiv_id": "2610.08268",
+    "title": "DySCo: Dynamic Sharding for Collaborative Edge-Cloud LLM Inference with Depth-Synchronized Batching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08268-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08268"
+  },
+  {
+    "arxiv_id": "2610.08312",
+    "title": "CoDe-LoRA: Mitigating the Orthogonality Dilemma in Continual Learning of LLMs via Knowledge Consolidation and Decoupling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08312-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08312"
+  },
+  {
+    "arxiv_id": "2610.08341",
+    "title": "DIPrune: Task-Aware Token Pruning with Dual Importance for Efficient Multimodal Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08341-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08341"
+  },
+  {
+    "arxiv_id": "2610.08367",
+    "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08367-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08367"
+  },
+  {
+    "arxiv_id": "2610.08378",
+    "title": "Lachesis: Lifetime-Aware KV Cache Placement for Agent Serving across HBM and High-Bandwidth Flash",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08378-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08378"
+  },
+  {
+    "arxiv_id": "2610.08388",
+    "title": "Foresight-over-Graph: Reasoning Beyond Local Horizons for Knowledge Base Question Answering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08388-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08388"
+  },
+  {
+    "arxiv_id": "2610.08403",
+    "title": "SSR: Sparse Segment Reduction for Ternary GEMM Acceleration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08403-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08403"
+  },
+  {
+    "arxiv_id": "2610.08430",
+    "title": "NeMo-DCR: Bit-Exact Delta-Compressed Refit for Scalable Agentic RL at Trillion-Parameter Scale",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08430-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08430"
+  },
+  {
+    "arxiv_id": "2610.08444",
+    "title": "ActTune: Action-Aware Precision and GPU Operating-Point Adaptation for Energy-Efficient Vision-Language-Action Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08444-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08444"
+  },
+  {
+    "arxiv_id": "2610.08537",
+    "title": "FlowCF: Sparse Counterfactual Explanations for Mixed-Type Tabular Data using Flow Matching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08537-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08537"
+  },
+  {
+    "arxiv_id": "2610.08578",
+    "title": "Random Feature Gaussian Process Attention: Linear-Time Probabilistic Attention with Calibrated Uncertainty",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08578-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08578"
+  },
+  {
+    "arxiv_id": "2610.08669",
+    "title": "MemFLoRA: Memory-Floor LoRA for CNN Adaptation at the Edge",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08669-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08669"
+  },
+  {
+    "arxiv_id": "2610.08678",
+    "title": "Secure Speculative Decoding for Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08678-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08678"
+  },
+  {
+    "arxiv_id": "2610.08732",
+    "title": "A Systematic Study of Semantic ID Spaces for Generative Information Retrieval",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08732-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08732"
+  },
+  {
+    "arxiv_id": "2610.08743",
+    "title": "Reinforcement Learning with Conformal Action Sets: An Application to Sequential Recommendation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08743-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08743"
   }
 ]
