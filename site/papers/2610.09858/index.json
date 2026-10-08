@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09858",
+  "title": "Training Advisors for LLM Agents from Task Outcomes",
+  "summary": "Caddie replaces hand-written step-level critique labels, reference critiques, and prompting-only self-reflection with a small critic model trained by RL purely from final task success, keeping the base model frozen. Costs include an RL training run on multi-hop QA data, an additional 4B-parameter model to host (feasible on one 24 GB GPU), and extra inference latency and token spend whenever the agent consults the critic. It can fail when the agent calls the critic at unhelpful times, when outcome-only reward produces generic advice, or when target tasks differ enough from the training distribution that transferred guidance degrades rather than helps.",
+  "rationale": "A 4B critic fits the reader's single-GPU budget and shows cross-model and cross-domain transfer, but the benefit must be validated on the reader's own agent workloads before production adoption.",
+  "technique": "Outcome-trained natural-language critic for LLM agents",
+  "family": "recuperacao_de_falha",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09858",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Caddie replaces hand-written step-level critique labels, reference critiques, and prompting-only self-reflection with a small critic model trained by RL purely from final task success, keeping the base model frozen. Costs include an RL training run on multi-hop QA data, an additional 4B-parameter model to host (feasible on one 24 GB GPU), and extra inference latency and token spend whenever the agent consults the critic. It can fail when the agent calls the critic at unhelpful times, when outcome-only reward produces generic advice, or when target tasks differ enough from the training distribution that transferred guidance degrades rather than helps.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09858",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On MuSiQue, a Qwen3-4B critic improves the same base model's success rate by more than 25 percentage points, surpassing Kimi K3 without a critic, with transfer to three unseen base models and out-of-domain benchmarks (τ^3, DeepDive).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09858",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

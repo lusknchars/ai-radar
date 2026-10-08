@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10062",
+  "title": "Loud Failures, Quiet Failures: Fault Detection and Recovery in Tool-Using Language Model Agents",
+  "summary": "The paper is a diagnostic benchmark, not a method; the production practice it argues for is replacing trust in well-formed tool outputs with explicit result validation and error-channel-independent checks in tool-using agents. The cost is added validation logic and extra verification calls per trajectory, since the paper shows a simple prompt line asking the agent to check results does not improve detection, so validation must be implemented in the harness rather than delegated to the model. What can fail is that silent faults (plausible wrong values, schema drift, corruption) still pass through undetected at high rates (detection only 58.8% versus 91.3% for explicit errors), reasoning-model variants do not help recovery, and stochastic run-to-run variation (only 63.3% identical end states on fault-free runs) limits how much any single-run safeguard can guarantee.",
+  "rationale": "The reader deploys or will deploy tool-using agents through APIs, and the paper's actionable finding is that agents respond to the error channel rather than output content, so harness-level validation of tool results should be adopted now rather than relying on reasoning models or prompt-level instructions.",
+  "technique": "Fault-injection evaluation of tool-using agent failure handling",
+  "family": "recuperacao_de_falha",
+  "recommendation": "adotar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10062",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 131,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The paper is a diagnostic benchmark, not a method; the production practice it argues for is replacing trust in well-formed tool outputs with explicit result validation and error-channel-independent checks in tool-using agents. The cost is added validation logic and extra verification calls per trajectory, since the paper shows a simple prompt line asking the agent to check results does not improve detection, so validation must be implemented in the harness rather than delegated to the model. What can fail is that silent faults (plausible wrong values, schema drift, corruption) still pass through undetected at high rates (detection only 58.8% versus 91.3% for explicit errors), reasoning-model variants do not help recovery, and stochastic run-to-run variation (only 63.3% identical end states on fault-free runs) limits how much any single-run safeguard can guarantee.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10062",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

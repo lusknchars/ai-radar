@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10507",
+  "title": "RECAST: Learning to Compute the Right Context through Adaptive Evidence Routing",
+  "summary": "RECAST replaces fixed similarity-based RAG retrieval with a trained RouterLM that sequentially selects retrieval and computation primitives, which a frozen CompilerLM turns into executable code before a frozen AnswerLM answers. Adoption costs a full SFT-plus-GRPO training pipeline for the router, maintenance of three coordinated model components, and added per-query latency from iterative routing and code execution. It can fail when RouterLM judges insufficient evidence as sufficient, when generated computation code errors or misaggregates, and on domains whose operation distributions differ from the training tasks, where the claimed zero-shot generalization may not transfer.",
+  "rationale": "The quality gains are meaningful, but reproducing them requires RL-based router training and a multi-model orchestration stack that exceeds a 24 GB GPU budget and small-team capacity, so the reader should track the work and reuse released artifacts if they appear rather than adopt it now.",
+  "technique": "Learned evidence routing with computation operations (RECAST)",
+  "family": "recuperacao_e_rag",
+  "recommendation": "observar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10507",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RECAST replaces fixed similarity-based RAG retrieval with a trained RouterLM that sequentially selects retrieval and computation primitives, which a frozen CompilerLM turns into executable code before a frozen AnswerLM answers. Adoption costs a full SFT-plus-GRPO training pipeline for the router, maintenance of three coordinated model components, and added per-query latency from iterative routing and code execution. It can fail when RouterLM judges insufficient evidence as sufficient, when generated computation code errors or misaggregates, and on domains whose operation distributions differ from the training tasks, where the claimed zero-shot generalization may not transfer.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10507",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "75.6% mean success rate across six benchmark families, +15.9 points over the strongest large-model baseline, and +15.0 points on three held-out benchmarks; a trained Qwen3.5-9B RouterLM beats a training-free Gemini 3.5 Flash router by 5.0 points.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10507",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

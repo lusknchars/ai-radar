@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10498",
+  "title": "EmbodiedRSI: Active Continual Robot Learning Through Hypothesis-Guided Co-Evolution",
+  "summary": "EmbodiedRSI replaces undirected trial-and-error adaptation in self-evolving robot harnesses with a Fast-Slow dual-system architecture that maintains competing code and skill hypotheses in a graph and selects physical experiments by value of information. Its costs are a robot embodiment (or simulator) for physical interaction, substantial orchestration complexity across hypothesis graphs, hierarchical memory, and co-evolution loops, plus dependence on an underlying robot foundation model. Failure modes include hypothesis graphs that diverge from true failure causes, unsafe or destructive physical exploration on hardware, memory entries selected by reward that do not generalize, and degradation when the base visuomotor model drifts outside the harness's repair capacity.",
+  "rationale": "The method targets physical robot learning on benchmarks such as RoboCasa365 and LIBERO-Pro, which lies outside the reader's production scope of LLM inference, serving, and agent engineering on constrained GPU infrastructure.",
+  "technique": "Hypothesis-guided self-evolving robotic agent harness",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10498",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 132,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "EmbodiedRSI replaces undirected trial-and-error adaptation in self-evolving robot harnesses with a Fast-Slow dual-system architecture that maintains competing code and skill hypotheses in a graph and selects physical experiments by value of information. Its costs are a robot embodiment (or simulator) for physical interaction, substantial orchestration complexity across hypothesis graphs, hierarchical memory, and co-evolution loops, plus dependence on an underlying robot foundation model. Failure modes include hypothesis graphs that diverge from true failure causes, unsafe or destructive physical exploration on hardware, memory entries selected by reward that do not generalize, and degradation when the base visuomotor model drifts outside the harness's repair capacity.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10498",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "77.0% overall success and 71.3% on Composite-Unseen on RoboCasa365 versus 40.1% for the best baseline; 86.8% overall on LIBERO-Pro; 71.3% zero-shot success on real-robot tasks (gains expressed in success-rate points, not a multiplicative factor).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10498",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

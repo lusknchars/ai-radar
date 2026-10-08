@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10265",
+  "title": "Stale, Misattributed, or Late: Where Personal Memory Fails Before Generation",
+  "summary": "The paper replaces answer-correctness-only evaluation of agent memory with pre-generation measurement of stored-state validity, identity resolution, abstention, and latency, and operationally replaces append-only memory stores with update-resolved stores that serve only the active value per slot. The cost is an update-resolution and slot-merge step at memory-write time plus an entity-posterior mechanism for same-name disambiguation, with participant-aware BM25 sufficing for retrieval at no extra model cost. The residual failures are slot assignment: missed merges leave stale values active, false merges silently delete current values, LLM key assigners underperform a rule extractor on clean retrieval despite higher key recall, and identically named speakers remain indistinguishable.",
+  "rationale": "Update-resolved active-value serving is implementable on constrained infrastructure, removes the dominant measured stale-exposure failure, and the paper's negative results on LLM key assigners and misattribution define exactly which parts should not yet be trusted in production.",
+  "technique": "Pre-generation memory validation with active-value serving",
+  "family": "memoria_e_contexto",
+  "recommendation": "adotar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10265",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 121,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The paper replaces answer-correctness-only evaluation of agent memory with pre-generation measurement of stored-state validity, identity resolution, abstention, and latency, and operationally replaces append-only memory stores with update-resolved stores that serve only the active value per slot. The cost is an update-resolution and slot-merge step at memory-write time plus an entity-posterior mechanism for same-name disambiguation, with participant-aware BM25 sufficing for retrieval at no extra model cost. The residual failures are slot assignment: missed merges leave stale values active, false merges silently delete current values, LLM key assigners underperform a rule extractor on clean retrieval despite higher key recall, and identically named speakers remain indistinguishable.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10265",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Without update resolution, 70.3% of prompts expose a superseded value; serving only the active value of each correctly keyed slot eliminates observed stale exposure. Open-domain merge recall on LongMemEval never exceeds 0.062.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10265",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

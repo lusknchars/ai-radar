@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09757",
+  "title": "EntroPrefill: Renyi-Guided Context Pruning with Conditional Stability Guarantees for Retrieval-Augmented Generation",
+  "summary": "EntroPrefill replaces heuristic attention-concentration-based pruning of retrieved context with a Renyi-entropy proposal mechanism constrained by explicit discarded-attention-mass bounds and a computable deletion envelope, executed mid-prefill so deeper layers process a shorter sequence. It costs additional scoring and pooling computation per head group, introduces hyperparameters for the regularized head pooling and deletion constraints, and requires implementing custom mid-prefill pruning logic that most serving stacks and third-party APIs do not expose. The authors themselves show a counterexample that shallow-layer observations cannot guarantee future-output stability, so pruning decisions can silently degrade generated answers, and the paper provides no measured speedup or accuracy preservation to size that risk.",
+  "rationale": "The work is explicitly theoretical with no empirical validation of speedup or task accuracy, and its mid-prefill intervention requires serving-stack access unavailable on third-party APIs, so it is not adoptable or testable under the stated constraints.",
+  "technique": "Renyi-guided mid-prefill context pruning for RAG",
+  "family": "recuperacao_e_rag",
+  "recommendation": "observar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09757",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "EntroPrefill replaces heuristic attention-concentration-based pruning of retrieved context with a Renyi-entropy proposal mechanism constrained by explicit discarded-attention-mass bounds and a computable deletion envelope, executed mid-prefill so deeper layers process a shorter sequence. It costs additional scoring and pooling computation per head group, introduces hyperparameters for the regularized head pooling and deletion constraints, and requires implementing custom mid-prefill pruning logic that most serving stacks and third-party APIs do not expose. The authors themselves show a counterexample that shallow-layer observations cannot guarantee future-output stability, so pruning decisions can silently degrade generated answers, and the paper provides no measured speedup or accuracy preservation to size that risk.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09757",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

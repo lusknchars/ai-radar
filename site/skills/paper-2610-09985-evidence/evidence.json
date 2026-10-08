@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09985",
+  "title": "Marrying Pricing and Advertising with LLMs",
+  "summary": "The method replaces decoupled pipelines in which ad text and price are optimized separately, substituting a single online actor-critic loop where a LoRA-tuned LLM generates advertisements and a demand-model critic selects prices from binary purchase feedback. Costs include maintaining online LoRA updates with policy-gradient training, fitting and updating a demand model continuously, and the engineering complexity of a live feedback loop, plus the exploration cost of suboptimal prices and ads during learning. It can fail when demand shifts non-stationarily, when purchase feedback is too sparse to identify price and text effects separately, and when simulator-validated gains do not transfer to real marketplace demand.",
+  "rationale": "The approach is feasible on a single 24 GB GPU via LoRA, but its gains are validated only on synthetic and simulator demand, so production adoption requires workload-specific validation of the online learning loop before deployment.",
+  "technique": "Online actor-critic joint pricing and LLM ad generation with LoRA",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09985",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces decoupled pipelines in which ad text and price are optimized separately, substituting a single online actor-critic loop where a LoRA-tuned LLM generates advertisements and a demand-model critic selects prices from binary purchase feedback. Costs include maintaining online LoRA updates with policy-gradient training, fitting and updating a demand model continuously, and the engineering complexity of a live feedback loop, plus the exploration cost of suboptimal prices and ads during learning. It can fail when demand shifts non-stationarily, when purchase feedback is too sparse to identify price and text effects separately, and when simulator-validated gains do not transfer to real marketplace demand.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09985",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Expected revenue gains of 5.69%, 5.18%, and 55.96% over the reference policy on three synthetic demand models and 5.81% on a marketplace-data simulator; gains are percentage improvements, not multiplicative factors.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09985",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

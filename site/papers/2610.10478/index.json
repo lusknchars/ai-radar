@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10478",
+  "title": "Before They Can Solve: Predicting Post-Training Coding-Agent Performance from Base Models",
+  "summary": "The method replaces end-to-end pass@K evaluation of base checkpoints (and the costly post-training rounds it is meant to triage) with cheaper screens that replay successful post-trained trajectories and probe the base model only at the decisive step, via action likelihood, multiple-choice patch selection, or prefix-conditioned sampling. It costs only benchmark trajectories plus their verifier and some GPU or API inference on the base checkpoint, with no need for the base model to drive the tool-use harness from a cold start. It can fail if the screens' correlation with post-trained performance does not transfer beyond the evaluated ten-model cohort and SWE-bench Verified, if suitable successful trajectories are unavailable for the target task distribution, or if decisive-step likelihood misestimates capabilities that post-training itself instills rather than amplifies.",
+  "rationale": "For a small team that fine-tunes or selects base checkpoints for coding agents, this offers a low-cost triage signal before committing compute to post-training, but its predictive validity rests on a single ten-model study and warrants workload-specific validation before reliance.",
+  "technique": "Trajectory-replay screens for base-model selection",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10478",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces end-to-end pass@K evaluation of base checkpoints (and the costly post-training rounds it is meant to triage) with cheaper screens that replay successful post-trained trajectories and probe the base model only at the decisive step, via action likelihood, multiple-choice patch selection, or prefix-conditioned sampling. It costs only benchmark trajectories plus their verifier and some GPU or API inference on the base checkpoint, with no need for the base model to drive the tool-use harness from a cold start. It can fail if the screens' correlation with post-trained performance does not transfer beyond the evaluated ten-model cohort and SWE-bench Verified, if suitable successful trajectories are unavailable for the target task distribution, or if decisive-step likelihood misestimates capabilities that post-training itself instills rather than amplifies.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10478",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Across ten public base/post-trained model pairs, all three screens (Decisive-Action BPB, Patch MCQ, prefix-conditioned pass@K) rank base checkpoints in close agreement with post-trained SWE-bench Verified pass@1.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10478",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

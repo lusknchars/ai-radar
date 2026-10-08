@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09906",
+  "title": "Constrained-Action AI Remediation for SIEM/XDR via a NeMo-Guardrails Proxy",
+  "summary": "The method replaces free-form LLM-generated remediation commands with a closed intent vocabulary whose templated commands run through thin endpoint agents, plus a NeMo-Guardrails proxy enforcing input and output rails on the analyst-facing LLM. Costs include an extra proxy layer whose measured rail latency rules out fully inline autonomous control, the engineering effort of defining the intent vocabulary, validators, and endpoint agents, and a residual false-positive rate of 0.1%. Failure modes after adoption include the roughly 5.5% of injections that still evade the rails, coverage gaps if a required remediation is absent from the closed vocabulary, and the fact that operational-technology suitability is argued architecturally rather than measured in deployment.",
+  "rationale": "The architecture is deployable on constrained infrastructure using third-party APIs and is directly relevant if the reader builds security automation, but its recall figures and latency trade-offs require validation against the reader's own alert corpus before production trust.",
+  "technique": "Closed-vocabulary LLM remediation with guardrails proxy",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09906",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces free-form LLM-generated remediation commands with a closed intent vocabulary whose templated commands run through thin endpoint agents, plus a NeMo-Guardrails proxy enforcing input and output rails on the analyst-facing LLM. Costs include an extra proxy layer whose measured rail latency rules out fully inline autonomous control, the engineering effort of defining the intent vocabulary, validators, and endpoint agents, and a residual false-positive rate of 0.1%. Failure modes after adoption include the roughly 5.5% of injections that still evade the rails, coverage gaps if a required remediation is absent from the closed vocabulary, and the fact that operational-technology suitability is argued architecturally rather than measured in deployment.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09906",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Stock NeMo-Guardrails proxy lifts prompt-injection recall from 25.0% to 94.5% at a 0.1% false-positive rate on the authors' SOC-specific adversarial corpus.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09906",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

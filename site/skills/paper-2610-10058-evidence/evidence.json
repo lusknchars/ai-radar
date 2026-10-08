@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10058",
+  "title": "Cache the Encoder Within:Compact, Reusable Memory across LLM Queries",
+  "summary": "EncBank replaces re-encoding or text replay of repeatedly queried documents by caching a pretrained LLM's lower-layer outputs once and feeding them to an adapted upper-layer reader, with 4-bit storage shared across precisions. It costs an offline self-distillation and adapter preparation step per backbone, a persistent store that shrinks but does not disappear, and a measured 3.12-point RULER accuracy drop relative to replay in the reported configuration. It can fail when reuse frequency is low enough that preparation and storage outweigh re-encoding, and its end-to-end gains are workload-dependent rather than guaranteed.",
+  "rationale": "The method targets a real cost in repeated-document RAG-style workloads and fits constrained infrastructure, but its benefits depend on reuse frequency, preparation overhead, and per-backbone adaptation, so it warrants a workload-specific pilot rather than immediate production adoption.",
+  "technique": "Reusable cached lower-layer document states (EncBank)",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10058",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "EncBank replaces re-encoding or text replay of repeatedly queried documents by caching a pretrained LLM's lower-layer outputs once and feeding them to an adapted upper-layer reader, with 4-bit storage shared across precisions. It costs an offline self-distillation and adapter preparation step per backbone, a persistent store that shrinks but does not disappear, and a measured 3.12-point RULER accuracy drop relative to replay in the reported configuration. It can fail when reuse frequency is low enough that preparation and storage outweigh re-encoding, and its end-to-end gains are workload-dependent rather than guaranteed.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10058",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "4-bit storage retains 28.1% of the native-precision persistent GPU store (about 3.6x reduction) while keeping benchmark aggregates within one score point; separately, a 1.40x prefill speedup over text replay at a 3.12-point RULER accuracy cost.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10058",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

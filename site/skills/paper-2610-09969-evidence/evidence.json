@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09969",
+  "title": "TR-PTQ: High-Accuracy Integer-Only Transformer Post Training Quantization via Taylor Region Reformulation",
+  "summary": "TR-PTQ replaces floating-point evaluation of nonlinear transformer operations (LayerNorm scale, GELU, SoftMax, division, square roots) with integer-only computation built on shared Taylor-region exponential and logarithm primitives, moving expensive operations into the log domain, plus a calibration-free outlier-aware optimization of LayerNorm parameters. It costs implementation complexity: adopting it requires a custom integer kernel path for the log-domain primitives rather than using standard INT8 quantization toolchains, and the paper reports up to 1.5% absolute accuracy loss. It can fail on models or datasets outside the tested benchmarks, since the claimed robustness of SoftMax and the error-source diagnosis may not transfer, and integer-only kernels may underperform optimized float16 inference on a 24 GB GPU that already supports FP16/BF16 natively.",
+  "rationale": "The method targets fully integer-only deployment, but on a single consumer GPU with native FP16 support the practical gain is limited, so the team should validate accuracy and latency on their own workload before committing to a custom integer kernel stack.",
+  "technique": "Integer-only transformer PTQ via shared Taylor-region log-domain primitives",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09969",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TR-PTQ replaces floating-point evaluation of nonlinear transformer operations (LayerNorm scale, GELU, SoftMax, division, square roots) with integer-only computation built on shared Taylor-region exponential and logarithm primitives, moving expensive operations into the log domain, plus a calibration-free outlier-aware optimization of LayerNorm parameters. It costs implementation complexity: adopting it requires a custom integer kernel path for the log-domain primitives rather than using standard INT8 quantization toolchains, and the paper reports up to 1.5% absolute accuracy loss. It can fail on models or datasets outside the tested benchmarks, since the claimed robustness of SoftMax and the error-source diagnosis may not transfer, and integer-only kernels may underperform optimized float16 inference on a 24 GB GPU that already supports FP16/BF16 natively.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09969",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Less than 1.5% absolute accuracy degradation across vision and language benchmarks with fully integer-only inference, eliminating floating-point fallbacks for nonlinearities.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09969",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

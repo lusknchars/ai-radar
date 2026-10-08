@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10381",
+  "title": "ResidualQuant: KV Cache Quantization for Looped Transformers with 2-Bit Residuals",
+  "summary": "ResidualQuant replaces standard per-loop full-precision (or uniformly quantized) KV caches in looped Transformers with a scheme where final-loop KV states are stored as a reference and earlier loops are stored as INT2 residuals, combined with least-square scaling, rotations, and loop-wise mixed precision. It costs implementation complexity in the inference path (residual encoding/decoding, rotations, mixed-precision kernels) and requires a serving stack that supports these custom formats; reconstruction overhead may offset some memory-traffic gains. It fails if the deployed model is not a looped Transformer, since the core assumption of high KV similarity across loops does not hold for standard architectures, and accuracy at the most aggressive 2-bit setting without mixed precision can still degrade on reasoning and code tasks.",
+  "rationale": "The gains are real and well-quantified, but the technique only applies to looped Transformer architectures, which are not what typical constrained-infrastructure teams deploy in production, so it is relevant to track rather than adopt or test now.",
+  "technique": "Residual loop-wise KV cache quantization (INT2 residuals)",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10381",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ResidualQuant replaces standard per-loop full-precision (or uniformly quantized) KV caches in looped Transformers with a scheme where final-loop KV states are stored as a reference and earlier loops are stored as INT2 residuals, combined with least-square scaling, rotations, and loop-wise mixed precision. It costs implementation complexity in the inference path (residual encoding/decoding, rotations, mixed-precision kernels) and requires a serving stack that supports these custom formats; reconstruction overhead may offset some memory-traffic gains. It fails if the deployed model is not a looped Transformer, since the core assumption of high KV similarity across loops does not hold for standard architectures, and accuracy at the most aggressive 2-bit setting without mixed precision can still degrade on reasoning and code tasks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10381",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces theoretical KV storage by 80.7% while retaining accuracy close to BF16 under mixed precision, and improves fixed-batch decode throughput up to 2.73x and peak throughput up to 4.15x on an RTX 5090.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10381",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

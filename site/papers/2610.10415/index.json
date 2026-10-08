@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.10415",
+  "title": "Steerspeech: Activation Steering For Emotion Control In Generated Speech",
+  "summary": "Replaces fine-tuning or specialized conditioning of the TTS backbone for emotion control by training a small low-rank transform per emotion and injecting steering vectors into hidden activations at inference, keeping the base model frozen. Costs include training one transform per target emotion (requiring a generation-and-replay pipeline with a straight-through estimator through discrete tokens), plus an optimization step at inference to set the steering direction. Can fail through degradation of speaker identity and linguistic content at strong steering, and the evidence is limited to one backbone (Qwen3-TTS) with objective metrics and a subjectively evaluated representative emotion, so gains may not transfer to other TTS stacks.",
+  "rationale": "The method is compatible with constrained infrastructure (frozen backbone, per-emotion low-rank modules), but the reader must validate emotion-intensity gains against speaker and content degradation on their specific TTS model before production adoption.",
+  "technique": "Activation steering for emotion control in TTS",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.10415",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces fine-tuning or specialized conditioning of the TTS backbone for emotion control by training a small low-rank transform per emotion and injecting steering vectors into hidden activations at inference, keeping the base model frozen. Costs include training one transform per target emotion (requiring a generation-and-replay pipeline with a straight-through estimator through discrete tokens), plus an optimization step at inference to set the steering direction. Can fail through degradation of speaker identity and linguistic content at strong steering, and the evidence is limited to one backbone (Qwen3-TTS) with objective metrics and a subjectively evaluated representative emotion, so gains may not transfer to other TTS stacks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10415",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reports 1.08x-7.12x improvement in target-emotion scores over baselines on Qwen3-TTS, with 78.1%-96.8% intensity preference and 1.43x-1.46x speaker-identity preservation at high steering strengths (subjective, one representative emotion).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.10415",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09901",
+  "title": "A Chat Assistant for Software Exploration in a 3D Software Visualization",
+  "summary": "The method replaces manual GUI interaction in a 3D software visualization tool with natural-language chat that triggers deterministic tool calls (highlighting, color themes, restructuring) via CopilotKit-style LLM-plus-tools integration. It costs third-party LLM API usage, frontend integration effort, and added nondeterminism layered over previously deterministic UI actions, with no training or cluster required. It can fail on open-ended restructuring commands, where the small study (eleven participants) showed mixed results and the authors identify a need for stronger guardrails and user-feedback incorporation.",
+  "rationale": "The pattern (constrained LLM plus deterministic tool actions) is cheap to adopt on a single GPU or API budget, but the paper's own evidence is a small usability study showing reliability only for simple, well-scoped actions, so production adoption should follow workload-specific validation of the tool-call surface.",
+  "technique": "LLM chat assistant with deterministic tool calls",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09901",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces manual GUI interaction in a 3D software visualization tool with natural-language chat that triggers deterministic tool calls (highlighting, color themes, restructuring) via CopilotKit-style LLM-plus-tools integration. It costs third-party LLM API usage, frontend integration effort, and added nondeterminism layered over previously deterministic UI actions, with no training or cluster required. It can fail on open-ended restructuring commands, where the small study (eleven participants) showed mixed results and the authors identify a need for stronger guardrails and user-feedback incorporation.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09901",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
