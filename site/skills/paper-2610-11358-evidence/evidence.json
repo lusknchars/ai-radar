@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.11358",
+  "title": "RaReCache: Bridging the Gap in Cross-Model KV Cache Reuse via Rank disagreement-based Selective Recomputation",
+  "summary": "Replaces full-context prefill by the target model whenever a session or cascade switches models: a small source model prefills once, its KV cache is linearly mapped to the target, and only the ~30-40% of tokens flagged by a rank-disagreement metric are recomputed by the target. Costs include holding both models' weights (or sequential loading), a calibration set to fit the linear maps and rank-disagreement statistics, and a residual 1-5% accuracy loss relative to native target prefill, plus engineering to integrate the mapped-cache path into the serving stack. It can fail when transfer error concentrates differently than the calibration data predicts, when the workload rarely switches or cascades models (making the prefill saving irrelevant), or when serving targets only fit on the GPU via APIs or aggressive quantization, where no open implementation of the mapped-cache path may exist.",
+  "rationale": "The speedup is real and single-GPU compatible, but the benefit only materializes for multi-model routing or cascade workloads and requires calibration plus serving-stack integration, so the reader should validate it on their own traffic before adopting.",
+  "technique": "Cross-model KV cache reuse with selective recomputation",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-09",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.11358",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 123,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces full-context prefill by the target model whenever a session or cascade switches models: a small source model prefills once, its KV cache is linearly mapped to the target, and only the ~30-40% of tokens flagged by a rank-disagreement metric are recomputed by the target. Costs include holding both models' weights (or sequential loading), a calibration set to fit the linear maps and rank-disagreement statistics, and a residual 1-5% accuracy loss relative to native target prefill, plus engineering to integrate the mapped-cache path into the serving stack. It can fail when transfer error concentrates differently than the calibration data predicts, when the workload rarely switches or cascades models (making the prefill saving irrelevant), or when serving targets only fit on the GPU via APIs or aggressive quantization, where no open implementation of the mapped-cache path may exist.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11358",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 3.04x prefill speedup; 1.8x request throughput on one GPU; 5.0x/6.4x lower median/p99 TTFT at saturation, recomputing 30-40% of positions while retaining 95-99% of target accuracy across 8.8x-23x model-size gaps.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11358",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

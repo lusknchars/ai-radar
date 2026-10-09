@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.11794",
+  "title": "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks",
+  "summary": "It replaces weight-level fine-tuning and in-context prompting for environment adaptation with a persistent natural-language rulebook of revisable world-model hypotheses that an LLM compiles into verified executable code for prediction and planning. The cost is a heavy inference-time loop of reflection, compilation, and replay verification with many LLM calls per environment, plus engineering of the memory, compiler, and verification pipeline; the weights stay frozen, so no training infrastructure is needed. It can fail when the LLM proposes unfaithful or non-generalizing rules that pass cell-exact replay but mispredict unseen states, and results are demonstrated only on ARC-AGI-3 and Pong, so transfer to noisy, partially observable production workloads is unvalidated.",
+  "rationale": "The approach is feasible on a single GPU or via APIs since the LLM is frozen, but its gains are shown only on specific game benchmarks and its per-episode inference cost and rulebook reliability must be validated on the reader's actual tasks before production adoption.",
+  "technique": "Reflective natural-language rulebook compiled to executable world model",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-09",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.11794",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 338,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces weight-level fine-tuning and in-context prompting for environment adaptation with a persistent natural-language rulebook of revisable world-model hypotheses that an LLM compiles into verified executable code for prediction and planning. The cost is a heavy inference-time loop of reflection, compilation, and replay verification with many LLM calls per environment, plus engineering of the memory, compiler, and verification pipeline; the weights stay frozen, so no training infrastructure is needed. It can fail when the LLM proposes unfaithful or non-generalizing rules that pass cell-exact replay but mispredict unseen states, and results are demonstrated only on ARC-AGI-3 and Pong, so transfer to noisy, partially observable production workloads is unvalidated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11794",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On ARC-AGI-3 the agent clears every level of all 25 public games with mean RHAE 100.0 using 44% of the human action count; a learned Pong controller wins 21:0 across three episodes without further LLM calls.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11794",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
