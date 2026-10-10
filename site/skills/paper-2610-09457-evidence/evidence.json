@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09457",
+  "title": "DSReg: Provably Recovering Individual World Latents without Reconstruction",
+  "summary": "DSReg replaces reconstruction-based or supervision-based disentanglement methods (nonlinear ICA, dictionary learning, causal representation learning with decoders or labels) with a post hoc regularization applied to any linearly identified representation, such as LeJEPA checkpoints. Its cost is low: no decoder, no labels, no retraining of the base model, and reuse of existing checkpoints at no loss versus joint training, which fits a single-GPU budget. It can fail if the Structural Diversity assumption does not hold, i.e., when two latents leave sufficiently similar dependency footprints on observations, since identifiability then degrades and no reconstruction signal exists to correct the mixing.",
+  "rationale": "The method is computationally cheap and post hoc, making it feasible on constrained infrastructure, but its guarantee rests on the Structural Diversity condition, so the reader should validate latent recovery on their specific representations before production adoption.",
+  "technique": "Dependency-sparsity regularization for identifiable JEPA latents",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-10",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09457",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 228,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DSReg replaces reconstruction-based or supervision-based disentanglement methods (nonlinear ICA, dictionary learning, causal representation learning with decoders or labels) with a post hoc regularization applied to any linearly identified representation, such as LeJEPA checkpoints. Its cost is low: no decoder, no labels, no retraining of the base model, and reuse of existing checkpoints at no loss versus joint training, which fits a single-GPU budget. It can fail if the Structural Diversity assumption does not hold, i.e., when two latents leave sufficiently similar dependency footprints on observations, since identifiability then degrades and no reconstruction signal exists to correct the mixing.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09457",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The paper claims provable recovery of individual world latents up to signed permutation, improving individual-latent recovery and downstream use while preserving dense prediction; no specific multiplicative factor is stated in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09457",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

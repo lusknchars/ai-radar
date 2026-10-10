@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.11732",
+  "title": "MemTrial: Learning When to Trust Memory in LLM Portfolio Agents",
+  "summary": "MemTrial replaces naive outcome-based crediting of retrieved experiences (where the shared market move contaminates the credit signal) with counterfactual ablation: each decision is drafted under eight fractional-factorial experience combinations, experiences are credited by Banzhaf values, and credits are pooled via a hierarchical Bayesian model that gates action on out-of-sample validation against a conservative 1/N anchor. The cost is roughly 8x the LLM calls per decision plus a Bayesian pooling and validation pipeline, which is feasible on third-party APIs but adds latency and engineering complexity. It can fail when the noisy per-date credits do not generalize to new dates, when LLM sampling variance dominates the ablation differences, or when the validation gate rarely triggers, leaving the system at its anchor while still paying the 8x inference cost.",
+  "rationale": "The counterfactual crediting idea is sound and API-feasible, but the evidence is confined to financial portfolio benchmarks, so the 8x inference overhead and Bayesian gating machinery require workload-specific validation before production adoption.",
+  "technique": "Banzhaf-value memory credit assignment for LLM agents",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-10",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.11732",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 136,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MemTrial replaces naive outcome-based crediting of retrieved experiences (where the shared market move contaminates the credit signal) with counterfactual ablation: each decision is drafted under eight fractional-factorial experience combinations, experiences are credited by Banzhaf values, and credits are pooled via a hierarchical Bayesian model that gates action on out-of-sample validation against a conservative 1/N anchor. The cost is roughly 8x the LLM calls per decision plus a Bayesian pooling and validation pipeline, which is feasible on third-party APIs but adds latency and engineering complexity. It can fail when the noisy per-date credits do not generalize to new dates, when LLM sampling variance dominates the ablation differences, or when the validation gate rarely triggers, leaving the system at its anchor while still paying the 8x inference cost.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11732",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Improves utility of the best experience-learning agent by 21.2% averaged over five settings; limits losses to at most 2.2% below the 1/N benchmark versus 15-38% for competing experience-learning agents.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.11732",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

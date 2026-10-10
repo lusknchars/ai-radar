@@ -6762,11 +6762,46 @@
     "source": "https://arxiv.org/abs/2610.08743"
   },
   {
+    "arxiv_id": "2610.09424",
+    "title": "Democratizing MoE inference on commodity GPUs with CoMoE",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09424-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09424"
+  },
+  {
+    "arxiv_id": "2610.09457",
+    "title": "DSReg: Provably Recovering Individual World Latents without Reconstruction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09457-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09457"
+  },
+  {
+    "arxiv_id": "2610.09476",
+    "title": "CHASE: Channel-Aligned Structure Exploitation for Geometry-Aware Model Engineering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09476-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09476"
+  },
+  {
+    "arxiv_id": "2610.09510",
+    "title": "Physics-Informed Neural Plasticity: PDE Solvers That Reshape Themselves",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09510-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09510"
+  },
+  {
     "arxiv_id": "2610.09681",
     "title": "Cost-Efficient Theorem Proving via Agent Orchestration in Program Verification",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-09681-evidence.zip",
     "source": "https://arxiv.org/abs/2610.09681"
+  },
+  {
+    "arxiv_id": "2610.09687",
+    "title": "The Silhouette Operator: Identifiability of Low-Rank Measures from One-Dimensional Projections",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09687-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09687"
   },
   {
     "arxiv_id": "2610.09703",
@@ -7042,6 +7077,111 @@
     "source": "https://arxiv.org/abs/2610.10507"
   },
   {
+    "arxiv_id": "2610.10621",
+    "title": "Self-Organization from Constrained Geometric Radiation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10621-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10621"
+  },
+  {
+    "arxiv_id": "2610.10630",
+    "title": "Phase-HDC: Replacing Optimizer History with Gradient Thresholds in Discrete Phase Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10630-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10630"
+  },
+  {
+    "arxiv_id": "2610.10636",
+    "title": "D-SLR: The Disjoint Row-Sparse plus Low-Rank Decomposition",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10636-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10636"
+  },
+  {
+    "arxiv_id": "2610.10641",
+    "title": "Coverage-Aware Reasoning with Medical Tokens for Diagnosis Prediction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10641-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10641"
+  },
+  {
+    "arxiv_id": "2610.10651",
+    "title": "Beyond the Ergodic Wall: A Discrete Geometric Physics Sandbox for Analysing AI Scaling Limits and Complexity Collapse",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10651-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10651"
+  },
+  {
+    "arxiv_id": "2610.10666",
+    "title": "Explaining the Saliency Map Sparsity of Adversarially-Trained Neural Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10666-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10666"
+  },
+  {
+    "arxiv_id": "2610.10690",
+    "title": "Learning infinite context windows in recurrent architectures via spatial neural computing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10690-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10690"
+  },
+  {
+    "arxiv_id": "2610.10738",
+    "title": "Lossy Compressive Text Autoencoders",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10738-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10738"
+  },
+  {
+    "arxiv_id": "2610.10933",
+    "title": "Rethinking the Tradeoff Between Temporal Encoding and Nonlinear Computation in Spiking Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10933-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10933"
+  },
+  {
+    "arxiv_id": "2610.11000",
+    "title": "Low-rank tensor structure of precipitation and its application to satellite-reference merging",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11000-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11000"
+  },
+  {
+    "arxiv_id": "2610.11004",
+    "title": "Reconstruction of Multiscale Plasma Dynamics Across Operating Regimes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11004-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11004"
+  },
+  {
+    "arxiv_id": "2610.11115",
+    "title": "Dynamics as Code: On Model Compression via Dynamic System",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11115-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11115"
+  },
+  {
+    "arxiv_id": "2610.11134",
+    "title": "QUILT: Rethinking Sparse-Attention Prefill through Shared Query Execution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11134-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11134"
+  },
+  {
+    "arxiv_id": "2610.11160",
+    "title": "LadderEdit: Edit-Level Residual Compression for Memory-Efficient Lifelong Editing of LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11160-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11160"
+  },
+  {
+    "arxiv_id": "2610.11214",
+    "title": "Bridging KV-Cache Quantization and Linear Attention: From Theory to Pretrained Weight Migration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11214-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11214"
+  },
+  {
     "arxiv_id": "2610.11226",
     "title": "When Lower Reconstruction Loss Hurts: Distributionally Robust Refinement for Low-Bit LLM Quantization",
     "status": "indexed",
@@ -7070,6 +7210,27 @@
     "source": "https://arxiv.org/abs/2610.11332"
   },
   {
+    "arxiv_id": "2610.11344",
+    "title": "EvoSim: Learning to Model, Modeling to Learn",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11344-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11344"
+  },
+  {
+    "arxiv_id": "2610.11345",
+    "title": "SynCo: Data Synthesis Co-Training for Self-Evolving LLMs via Multi-Agent Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11345-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11345"
+  },
+  {
+    "arxiv_id": "2610.11351",
+    "title": "Deception by Omission: Language Models Knowingly Hide Their Mistakes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11351-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11351"
+  },
+  {
     "arxiv_id": "2610.11358",
     "title": "RaReCache: Bridging the Gap in Cross-Model KV Cache Reuse via Rank disagreement-based Selective Recomputation",
     "status": "indexed",
@@ -7077,11 +7238,39 @@
     "source": "https://arxiv.org/abs/2610.11358"
   },
   {
+    "arxiv_id": "2610.11370",
+    "title": "RIT-RAG: Navigating Document Corpora with Retrieval-Induced Trees",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11370-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11370"
+  },
+  {
+    "arxiv_id": "2610.11447",
+    "title": "Closed-loop evaluation of LLM agents for embedded software development",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11447-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11447"
+  },
+  {
+    "arxiv_id": "2610.11450",
+    "title": "Tracing the Thoughts of a Coding Agent Playing ARC-AGI-3: Lessons for Continual Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11450-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11450"
+  },
+  {
     "arxiv_id": "2610.11458",
     "title": "Generative Adversarial Loops",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-11458-evidence.zip",
     "source": "https://arxiv.org/abs/2610.11458"
+  },
+  {
+    "arxiv_id": "2610.11480",
+    "title": "RoboAware: Learning to Coordinate Embodied Skills from Counterfactual Outcomes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11480-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11480"
   },
   {
     "arxiv_id": "2610.11482",
@@ -7096,6 +7285,97 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-11506-evidence.zip",
     "source": "https://arxiv.org/abs/2610.11506"
+  },
+  {
+    "arxiv_id": "2610.11514",
+    "title": "SSCBench: Evaluating the Evidential Validity of Fault-Injection Tests for Tool-Using LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11514-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11514"
+  },
+  {
+    "arxiv_id": "2610.11529",
+    "title": "ReTeach: Building a Self-Teacher through Multi-Round Reflection and Retry",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11529-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11529"
+  },
+  {
+    "arxiv_id": "2610.11552",
+    "title": "Safe, Persistent, and Evolving Agent Harness for Understanding Partially Observable Worlds",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11552-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11552"
+  },
+  {
+    "arxiv_id": "2610.11559",
+    "title": "SWE-Journey: Towards More Realistic Evaluation of Coding Assistants through Long-Horizon, Multi-Turn Interaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11559-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11559"
+  },
+  {
+    "arxiv_id": "2610.11578",
+    "title": "Chronos Enables Code Agents to Reason over Software Evolution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11578-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11578"
+  },
+  {
+    "arxiv_id": "2610.11593",
+    "title": "Runnable Commit Untangling for Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11593-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11593"
+  },
+  {
+    "arxiv_id": "2610.11600",
+    "title": "Error-Propagation Modeling for Failure Attribution in LLM-Based Multi-Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11600-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11600"
+  },
+  {
+    "arxiv_id": "2610.11602",
+    "title": "Where Do the Tokens Go? Understanding and Reducing Costs in LLM Agents for Vulnerability Discovery",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11602-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11602"
+  },
+  {
+    "arxiv_id": "2610.11618",
+    "title": "PolyCodeEval: Benchmarking Multilingual Code Generation from Functions to Repositories",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11618-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11618"
+  },
+  {
+    "arxiv_id": "2610.11647",
+    "title": "One Skill Too Many: How Co-Installed Skills Conflict in Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11647-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11647"
+  },
+  {
+    "arxiv_id": "2610.11655",
+    "title": "Harness Evolution Hits a Ceiling: When Weight Training Should Begin",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11655-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11655"
+  },
+  {
+    "arxiv_id": "2610.11678",
+    "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11678-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11678"
+  },
+  {
+    "arxiv_id": "2610.11732",
+    "title": "MemTrial: Learning When to Trust Memory in LLM Portfolio Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11732-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11732"
   },
   {
     "arxiv_id": "2610.11748",
