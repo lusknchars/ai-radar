@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09346",
+  "title": "OnlineQAT: On-Policy Distillation for Ultra-Low-Bit Large Language Models",
+  "summary": "OnlineQAT replaces offline quantization-aware training on fixed or teacher-generated completions with a two-stage pipeline: block-wise QAT initialization followed by on-policy distillation, where a frozen full-precision teacher supplies a sampled reverse-KL signal at prefixes the quantized student itself generates. The cost is a full training recovery stage rather than post-training quantization: the teacher must be served during training, the student must generate responses on-policy (adding sampling latency per step), and one 24 GB GPU constrains this to small models such as 1.7B-scale with offloading or gradient checkpointing. It can fail if the workload cannot absorb training cost (a static PTQ method may be preferable), the marginal W2A16 gain of 0.44 points may not transfer to other models or tasks, and student sampling introduces variance and hyperparameter sensitivity absent from fixed-completion training.",
+  "rationale": "The paper demonstrates a reproducible quality recovery gain at 2-3 bit widths on a small open model, but the on-policy training loop's cost and tuning burden require validation on the reader's specific model and budget before production adoption.",
+  "technique": "On-policy distillation for ultra-low-bit QAT recovery",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-10-07",
+  "as_of": "2026-10-11",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09346",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "OnlineQAT replaces offline quantization-aware training on fixed or teacher-generated completions with a two-stage pipeline: block-wise QAT initialization followed by on-policy distillation, where a frozen full-precision teacher supplies a sampled reverse-KL signal at prefixes the quantized student itself generates. The cost is a full training recovery stage rather than post-training quantization: the teacher must be served during training, the student must generate responses on-policy (adding sampling latency per step), and one 24 GB GPU constrains this to small models such as 1.7B-scale with offloading or gradient checkpointing. It can fail if the workload cannot absorb training cost (a static PTQ method may be preferable), the marginal W2A16 gain of 0.44 points may not transfer to other models or tasks, and student sampling introduces variance and hyperparameter sensitivity absent from fixed-completion training.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09346",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Qwen3-1.7B, best average among compared quantized methods: 57.28 at W3A16 and 32.52 at W2A16, +2.90 and +0.44 points over ReasoningQAT.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09346",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

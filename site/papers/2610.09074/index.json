@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.09074",
+  "title": "TAP: Efficient Long-Horizon Agent Pruning via Trajectory-Anchored Recovery",
+  "summary": "TAP replaces one-shot importance-based pruning plus offline or full-trajectory distillation with iterative gradient-based channel re-scoring coupled to recovery, using a frozen dense teacher that anchors trajectories while the pruned student generates each response. It costs a pruning-and-recovery training pipeline: a frozen 7B teacher in memory, gradient computation for re-scoring, and RL-style trajectory rollouts, which is a substantial engineering and compute burden beyond simple post-hoc pruning. It can fail when applied to non-RL agents or tasks whose reward signals differ from ALFWorld/WebShop, and the WebShop retention of 88.0% shows meaningful task-dependent quality loss at 60% channel removal.",
+  "rationale": "The method requires a full pruning-plus-on-policy-recovery training run with a frozen teacher, which exceeds a 24 GB GPU budget unless the authors release pruned checkpoints, so it is worth tracking rather than implementing now.",
+  "technique": "Trajectory-anchored structural pruning with on-policy recovery",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-11",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.09074",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TAP replaces one-shot importance-based pruning plus offline or full-trajectory distillation with iterative gradient-based channel re-scoring coupled to recovery, using a frozen dense teacher that anchors trajectories while the pruned student generates each response. It costs a pruning-and-recovery training pipeline: a frozen 7B teacher in memory, gradient computation for re-scoring, and RL-style trajectory rollouts, which is a substantial engineering and compute burden beyond simple post-hoc pruning. It can fail when applied to non-RL agents or tasks whose reward signals differ from ALFWorld/WebShop, and the WebShop retention of 88.0% shows meaningful task-dependent quality loss at 60% channel removal.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09074",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "With 60% of FFN channels removed, TAP retains 99.2% and 88.0% of the dense 7B agents' success rates on ALFWorld and WebShop while reducing GPU time per successful task by approximately 22% and 17%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.09074",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

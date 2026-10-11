@@ -6762,6 +6762,146 @@
     "source": "https://arxiv.org/abs/2610.08743"
   },
   {
+    "arxiv_id": "2610.08884",
+    "title": "Task-Sufficient Contraction: Source Selection for Machine Information Interfaces",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08884-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08884"
+  },
+  {
+    "arxiv_id": "2610.08917",
+    "title": "CARE: Certifying Acceleration for Vision-Language-Action Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08917-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08917"
+  },
+  {
+    "arxiv_id": "2610.08977",
+    "title": "SNR-Gated LSTM-Conditioned Diffusion Model for MIMO Channel Estimation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-08977-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.08977"
+  },
+  {
+    "arxiv_id": "2610.09000",
+    "title": "How Fragile Is On-Device Language Model Safety? Localizing Safety-Critical Parameters for Sparse Fault Analysis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09000-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09000"
+  },
+  {
+    "arxiv_id": "2610.09025",
+    "title": "SPIN: Shadow Predictive Indexer for Sparse Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09025-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09025"
+  },
+  {
+    "arxiv_id": "2610.09034",
+    "title": "Shared-Roadmap Generation and Evaluator for Multi-Agent Path Planning Using Heterogeneous Graph Neural Network",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09034-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09034"
+  },
+  {
+    "arxiv_id": "2610.09051",
+    "title": "A Self-Pruning Transformer: Extreme KV-Cache Compression with Universal Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09051-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09051"
+  },
+  {
+    "arxiv_id": "2610.09063",
+    "title": "Multi-Label Topic Assignment via LLM Distillation: A Comparative Analysis of Generative vs. Discriminative Student Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09063-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09063"
+  },
+  {
+    "arxiv_id": "2610.09074",
+    "title": "TAP: Efficient Long-Horizon Agent Pruning via Trajectory-Anchored Recovery",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09074-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09074"
+  },
+  {
+    "arxiv_id": "2610.09090",
+    "title": "Tucker Bottleneck Attention for Multi-Dimensional Sequence Modeling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09090-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09090"
+  },
+  {
+    "arxiv_id": "2610.09092",
+    "title": "MaRK: Markov-adapted Recurrent Kernels for Dynamic Operator Conditioning in State Space Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09092-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09092"
+  },
+  {
+    "arxiv_id": "2610.09183",
+    "title": "Q-PACE: Dynamic Precision Allocation for Quantization-Aware Training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09183-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09183"
+  },
+  {
+    "arxiv_id": "2610.09196",
+    "title": "Exact Dynamics and Finite-Sample Trajectory Recovery of Linear Recursive Feature Machines",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09196-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09196"
+  },
+  {
+    "arxiv_id": "2610.09202",
+    "title": "Few Bits, One Law: Toward W2A4KV2",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09202-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09202"
+  },
+  {
+    "arxiv_id": "2610.09212",
+    "title": "CurveTQ: Rotation-Free Trellis Quantization of LLM Weights via Curvature-Weighted Search",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09212-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09212"
+  },
+  {
+    "arxiv_id": "2610.09227",
+    "title": "Quantize by Drift: Label-Free Mixed-Precision Post-Training Quantization for Text Embedders",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09227-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09227"
+  },
+  {
+    "arxiv_id": "2610.09292",
+    "title": "An Interleaved Parallel Dependent Quantization Hardware Architecture for H.266/VVC",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09292-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09292"
+  },
+  {
+    "arxiv_id": "2610.09335",
+    "title": "SearchWorld: Spatial Value-Grounded Imagination for UAV Object Search via World Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09335-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09335"
+  },
+  {
+    "arxiv_id": "2610.09342",
+    "title": "Shared Low-rank Basis Factorization for Data-free Mixture-of-Experts Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09342-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09342"
+  },
+  {
+    "arxiv_id": "2610.09346",
+    "title": "OnlineQAT: On-Policy Distillation for Ultra-Low-Bit Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-09346-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.09346"
+  },
+  {
     "arxiv_id": "2610.09424",
     "title": "Democratizing MoE inference on commodity GPUs with CoMoE",
     "status": "indexed",
@@ -7133,11 +7273,60 @@
     "source": "https://arxiv.org/abs/2610.10738"
   },
   {
+    "arxiv_id": "2610.10778",
+    "title": "MemoWM: How World Models Change What Agents Need to Remember",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10778-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10778"
+  },
+  {
+    "arxiv_id": "2610.10786",
+    "title": "Plan-and-Patch: Diffusion Language Models for Agentic Planning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10786-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10786"
+  },
+  {
+    "arxiv_id": "2610.10833",
+    "title": "On the Clock: Towards Punctual and Productive Time-Budgeted AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10833-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10833"
+  },
+  {
+    "arxiv_id": "2610.10858",
+    "title": "RFChipAgent: Multi-Agentic AI Flow for Analog/RF Chip Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10858-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10858"
+  },
+  {
+    "arxiv_id": "2610.10906",
+    "title": "Reading the Room: Foundations, Design, and Challenges of Normative Competence in LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10906-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10906"
+  },
+  {
     "arxiv_id": "2610.10933",
     "title": "Rethinking the Tradeoff Between Temporal Encoding and Nonlinear Computation in Spiking Language Models",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-10933-evidence.zip",
     "source": "https://arxiv.org/abs/2610.10933"
+  },
+  {
+    "arxiv_id": "2610.10942",
+    "title": "StoreBench: A Live-Commerce Environment for Evaluating and Training Autonomous Operator Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10942-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10942"
+  },
+  {
+    "arxiv_id": "2610.10961",
+    "title": "Cross-Provider Review as a Runtime Contract for Coding Agents: A Controlled Pilot and Fault-Injection Study",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-10961-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.10961"
   },
   {
     "arxiv_id": "2610.11000",
@@ -7154,11 +7343,46 @@
     "source": "https://arxiv.org/abs/2610.11004"
   },
   {
+    "arxiv_id": "2610.11007",
+    "title": "Curating Always-Loaded Context for LLM Agents: A Capacitated Assortment Model with Censored Feedback",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11007-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11007"
+  },
+  {
+    "arxiv_id": "2610.11015",
+    "title": "Prompts versus Rules: Auditing and Controlling Speech Naturalness Behaviors in Voice User Simulators",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11015-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11015"
+  },
+  {
+    "arxiv_id": "2610.11030",
+    "title": "NOMOS: Compiling Written Policies into Statically Verified Tool-Call Gates for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11030-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11030"
+  },
+  {
+    "arxiv_id": "2610.11050",
+    "title": "AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11050-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11050"
+  },
+  {
     "arxiv_id": "2610.11115",
     "title": "Dynamics as Code: On Model Compression via Dynamic System",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-11115-evidence.zip",
     "source": "https://arxiv.org/abs/2610.11115"
+  },
+  {
+    "arxiv_id": "2610.11123",
+    "title": "When Interfaces Speak: Data-Aware Generative UI Harness for Active Interaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11123-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11123"
   },
   {
     "arxiv_id": "2610.11134",
@@ -7168,6 +7392,13 @@
     "source": "https://arxiv.org/abs/2610.11134"
   },
   {
+    "arxiv_id": "2610.11152",
+    "title": "Do LLMs Learn from Rewards in Context? : Rethinking the role of reward in In-Context Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11152-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11152"
+  },
+  {
     "arxiv_id": "2610.11160",
     "title": "LadderEdit: Edit-Level Residual Compression for Memory-Efficient Lifelong Editing of LLMs",
     "status": "indexed",
@@ -7175,11 +7406,46 @@
     "source": "https://arxiv.org/abs/2610.11160"
   },
   {
+    "arxiv_id": "2610.11169",
+    "title": "Skill Constellations: Tracing the Supply Chain of Agent Skills on GitHub",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11169-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11169"
+  },
+  {
+    "arxiv_id": "2610.11171",
+    "title": "VAMR: Multi-Question Agentic Reasoning for Efficient Long-Form Video Understanding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11171-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11171"
+  },
+  {
+    "arxiv_id": "2610.11179",
+    "title": "Who Pays the Review Cost? Triage, Fairness, and Accountability in AI-authored Pull Requests",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11179-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11179"
+  },
+  {
+    "arxiv_id": "2610.11188",
+    "title": "What to Admit and How to Present: Governing Persistent Memory in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11188-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11188"
+  },
+  {
     "arxiv_id": "2610.11214",
     "title": "Bridging KV-Cache Quantization and Linear Attention: From Theory to Pretrained Weight Migration",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-11214-evidence.zip",
     "source": "https://arxiv.org/abs/2610.11214"
+  },
+  {
+    "arxiv_id": "2610.11223",
+    "title": "SafeInferCom: Safe Inference-Time Compute via Verifier-Guided Mid-Generation Intervention for Robotic Task Planning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11223-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11223"
   },
   {
     "arxiv_id": "2610.11226",
@@ -7194,6 +7460,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-11245-evidence.zip",
     "source": "https://arxiv.org/abs/2610.11245"
+  },
+  {
+    "arxiv_id": "2610.11287",
+    "title": "REMORY: Learning Residual Memory for Context Compaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11287-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11287"
+  },
+  {
+    "arxiv_id": "2610.11299",
+    "title": "DuplexAgent-RSI: Recursive Harness Improvement for Full-Duplex Voice Agent Collaboration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-11299-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.11299"
   },
   {
     "arxiv_id": "2610.11315",

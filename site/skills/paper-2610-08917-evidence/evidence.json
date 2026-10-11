@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.08917",
+  "title": "CARE: Certifying Acceleration for Vision-Language-Action Inference",
+  "summary": "CARE replaces ad hoc selection of VLA acceleration methods (action chunking, token pruning, flow-step reduction) based on latency and average success, instead running paired rollouts from identical initial conditions on a calibration set to certify that acceleration-induced failure risk stays below a user-specified budget, deploying the fastest certified candidate or falling back to the reference policy. The cost is calibration compute: paired closed-loop rollouts must be executed for each candidate, mitigated but not eliminated by sequential testing, and the method adds selection and fallback infrastructure around the serving stack. Certification guarantees are statistical and tied to the calibration distribution, so distribution shift between calibration and deployment initial conditions can invalidate the failure bound, and a tight risk budget may leave no certified accelerator, yielding no speedup at all.",
+  "rationale": "The method is directly applicable on a single GPU if the reader deploys VLA policies, but the calibration rollout cost and the distribution-dependent guarantee require validation on the reader's own tasks before production reliance.",
+  "technique": "Certified accelerator selection via paired rollouts",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-11",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.08917",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "CARE replaces ad hoc selection of VLA acceleration methods (action chunking, token pruning, flow-step reduction) based on latency and average success, instead running paired rollouts from identical initial conditions on a calibration set to certify that acceleration-induced failure risk stays below a user-specified budget, deploying the fastest certified candidate or falling back to the reference policy. The cost is calibration compute: paired closed-loop rollouts must be executed for each candidate, mitigated but not eliminated by sequential testing, and the method adds selection and fallback infrastructure around the serving stack. Certification guarantees are statistical and tied to the calibration distribution, so distribution shift between calibration and deployment initial conditions can invalidate the failure bound, and a tight risk budget may leave no certified accelerator, yielding no speedup at all.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.08917",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "CARE certifies 9.0–10.8x speedups on OpenVLA-OFT across four LIBERO suites, guaranteeing at 95% confidence that at least 85.8% of reference-solved episodes are preserved; sequential certification uses 78.9% fewer rollouts than exhaustive evaluation.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.08917",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
