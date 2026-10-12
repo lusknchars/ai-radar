@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.13778",
+  "title": "ReplaySSM: Cache SSM Inputs, Not State",
+  "summary": "It replaces eager per-step SSM state reads/writes with a periodically updated checkpoint plus a buffer of recent SSM inputs, decoupling output computation from state updates and enabling cheap speculative rollback and split-precision checkpoints. The cost is additional implementation complexity in the serving stack (currently a vLLM patch for Mamba-2 and Gated DeltaNet), memory for the input buffer, and dual checkpoint copies when split precision is used. It can fail if checkpoint staleness degrades outputs for long unroll intervals, if the reader's model architecture lacks support in the implementation, or if batch sizes are too small for state I/O to be the bottleneck, in which case the measured gains do not transfer.",
+  "rationale": "The method targets large-batch serving of 120B-class hybrid SSMs, which exceeds the reader's single 24 GB GPU, but if the reader serves supported hybrid models through vLLM at meaningful batch sizes it is a low-risk serving-level change worth validating on their own workload.",
+  "technique": "Checkpoint-and-replay SSM state management",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-10-09",
+  "as_of": "2026-10-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.13778",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces eager per-step SSM state reads/writes with a periodically updated checkpoint plus a buffer of recent SSM inputs, decoupling output computation from state updates and enabling cheap speculative rollback and split-precision checkpoints. The cost is additional implementation complexity in the serving stack (currently a vLLM patch for Mamba-2 and Gated DeltaNet), memory for the input buffer, and dual checkpoint copies when split precision is used. It can fail if checkpoint staleness degrades outputs for long unroll intervals, if the reader's model architecture lacks support in the implementation, or if batch sizes are too small for state I/O to be the bottleneck, in which case the measured gains do not transfer.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13778",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At batch size 256, ReplaySSM accelerates standard decoding by 1.20-1.47x over a tuned vLLM baseline across four hybrid models and delivers about 1.8x the throughput of vLLM's speculative decoding on two 120B-class models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13778",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

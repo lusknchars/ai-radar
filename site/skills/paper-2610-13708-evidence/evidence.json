@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.13708",
+  "title": "Adaptive DHiSparse: Speculative Decoding over a Load-Adaptive KV Hierarchy",
+  "summary": "The method replaces fixed-budget hierarchical sparse KV serving (HiSparse) and non-speculative adaptive serving by combining host-memory KV offloading with exact fused retrieval, speculative decoding (DSpark/DFlash2), and residency that expands or contracts with load. It costs engineering complexity: shared missing-row retrieval across queries, a window-bounded draft KV ring, verification staging reused across layer groups, and a load-adaptive residency controller, plus host-memory capacity and PCIe transfer bandwidth. It can fail at low concurrency or short contexts where offload and retrieval overhead dominate, when host-GPU bandwidth is saturated, or if the exact retrieval path and speculative acceptance interact poorly with draft-model quality, eroding the acceptance-rate assumptions behind the throughput claims.",
+  "rationale": "The reported gains require 100K-500K contexts, concurrency of 128-512, and multi-GPU decode serving with specific draft frameworks, none of which fit a single 24 GB GPU or API-based production setup, so the technique is worth tracking rather than adopting or testing now.",
+  "technique": "Load-adaptive hierarchical KV with speculative decoding",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-10-09",
+  "as_of": "2026-10-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.13708",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces fixed-budget hierarchical sparse KV serving (HiSparse) and non-speculative adaptive serving by combining host-memory KV offloading with exact fused retrieval, speculative decoding (DSpark/DFlash2), and residency that expands or contracts with load. It costs engineering complexity: shared missing-row retrieval across queries, a window-bounded draft KV ring, verification staging reused across layer groups, and a load-adaptive residency controller, plus host-memory capacity and PCIe transfer bandwidth. It can fail at low concurrency or short contexts where offload and retrieval overhead dominate, when host-GPU bandwidth is saturated, or if the exact retrieval path and speculative acceptance interact poorly with draft-model quality, eroding the acceptance-rate assumptions behind the throughput claims.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13708",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At 500K context and concurrency 512 on DeepSeek-V4.1-Flash, Adaptive DHiSparse with DSpark delivers 1.85x the output tokens of resident serving with DSpark; at 100K context and concurrency 128 on GLM-5.3 with DFlash2 it reaches 793 output tokens/s per decode GPU, 1.45x HiSparse, and sustains up to 4x the concurrency under equal latency bounds.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13708",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

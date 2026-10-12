@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.13395",
+  "title": "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents",
+  "summary": "Program-Agent replaces a single monolithic coding-agent loop with a role-isolated workflow (analysis, implementation, review) plus revision management for compilation checks and failure recovery, which a small team can replicate as prompting/orchestration over API models; Program-Env replaces hand-built training environments with a feedback-driven pipeline that repairs sandbox builds and black-box tests. The agent-side cost is higher token consumption and latency from multi-role passes and exploratory analysis before implementation; the environment-side cost is substantial engineering and compute to build and verify 1,648 sandboxed repositories, which is not realistic on one 24 GB GPU. Failure modes include compounding errors across role handoffs, reference exploration that consumes context without improving the implementation, and environment/test suites whose black-box tests are too weak to verify correctness, so reproduced gains may not transfer to benchmarks other than ProgramBench.",
+  "rationale": "The agent workflow is adoptable at small scale via API orchestration and shows large quality gains, but the headline results depend on a training-environment pipeline and fine-tuning that exceed the reader's infrastructure, so workload-specific validation is required before production adoption.",
+  "technique": "Role-isolated long-horizon program reproduction workflow",
+  "family": "agentes_de_codigo",
+  "recommendation": "testar",
+  "published": "2026-10-09",
+  "as_of": "2026-10-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.13395",
+  "independent_implementations": 3,
+  "total_implementations": 3,
+  "stars": 21,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Program-Agent replaces a single monolithic coding-agent loop with a role-isolated workflow (analysis, implementation, review) plus revision management for compilation checks and failure recovery, which a small team can replicate as prompting/orchestration over API models; Program-Env replaces hand-built training environments with a feedback-driven pipeline that repairs sandbox builds and black-box tests. The agent-side cost is higher token consumption and latency from multi-role passes and exploratory analysis before implementation; the environment-side cost is substantial engineering and compute to build and verify 1,648 sandboxed repositories, which is not realistic on one 24 GB GPU. Failure modes include compounding errors across role handoffs, reference exploration that consumes context without improving the implementation, and environment/test suites whose black-box tests are too weak to verify correctness, so reproduced gains may not transfer to benchmarks other than ProgramBench.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13395",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Program-Agent raises ProgramBench pass rates of Qwen3.8-27B from 34.87% (base) and 42.84% (SFT) to 55.71% and 56.25%; SFT on trajectories from the constructed environments alone raises the base model from 34.87% to 42.84%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13395",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
