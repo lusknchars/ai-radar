@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-10-11
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-10-05 to 2026-10-11
+
+ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents
+Program-Agent replaces a single monolithic coding-agent loop with a role-isolated workflow (analysis, implementation, review) plus revision management for compilation checks and failure recovery, which a small team can replicate as prompting/orchestration over API models; Program-Env replaces hand-built training environments with a feedback-driven pipeline that repairs sandbox builds and black-box tests. The agent-side cost is higher token consumption and latency from multi-role passes and exploratory analysis before implementation; the environment-side cost is substantial engineering and compute to build and verify 1,648 sandboxed repositories, which is not realistic on one 24 GB GPU. Failure modes include compounding errors across role handoffs, reference exploration that consumes context without improving the implementation, and environment/test suites whose black-box tests are too weak to verify correctness, so reproduced gains may not transfer to benchmarks other than ProgramBench.
+The agent workflow is adoptable at small scale via API orchestration and shows large quality gains, but the headline results depend on a training-environment pipeline and fine-tuning that exceed the reader's infrastructure, so workload-specific validation is required before production adoption.
+Builder's cut (area guidance)
+It may fit when: Your coding assistant makes changes that still need substantial repair before merging.
+First move: Try the technique on held-out issues from a repository with reliable tests.
+Measure: Correct patches, regression failures, human repair time, and total cost per accepted change.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+3 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.13395/
+https://arxiv.org/abs/2610.13395
+
+JANUS: Enhancing Long-Horizon Autonomous Research with Co-Evolving World Models
+JANUS replaces reactive trial-and-error Generate-Execute-Feedback loops in autonomous research agents with a Predict-Verify-Evolve loop in which a co-evolving world model scores, prunes, and refines candidate branches before costly executions. The cost is maintaining an evolving candidate graph, a forecasting world model, hierarchical skill stores, and their coordination protocols, which adds orchestration complexity and extra model calls per iteration. Failure modes include miscalibrated world-model forecasts pruning valuable branches early, error compounding as skills and predictions co-evolve over long horizons, and limited transferability of gains demonstrated primarily on one benchmark.
+The framework targets long-horizon autonomous research pipelines rather than standard inference or coding workloads, and adopting it requires building a bespoke world-model and skill-evolution infrastructure whose benefits are only shown on a narrow benchmark without quantified factors.
+Builder's cut (area guidance)
+It may fit when: A multi-step product task fails because the agent loses track of dependencies.
+First move: Try the proposed planning step on tasks with checkable intermediate outcomes.
+Measure: Task completion, unnecessary steps, planning tokens, response time, and total cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+3 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.13194/
+https://arxiv.org/abs/2610.13194
+
+AgentSWE: Can Coding Agents Build the Agent You Actually Want?
+AgentSWE replaces ad hoc acceptance of agent-generated agent code with commission-style evaluation: a frozen submission is tested on held-out cases graded against requirement-derived rubrics under pass/fail gates, rather than being judged by its behavior on the illustrative cases the builder saw. The cost is evaluation engineering effort: constructing held-out cases and rubrics per requirement, plus the API or GPU spend to run frozen submissions, and it measures rather than improves delivered quality. It can fail to transfer if the reader's tasks are narrower than the benchmark's 25 commissions, and rubric-based grading inherits the reliability limits of whatever grader is used.
+The paper contributes a benchmark and failure analysis rather than a deployable method, but its central finding—that coding agents systematically overfit visible cases and claim unsupported completion—directly justifies adopting held-out, rubric-gated acceptance testing as a low-cost validation practice before shipping agent-built agents.
+Builder's cut (area guidance)
+It may fit when: An agent looks good in demos, but you cannot tell which product tasks it fails.
+First move: Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.
+Measure: Agreement with human review, missed failures, false alarms, and evaluation cost per task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.13361/
+https://arxiv.org/abs/2610.13361
+
+Surfing the Activation Wave: Analyzing the Information and Geometry of LLM Hidden States for Speculative Decoding
+The method replaces fixed, position-based heuristics for choosing which decoder layers feed the draft model in EAGLE-style speculative decoding with a data-driven selection based on matrix entropy (informativeness), CKA (diversity), and token-entropy filtering. The cost is a one-time offline analysis pass over calibration data plus added pipeline complexity; inference architecture and memory footprint are unchanged since only the layer subset used by the draft head differs. It can fail if the calibration distribution shifts, if the gains are small relative to the already-competitive default rule (which the paper itself concedes can remain competitive), or if the statistics are computed on too few or poorly filtered tokens.
+The reader runs single-GPU inference where speculative decoding is directly deployable, and layer selection is a cheap offline tuning step, but the abstract provides no quantified speedup, so the gain must be validated against the strong default heuristic on the reader's own model and workload.
+Builder's cut (area guidance)
+It may fit when: Your self-hosted model spends too long generating answers token by token.
+First move: Check whether a compatible draft model and serving integration exist before renting compute.
+Measure: Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.12939/
+https://arxiv.org/abs/2610.12939
+
+Rollout-Time Intervention: Unlocking Agentic Reinforcement Learning Beyond Policy Limits
+RTI replaces purely on-policy exploration in agentic RL by injecting reward-rubric evidence during rollout to convert failed trajectories into successful ones, then filtering interventions with excessive distributional shift before policy optimization. It costs additional rollout compute for intervention and filtering, requires well-specified evaluation rubrics per task, and adds off-policy correction logic to the training pipeline. It can fail when rubrics are unavailable or noisy, when filtering admits trajectories whose distribution shift destabilizes training, or when the resulting training still demands more GPU memory than a single 24 GB card provides for the chosen model size.
+The method targets a real failure mode of small-scale agentic RL (sparse success on hard tasks) and is implementable with modest models and rubric-based rewards, but its benefit depends on task-specific rubric quality and off-policy filtering that must be validated on the reader's own workload.
+Builder's cut (area guidance)
+It may fit when: You already need task-specific training and want to reduce its memory or compute cost.
+First move: Change only the training technique on a small controlled run after checking prerequisites.
+Measure: Held-out quality, peak memory, training time, and full compute cost to the target quality.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.13438/
+https://arxiv.org/abs/2610.13438
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
