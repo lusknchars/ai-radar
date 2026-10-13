@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07863",
+  "title": "ReFold: Training-Free Reversible Inter-Turn Context Folding for Long-Horizon Agents",
+  "summary": "ReFold replaces predictive context-management methods (auxiliary model calls, heuristic rules, or trained compression policies) with a training-free rendering layer that stubs content already displayed in earlier turns and folds agent-reported-finished turns into one-line notes, using chunked rendering that rewrites the cached prefix only every few steps. It costs implementation effort in the prompt-rendering layer of the harness and occasional one-step restores from the preserved history when a removal proves wrong, plus minor prefix-cache rewrites at chunk boundaries. It can fail when the agent incorrectly marks a turn as finished and later needs its details, requiring restores that add latency, and the reported gains may not transfer to workloads with low inter-turn redundancy or non-ReAct harness structures.",
+  "rationale": "The method is training-free, model-agnostic, and operates purely at the rendering layer, so a small team on a 24 GB GPU or third-party APIs can adopt it directly in an existing ReAct-style harness with reversible failure modes and quantified cost and memory reductions.",
+  "technique": "Reversible inter-turn context folding for agents",
+  "family": "memoria_e_contexto",
+  "recommendation": "adotar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07863",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ReFold replaces predictive context-management methods (auxiliary model calls, heuristic rules, or trained compression policies) with a training-free rendering layer that stubs content already displayed in earlier turns and folds agent-reported-finished turns into one-line notes, using chunked rendering that rewrites the cached prefix only every few steps. It costs implementation effort in the prompt-rendering layer of the harness and occasional one-step restores from the preserved history when a removal proves wrong, plus minor prefix-cache rewrites at chunk boundaries. It can fail when the agent incorrectly marks a turn as finished and later needs its details, requiring restores that add latency, and the reported gains may not transfer to workloads with low inter-turn redundancy or non-ReAct harness structures.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07863",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces token consumption by up to 2.5x, halves KV-cache memory per session, cuts inference costs by up to 3.4x, and accelerates inference by up to 1.7x under concurrent serving, without degrading task success rates.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07863",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

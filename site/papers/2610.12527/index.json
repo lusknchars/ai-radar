@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12527",
+  "title": "Behind-the-Meter Photovoltaic Visibility from Net Smart Meters: Deployment Regimes and Operational Insights",
+  "summary": "This replaces unmonitored behind-the-meter PV estimation or per-site hardware telemetry with deep sequence models applied to existing net smart-meter data, evaluated under deployment regimes that separate household transfer from temporal extrapolation. It costs a training pipeline per deployment regime, labeled PV data for source and (minimally five-household) target supervision, plus context-length selection, rather than additional metering hardware. It can fail when deployed on unseen households or new regions without fine-tuning, since the deployment regime drives error more than model choice and transfer error is roughly 78% higher than seen-household error.",
+  "rationale": "This is a domain-specific energy analytics study rather than a generalizable inference, training, or agent technique, so it is only actionable if the reader's production work involves smart-meter or distributed energy data.",
+  "technique": "Regime-matched PV disaggregation from net smart meters",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12527",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces unmonitored behind-the-meter PV estimation or per-site hardware telemetry with deep sequence models applied to existing net smart-meter data, evaluated under deployment regimes that separate household transfer from temporal extrapolation. It costs a training pipeline per deployment regime, labeled PV data for source and (minimally five-household) target supervision, plus context-length selection, rather than additional metering hardware. It can fail when deployed on unseen households or new regions without fine-tuning, since the deployment regime drives error more than model choice and transfer error is roughly 78% higher than seen-household error.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12527",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Fine-tuning on five target-region households reduces source-model transfer error by 28%-36%; best-model daylight MAE is 0.104 kW on seen households versus 0.185 kW on unseen households.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12527",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

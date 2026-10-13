@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07816",
+  "title": "Do I Need the Cloud? Uncertainty-Aware Step-Level Handoff for Small Language Model Agents",
+  "summary": "Replaces once-per-query model routing (or always-on cloud inference for agents) with per-step uncertainty scoring that escalates only difficult agent actions from a local SLM to a stronger backend. Costs a scoring/escalation mechanism per step, roughly 30% cloud action volume, and the engineering complexity of maintaining two model backends plus threshold calibration. Can fail if the uncertainty signal miscalibrates on out-of-distribution tasks, since evidence comes from one model family, one stronger backend, scripted tasks, and small test sets.",
+  "rationale": "The approach matches the reader's constrained-infrastructure profile and shows a large quality recovery at low cloud spend, but the single-family, small-sample evaluation requires workload-specific validation before production adoption.",
+  "technique": "Uncertainty-aware step-level local-to-cloud handoff",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07816",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces once-per-query model routing (or always-on cloud inference for agents) with per-step uncertainty scoring that escalates only difficult agent actions from a local SLM to a stronger backend. Costs a scoring/escalation mechanism per step, roughly 30% cloud action volume, and the engineering complexity of maintaining two model backends plus threshold calibration. Can fail if the uncertainty signal miscalibrates on out-of-distribution tasks, since evidence comes from one model family, one stronger backend, scripted tasks, and small test sets.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07816",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On a 52-task BFCL-derived split, a Qwen2.5-1.5B/7B pair reaches 82.7% task success at 30.8% escalation versus 67.3% local-only (about 1.23x relative task success); multi-turn trajectory success is 69.0% using 30.0% cloud actions versus 48.0% local-only and 82.0% strong-only.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07816",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

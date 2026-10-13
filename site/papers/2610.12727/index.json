@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12727",
+  "title": "Zebra3D: Efficient Hybrid Foundation Models For Scalable 3D Reconstruction",
+  "summary": "Zebra3D replaces quadratic global attention in pretrained 3D reconstruction foundation models (VGGT, HunyuanWorld-Mirror, pi3) with a layerwise mix of linear attention in tolerant early layers and tile-sparse attention with landmark summaries in sensitive later layers, convertible without retraining via closed-form affine fitting. The cost is implementation complexity of the hybrid layer assignment and optional post-conversion distillation training to recover the final accuracy gap, plus a quality drop in the training-free variant. Failure modes include degradation on workloads dominated by the sensitive middle-to-late attention patterns, benefits that only materialize at large view counts (the 7.1x figure applies at 1,024 views), and dependence on the specific backbones studied.",
+  "rationale": "The speedup only matters for large-view-set feed-forward 3D reconstruction, so it warrants a workload-specific pilot on the reader's own data before production adoption.",
+  "technique": "Layerwise hybrid sparse-linear attention conversion",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12727",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 1510,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Zebra3D replaces quadratic global attention in pretrained 3D reconstruction foundation models (VGGT, HunyuanWorld-Mirror, pi3) with a layerwise mix of linear attention in tolerant early layers and tile-sparse attention with landmark summaries in sensitive later layers, convertible without retraining via closed-form affine fitting. The cost is implementation complexity of the hybrid layer assignment and optional post-conversion distillation training to recover the final accuracy gap, plus a quality drop in the training-free variant. Failure modes include degradation on workloads dominated by the sensitive middle-to-late attention patterns, benefits that only materialize at large view counts (the 7.1x figure applies at 1,024 views), and dependence on the specific backbones studied.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12727",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 7.1x end-to-end speedup at 1,024 input views; Zebra3D-VGGT reaches 80.5% RealEstate10K AUC@30 at 94% mean attention sparsity, within 1.1 points of dense VGGT.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12727",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07730",
+  "title": "SanSi: A Looped Typed Decision Model for System 1.5 Thinking",
+  "summary": "SanSi replaces generated chain-of-thought reasoning and large single-pass classifiers with a small looped language model that recursively re-applies its layers before a single typed readout, with one model serving any compute budget from one to eight loops. It costs a looped pre-trained backbone, multi-loop training with a proper scoring rule, and up to 8x the forward-pass latency of a single-pass model, though with no KV growth from generated tokens. It can fail on tasks needing explicit intermediate text, on decision formats outside the declared-option setting, or if the reported gains do not transfer from the paper's 59-source benchmark to the reader's domain, and adopting it requires reproducing the authors' specific training recipe rather than fine-tuning an off-the-shelf model.",
+  "rationale": "The approach is compatible with a single 24 GB GPU and a small team and offers a plausible quality-per-parameter gain for classification, judging, and routing workloads, but it depends on a custom looped backbone and training recipe whose benefits must be validated on the reader's own tasks before production adoption.",
+  "technique": "Looped typed decision model with per-loop readout",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07730",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 2,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SanSi replaces generated chain-of-thought reasoning and large single-pass classifiers with a small looped language model that recursively re-applies its layers before a single typed readout, with one model serving any compute budget from one to eight loops. It costs a looped pre-trained backbone, multi-loop training with a proper scoring rule, and up to 8x the forward-pass latency of a single-pass model, though with no KV growth from generated tokens. It can fail on tasks needing explicit intermediate text, on decision formats outside the declared-option setting, or if the reported gains do not transfer from the paper's 59-source benchmark to the reader's domain, and adopting it requires reproducing the authors' specific training recipe rather than fine-tuning an off-the-shelf model.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07730",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "72.0% accuracy on 10,027 test decisions from 59 sources: 13.5 points above a non-looped model of identical shape, 5.3 points above a newer non-looped model of its size, 1.8 points below a model with three times the parameters; as an RL judge it raises generator F1 by 7.7 points.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07730",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

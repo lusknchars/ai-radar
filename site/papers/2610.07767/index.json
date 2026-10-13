@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07767",
+  "title": "TRACE: Rollout-Guided Quantization-Aware Training for FP4 Reinforcement Learning of MoE Language Models",
+  "summary": "TRACE replaces independent train-side and rollout-side FP4 quantization in RL post-training with rollout-guided quantization-aware training that aligns the two quantized execution paths, plus a caching scheme that selectively stores mantissa and scale data from deeper layers. It costs additional training-time machinery: quantization-information caching and communication between rollout and training paths, implementation complexity in the RL stack, and reliance on FP4-capable hardware to realize the speedup. It can fail if the target hardware lacks native FP4 support (negating throughput gains), if the workload is inference rather than RL training (where the method does not apply), or if train-rollout discrepancy is not the accuracy bottleneck in the reader's setting.",
+  "rationale": "The method targets RL post-training of large-scale MoE models on multi-GPU infrastructure with FP4 hardware, none of which the reader possesses, so it is worth tracking but not adoptable now.",
+  "technique": "Rollout-guided FP4 quantization-aware RL training",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07767",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TRACE replaces independent train-side and rollout-side FP4 quantization in RL post-training with rollout-guided quantization-aware training that aligns the two quantized execution paths, plus a caching scheme that selectively stores mantissa and scale data from deeper layers. It costs additional training-time machinery: quantization-information caching and communication between rollout and training paths, implementation complexity in the RL stack, and reliance on FP4-capable hardware to realize the speedup. It can fail if the target hardware lacks native FP4 support (negating throughput gains), if the workload is inference rather than RL training (where the method does not apply), or if train-rollout discrepancy is not the accuracy bottleneck in the reader's setting.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07767",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 5.4x rollout speedup with joint FP4 weight/activation and FP4 KV-cache rollout, with RL performance comparable to BF16 rollout.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07767",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

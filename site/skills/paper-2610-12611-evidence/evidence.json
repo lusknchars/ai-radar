@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12611",
+  "title": "SoftwareGym: Scaling Computer-Use Agent Training with Diverse Synthesized Software Environments",
+  "summary": "The method replaces hand-constructed native application environments and shallow browser-hosted environments with an automated pipeline that generates, runs, and runtime-verifies diverse GUI software for agent training and evaluation. The cost is a multi-stage generation, execution, and GUI-evaluation-with-repair pipeline plus trajectory collection and model training, which exceeds a single-GPU budget in engineering effort and compute. Failure modes include synthesized applications not matching the interaction complexity and visual distribution of real software, functional bugs surviving the 91.5%-reliable verification loop, and overfitting to generator-induced interface patterns that may not transfer beyond the reported OSWorld setting.",
+  "rationale": "The results show transferable supervision value, but reproducing or applying the pipeline requires environment-synthesis infrastructure and CUA training runs that exceed the reader's constrained infrastructure, making it a result to monitor rather than adopt.",
+  "technique": "Synthesized GUI environments for CUA training",
+  "family": "avaliacao_de_agente",
+  "recommendation": "observar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12611",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 14,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces hand-constructed native application environments and shallow browser-hosted environments with an automated pipeline that generates, runs, and runtime-verifies diverse GUI software for agent training and evaluation. The cost is a multi-stage generation, execution, and GUI-evaluation-with-repair pipeline plus trajectory collection and model training, which exceeds a single-GPU budget in engineering effort and compute. Failure modes include synthesized applications not matching the interaction complexity and visual distribution of real software, functional bugs surviving the 91.5%-reliable verification loop, and overfitting to generator-induced interface patterns that may not transfer beyond the reported OSWorld setting.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12611",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Training on trajectories from 182 synthesized applications improves Pass@3 from 41.39% to 56.97% on the out-of-domain OSWorld benchmark (a 1.38x relative gain) and reaches 40.0% on SoftwareGym-Bench, with a 91.5% mean GUI task pass rate in the synthesized environments themselves.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12611",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

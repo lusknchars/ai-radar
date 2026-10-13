@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.13025",
+  "title": "Evo$^2$: Evolving the Evolver through Weight-Harness Co-Evolution",
+  "summary": "The method replaces treating agent self-improvement as either weight updates or harness/prompt-tool edits alone, instead co-evolving both with a single policy acting as Proposer and Reflector trained via SFT plus interleaved GRPO. The full pipeline requires RL training infrastructure (trajectory recovery, GRPO on two roles) that strains a single 24 GB GPU, though the harness-evolution component alone runs through proprietary model APIs at inference cost plus execution feedback loops. It can fail through reward hacking of the Reflector, non-transfer of evolved harnesses to out-of-distribution tasks despite the reported transfer results, and high API or compute spend from iterative propose-execute-diagnose cycles without corresponding gains on the reader's specific workload.",
+  "rationale": "The harness-only evolution path is API-accessible and showed large gains on a proprietary model, but the full co-evolution training pipeline exceeds constrained infrastructure and its benefits must be validated on the reader's own tasks before production adoption.",
+  "technique": "Weight-harness co-evolution for self-evolving agents",
+  "family": "agentes_de_codigo",
+  "recommendation": "testar",
+  "published": "2026-10-09",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.13025",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 122,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces treating agent self-improvement as either weight updates or harness/prompt-tool edits alone, instead co-evolving both with a single policy acting as Proposer and Reflector trained via SFT plus interleaved GRPO. The full pipeline requires RL training infrastructure (trajectory recovery, GRPO on two roles) that strains a single 24 GB GPU, though the harness-evolution component alone runs through proprietary model APIs at inference cost plus execution feedback loops. It can fail through reward hacking of the Reflector, non-transfer of evolved harnesses to out-of-distribution tasks despite the reported transfer results, and high API or compute spend from iterative propose-execute-diagnose cycles without corresponding gains on the reader's specific workload.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13025",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "82.1% on Polyglot and 48.3% on SWE-bench Verified versus 62.6% and 41.0% for the strongest self-evolution baseline; a harness-only variant raises a GPT-5-mini agent from 24.4% to 48.3%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13025",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

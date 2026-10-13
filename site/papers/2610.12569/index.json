@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12569",
+  "title": "SWE-Duel: Towards a Self-Scaling Arena for Coding Agents",
+  "summary": "SWE-Duel replaces static, leak-prone coding benchmarks (e.g., SWE-bench-style fixed task sets) with evaluation-time task generation, where agents alternately author buggy pull requests and review each other's under mirrored Red-Blue turns with test-based oracles. The cost is substantial: each turn requires three context-isolated Red sessions plus a blind repair check and a Blue review, and the reported tournament ran 1,500 turns across 11 frontier model-harness pairs, which is entirely API- or compute-billed agent execution rather than a one-time benchmark download. It can fail as a procurement signal because the oracle only checks test outcomes (subtle bugs can slip through if feature and bug tests are weak), results depend heavily on the harness rather than the model alone, and a two-agent duel format is a research artifact with no production role for a small team.",
+  "rationale": "This is a benchmark methodology paper, not a production technique; it is relevant for tracking how coding agents will be compared, but reproducing or depending on it requires frontier-model API spend and evaluation infrastructure that a constrained team should not build, and its rankings can inform model selection only after independent validation.",
+  "technique": "Self-scaling Red-Blue arena for coding-agent evaluation",
+  "family": "avaliacao_de_agente",
+  "recommendation": "observar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12569",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 18,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SWE-Duel replaces static, leak-prone coding benchmarks (e.g., SWE-bench-style fixed task sets) with evaluation-time task generation, where agents alternately author buggy pull requests and review each other's under mirrored Red-Blue turns with test-based oracles. The cost is substantial: each turn requires three context-isolated Red sessions plus a blind repair check and a Blue review, and the reported tournament ran 1,500 turns across 11 frontier model-harness pairs, which is entirely API- or compute-billed agent execution rather than a one-time benchmark download. It can fail as a procurement signal because the oracle only checks test outcomes (subtle bugs can slip through if feature and bug tests are weak), results depend heavily on the harness rather than the model alone, and a two-agent duel format is a research artifact with no production role for a small team.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12569",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The strongest solver (GPT-5.5 with Codex CLI) repaired 98.3% of reviewed defects; tasks authored by the newest model version defeated a fixed-reference solver 42.9% of the time versus 4.0% for older versions, suggesting difficulty scales with authoring capability.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12569",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12657",
+  "title": "Kronecker Product Attention: Memory-Efficient KV Compression via Structured Factorization",
+  "summary": "KPA replaces standard MHA/GQA/MLA attention parameterization by representing key and value activations as sums of Kronecker products of compact token-dependent factors, with a structured rotary embedding applied only to those factors instead of a decoupled RoPE branch. The cost is that it is an architectural change requiring training from scratch (or at least substantial retraining), plus a new head-split hyperparameter and custom factorization kernels that lack mature framework support. It can fail for this reader because the reported gains are demonstrated only under controlled identical-training conditions at research scale, and the method cannot be applied to existing pretrained checkpoints or API-served models.",
+  "rationale": "KPA is a pretraining-time architectural choice, so a team constrained to a single 24 GB GPU and third-party APIs cannot deploy it on existing models and can only track it until pretrained KPA checkpoints or fine-tuning conversion methods become available.",
+  "technique": "Kronecker Product Attention for KV cache compression",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12657",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "KPA replaces standard MHA/GQA/MLA attention parameterization by representing key and value activations as sums of Kronecker products of compact token-dependent factors, with a structured rotary embedding applied only to those factors instead of a decoupled RoPE branch. The cost is that it is an architectural change requiring training from scratch (or at least substantial retraining), plus a new head-split hyperparameter and custom factorization kernels that lack mature framework support. It can fail for this reader because the reported gains are demonstrated only under controlled identical-training conditions at research scale, and the method cannot be applied to existing pretrained checkpoints or API-served models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12657",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 10x KV cache compression while matching or exceeding TPA, MHA, MQA, GQA, and MLA across four model scales and nine downstream benchmarks under identical training conditions.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12657",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

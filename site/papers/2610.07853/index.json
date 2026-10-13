@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.07853",
+  "title": "Lost in the bf16 Cast: Exporting Ternary Language Models Can Revert Most Low-Learning-Rate Code Changes",
+  "summary": "The technique replaces the standard ternary export path (cast latent weights to bf16, then requantize with the stock exporter) with either writing the training quantizer's codes directly or adjusting bf16 inputs so unchanged tools emit the correct codes. It costs nothing in memory, latency, or model quality; the only cost is a small modification to the export/save pipeline and a validation pass comparing exported codes against the training quantizer. What can fail: teams unaware of the issue may ship silently corrupted models, since bf16 rounding maps near-threshold values to zero and can revert most low-learning-rate fine-tuning changes, and the fix only matters if the reader actually fine-tunes or exports ternary models such as BitNet, Falcon-E, or BitCPM.",
+  "rationale": "If the reader fine-tunes or deploys ternary 1.58-bit models, this is a zero-cost export-pipeline correction that prevents catastrophic, silent accuracy loss, and it requires no additional hardware or budget.",
+  "technique": "Bf16-safe export of ternary model codes",
+  "family": "quantizacao",
+  "recommendation": "adotar",
+  "published": "2026-10-06",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.07853",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The technique replaces the standard ternary export path (cast latent weights to bf16, then requantize with the stock exporter) with either writing the training quantizer's codes directly or adjusting bf16 inputs so unchanged tools emit the correct codes. It costs nothing in memory, latency, or model quality; the only cost is a small modification to the export/save pipeline and a validation pass comparing exported codes against the training quantizer. What can fail: teams unaware of the issue may ship silently corrupted models, since bf16 rounding maps near-threshold values to zero and can revert most low-learning-rate fine-tuning changes, and the fix only matters if the reader actually fine-tunes or exports ternary models such as BitNet, Falcon-E, or BitCPM.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07853",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The documented bf16-cast export collapses greedy GSM8K strict accuracy from 58.79% to 0.78% (Falcon-E-1B-Base) and 36.13% to 0.39% (BitCPM-CANN-0.5B); two compatibility remedies restore accuracy to within a 4-point strict-accuracy non-inferiority criterion against online evaluation in all three audited models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.07853",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

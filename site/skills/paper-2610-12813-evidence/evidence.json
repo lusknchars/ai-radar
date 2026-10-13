@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.12813",
+  "title": "VEPA: Verified Evolving Formal Policy for Lifelong LLM Agent Guardrails",
+  "summary": "VEPA replaces LLM-inference-based adaptive guardrails and static pre-deployment formal policies with deterministic symbolic rules that an LLM patches from deployment feedback, gated by a deterministic verifier and an evidence-threshold activation layer. It costs additional infrastructure: typed event schemas, a rule engine, a patch-verification pipeline, evidence tracking, and LLM calls for policy proposals, plus latency for rule evaluation before each guarded action. It can fail when feedback is corrupted or sparse so valid risks never accumulate enough evidence to activate rules, when the LLM proposes patches the verifier cannot reconcile with existing behavior, and when agent actions are not cleanly expressible as typed events, leaving gaps in coverage.",
+  "rationale": "The approach is feasible on constrained infrastructure since enforcement is deterministic and only policy patching uses an LLM, but adopting it requires building event schemas and a verification pipeline whose benefit depends on the reader's actual agent workload, so a small-scale pilot is warranted before production commitment.",
+  "technique": "LLM-proposed verified evolution of formal guardrail policies",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-08",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.12813",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 14,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "VEPA replaces LLM-inference-based adaptive guardrails and static pre-deployment formal policies with deterministic symbolic rules that an LLM patches from deployment feedback, gated by a deterministic verifier and an evidence-threshold activation layer. It costs additional infrastructure: typed event schemas, a rule engine, a patch-verification pipeline, evidence tracking, and LLM calls for policy proposals, plus latency for rule evaluation before each guarded action. It can fail when feedback is corrupted or sparse so valid risks never accumulate enough evidence to activate rules, when the LLM proposes patches the verifier cannot reconcile with existing behavior, and when agent actions are not cleanly expressible as typed events, leaving gaps in coverage.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12813",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The abstract claims VEPA 'consistently outperforms baselines' on ASSEBench-Safety, ASSEBench-Security, and ATBench, including under mixed streams, corrupted feedback, and longer horizons, but provides no numeric improvement figure.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.12813",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

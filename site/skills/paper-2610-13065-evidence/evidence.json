@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.13065",
+  "title": "TestSuiteBench: Coding Agents Struggle to Generate Strong Test Suites from Specifications",
+  "summary": "TestSuiteBench replaces informal pass-rate evaluation of agent-generated test suites with specification-derived mutation testing across 165 applications, isolating one requirement per mutant. Adopting this evaluation practice costs mutation-generation and test-execution compute, which fits a single-GPU or API budget since the tested artifact is ordinary code rather than a model, but adds pipeline complexity for specification structuring and mutant refinement. The failure mode the paper exposes is that high pass rates on reference implementations mask weak suites: generated tests lack relevant input combinations and under-cover requirements, so an agent can ship code it cannot actually verify.",
+  "rationale": "The paper contributes a benchmark and a negative capability finding rather than a deployable method, but its conclusion directly informs production practice: agent-generated test suites must be validated with mutation testing before being trusted for autonomous development.",
+  "technique": "Mutation-based benchmark for agent-generated test suites",
+  "family": "avaliacao_de_agente",
+  "recommendation": "observar",
+  "published": "2026-10-09",
+  "as_of": "2026-10-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.13065",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TestSuiteBench replaces informal pass-rate evaluation of agent-generated test suites with specification-derived mutation testing across 165 applications, isolating one requirement per mutant. Adopting this evaluation practice costs mutation-generation and test-execution compute, which fits a single-GPU or API budget since the tested artifact is ordinary code rather than a model, but adds pipeline complexity for specification structuring and mutant refinement. The failure mode the paper exposes is that high pass rates on reference implementations mask weak suites: generated tests lack relevant input combinations and under-cover requirements, so an agent can ship code it cannot actually verify.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13065",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Frontier coding agents achieve mutation scores below 60% on generated test suites despite 88% of tests passing the reference implementation, while agent-generated implementations pass 82% of reference tests.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.13065",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
