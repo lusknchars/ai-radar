@@ -13,6 +13,7 @@ from .community import COMMUNITY_SCRIPT
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
 from .exposure_editions import apply_exposure_edition
+from .lab_reproductions import apply_lab_reproductions
 from .paper_skills import build_paper_skills
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
@@ -132,6 +133,8 @@ def publish_site(
         page = apply_builder_review(
             page, content_root / "builders" / f"{point.arxiv_id}.json",
             reports_by_id.get(point.arxiv_id))
+        page = apply_lab_reproductions(
+            page, content_root / "reproductions" / f"{point.arxiv_id}.json")
         published_pages.append(page)
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
