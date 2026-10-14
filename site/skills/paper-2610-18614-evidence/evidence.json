@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.18614",
+  "title": "Can an Agent Learn to Predict Its Own Failure? Outcome-Grounded Confidence Calibration in LLM Agents",
+  "summary": "The method replaces self-reported verbalized confidence calibrated only against per-step correctness with RL-calibrated per-step confidence scored against eventual episode outcome, using GRPO group rollouts as success labels and a proper scoring rule. It costs a GRPO training run (offline on recorded trajectories or online on the live agent) on a 7B model, plus instrumentation to log per-step confidence, fitting a single 24 GB GPU but requiring RL pipeline engineering. It can fail when confidence must distinguish a failing from a succeeding attempt on the same task, since gains concentrate on first-step task-level foresight rather than within-task discrimination, and results are confined to ALFWorld, TextWorld, and WebShop with Qwen2.5-7B.",
+  "rationale": "A per-step failure-prediction signal directly supports production decisions like abstention and human handoff, but the required GRPO training and the narrow validation environments mean the reader should validate on their own agent workload before adoption.",
+  "technique": "Outcome-grounded confidence calibration for LLM agents via GRPO",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-13",
+  "as_of": "2026-10-14",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.18614",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces self-reported verbalized confidence calibrated only against per-step correctness with RL-calibrated per-step confidence scored against eventual episode outcome, using GRPO group rollouts as success labels and a proper scoring rule. It costs a GRPO training run (offline on recorded trajectories or online on the live agent) on a 7B model, plus instrumentation to log per-step confidence, fitting a single 24 GB GPU but requiring RL pipeline engineering. It can fail when confidence must distinguish a failing from a succeeding attempt on the same task, since gains concentrate on first-step task-level foresight rather than within-task discrimination, and results are confined to ALFWorld, TextWorld, and WebShop with Qwen2.5-7B.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.18614",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Top-10% most-confident steps succeed ~4.3x more often than average; step-confidence AUROC rises from near chance to 0.68-0.85, and calibration error drops from 0.42 to below 0.12, enabling better selective execution without degrading task success.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.18614",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
