@@ -102,6 +102,27 @@ class IndependentTest(BaseModel):
     source_url: str = Field(pattern=r"^https://")
 
 
+class LabReproduction(BaseModel):
+    """A Paper Raft study that reran the paper's claims. Limits are required: a reproduction
+    covers stated conditions only, so it never promotes editorial status or validation tiers."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
+    limits: str = Field(min_length=1)
+    source_url: str = Field(pattern=r"^https://")
+    checked_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    methods_verified: int = Field(ge=0)
+    methods_total: int = Field(ge=1)
+
+    @model_validator(mode="after")
+    def verified_within_total(self) -> LabReproduction:
+        if self.methods_verified > self.methods_total:
+            raise ValueError("verified methods cannot exceed the methods tried")
+        return self
+
+
 class ResearchEquation(BaseModel):
     """One central equation. `mathml` and `context` are sanitized markup:
     the context is escaped prose with inline MathML for the paper's symbols."""
@@ -151,6 +172,7 @@ class ResearchPage(BaseModel):
     minimum_test: tuple[str, ...]
     open_questions: tuple[str, ...]
     independent_tests: tuple[IndependentTest, ...] = ()
+    lab_reproductions: tuple[LabReproduction, ...] = ()
     report_available: bool
     validation_tier: InfrastructureTier = "unknown"
     evidence_tier: InfrastructureTier = "unknown"

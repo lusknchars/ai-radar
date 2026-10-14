@@ -1113,6 +1113,8 @@ def _render_research_jumps(page: ResearchPage, *, community: bool = False) -> st
     ]
     if page.independent_tests:
         links.append(("independent-tests", "independent tests"))
+    if page.lab_reproductions:
+        links.append(("lab-reproductions", "reproduced"))
     if community:
         links.append(('discussion', 'discussion'))
     return (
@@ -1404,6 +1406,25 @@ def render_research_page(
             'conditions.</p></div>'
             f'<ul class="research-independent-tests">{items}</ul></section>'
         )
+    lab_reproductions = ""
+    if page.lab_reproductions:
+        items = "".join(
+            '<li><h3>'
+            f'<a href="{escape(item.source_url)}" target="_blank" '
+            f'rel="noopener noreferrer">{escape(item.title)} ↗</a></h3>'
+            f'<p>{escape(item.summary)}</p>'
+            f'<p><strong>Scope:</strong> {escape(item.limits)}</p>'
+            f'<p>{item.methods_verified} of {item.methods_total} methods verified by a separate '
+            f'reviewer · checked {escape(item.checked_at)}</p></li>'
+            for item in page.lab_reproductions
+        )
+        lab_reproductions = (
+            '<section id="lab-reproductions" class="research-section">'
+            '<div class="section-head"><h2>Reproduced in Paper Raft</h2>'
+            '<p class="sub">Independent agents reran the paper\'s claims under the stated '
+            'scope. This does not change the brief\'s editorial status.</p></div>'
+            f'<ul class="research-independent-tests">{items}</ul></section>'
+        )
     json_href = public_config.path(f"papers/{page.arxiv_id}/index.json")
     skill_href = public_config.path(
         f"skills/paper-{page.arxiv_id.replace('.', '-')}-evidence.zip")
@@ -1447,7 +1468,7 @@ def render_research_page(
         '<p class="sub">Author findings, Paperraft interpretations, and the next check. '
         'Missing analysis never counts as evidence of safety.</p></div>'
         f'{_render_exposure_map(page)}</section>'
-        f'{detail_sections}{_render_reading_guide(page)}{independent_tests}'
+        f'{detail_sections}{_render_reading_guide(page)}{independent_tests}{lab_reproductions}'
         f'{_render_paper_stack(page, public_config, preview_pages)}'
         '<aside id="signal" class="research-signal-note" aria-label="Discovery signal">'
         '<span>Discovery signal</span>'
