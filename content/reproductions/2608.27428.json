@@ -8,7 +8,14 @@
       "source_url": "https://lusknchars.github.io/paper-raft/#study/transduced-lm-2026",
       "checked_at": "2026-10-13",
       "methods_verified": 5,
-      "methods_total": 5
+      "methods_total": 5,
+      "flow": {
+        "file": "2608.27428.flow.json",
+        "study": "transduced-lm-2026",
+        "source_commit": "aeeeeb1a23184815d730cab1fead10761cbc0e92",
+        "exported_at": "2026-10-14",
+        "explorer_url": "https://lusknchars.github.io/paper-raft/#flow/transduced-lm-2026"
+      }
     }
   ]
 }

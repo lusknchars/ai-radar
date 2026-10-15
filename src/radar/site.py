@@ -37,7 +37,7 @@ from .public_labels import (CORE_KIND_PHRASES,
 from .report import ReportDocument
 from .site_assets import math_font_face
 from .site_assets import BACKGROUND_SCRIPT as _BACKGROUND_JS
-from .site_assets import BEAM_INPUT_SCRIPT, PAPER_STACK_SCRIPT
+from .site_assets import BEAM_INPUT_SCRIPT, LAB_FLOW_SCRIPT, PAPER_STACK_SCRIPT
 from .site_assets import CHART_SCRIPT as _CHART_JS
 from .site_assets import REPORT_SCRIPT as _REPORT_JS
 from .site_assets import SCRIPT as _JS, STYLES as _CSS
@@ -1357,6 +1357,23 @@ def _render_builder_guide(page: ResearchPage, config: PublicConfig) -> str:
     return application + benchmarks + trial
 
 
+def _render_lab_flow(arxiv_id: str, ref, public_config: PublicConfig) -> str:
+    three = public_config.path("assets/three-0.186.1/")
+    importmap = json.dumps({"imports": {"three": three + "build/three.module.js",
+                                        "three/addons/": three + "examples/jsm/"}}).replace("</", "<\\/")
+    return (
+        f'<link rel="stylesheet" href="{escape(public_config.path("assets/paper-raft-flow/flow.css"))}">'
+        f'<script type="importmap">{importmap}</script>'
+        f'<div class="lab-flow" id="lab-flow" data-src="{escape(public_config.path(f"papers/{arxiv_id}/lab-flow.json"))}" '
+        f'data-module="{escape(public_config.path("assets/paper-raft-flow/flow.js"))}" '
+        'role="img" aria-label="Chain from the paper to the lab runs: extracted items, methods, runs and results"></div>'
+        f'<p class="lab-flow-source">Lab data from commit {escape(ref.source_commit[:7])}, exported '
+        f'{escape(ref.exported_at)} · <a href="{escape(ref.explorer_url)}" target="_blank" '
+        'rel="noopener noreferrer">Open the full view in Paper Raft →</a></p>'
+        f'<script type="module">{LAB_FLOW_SCRIPT}</script>'
+    )
+
+
 def render_research_page(
     page: ResearchPage,
     public_config: PublicConfig = DEFAULT_PUBLIC_CONFIG,
@@ -1418,12 +1435,14 @@ def render_research_page(
             f'reviewer · checked {escape(item.checked_at)}</p></li>'
             for item in page.lab_reproductions
         )
+        flow_ref = next((item.flow for item in page.lab_reproductions if item.flow is not None), None)
         lab_reproductions = (
             '<section id="lab-reproductions" class="research-section">'
             '<div class="section-head"><h2>Reproduced in Paper Raft</h2>'
             '<p class="sub">Independent agents reran the paper\'s claims under the stated '
             'scope. This does not change the brief\'s editorial status.</p></div>'
-            f'<ul class="research-independent-tests">{items}</ul></section>'
+            f'<ul class="research-independent-tests">{items}</ul>'
+            f'{_render_lab_flow(page.arxiv_id, flow_ref, public_config) if flow_ref else ""}</section>'
         )
     json_href = public_config.path(f"papers/{page.arxiv_id}/index.json")
     skill_href = public_config.path(

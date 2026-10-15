@@ -1,0 +1,643 @@
+{
+ "schema": 1,
+ "study": "transduced-lm-2026",
+ "source": {
+  "repo": "https://github.com/lusknchars/paper-raft",
+  "commit": "aeeeeb1a23184815d730cab1fead10761cbc0e92",
+  "built_at": "2026-10-15T02:42:18+00:00"
+ },
+ "paper": {
+  "title": "Stochastic Estimation of Transduced Language Models",
+  "authors_short": "Snæbjarnarson et al. 2026",
+  "reference_checked": true,
+  "draft": false
+ },
+ "items": [
+  {
+   "id": "target-prefix-probability",
+   "kind": "equation"
+  },
+  {
+   "id": "zero-mass-convention",
+   "kind": "boundary_condition"
+  },
+  {
+   "id": "quotient-remainder-decomposition",
+   "kind": "equation"
+  },
+  {
+   "id": "precover-predicates",
+   "kind": "equation"
+  },
+  {
+   "id": "predicate-implementation",
+   "kind": "method"
+  },
+  {
+   "id": "twist-is-live",
+   "kind": "equation"
+  },
+  {
+   "id": "twist-is-live-all-experiments",
+   "kind": "parameter"
+  },
+  {
+   "id": "beam-summing",
+   "kind": "method"
+  },
+  {
+   "id": "empty-target-base-case",
+   "kind": "boundary_condition"
+  },
+  {
+   "id": "beam-summing-z-hat",
+   "kind": "equation"
+  },
+  {
+   "id": "prune-m",
+   "kind": "method"
+  },
+  {
+   "id": "prune-tau",
+   "kind": "method"
+  },
+  {
+   "id": "prune-sort-ties",
+   "kind": "method"
+  },
+  {
+   "id": "ht-estimator",
+   "kind": "equation"
+  },
+  {
+   "id": "swor-inclusion-probabilities",
+   "kind": "equation"
+  },
+  {
+   "id": "pps",
+   "kind": "method"
+  },
+  {
+   "id": "systematic-pps-sampling",
+   "kind": "equation"
+  },
+  {
+   "id": "pps-floating-point",
+   "kind": "method"
+  },
+  {
+   "id": "beam-swor-prune",
+   "kind": "method"
+  },
+  {
+   "id": "beam-swor-adaptive-prune",
+   "kind": "method"
+  },
+  {
+   "id": "beam-swor-adaptive-threshold",
+   "kind": "equation"
+  },
+  {
+   "id": "beam-swor-adaptive-count",
+   "kind": "equation"
+  },
+  {
+   "id": "beam-swor-adaptive-roulette",
+   "kind": "equation"
+  },
+  {
+   "id": "effective-running-total",
+   "kind": "equation"
+  },
+  {
+   "id": "epsilon-setting",
+   "kind": "parameter"
+  },
+  {
+   "id": "expected-weight-preservation",
+   "kind": "equation"
+  },
+  {
+   "id": "lemma-3-2",
+   "kind": "result"
+  },
+  {
+   "id": "theorem-3-3-unbiasedness",
+   "kind": "result"
+  },
+  {
+   "id": "prop-3-4-adaptive",
+   "kind": "result"
+  },
+  {
+   "id": "smc-simple",
+   "kind": "method"
+  },
+  {
+   "id": "smc-simple-weight-update",
+   "kind": "equation"
+  },
+  {
+   "id": "smc-simple-z-hat",
+   "kind": "equation"
+  },
+  {
+   "id": "smc-simple-cylinder-completion",
+   "kind": "method"
+  },
+  {
+   "id": "smc-rb-proposal",
+   "kind": "equation"
+  },
+  {
+   "id": "smc-rb-weight-update",
+   "kind": "equation"
+  },
+  {
+   "id": "smc-rb",
+   "kind": "method"
+  },
+  {
+   "id": "ess",
+   "kind": "equation"
+  },
+  {
+   "id": "ess-gated-multinomial-resample",
+   "kind": "equation"
+  },
+  {
+   "id": "prop-b1-smc-rb-unbiased",
+   "kind": "result"
+  },
+  {
+   "id": "smc-simple-unbiased",
+   "kind": "result"
+  },
+  {
+   "id": "tail-roulette",
+   "kind": "method"
+  },
+  {
+   "id": "tail-roulette-for-beam-summing",
+   "kind": "method"
+  },
+  {
+   "id": "tail-roulette-halting",
+   "kind": "result"
+  },
+  {
+   "id": "kappa-dna",
+   "kind": "parameter"
+  },
+  {
+   "id": "eta-default",
+   "kind": "parameter"
+  },
+  {
+   "id": "tau-dna",
+   "kind": "parameter"
+  },
+  {
+   "id": "rho-default",
+   "kind": "parameter"
+  },
+  {
+   "id": "m-table2-dna",
+   "kind": "parameter"
+  },
+  {
+   "id": "seeds-fig9a",
+   "kind": "parameter"
+  },
+  {
+   "id": "m-grid-fig9a",
+   "kind": "parameter"
+  },
+  {
+   "id": "m-meaning-per-method",
+   "kind": "parameter"
+  },
+  {
+   "id": "rng-and-seeds",
+   "kind": "parameter"
+  },
+  {
+   "id": "empty-pool-handling",
+   "kind": "boundary_condition"
+  },
+  {
+   "id": "failed-run-zero",
+   "kind": "boundary_condition"
+  },
+  {
+   "id": "reporting-log-mean",
+   "kind": "equation"
+  },
+  {
+   "id": "relative-rmse",
+   "kind": "equation"
+  },
+  {
+   "id": "exact-path-sum",
+   "kind": "method"
+  },
+  {
+   "id": "dna-training-corpus",
+   "kind": "parameter"
+  },
+  {
+   "id": "dna-targets",
+   "kind": "parameter"
+  },
+  {
+   "id": "f-dna2aa-definition",
+   "kind": "equation"
+  },
+  {
+   "id": "worst-case-source",
+   "kind": "parameter"
+  },
+  {
+   "id": "worst-case-source-stop",
+   "kind": "parameter"
+  },
+  {
+   "id": "worst-case-closed-form",
+   "kind": "equation"
+  },
+  {
+   "id": "appendix-e-eq49-beam",
+   "kind": "result"
+  },
+  {
+   "id": "appendix-e-eq50-exact",
+   "kind": "result"
+  },
+  {
+   "id": "beam-summing-lower-bound",
+   "kind": "result"
+  },
+  {
+   "id": "table-2",
+   "kind": "result"
+  },
+  {
+   "id": "table-2-dna-column",
+   "kind": "result"
+  },
+  {
+   "id": "fig-9a",
+   "kind": "result"
+  },
+  {
+   "id": "fig-9b",
+   "kind": "result"
+  },
+  {
+   "id": "smc-rb-vs-simple-dna",
+   "kind": "result"
+  }
+ ],
+ "methods": [
+  {
+   "name": "beam-summing",
+   "implements": [
+    "beam-summing",
+    "beam-summing-z-hat",
+    "empty-target-base-case",
+    "prune-m",
+    "prune-tau",
+    "twist-is-live",
+    "twist-is-live-all-experiments",
+    "precover-predicates",
+    "zero-mass-convention",
+    "tau-dna",
+    "beam-summing-lower-bound",
+    "appendix-e-eq49-beam"
+   ],
+   "status": "verified",
+   "color": 0
+  },
+  {
+   "name": "beam-swor",
+   "implements": [
+    "beam-summing",
+    "beam-summing-z-hat",
+    "empty-target-base-case",
+    "quotient-remainder-decomposition",
+    "precover-predicates",
+    "twist-is-live",
+    "twist-is-live-all-experiments",
+    "ht-estimator",
+    "swor-inclusion-probabilities",
+    "pps",
+    "systematic-pps-sampling",
+    "beam-swor-prune",
+    "expected-weight-preservation",
+    "tail-roulette",
+    "kappa-dna",
+    "zero-mass-convention"
+   ],
+   "status": "verified",
+   "color": 1
+  },
+  {
+   "name": "beam-swor-adaptive",
+   "implements": [
+    "beam-summing",
+    "empty-target-base-case",
+    "beam-summing-z-hat",
+    "twist-is-live",
+    "twist-is-live-all-experiments",
+    "ht-estimator",
+    "pps",
+    "systematic-pps-sampling",
+    "beam-swor-adaptive-prune",
+    "beam-swor-adaptive-threshold",
+    "beam-swor-adaptive-count",
+    "beam-swor-adaptive-roulette",
+    "effective-running-total",
+    "epsilon-setting",
+    "rho-default",
+    "expected-weight-preservation",
+    "prop-3-4-adaptive"
+   ],
+   "status": "verified",
+   "color": 2
+  },
+  {
+   "name": "smc-rb",
+   "implements": [
+    "smc-rb",
+    "smc-rb-proposal",
+    "smc-rb-weight-update",
+    "twist-is-live",
+    "twist-is-live-all-experiments",
+    "empty-target-base-case",
+    "beam-summing-z-hat",
+    "ess",
+    "ess-gated-multinomial-resample",
+    "eta-default",
+    "tail-roulette",
+    "kappa-dna",
+    "precover-predicates",
+    "quotient-remainder-decomposition",
+    "zero-mass-convention",
+    "failed-run-zero",
+    "prop-b1-smc-rb-unbiased"
+   ],
+   "status": "verified",
+   "color": 3
+  },
+  {
+   "name": "smc-simple",
+   "implements": [
+    "smc-simple",
+    "smc-simple-weight-update",
+    "smc-simple-z-hat",
+    "smc-simple-cylinder-completion",
+    "smc-rb-proposal",
+    "twist-is-live",
+    "twist-is-live-all-experiments",
+    "ess",
+    "ess-gated-multinomial-resample",
+    "eta-default",
+    "tail-roulette",
+    "kappa-dna",
+    "empty-target-base-case",
+    "empty-pool-handling",
+    "failed-run-zero",
+    "rng-and-seeds",
+    "m-meaning-per-method",
+    "smc-simple-unbiased",
+    "appendix-e-eq50-exact",
+    "zero-mass-convention"
+   ],
+   "status": "verified",
+   "color": 4
+  }
+ ],
+ "cases": [
+  {
+   "key": "case=worst",
+   "label": "worst"
+  },
+  {
+   "key": "case=bigram",
+   "label": "bigram"
+  }
+ ],
+ "runs": [
+  {
+   "run_id": "beam-summing-caseworst",
+   "method": "beam-summing",
+   "params": {
+    "case": "worst"
+   },
+   "case": "case=worst",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:11:19+00:00",
+   "metrics": [
+    {
+     "key": "exact_error",
+     "value": 7.958078640513122e-13
+    }
+   ]
+  },
+  {
+   "run_id": "beam-summing-casebigram",
+   "method": "beam-summing",
+   "params": {
+    "case": "bigram"
+   },
+   "case": "case=bigram",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:11:24+00:00",
+   "metrics": [
+    {
+     "key": "lower_bound",
+     "value": -0.014027813771837705
+    }
+   ]
+  },
+  {
+   "run_id": "beam-swor-caseworst",
+   "method": "beam-swor",
+   "params": {
+    "case": "worst"
+   },
+   "case": "case=worst",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:11:27+00:00",
+   "metrics": [
+    {
+     "key": "exact_error",
+     "value": 7.958078640513122e-13
+    }
+   ]
+  },
+  {
+   "run_id": "beam-swor-casebigram",
+   "method": "beam-swor",
+   "params": {
+    "case": "bigram"
+   },
+   "case": "case=bigram",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:12:15+00:00",
+   "metrics": [
+    {
+     "key": "bias",
+     "value": 1.8568208501777455
+    },
+    {
+     "key": "error_drop",
+     "value": 0.20172017319026486
+    }
+   ]
+  },
+  {
+   "run_id": "beam-swor-adaptive-caseworst",
+   "method": "beam-swor-adaptive",
+   "params": {
+    "case": "worst"
+   },
+   "case": "case=worst",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:12:20+00:00",
+   "metrics": []
+  },
+  {
+   "run_id": "beam-swor-adaptive-casebigram",
+   "method": "beam-swor-adaptive",
+   "params": {
+    "case": "bigram"
+   },
+   "case": "case=bigram",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:13:08+00:00",
+   "metrics": [
+    {
+     "key": "bias",
+     "value": 2.112693456147854
+    },
+    {
+     "key": "error_drop",
+     "value": 0.17877227550607483
+    }
+   ]
+  },
+  {
+   "run_id": "smc-rb-caseworst",
+   "method": "smc-rb",
+   "params": {
+    "case": "worst"
+   },
+   "case": "case=worst",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:13:13+00:00",
+   "metrics": [
+    {
+     "key": "exact_error",
+     "value": 1.7053025658242404e-13
+    }
+   ]
+  },
+  {
+   "run_id": "smc-rb-casebigram",
+   "method": "smc-rb",
+   "params": {
+    "case": "bigram"
+   },
+   "case": "case=bigram",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:14:05+00:00",
+   "metrics": [
+    {
+     "key": "bias",
+     "value": 2.1369099129298603
+    },
+    {
+     "key": "error_drop",
+     "value": 0.26085507647779255
+    }
+   ]
+  },
+  {
+   "run_id": "smc-simple-caseworst",
+   "method": "smc-simple",
+   "params": {
+    "case": "worst"
+   },
+   "case": "case=worst",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:14:22+00:00",
+   "metrics": [
+    {
+     "key": "exact_error",
+     "value": 1.7053025658242404e-13
+    }
+   ]
+  },
+  {
+   "run_id": "smc-simple-casebigram",
+   "method": "smc-simple",
+   "params": {
+    "case": "bigram"
+   },
+   "case": "case=bigram",
+   "status": "verified",
+   "pass": true,
+   "started_at": "2026-10-13T19:14:56+00:00",
+   "metrics": [
+    {
+     "key": "bias",
+     "value": 2.383999050421467
+    },
+    {
+     "key": "error_drop",
+     "value": 0.27504287096765995
+    }
+   ]
+  }
+ ],
+ "metrics": [
+  {
+   "key": "bias",
+   "label": "worst bias test",
+   "note": "limit 4σ over 128 seeds",
+   "agg": "max",
+   "format": "sigma"
+  },
+  {
+   "key": "error_drop",
+   "label": "error as budget grows",
+   "note": "relative RMSE, M 16 → 256, weakest method",
+   "agg": "max",
+   "format": "drop_percent"
+  },
+  {
+   "key": "exact_error",
+   "label": "exact-case error",
+   "note": "log Ẑ vs closed form, limit 1e-9",
+   "agg": "max",
+   "format": "sci"
+  },
+  {
+   "key": "lower_bound",
+   "label": "beam summing keeps",
+   "note": "share of the true value, never above it",
+   "agg": "max",
+   "format": "kept_percent"
+  }
+ ]
+}

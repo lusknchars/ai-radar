@@ -91,3 +91,42 @@ def test_apply_validates_the_snapshot_and_copy_places_it(tmp_path):
     assert copy_lab_flow(linked, tmp_path, out) is True
     assert json.loads((out / "lab-flow.json").read_text())["study"] == "transduced-lm-2026"
     assert copy_lab_flow(page(), tmp_path, out) is False
+
+
+from radar.site import render_research_page
+
+
+def real_page():
+    return apply_lab_reproductions(page(), ROOT / "content/reproductions/2608.27428.json")
+
+
+def test_paper_page_carries_the_demo_after_the_text_summary():
+    html = render_research_page(real_page())
+    section = html[html.index('id="lab-reproductions"'):]
+    assert section.index("methods verified by a separate reviewer") < section.index('id="lab-flow"')
+    assert 'data-src="/ai-radar/papers/2608.27428/lab-flow.json"' in section or 'data-src="/papers/2608.27428/lab-flow.json"' in section
+    assert '"three": "' in section and "three-0.186.1/build/three.module.js" in section
+    assert "Open the full view in Paper Raft" in section and 'rel="noopener noreferrer"' in section
+    assert "Lab data from commit" in section
+
+
+def test_page_without_flow_has_no_demo():
+    html = render_research_page(page())
+    assert 'id="lab-flow"' not in html and "three-0.186.1" not in html
+
+
+def test_snapshot_text_never_reaches_the_page_html(tmp_path):
+    data = json.loads((ROOT / "content/reproductions/2608.27428.flow.json").read_text())
+    data["paper"]["title"] = '</script><img src=x onerror=alert(1)>'
+    (tmp_path / "2608.27428.flow.json").write_text(json.dumps(data))
+    edition = json.loads((ROOT / "content/reproductions/2608.27428.json").read_text())
+    (tmp_path / "2608.27428.json").write_text(json.dumps(edition))
+    html = render_research_page(apply_lab_reproductions(page(), tmp_path / "2608.27428.json"))
+    assert "onerror" not in html
+
+
+def test_vendored_flow_assets_are_present():
+    base = ROOT / "assets/vendor"
+    assert (base / "three-0.186.1/build/three.module.js").is_file()
+    assert (base / "three-0.186.1/LICENSE").is_file()
+    assert "export function mountFlow" in (base / "paper-raft-flow/flow.js").read_text()

@@ -13,7 +13,7 @@ from .community import COMMUNITY_SCRIPT
 from .discovery_files import render_robots, render_sitemap
 from .equation_editions import apply_equation_edition
 from .exposure_editions import apply_exposure_edition
-from .lab_reproductions import apply_lab_reproductions
+from .lab_reproductions import apply_lab_reproductions, copy_lab_flow
 from .paper_skills import build_paper_skills
 from .feed import MAX_ITEMS as RSS_MAX_ITEMS, render_rss
 from .public_research import build_research_page
@@ -26,6 +26,10 @@ from .store import Store
 VENDOR_ASSETS = tuple(
     Path(__file__).resolve().parents[2] / "assets" / "vendor" / name
     for name in ("d3-7.9.0.min.js", "observable-plot-0.6.17.min.js")
+)
+VENDOR_TREES = tuple(
+    Path(__file__).resolve().parents[2] / "assets" / "vendor" / name
+    for name in ("three-0.186.1", "paper-raft-flow")
 )
 FONT_ASSETS = tuple(sorted(
     (Path(__file__).resolve().parents[2] / "assets" / "fonts").glob("*.woff2")
@@ -58,6 +62,8 @@ def publish_site(
         copytree(previews_root, assets_root / "paper-previews", dirs_exist_ok=True)
     for asset in VENDOR_ASSETS:
         copyfile(asset, assets_root / asset.name)
+    for tree in VENDOR_TREES:
+        copytree(tree, assets_root / tree.name, dirs_exist_ok=True)
     copyfile(Path(__file__).resolve().parents[2] / "assets" / "social-card.png",
              assets_root / "social-card.png")
     fonts_root = assets_root / "fonts"
@@ -138,6 +144,7 @@ def publish_site(
         published_pages.append(page)
         destination = papers_root / point.arxiv_id
         destination.mkdir(parents=True, exist_ok=True)
+        copy_lab_flow(page, content_root / "reproductions", destination)
         preview_manifest = previews_root / point.arxiv_id / "manifest.json"
         preview_pages = 0
         if preview_manifest.exists():

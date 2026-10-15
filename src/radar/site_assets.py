@@ -1224,3 +1224,33 @@ STYLES += r"""
 .giscus{margin-top:22px}.giscus-frame{width:100%;border:0}
 @media(max-width:700px){.community-welcome{grid-template-columns:1fr;gap:28px}.community-forum-link{padding-left:18px}.community-papers h3{font-size:22px}.community-search{grid-template-columns:1fr}.community-search button{justify-self:start}.community-links{align-items:flex-start}.community-discussion{padding:38px 0}.community-steps{grid-template-columns:1fr;gap:10px}}
 """
+
+# Paper Raft flow demo inside "Reproduced in Paper Raft". The module and three.js load only when the
+# section scrolls near the viewport; if anything fails, the box hides and the text summary above stays.
+LAB_FLOW_SCRIPT = """
+const box = document.getElementById("lab-flow");
+if (box) {
+  const start = async () => {
+    try {
+      const [{ mountFlow }, data] = await Promise.all([
+        import(box.dataset.module),
+        fetch(box.dataset.src).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      ]);
+      mountFlow(box, data, {});
+    } catch (e) { box.hidden = true; }
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { io.disconnect(); start(); }
+    }, { rootMargin: "300px" });
+    io.observe(box);
+  } else { start(); }
+}
+"""
+
+LAB_FLOW_STYLES = (
+    ".lab-flow{height:520px;margin:18px 0 6px}"
+    "@media (max-width:719px){.lab-flow{height:420px}}"
+    ".lab-flow-source{font-size:.85em;opacity:.75}"
+)
+STYLES = STYLES + LAB_FLOW_STYLES
