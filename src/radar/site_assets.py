@@ -1249,7 +1249,7 @@ if (box) {
 """
 
 LAB_FLOW_STYLES = (
-    ".lab-flow{height:560px;margin:18px 0 6px}"
+    ".lab-flow{height:720px;margin:18px 0 6px}"
     "@media (max-width:719px){.lab-flow{height:420px}}"
     ".lab-flow-source{font-size:.85em;opacity:.75}"
 )
