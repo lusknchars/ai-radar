@@ -102,6 +102,18 @@ class IndependentTest(BaseModel):
     source_url: str = Field(pattern=r"^https://")
 
 
+class LabFlowRef(BaseModel):
+    """A committed copy of a Paper Raft study's flow.json, drawn on the paper's page."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    file: str = Field(pattern=r"^\d{4}\.\d{4,5}\.flow\.json$")
+    study: str = Field(pattern=r"^[a-z0-9][a-z0-9-]*$")
+    source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    exported_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    explorer_url: str = Field(pattern=r"^https://")
+
+
 class LabReproduction(BaseModel):
     """A Paper Raft study that reran the paper's claims. Limits are required: a reproduction
     covers stated conditions only, so it never promotes editorial status or validation tiers."""
@@ -115,6 +127,7 @@ class LabReproduction(BaseModel):
     checked_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
     methods_verified: int = Field(ge=0)
     methods_total: int = Field(ge=1)
+    flow: LabFlowRef | None = None
 
     @model_validator(mode="after")
     def verified_within_total(self) -> LabReproduction:
