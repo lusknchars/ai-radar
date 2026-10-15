@@ -76,7 +76,8 @@ def edition_with_flow(tmp_path):
 
 
 def page():
-    return ResearchPage.model_validate_json((ROOT / "site/papers/2608.27428/index.json").read_text())
+    raw = json.loads((ROOT / "site/papers/2608.27428/index.json").read_text())
+    return ResearchPage.model_validate({**raw, "lab_reproductions": []})
 
 
 def test_apply_validates_the_snapshot_and_copy_places_it(tmp_path):
@@ -134,6 +135,7 @@ def test_vendored_flow_assets_are_present():
 
 def test_demo_box_is_a_region_not_an_image():
     html = render_research_page(real_page())
+    assert '<noscript><style>#lab-flow{display:none}</style></noscript>' in html
     assert 'role="region" aria-label="Chain from the paper' in html
     assert 'role="img" aria-label="Chain' not in html
 
@@ -144,3 +146,13 @@ def test_provenance_line_differs_when_lab_reproductions_exist():
     assert "Paperraft's editors have not rerun this experiment; see Reproduced in Paper Raft above" in with_lab
     assert "Paperraft has not reproduced this experiment." not in with_lab
     assert "Paperraft has not reproduced this experiment." in without
+
+
+def test_flow_file_must_be_named_after_the_paper(tmp_path):
+    data = json.loads((ROOT / "content/reproductions/2608.27428.json").read_text())
+    data["reproductions"][0]["flow"]["file"] = "2608.99999.flow.json"
+    (tmp_path / "2608.27428.json").write_text(json.dumps(data))
+    (tmp_path / "2608.99999.flow.json").write_text(
+        (ROOT / "content/reproductions/2608.27428.flow.json").read_text())
+    with pytest.raises(ValueError, match="flow file"):
+        apply_lab_reproductions(page(), tmp_path / "2608.27428.json")

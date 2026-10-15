@@ -1251,6 +1251,6 @@ if (box) {
 LAB_FLOW_STYLES = (
     ".lab-flow{height:720px;margin:18px 0 6px}"
     "@media (max-width:719px){.lab-flow{height:420px}}"
-    ".lab-flow-source{font-size:.85em;opacity:.75}"
+    ".lab-flow-source{font-size:.85em;color:var(--fraco)}"
 )
 STYLES = STYLES + LAB_FLOW_STYLES

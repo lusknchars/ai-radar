@@ -117,6 +117,8 @@ def apply_lab_reproductions(page: ResearchPage, path: Path) -> ResearchPage:
         raise ValueError("lab reproduction belongs to a different paper")
     for item in edition.reproductions:
         if item.flow is not None:
+            if item.flow.file != f"{edition.arxiv_id}.flow.json":
+                raise ValueError("lab flow file must be named after the paper")
             load_flow(path.parent / item.flow.file, item.flow)
     return ResearchPage.model_validate({
         **page.model_dump(),

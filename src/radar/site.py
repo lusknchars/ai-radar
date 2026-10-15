@@ -1364,6 +1364,7 @@ def _render_lab_flow(arxiv_id: str, ref, public_config: PublicConfig) -> str:
     return (
         f'<link rel="stylesheet" href="{escape(public_config.path("assets/paper-raft-flow/flow.css"))}">'
         f'<script type="importmap">{importmap}</script>'
+        '<noscript><style>#lab-flow{display:none}</style></noscript>'
         f'<div class="lab-flow" id="lab-flow" data-src="{escape(public_config.path(f"papers/{arxiv_id}/lab-flow.json"))}" '
         f'data-module="{escape(public_config.path("assets/paper-raft-flow/flow.js"))}" '
         'role="region" aria-label="Chain from the paper to the lab runs: extracted items, methods, runs and results"></div>'
