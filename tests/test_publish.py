@@ -91,6 +91,8 @@ def test_publish_site_links_and_renders_saved_reports(tmp_path):
     assert plot_asset.stat().st_size == 209_183
     assert d3_asset.exists()
     assert d3_asset.stat().st_size == 279_706
+    assert (tmp_path / "site" / "assets" / "three-0.186.1" / "build" / "three.module.js").exists()
+    assert (tmp_path / "site" / "assets" / "paper-raft-flow" / "flow.js").exists()
     assert (tmp_path / "site" / "assets" / "site.css").exists()
     assert (tmp_path / "site" / "assets" / "background.js").exists()
     assert (tmp_path / "site" / ".nojekyll").exists()

@@ -1366,7 +1366,7 @@ def _render_lab_flow(arxiv_id: str, ref, public_config: PublicConfig) -> str:
         f'<script type="importmap">{importmap}</script>'
         f'<div class="lab-flow" id="lab-flow" data-src="{escape(public_config.path(f"papers/{arxiv_id}/lab-flow.json"))}" '
         f'data-module="{escape(public_config.path("assets/paper-raft-flow/flow.js"))}" '
-        'role="img" aria-label="Chain from the paper to the lab runs: extracted items, methods, runs and results"></div>'
+        'role="region" aria-label="Chain from the paper to the lab runs: extracted items, methods, runs and results"></div>'
         f'<p class="lab-flow-source">Lab data from commit {escape(ref.source_commit[:7])}, exported '
         f'{escape(ref.exported_at)} · <a href="{escape(ref.explorer_url)}" target="_blank" '
         'rel="noopener noreferrer">Open the full view in Paper Raft →</a></p>'
@@ -1444,6 +1444,10 @@ def render_research_page(
             f'<ul class="research-independent-tests">{items}</ul>'
             f'{_render_lab_flow(page.arxiv_id, flow_ref, public_config) if flow_ref else ""}</section>'
         )
+    provenance_tail = (
+        "Paperraft's editors have not rerun this experiment; see Reproduced in Paper Raft "
+        "above for the lab's claim checks."
+        if page.lab_reproductions else "Paperraft has not reproduced this experiment.")
     json_href = public_config.path(f"papers/{page.arxiv_id}/index.json")
     skill_href = public_config.path(
         f"skills/paper-{page.arxiv_id.replace('.', '-')}-evidence.zip")
@@ -1496,7 +1500,7 @@ def render_research_page(
         f'{"star" if page.stars == 1 else "stars"} · {escape(citations)} citations</p>'
         '<p>Repository activity and attention, not experimental evidence.</p></aside>'
         '<p class="research-provenance">Provisional research brief updated '
-        f'{escape(page.as_of)}. Paperraft has not reproduced this experiment.</p>'
+        f'{escape(page.as_of)}. {provenance_tail}</p>'
         f'</article>{discussion}'
     )
     return _pagina_estatica(

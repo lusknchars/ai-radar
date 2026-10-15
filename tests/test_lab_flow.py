@@ -130,3 +130,17 @@ def test_vendored_flow_assets_are_present():
     assert (base / "three-0.186.1/build/three.module.js").is_file()
     assert (base / "three-0.186.1/LICENSE").is_file()
     assert "export function mountFlow" in (base / "paper-raft-flow/flow.js").read_text()
+
+
+def test_demo_box_is_a_region_not_an_image():
+    html = render_research_page(real_page())
+    assert 'role="region" aria-label="Chain from the paper' in html
+    assert 'role="img" aria-label="Chain' not in html
+
+
+def test_provenance_line_differs_when_lab_reproductions_exist():
+    with_lab = render_research_page(real_page())
+    without = render_research_page(page())
+    assert "Paperraft's editors have not rerun this experiment; see Reproduced in Paper Raft above" in with_lab
+    assert "Paperraft has not reproduced this experiment." not in with_lab
+    assert "Paperraft has not reproduced this experiment." in without

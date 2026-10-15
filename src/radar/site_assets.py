@@ -958,10 +958,10 @@ body:has(.research-page) .article-masthead,
 .research-page>.research-signal-note,
 .research-page>.research-provenance,
 .research-page+.community-discussion{max-width:var(--reading-width);margin-inline:auto}
-.research-page .research-section:is(#equations,#exposure,#reading-guide){max-width:none}
-.research-page :is(#equations,#exposure,#reading-guide)>.section-head,
-.research-page :is(.exposure-provenance,.reading-guide-note){max-width:var(--reading-width);margin-inline:auto}
-.research-page .research-section>p:not(.exposure-provenance):not(.reading-guide-note),
+.research-page .research-section:is(#equations,#exposure,#reading-guide,#lab-reproductions){max-width:none}
+.research-page :is(#equations,#exposure,#reading-guide,#lab-reproductions)>.section-head,
+.research-page :is(.exposure-provenance,.reading-guide-note,.lab-flow-source,#lab-reproductions .research-independent-tests){max-width:var(--reading-width);margin-inline:auto}
+.research-page .research-section>p:not(.exposure-provenance):not(.reading-guide-note):not(.lab-flow-source),
 .research-page .section-head .sub,
 .research-page :is(.research-claims,.research-risks,.research-test,.research-questions,.research-independent-tests)>li{max-width:none}
 .research-page+.community-discussion .section-head{grid-template-columns:minmax(0,1fr);gap:12px}
@@ -1249,7 +1249,7 @@ if (box) {
 """
 
 LAB_FLOW_STYLES = (
-    ".lab-flow{height:520px;margin:18px 0 6px}"
+    ".lab-flow{height:560px;margin:18px 0 6px}"
     "@media (max-width:719px){.lab-flow{height:420px}}"
     ".lab-flow-source{font-size:.85em;opacity:.75}"
 )
