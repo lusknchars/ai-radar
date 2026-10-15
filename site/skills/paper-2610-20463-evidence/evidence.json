@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.20463",
+  "title": "Selective Growing Q-Networks (SGQN): An Analysis of Adaptive Action Grids in Decoupled Q-Learning",
+  "summary": "SGQN replaces uniform coarse-to-fine action-grid growth in decoupled value-based continuous control with an adaptive grid that adds bins near high-Q bins and prunes low-Q ones, using epsilon-greedy selection. It costs nothing extra in principle, but the paper's own ablation shows the adaptive grid activates all bins and behaves like uniform growth, pruning changes returns by at most 1.1%, and the real drivers are coarse initialization and epsilon-greedy exploration; it also uses one gradient update per environment step, an uncontrolled confound versus baselines. What can fail after adoption: the claimed benefit may not transfer, since the advantage cannot be attributed to the adaptive grid, an annealed softmax collapses returns by 23-100%, and fine-grid initialization produces collapsed seeds.",
+  "rationale": "This is a reinforcement-learning method for continuous control with honest negative ablations and uncontrolled confounds, so it offers no validated, attributable gain worth adopting in a constrained-infrastructure LLM-oriented production practice.",
+  "technique": "Selective growing action grids for decoupled Q-learning",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-10-14",
+  "as_of": "2026-10-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.20463",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SGQN replaces uniform coarse-to-fine action-grid growth in decoupled value-based continuous control with an adaptive grid that adds bins near high-Q bins and prunes low-Q ones, using epsilon-greedy selection. It costs nothing extra in principle, but the paper's own ablation shows the adaptive grid activates all bins and behaves like uniform growth, pruning changes returns by at most 1.1%, and the real drivers are coarse initialization and epsilon-greedy exploration; it also uses one gradient update per environment step, an uncontrolled confound versus baselines. What can fail after adoption: the claimed benefit may not transfer, since the advantage cannot be attributed to the adaptive grid, an annealed softmax collapses returns by 23-100%, and fine-grid initialization produces collapsed seeds.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20463",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Highest mean final return on 4 of 8 DMControl tasks, within 1.1% of best on three more, 3.4% below Bang-Bang MPO on Walker Run; no multiplicative speed, memory, or cost claim.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20463",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

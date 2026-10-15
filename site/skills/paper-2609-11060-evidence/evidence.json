@@ -86,7 +86,7 @@
   "family": "memoria_e_contexto",
   "recommendation": "testar",
   "published": "2026-09-10",
-  "as_of": "2026-10-14",
+  "as_of": "2026-10-15",
   "editorial_status": "source_mapped",
   "source_url": "https://arxiv.org/abs/2609.11060",
   "independent_implementations": 1,
@@ -288,6 +288,7 @@
     "Would probing help when memory errors come from retrieval failure rather than record quality, which this design does not address?"
   ],
   "independent_tests": [],
+  "lab_reproductions": [],
   "report_available": true,
   "validation_tier": "api_or_cpu",
   "evidence_tier": "api_or_cpu",

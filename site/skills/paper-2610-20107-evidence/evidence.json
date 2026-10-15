@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.20107",
+  "title": "Why Generate a Click? Plug-in Decision Heads for Web Agents",
+  "summary": "The method replaces text-based action decoding (generating tokens like click(12)) with lightweight classification heads that read action type, target element, and text-option choices directly from the frozen generator's hidden states, falling back to full decoding from the same forward pass's KV cache when head confidence is low. Costs include training the heads on web-step data (the paper used 213k steps), an additional confidence-threshold hyperparameter per deployment, and up to 2 points of step-success regression on some benchmarks (GUIAct, MiniWoB++) under loose thresholds. Failures after adoption can come from miscalibrated confidence on out-of-distribution websites, from UI layouts whose element structure differs from training data, and from degradation of the generator itself if heads are trained jointly rather than on frozen weights (up to 4.9 points of generator step-success loss).",
+  "rationale": "The approach fits a single-GPU budget and cuts inference cost for web-agent workloads, but it requires training task-specific heads and tuning confidence thresholds against the reader's own web environment before production adoption.",
+  "technique": "Plug-in decision heads on frozen VLM web agents",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-14",
+  "as_of": "2026-10-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.20107",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces text-based action decoding (generating tokens like click(12)) with lightweight classification heads that read action type, target element, and text-option choices directly from the frozen generator's hidden states, falling back to full decoding from the same forward pass's KV cache when head confidence is low. Costs include training the heads on web-step data (the paper used 213k steps), an additional confidence-threshold hyperparameter per deployment, and up to 2 points of step-success regression on some benchmarks (GUIAct, MiniWoB++) under loose thresholds. Failures after adoption can come from miscalibrated confidence on out-of-distribution websites, from UI layouts whose element structure differs from training data, and from degradation of the generator itself if heads are trained jointly rather than on frozen weights (up to 4.9 points of generator step-success loss).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20107",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "WebArena task success rises from 12.5% to 13.8% (Qwen3-VL 4B) and from 13.6% to 14.6% (8B) while generating less than half the tokens; a strict threshold keeps offline step success within -0.3 to +1.4 points across seven test sets with 12-64% of steps decided by heads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20107",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

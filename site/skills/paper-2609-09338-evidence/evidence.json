@@ -86,7 +86,7 @@
   "family": "decodificacao_especulativa",
   "recommendation": "testar",
   "published": "2026-09-08",
-  "as_of": "2026-10-14",
+  "as_of": "2026-10-15",
   "editorial_status": "source_mapped",
   "source_url": "https://arxiv.org/abs/2609.09338",
   "independent_implementations": 0,
@@ -288,6 +288,7 @@
     "For the MiniMax-M2.5 comparison, the public EAGLE-3 baseline's training cost is unknown, so cost parity is unverified there."
   ],
   "independent_tests": [],
+  "lab_reproductions": [],
   "report_available": true,
   "validation_tier": "single_gpu_48_80gb",
   "evidence_tier": "cluster",

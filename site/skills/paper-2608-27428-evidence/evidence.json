@@ -22,7 +22,7 @@
   "family": "outro",
   "recommendation": "nao_aplica",
   "published": "2026-08-27",
-  "as_of": "2026-10-14",
+  "as_of": "2026-10-15",
   "editorial_status": "indexed",
   "source_url": "https://arxiv.org/abs/2608.27428",
   "independent_implementations": 0,
@@ -136,6 +136,17 @@
   "minimum_test": [],
   "open_questions": [],
   "independent_tests": [],
+  "lab_reproductions": [
+    {
+      "title": "Paper Raft study: transduced-lm-2026",
+      "summary": "Five agents each implemented one estimator from the paper (beam summing, smc_simple, smc_rb, beam_swor, beam_swor_adaptive) and were graded against the claim the paper makes for it. All five pass: smc_simple, smc_rb and beam_swor are exact in the Appendix E worst case; the four unbiased estimators stay within 4 standard errors of the exact value over 128 seeds on a DNA bigram, with error falling as M grows; beam summing is a lower bound matching Fig. 1. The error ordering matches the paper's Table 2: beam_swor ≈ beam_swor_adaptive < smc_rb < smc_simple.",
+      "limits": "Claims only, not Table 2's numbers: the paper does not name its DNA corpus or targets, so the bigram and three targets are stand-ins. The WikiText-2/PTB text and GPT-2 experiments are not covered. Remainder entries, the tail roulette for the beam estimators and beam_swor_adaptive's budget shrinking are never triggered by the graded runs.",
+      "source_url": "https://lusknchars.github.io/paper-raft/#study/transduced-lm-2026",
+      "checked_at": "2026-10-13",
+      "methods_verified": 5,
+      "methods_total": 5
+    }
+  ],
   "report_available": false,
   "validation_tier": "unknown",
   "evidence_tier": "unknown",
