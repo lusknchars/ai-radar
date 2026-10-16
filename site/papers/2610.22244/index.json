@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.22244",
+  "title": "Language Is a Security Surface for Agent Guards",
+  "summary": "This is an evaluation method, not a deployed component: it replaces the assumption that an English-trained step-level guard's verdicts are invariant to the language of the user request, by re-verdicting TS-Bench trajectories with only the instruction translated. It costs benchmark runs against the candidate guard (API calls or local inference) plus analysis of the released 489k verdicts, with no production latency or memory impact. What can fail is overgeneralizing from the paper's guard set: a guard not covered here may behave differently on the reader's languages, and the effect is concentrated in a few instructions and in steps where agent reasoning restates the English request, so results may not transfer to other trajectories.",
+  "rationale": "The reader adopting a small or purpose-built guard in production should first validate its multilingual flip rate on their own traffic, since the paper shows such guards change verdicts beyond noise for non-English requests while frontier API guards remain stable.",
+  "technique": "Multilingual robustness benchmark for step-level agent guards",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.22244",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is an evaluation method, not a deployed component: it replaces the assumption that an English-trained step-level guard's verdicts are invariant to the language of the user request, by re-verdicting TS-Bench trajectories with only the instruction translated. It costs benchmark runs against the candidate guard (API calls or local inference) plus analysis of the released 489k verdicts, with no production latency or memory impact. What can fail is overgeneralizing from the paper's guard set: a guard not covered here may behave differently on the reader's languages, and the effect is concentrated in a few instructions and in steps where agent reasoning restates the English request, so results may not transfer to other trajectories.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22244",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "No improvement claim; the paper is a diagnostic. It reports that among guards below 13B parameters the mean placebo-adjusted verdict flip rate rises from +1.5 percentage points on French to +4.4 points on Amharic, open 12-30B guards add up to +5.0 points of false positives, and recall losses up to -7.4 points occur only in guards under 10B, while frontier guards shift by at most about one point.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22244",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

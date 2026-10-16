@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21900",
+  "title": "TEM: Temporal State Tracking Memory for Large Language Model Agents",
+  "summary": "TEM replaces flat RAG or overwrite-style memory with versioned, source-linked fact records whose historical entries are explicitly labeled before generation. It costs an extraction and storage pipeline for versioned records plus event memory, but it is training-free and reduces evidence to 94-118 tokens per answer, lowering inference cost. It can fail if fact extraction misses or mislinks updates, if version ordering or labeling is wrong, and its gains are demonstrated only on two conversational benchmarks, so performance on other domains is unverified.",
+  "rationale": "The method is training-free, cheap in tokens, and compatible with small open-weight models or APIs, but its benefits are shown on limited benchmarks and depend on extraction quality, so the reader should validate it on their own workload before production adoption.",
+  "technique": "Versioned temporal memory with labeled fact history",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21900",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 132,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TEM replaces flat RAG or overwrite-style memory with versioned, source-linked fact records whose historical entries are explicitly labeled before generation. It costs an extraction and storage pipeline for versioned records plus event memory, but it is training-free and reduces evidence to 94-118 tokens per answer, lowering inference cost. It can fail if fact extraction misses or mislinks updates, if version ordering or labeling is wrong, and its gains are demonstrated only on two conversational benchmarks, so performance on other domains is unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21900",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Adding historical labels to source-ordered facts increased key-entity hit rates by 17.14-55.95 percentage points overall (75.71-97.62% across four models); on 1,540 LoCoMo questions TEM exceeded session-aware RAG by 7.92 and 10.58 percentage points with 48.75-56.73% fewer evidence tokens.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21900",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

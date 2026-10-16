@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21810",
+  "title": "N-Gram Memories at Two Bits: Quantizing Lookup Tables in Large Language Models",
+  "summary": "The method replaces full-precision storage of conditional n-gram memory tables with two-bit row codes plus a shared Gaussian trellis reconstruction program with norm restoration, decompressing only the rows each input requests. It costs a per-lookup reconstruction step, a shared decoding program that must be trained and shipped with the model, and residual quality loss relative to the unquantized table. It can fail if coordinate statistics deviate from the assumed Gaussian structure, if the trained relationships among rows are not captured by the shared trellis, or if row-reconstruction latency outweighs the memory savings when the table already fits in available memory.",
+  "rationale": "The compression is compelling for models that actually use large trained n-gram memory tables, but such architectures are not part of the reader's current stack and the technique requires access to the trained table and reconstruction pipeline, so it is worth tracking rather than adopting now.",
+  "technique": "Two-bit quantization of n-gram embedding tables",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21810",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces full-precision storage of conditional n-gram memory tables with two-bit row codes plus a shared Gaussian trellis reconstruction program with norm restoration, decompressing only the rows each input requests. It costs a per-lookup reconstruction step, a shared decoding program that must be trained and shipped with the model, and residual quality loss relative to the unquantized table. It can fail if coordinate statistics deviate from the assumed Gaussian structure, if the trained relationships among rows are not captured by the shared trellis, or if row-reconstruction latency outweighs the memory savings when the table already fits in available memory.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21810",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Two-bit CP coding reduces a DeepSeek n-gram table from 203GB to 51GB and lowers output KL by 41-63% relative to 2-bit round-to-nearest quantization.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21810",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

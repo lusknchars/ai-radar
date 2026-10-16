@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.22110",
+  "title": "Unfragmenting Nawatl NMT: Single-Variant Specialization for Masewalkopa",
+  "summary": "Replaces the common practice of pooling multiple language variants into one mixed corpus (which produces an unaccountable artificial register) and full fine-tuning of a foundation model, substituting LoRA adapters on an mT5-large checkpoint with a finite-state morphological analyzer feeding plain-text prefix tags. Costs include building a custom FST analyzer, curating a small in-variant parallel corpus, and reserving all sentence-level data for evaluation, plus int8 quantization as an additional deployment step. Failure modes: gains are specific to Masewalkopa Nawatl and may not transfer to other low-resource pairs; the 82.0% to 19.9% reduction in unanalyzed forms still leaves one fifth of surface forms uncovered; elder-transcribed backtranslation data of only 192 sentences can bias the register; and int8 quantization may degrade translation quality in ways the reported chrF++ does not fully isolate.",
+  "rationale": "LoRA specialization with quantization is feasible on one 24 GB GPU and cheap CPU serving, but the technique's value depends on having in-variant data and analyzer resources that must be validated for the reader's own language pair.",
+  "technique": "Single-variant LoRA specialization of mT5 for low-resource NMT",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.22110",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces the common practice of pooling multiple language variants into one mixed corpus (which produces an unaccountable artificial register) and full fine-tuning of a foundation model, substituting LoRA adapters on an mT5-large checkpoint with a finite-state morphological analyzer feeding plain-text prefix tags. Costs include building a custom FST analyzer, curating a small in-variant parallel corpus, and reserving all sentence-level data for evaluation, plus int8 quantization as an additional deployment step. Failure modes: gains are specific to Masewalkopa Nawatl and may not transfer to other low-resource pairs; the 82.0% to 19.9% reduction in unanalyzed forms still leaves one fifth of surface forms uncovered; elder-transcribed backtranslation data of only 192 sentences can bias the register; and int8 quantization may degrade translation quality in ways the reported chrF++ does not fully isolate.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22110",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "CTranslate2 int8 quantization cuts CPU latency from 137.5 s to 1.8-2.6 s per request (roughly 53x at the conservative end), with 58.20/57.90 directional test chrF++ from LoRA specialization on 2,665 curated pairs plus 192 backtranslated sentences.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22110",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

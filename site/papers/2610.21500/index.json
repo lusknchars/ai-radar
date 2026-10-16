@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21500",
+  "title": "When the KV Cache Is Slower Than the GPU: Scaling Remote KV Tiers for Context-Parallel Prefill",
+  "summary": "The method replaces a monolithic, synchronously-loaded remote KV cache tier (LMCache with a single Valkey store) with a rank-sharded store, per-rank server partitioning, asynchronous loading, and client bug fixes. It costs additional serving infrastructure (one cache server instance per context-parallel rank), integration complexity with context parallelism, and client-side engineering; the model itself is unchanged so quality is unaffected. It can fail when the remote tier delivers less than the breakeven bandwidth (2.53 GB/s here), when prompts are shorter than roughly 17k tokens (where recompute always wins due to a ~0.33 s fixed per-hit cost), or when synchronous loading turns hit-heavy traffic into an unstable queue with idle GPUs.",
+  "rationale": "The techniques target multi-node B300-scale disaggregated serving with context parallelism, but the cost model (hit pays off only above bandwidth B* and above a minimum prompt length) and the async-loading lesson are worth tracking for any future remote KV cache deployment.",
+  "technique": "Sharded asynchronous remote KV cache tier",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21500",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces a monolithic, synchronously-loaded remote KV cache tier (LMCache with a single Valkey store) with a rank-sharded store, per-rank server partitioning, asynchronous loading, and client bug fixes. It costs additional serving infrastructure (one cache server instance per context-parallel rank), integration complexity with context parallelism, and client-side engineering; the model itself is unchanged so quality is unaffected. It can fail when the remote tier delivers less than the breakeven bandwidth (2.53 GB/s here), when prompts are shorter than roughly 17k tokens (where recompute always wins due to a ~0.33 s fixed per-hit cost), or when synchronous loading turns hit-heavy traffic into an unstable queue with idle GPUs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21500",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Sharded MLA KV store raises prefill throughput by 14%, and by 34% with an upstream kernel fix; on a hit-heavy stream p99 falls from 83.32 s to 0.67 s with 98.5% of prompt tokens served remotely; per-rank partitioning raises GET bandwidth 6.3x to 10.76 GB/s.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21500",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

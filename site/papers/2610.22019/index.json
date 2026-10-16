@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.22019",
+  "title": "Priming Base Models for Agentic Post-Training: An Open Midtraining Recipe",
+  "summary": "The method inserts a midtraining stage between pretraining and post-training, replacing the practice of going directly from short-context pretraining to synthetic SFT and long RL stages. It costs hundreds of billions of tokens of training at 256K context on large frontier-scale base models, which requires cluster-scale compute and curated repository-scale data pipelines far beyond a single 24 GB GPU or a limited API budget. It can fail because base-model proxy metrics did not correlate with post-training outcomes, so recipe validation requires repeated fixed SFT runs, and gains may not transfer to smaller or differently pretrained models.",
+  "rationale": "The recipe requires cluster-scale midtraining compute and proprietary-scale data mixtures that a constrained team cannot execute, so it is relevant as context on how frontier coding agents are built but not adoptable or testable at small scale.",
+  "technique": "Long-context agentic midtraining before post-training",
+  "family": "agentes_de_codigo",
+  "recommendation": "observar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.22019",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 132,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method inserts a midtraining stage between pretraining and post-training, replacing the practice of going directly from short-context pretraining to synthetic SFT and long RL stages. It costs hundreds of billions of tokens of training at 256K context on large frontier-scale base models, which requires cluster-scale compute and curated repository-scale data pipelines far beyond a single 24 GB GPU or a limited API budget. It can fail because base-model proxy metrics did not correlate with post-training outcomes, so recipe validation requires repeated fixed SFT runs, and gains may not transfer to smaller or differently pretrained models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22019",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Nemotron 3.5 Lightning, 500B midtraining tokens raise SWE-bench Verified from 60.7 to 64.5 and SWE-bench Multilingual from 55.8 to 62.8 after identical SFT; on Nemotron 3.5 Super, 280B tokens raise DeepSWE from 11.7 to 15.7.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.22019",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

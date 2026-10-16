@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21708",
+  "title": "Human Interventions as Labels: Localizing, Steering, and (Sometimes) Editing the Computations Behind LLM Agent Failures",
+  "summary": "The method replaces discarding or replaying human interventions as training data by using them as labels to learn a causal steering direction at a specific residual-stream depth, optionally consolidated into weights via LoRA. It costs an interpretability pipeline (rule-based overseer, probes, direction learning, dose/site selection on training data) and per-model validation effort; the narrow results cover only one failure type on models up to 12B parameters. It can fail because outcomes vary by model family: LoRA consolidation succeeds on one model but breaks retention on three others, the pre-registered geometric predictor failed two out-of-family tests, and prompt-based instruction actively worsened behavior.",
+  "rationale": "The technique is feasible on a single GPU for small models, but its cross-family inconsistency, single-failure-type scope, and the authors' own reported predictor failure mean it should be tracked rather than adopted into production until the regime-selection problem is resolved.",
+  "technique": "Intervention-label steering to localize and fix agent failures",
+  "family": "recuperacao_de_falha",
+  "recommendation": "observar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21708",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces discarding or replaying human interventions as training data by using them as labels to learn a causal steering direction at a specific residual-stream depth, optionally consolidated into weights via LoRA. It costs an interpretability pipeline (rule-based overseer, probes, direction learning, dose/site selection on training data) and per-model validation effort; the narrow results cover only one failure type on models up to 12B parameters. It can fail because outcomes vary by model family: LoRA consolidation succeeds on one model but breaks retention on three others, the pre-registered geometric predictor failed two out-of-family tests, and prompt-based instruction actively worsened behavior.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21708",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "A learned residual-stream direction flips 72-100% of held-out over-asking failures in eligible models, and probe-gated steering removes most simulated oversight burden with bootstrap 95% intervals excluding zero; weight consolidation via band-confined LoRA succeeds on only one of five model families.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21708",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

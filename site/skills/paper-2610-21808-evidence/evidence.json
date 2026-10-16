@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21808",
+  "title": "RoleQ: Role-Aligned Scales for Converting Language Models to Ternary",
+  "summary": "RoleQ replaces layout-based (per-row/per-column) scaling in weight quantization with scales assigned by functional role: one per output unit for residual-stream readers and one per input unit for writers, requiring no search, calibration, or stored state, and it is applied post-training to an existing checkpoint. The cost is a few GPU-hours per model plus a modest implementation burden for ternary kernels and the optional sparse second plane; quality still degrades relative to the full-precision model, particularly on knowledge-heavy tasks, even if less than with competing post-training ternary methods. It can fail where ternary matmul kernels are not available in the deployment stack (erasing the practical speed and memory benefit), on models or tasks outside the evaluated families, and where the residual knowledge loss after conversion is unacceptable for the production use case.",
+  "rationale": "The method fits constrained infrastructure (single GPU, few GPU-hours, no training from scratch) and shows large memory gains, but ternary inference requires kernel support and per-workload accuracy validation before production adoption.",
+  "technique": "Role-aligned scaling for post-training ternary quantization",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21808",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RoleQ replaces layout-based (per-row/per-column) scaling in weight quantization with scales assigned by functional role: one per output unit for residual-stream readers and one per input unit for writers, requiring no search, calibration, or stored state, and it is applied post-training to an existing checkpoint. The cost is a few GPU-hours per model plus a modest implementation burden for ternary kernels and the optional sparse second plane; quality still degrades relative to the full-precision model, particularly on knowledge-heavy tasks, even if less than with competing post-training ternary methods. It can fail where ternary matmul kernels are not available in the deployment stack (erasing the practical speed and memory benefit), on models or tasks outside the evaluated families, and where the residual knowledge loss after conversion is unacceptable for the production use case.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21808",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Converts existing checkpoints to 1.59 bits per weight (about 10x memory reduction versus FP16) in a few GPU-hours, cuts perplexity by up to half versus layout-based ternary placement from 0.6B to 14B, and an optional Fisher-placed sparse ternary plane recovers roughly half of the MMLU lost to conversion at 8B for a fraction of a bit.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21808",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

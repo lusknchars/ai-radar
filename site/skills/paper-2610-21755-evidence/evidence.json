@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A multi-step product task fails because the agent loses track of dependencies.",
+    "change": "Try the proposed planning step on tasks with checkable intermediate outcomes.",
+    "baseline": "The same agent solving the same tasks without the new planning step.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task completion, unnecessary steps, planning tokens, response time, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.21755",
+  "title": "DeciCAD: Harness-Grounded Learning of Action Policies for CAD Agents",
+  "summary": "Replaces a general-purpose coding harness for CAD agents with a domain-native harness exposing semantic CAD actions, decision-oriented observations, and persistent state, plus a pipeline of trajectory-derived SFT and geometry-grounded online RL. Costs include building and maintaining a CAD-specific action/observation layer, collecting interaction trajectories, and running SFT plus online RL against a geometry evaluation environment, which is a substantial engineering and compute commitment beyond inference-time prompting. The approach can fail if the harness's semantic action set does not cover the target CAD operations, if trajectory supervision encodes suboptimal decisions, or if the learned policy overfits to the benchmark procedures and does not transfer to other CAD tools or workflows.",
+  "rationale": "The results are specific to CAD and depend on a custom harness and RL infrastructure that a small team can only justify if it is actively building CAD agents; otherwise only the general principle that harness design shapes agent policies transfers.",
+  "technique": "Domain-native CAD agent harness with SFT and online RL",
+  "family": "planejamento_e_decomposicao",
+  "recommendation": "observar",
+  "published": "2026-10-15",
+  "as_of": "2026-10-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.21755",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 134,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces a general-purpose coding harness for CAD agents with a domain-native harness exposing semantic CAD actions, decision-oriented observations, and persistent state, plus a pipeline of trajectory-derived SFT and geometry-grounded online RL. Costs include building and maintaining a CAD-specific action/observation layer, collecting interaction trajectories, and running SFT plus online RL against a geometry evaluation environment, which is a substantial engineering and compute commitment beyond inference-time prompting. The approach can fail if the harness's semantic action set does not cover the target CAD operations, if trajectory supervision encodes suboptimal decisions, or if the learned policy overfits to the benchmark procedures and does not transfer to other CAD tools or workflows.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21755",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces model-output tokens by 45--88% versus a general-purpose coding harness; SFT improves F1 from 0.6883 to 0.7437 and online RL raises F1 to 0.7880 and geometry availability from 66.5% to 73.5% across four CAD benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.21755",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
