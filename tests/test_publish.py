@@ -91,6 +91,8 @@ def test_publish_site_links_and_renders_saved_reports(tmp_path):
     assert plot_asset.stat().st_size == 209_183
     assert d3_asset.exists()
     assert d3_asset.stat().st_size == 279_706
+    assert (tmp_path / "site" / "assets" / "three-0.186.1" / "build" / "three.module.js").exists()
+    assert (tmp_path / "site" / "assets" / "paper-raft-flow" / "flow.js").exists()
     assert (tmp_path / "site" / "assets" / "site.css").exists()
     assert (tmp_path / "site" / "assets" / "background.js").exists()
     assert (tmp_path / "site" / ".nojekyll").exists()
@@ -162,3 +164,22 @@ def test_publish_copies_the_math_font_and_its_license_stays_in_the_repo(tmp_path
     license_text = (Path(__file__).resolve().parents[1] / "assets" / "fonts"
                     / "STIXTwoMath-OFL.txt").read_text(encoding="utf-8")
     assert license_text.startswith("Copyright 2001-2021 The STIX Fonts Project Authors")
+
+
+def test_publish_site_writes_lab_flow_json_for_a_paper_with_a_flow(tmp_path):
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1] / "content" / "reproductions"
+    content = tmp_path / "content"
+    (content / "reproductions").mkdir(parents=True)
+    edition = json.loads((root / "2608.27428.json").read_text())
+    edition["arxiv_id"] = "2608.11111"
+    edition["reproductions"][0]["flow"]["file"] = "2608.11111.flow.json"
+    (content / "reproductions" / "2608.11111.json").write_text(json.dumps(edition))
+    (content / "reproductions" / "2608.11111.flow.json").write_text(
+        (root / "2608.27428.flow.json").read_text())
+    store = _store(tmp_path / "data" / "radar.db")
+    publish_site(store, tmp_path / "site", date(2026, 8, 31),
+                 reports_root=tmp_path / "reports", content_root=content)
+    out = tmp_path / "site" / "papers" / "2608.11111" / "lab-flow.json"
+    assert json.loads(out.read_text())["study"] == "transduced-lm-2026"
+    assert 'id="lab-flow"' in (out.parent / "index.html").read_text(encoding="utf-8")
