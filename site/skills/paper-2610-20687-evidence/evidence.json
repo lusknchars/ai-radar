@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.20687",
+  "title": "On-Policy Residual Learning for Diffusion Language Models",
+  "summary": "ORL replaces standard multi-step DLM denoising (and, in single-request serving, autoregressive decoding with speculative decoding such as EAGLE3/DFlash) by carrying residual predictive distributions across denoising steps and training on-policy with an entropy-contraction objective, served via the dlmrt engine. It costs a residual-learning fine-tuning run (36 H100-hours and 4.2M self-generated tokens on LLaDA-2.1-mini, feasible on a modest budget), dependence on a custom engine, and added system complexity in residual capture, block-diffusion attention, and packed training. It can fail because results are demonstrated on a small set of converted or existing DLMs, the Pareto gains are shown mainly for single-request serving rather than batched production traffic, and quality parity may not hold on task distributions outside the reported benchmarks.",
+  "rationale": "The per-token speedup is large and the adaptation cost is small, but the method applies only to diffusion language models and requires workload-specific validation of quality and serving-mode fit before production adoption.",
+  "technique": "On-policy residual learning for diffusion language models",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-10-14",
+  "as_of": "2026-10-17",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.20687",
+  "independent_implementations": 3,
+  "total_implementations": 3,
+  "stars": 35,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ORL replaces standard multi-step DLM denoising (and, in single-request serving, autoregressive decoding with speculative decoding such as EAGLE3/DFlash) by carrying residual predictive distributions across denoising steps and training on-policy with an entropy-contraction objective, served via the dlmrt engine. It costs a residual-learning fine-tuning run (36 H100-hours and 4.2M self-generated tokens on LLaDA-2.1-mini, feasible on a modest budget), dependence on a custom engine, and added system complexity in residual capture, block-diffusion attention, and packed training. It can fail because results are demonstrated on a small set of converted or existing DLMs, the Pareto gains are shown mainly for single-request serving rather than batched production traffic, and quality parity may not hold on task distributions outside the reported benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20687",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 6.2x tokens-per-forward and approximately 6.9x end-to-end throughput at comparable or better quality on a 4B DLM; 1.74x faster than DFlash speculative decoding at matched accuracy; up to 2,788 tokens/s single-request on one RTX 5090.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.20687",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
