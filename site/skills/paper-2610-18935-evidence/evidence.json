@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.18935",
+  "title": "Delay Complexity Dimension: Learning with Delayed and Censored Labels",
+  "summary": "This is a PAC learning-theoretic characterization of training with delayed and censored labels rather than a deployable method, so it replaces nothing in an existing inference or training stack; the adjacent practical artifacts are a quantization scheme and an expedition (label-expediting) policy that could supplement standard delayed-feedback pipelines such as conversion modeling. The cost of acting on it is engineering effort to integrate pseudo-labeling, quantization of delay information, or expedition policies into the data pipeline, plus dependence on assumptions (oracle pseudo-labels, instance-family-specific rates) that may not hold on real traffic. What can fail after adoption is that the achievable-rate question remains open where DCD and classical censored-ERM complexity separate, the labeler-diversity prediction failed empirically in a budget-matched test, and the window-beats-immediate-labels phenomenon is regime-dependent rather than universal.",
+  "rationale": "The contribution is primarily theoretical sample-complexity analysis with only preliminary algorithmic artifacts, so it merits monitoring for teams with delayed-feedback problems (for example conversion prediction) but does not yet justify production adoption or small-scale testing effort.",
+  "technique": "Sample complexity theory for delayed and censored labels",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-10-13",
+  "as_of": "2026-10-18",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.18935",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is a PAC learning-theoretic characterization of training with delayed and censored labels rather than a deployable method, so it replaces nothing in an existing inference or training stack; the adjacent practical artifacts are a quantization scheme and an expedition (label-expediting) policy that could supplement standard delayed-feedback pipelines such as conversion modeling. The cost of acting on it is engineering effort to integrate pseudo-labeling, quantization of delay information, or expedition policies into the data pipeline, plus dependence on assumptions (oracle pseudo-labels, instance-family-specific rates) that may not hold on real traffic. What can fail after adoption is that the achievable-rate question remains open where DCD and classical censored-ERM complexity separate, the labeler-diversity prediction failed empirically in a budget-matched test, and the window-beats-immediate-labels phenomenon is regime-dependent rather than universal.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.18935",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The paper establishes a lower bound of Ω(DCD/ε²) samples matched up to constants and logarithmic factors by an oracle pseudo-label ERM, a (1-1/e) approximation guarantee for its expedition policy, and an empirical finding that a moderate observation window can strictly outperform immediate labels under a fixed collection horizon; no multiplicative production-performance factor is claimed, and the companion labeler-diversity prediction is reported as a negative result.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.18935",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
