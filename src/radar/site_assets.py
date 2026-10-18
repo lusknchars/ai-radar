@@ -958,10 +958,10 @@ body:has(.research-page) .article-masthead,
 .research-page>.research-signal-note,
 .research-page>.research-provenance,
 .research-page+.community-discussion{max-width:var(--reading-width);margin-inline:auto}
-.research-page .research-section:is(#equations,#exposure,#reading-guide){max-width:none}
-.research-page :is(#equations,#exposure,#reading-guide)>.section-head,
-.research-page :is(.exposure-provenance,.reading-guide-note){max-width:var(--reading-width);margin-inline:auto}
-.research-page .research-section>p:not(.exposure-provenance):not(.reading-guide-note),
+.research-page .research-section:is(#equations,#exposure,#reading-guide,#lab-reproductions){max-width:none}
+.research-page :is(#equations,#exposure,#reading-guide,#lab-reproductions)>.section-head,
+.research-page :is(.exposure-provenance,.reading-guide-note,.lab-flow-source,#lab-reproductions .research-independent-tests){max-width:var(--reading-width);margin-inline:auto}
+.research-page .research-section>p:not(.exposure-provenance):not(.reading-guide-note):not(.lab-flow-source),
 .research-page .section-head .sub,
 .research-page :is(.research-claims,.research-risks,.research-test,.research-questions,.research-independent-tests)>li{max-width:none}
 .research-page+.community-discussion .section-head{grid-template-columns:minmax(0,1fr);gap:12px}
@@ -1224,3 +1224,33 @@ STYLES += r"""
 .giscus{margin-top:22px}.giscus-frame{width:100%;border:0}
 @media(max-width:700px){.community-welcome{grid-template-columns:1fr;gap:28px}.community-forum-link{padding-left:18px}.community-papers h3{font-size:22px}.community-search{grid-template-columns:1fr}.community-search button{justify-self:start}.community-links{align-items:flex-start}.community-discussion{padding:38px 0}.community-steps{grid-template-columns:1fr;gap:10px}}
 """
+
+# Paper Raft flow demo inside "Reproduced in Paper Raft". The module and three.js load only when the
+# section scrolls near the viewport; if anything fails, the box hides and the text summary above stays.
+LAB_FLOW_SCRIPT = """
+const box = document.getElementById("lab-flow");
+if (box) {
+  const start = async () => {
+    try {
+      const [{ mountFlow }, data] = await Promise.all([
+        import(box.dataset.module),
+        fetch(box.dataset.src).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      ]);
+      mountFlow(box, data, {});
+    } catch (e) { box.hidden = true; }
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { io.disconnect(); start(); }
+    }, { rootMargin: "300px" });
+    io.observe(box);
+  } else { start(); }
+}
+"""
+
+LAB_FLOW_STYLES = (
+    ".lab-flow{height:720px;margin:18px 0 6px}"
+    "@media (max-width:719px){.lab-flow{height:420px}}"
+    ".lab-flow-source{font-size:.85em;color:var(--fraco)}"
+)
+STYLES = STYLES + LAB_FLOW_STYLES
