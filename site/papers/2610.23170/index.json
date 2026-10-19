@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.23170",
+  "title": "Chinese Decision: A Family of Language Models for Single-Pass Probabilistic Decision-Making",
+  "summary": "Replaces autoregressive answer generation and prompt-based classification with a single forward pass that extracts candidate-letter logits at the final position and normalizes them over valid options, unifying Boolean, categorical, and ordinal decisions in one interface. Costs: a dedicated Chinese-language checkpoint (0.8B or 2B, Q8-quantizable) rather than a general-purpose LLM, giving one-token latency and small memory footprint, but requiring adoption of the authors' task-specific model and pipeline instead of existing API models. Can fail: results are Chinese-language and decision-formatted only, the 2B model does not yet beat the 0.8B on professional domains, temperature scaling shifts some individual predictions, and no isolation of scale effects or comparison against strong prompted general models is established.",
+  "rationale": "The approach fits a single 24 GB GPU and offers calibrated probabilistic decisions at minimal inference cost, but it only applies to Chinese decision tasks and needs workload-specific validation against the reader's current prompted-LLM baseline.",
+  "technique": "Single-pass classification-head decision model",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-16",
+  "as_of": "2026-10-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.23170",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces autoregressive answer generation and prompt-based classification with a single forward pass that extracts candidate-letter logits at the final position and normalizes them over valid options, unifying Boolean, categorical, and ordinal decisions in one interface. Costs: a dedicated Chinese-language checkpoint (0.8B or 2B, Q8-quantizable) rather than a general-purpose LLM, giving one-token latency and small memory footprint, but requiring adoption of the authors' task-specific model and pipeline instead of existing API models. Can fail: results are Chinese-language and decision-formatted only, the 2B model does not yet beat the 0.8B on professional domains, temperature scaling shifts some individual predictions, and no isolation of scale effects or comparison against strong prompted general models is established.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.23170",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On CJ-Bench (307,900 decisions), the 0.8B model achieves 72.24% general-domain accuracy, 76.98% average across medicine/law/finance, and 1.07% expected calibration error, uncalibrated, from a single checkpoint.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.23170",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
