@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-10-18
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-10-12 to 2026-10-18
+
+Ignored, Not Refused: What Low Prompt-Injection Success Rates Hide in Small Tool-Using Agents
+Replaces reporting only attack success rate (ASR) in indirect prompt-injection evaluation with a failure-mode decomposition (refused vs. ignored vs. task-not-completed) using the paper's Attack-Task Outcome Matrix and a label-blind LLM judge, whose prompt and code are released. Cost is one judge pass over agent trajectories plus the labeled corpus, feasible on a single GPU or via API, with no changes to the production agent required. It can fail if the LLM judge misclassifies refusal versus ignoring at scale, and the findings are specific to small open-weight agents (2-14B) on InjecAgent and AgentDojo, so results may not transfer to other models or benchmarks.
+The reader deploying tool-using agents needs a security metric that distinguishes silent ignoring from genuine refusal and checks task completion, and the released judge and corpus make this adoptable immediately at negligible infrastructure cost.
+Builder's cut (area guidance)
+It may fit when: An agent looks good in demos, but you cannot tell which product tasks it fails.
+First move: Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.
+Measure: Agreement with human review, missed failures, false alarms, and evaluation cost per task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.23254/
+https://arxiv.org/abs/2610.23254
+
+Prism Attention: Proposal-Refined Index Sharing Mechanism for Efficient LLMs Inference
+Prism Attention replaces rigid cross-layer sharing of sparse attention indices (computed once at anchor layers and statically reused) with a coarse-to-fine proposal-and-refinement scheme that exploits the localized shift of salient tokens between layers. The cost is additional per-layer refinement logic and index management on top of a sparse-attention implementation, plus the integration complexity of a non-standard attention path rather than stock FlashAttention. It can fail on workloads whose attention patterns do not exhibit the assumed cross-layer locality, and realized speedup depends heavily on whether an efficient implementation of the proposal-refinement step exists for the reader's serving stack.
+The claim is strong for long-context decoding, but gains are conditional on a specific sparsity assumption and require non-trivial integration, so a 24 GB/API-constrained team should benchmark it on their own workloads before committing to production.
+Builder's cut (area guidance)
+It may fit when: A self-hosted model uses more compute or memory than your workload can justify.
+First move: Check for a usable pruned checkpoint and runtime support before attempting model surgery.
+Measure: Task quality, actual GPU memory, serving throughput, and preparation cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.22985/
+https://arxiv.org/abs/2610.22985
+
+DLite: History-free Speculative Decoding for Agentic AI
+DLite replaces conventional draft models that maintain their own historical KV cache with a history-free draft that reuses the target model's contextual hidden states and a lightweight sequential head, trained with a two-stage strategy. It costs the training of a custom draft head, access to the target model's hidden states, and integration effort into the serving stack, though it reduces draft-side KV memory overhead. It can fail on workloads where acceptance length does not reach the reported 2-6 range, and it is inapplicable to API-only models that do not expose hidden states.
+The speedup claim is significant for agentic multi-turn workloads, but adoption requires self-hosted model access to hidden states and custom draft training, so it warrants small-scale validation on the reader's own workloads rather than immediate production adoption.
+Builder's cut (area guidance)
+It may fit when: Your self-hosted model spends too long generating answers token by token.
+First move: Check whether a compatible draft model and serving integration exist before renting compute.
+Measure: Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.23787/
+https://arxiv.org/abs/2610.23787
+
+RL-Guided Temporal Localization for Dual-Channel Retrieval in Long-Horizon Agent Memory
+TIDER replaces purely lexical/semantic retrieval over agent long-term memory (and approaches that inject time only at organization or generation) with an RL-trained temporal interval locator whose predicted windows define a temporal retrieval channel, merged with semantic results and reranked by temporal proximity. The cost is training a 1.7B locator with composite RL rewards (feasible on a 24 GB GPU but non-trivial engineering), plus added retrieval latency and pipeline complexity from the dual-channel merge and reranking. It can fail when queries lack identifiable temporal structure, when timestamps in memory are noisy or missing, or when the locator mispredicts windows and excludes the correct evidence before the semantic channel can compensate; benchmark gains on LifeBench/LoCoMo may not transfer to other memory distributions.
+The accuracy gains are meaningful and the 1.7B locator fits constrained infrastructure, but the RL training pipeline and dependence on timestamped, temporally structured memories require validation on the reader's own workload before production adoption.
+Builder's cut (area guidance)
+It may fit when: A support or data assistant repeats work across related customer requests.
+First move: Try the paper's memory change in a replay of past tasks, with separate memory per customer.
+Measure: Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.23598/
+https://arxiv.org/abs/2610.23598
+
+Acceptance Is Not Speed: Length Inflation in Training-Free Lossy Speculative Decoding
+The recommendation is to keep lossless verification in speculative decoding rather than adopting training-free relaxed (lossy) acceptance rules, and to evaluate decoding efficiency by wall-clock time, verifier rounds, and completion length instead of accepted tokens per round. Lossless verification preserves the target distribution at the cost of lower per-round acceptance, while relaxed rules inflate reasoning traces and can exhaust the token budget before a final answer is produced. Relaxed rules can fail by accepting low-probability draft tokens that extend completions, reduce verifier rounds at the price of substantial accuracy loss, and deliver no real latency improvement despite favorable headline acceptance metrics.
+The paper shows that training-free relaxed verification rules, the only speculative-decoding variants accessible on constrained infrastructure, do not deliver their advertised speedups once completion length is accounted for, so the production-safe choice is lossless verification with honest efficiency metrics.
+Builder's cut (area guidance)
+It may fit when: Your self-hosted model spends too long generating answers token by token.
+First move: Check whether a compatible draft model and serving integration exist before renting compute.
+Measure: Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.23818/
+https://arxiv.org/abs/2610.23818
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
