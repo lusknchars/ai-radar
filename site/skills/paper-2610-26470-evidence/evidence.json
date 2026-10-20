@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26470",
+  "title": "On Learning Expand-and-Sparsify Representations",
+  "summary": "The method replaces a dense ReLU layer (and its random-map expand-and-sparsify variant) with a learned linear expansion followed by top-k sparsification, letting the expansion be much narrower than the exponential widths random theory requires while matching the dense layer's accuracy at 10% activation density. The cost is an extra learned linear map and top-k selection per layer, plus the need to tune expansion width and sparsity per task; the evidence base is 73 OpenML classification and 48 regression tasks, all small tabular benchmarks, not production-scale deep networks. It can fail because the learned-map advantage vanishes at wide expansions, gains over dense ReLU are parity rather than improvement, and results on small tabular data may not transfer to the reader's actual workloads.",
+  "rationale": "The paper shows parity with dense layers on small tabular tasks rather than a quantified speed or memory win, so adoption is only justified after workload-specific validation of whether the sparse or binary representation yields real deployment savings.",
+  "technique": "Learned expand-and-sparsify sparse layer",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26470",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces a dense ReLU layer (and its random-map expand-and-sparsify variant) with a learned linear expansion followed by top-k sparsification, letting the expansion be much narrower than the exponential widths random theory requires while matching the dense layer's accuracy at 10% activation density. The cost is an extra learned linear map and top-k selection per layer, plus the need to tune expansion width and sparsity per task; the evidence base is 73 OpenML classification and 48 regression tasks, all small tabular benchmarks, not production-scale deep networks. It can fail because the learned-map advantage vanishes at wide expansions, gains over dense ReLU are parity rather than improvement, and results on small tabular data may not transfer to the reader's actual workloads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26470",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

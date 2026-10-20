@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26636",
+  "title": "Revision-Based Learning from Interactive Experience and Feedback",
+  "summary": "RELIEF replaces training pipelines that ignore post-generation interactive behavior by having a coding agent revise generated interfaces from feedback (code inspection, automated interaction, human comments, and interaction recordings) and folding those revisions back into the original generation traces as fine-tuning supervision. Its cost is a feedback-collection effort (the study used 200 websites, 355 interaction recordings, 24 users), agent revision runs, and fine-tuning compute, all feasible on a single 24 GB GPU only for small models or via API-based fine-tuning. It can fail when feedback is noisy or sparse, when the base model is too weak to benefit (effectiveness depends on base capability), and when improvements in revised traces do not transfer to zero-shot generation of new interfaces.",
+  "rationale": "The recipe is implementable at small scale with an existing coding agent and modest fine-tuning, but gains depend on base model capability and feedback quality, so the reader should validate it on their own UI-generation workload before adopting it in production.",
+  "technique": "RELIEF: revision-based fine-tuning from interaction feedback",
+  "family": "agentes_de_codigo",
+  "recommendation": "testar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26636",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 122,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RELIEF replaces training pipelines that ignore post-generation interactive behavior by having a coding agent revise generated interfaces from feedback (code inspection, automated interaction, human comments, and interaction recordings) and folding those revisions back into the original generation traces as fine-tuning supervision. Its cost is a feedback-collection effort (the study used 200 websites, 355 interaction recordings, 24 users), agent revision runs, and fine-tuning compute, all feasible on a single 24 GB GPU only for small models or via API-based fine-tuning. It can fail when feedback is noisy or sparse, when the base model is too weak to benefit (effectiveness depends on base capability), and when improvements in revised traces do not transfer to zero-shot generation of new interfaces.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26636",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Critiques inferred from human interaction recordings led to the largest usability improvements overall across tested models; effectiveness varied with base model capability. No quantitative factor is reported in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26636",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

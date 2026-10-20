@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26847",
+  "title": "WeAct: Dynamic Weight Switching as Agent Actions",
+  "summary": "WeAct replaces joint fine-tuning and static adapter merging by training independent capability-specific LoRA adapters on a frozen backbone and letting the agent select adapters at runtime through its native tool-calling interface. The cost is maintaining and serving multiple adapters (each small, but adding routing complexity), plus training a selection policy whose adapter-switching actions must be learned from trajectories. It can fail if the model selects the wrong adapter mid-trajectory, if switching breaks contextual coherence across stages, or if the benchmark gains do not transfer to workloads with fewer or less distinct capability boundaries.",
+  "rationale": "The method fits constrained infrastructure since LoRA adapters on a frozen 32B backbone are trainable on a single 24 GB GPU, but the claimed gains are benchmark-specific and the runtime selection policy requires workload-specific validation before production adoption.",
+  "technique": "Dynamic LoRA adapter switching as agent actions",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26847",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "WeAct replaces joint fine-tuning and static adapter merging by training independent capability-specific LoRA adapters on a frozen backbone and letting the agent select adapters at runtime through its native tool-calling interface. The cost is maintaining and serving multiple adapters (each small, but adding routing complexity), plus training a selection policy whose adapter-switching actions must be learned from trajectories. It can fail if the model selects the wrong adapter mid-trajectory, if switching breaks contextual coherence across stages, or if the benchmark gains do not transfer to workloads with fewer or less distinct capability boundaries.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26847",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Qwen3-32B with WeAct improves average accuracy by 6.2% relative to full fine-tuning counterparts with less compute, and by 27.5% relative to the strongest static LoRA-merging method, across eight deep-research benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26847",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

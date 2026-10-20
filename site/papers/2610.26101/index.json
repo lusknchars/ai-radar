@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26101",
+  "title": "Reliable Before Profitable: QuantHarness for Governing Financial Strategy Development with LLM Agents",
+  "summary": "It replaces ad-hoc single-agent or loosely scripted LLM pipelines for turning natural-language research requests into backtested financial strategies, substituting a structured workflow (specification, data grounding, construction, testing, review) with enforced stage-level information, action, and commitment boundaries. The cost is additional orchestration complexity, structured run-record storage, and extra LLM calls across stages, which raises latency and API spend per strategy developed. What can fail: the benchmark (FinRelBench) is introduced by the same authors, so the 90.72% figure may not transfer to real trading desks; boundary rules can block legitimate repairs or add friction without catching novel leakage modes; and the paper demonstrates violation containment only under its own controlled stress tests, not under production data or live-market conditions.",
+  "rationale": "The governance-harness pattern is relevant to regulated or audit-sensitive agent deployments, but its benefits are validated only on the authors' own benchmark, so the reader should track it rather than commit production infrastructure to it.",
+  "technique": "Two-layer agent harness for financial strategy development",
+  "family": "orquestracao_multiagente",
+  "recommendation": "observar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26101",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 132,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces ad-hoc single-agent or loosely scripted LLM pipelines for turning natural-language research requests into backtested financial strategies, substituting a structured workflow (specification, data grounding, construction, testing, review) with enforced stage-level information, action, and commitment boundaries. The cost is additional orchestration complexity, structured run-record storage, and extra LLM calls across stages, which raises latency and API spend per strategy developed. What can fail: the benchmark (FinRelBench) is introduced by the same authors, so the 90.72% figure may not transfer to real trading desks; boundary rules can block legitimate repairs or add friction without catching novel leakage modes; and the paper demonstrates violation containment only under its own controlled stress tests, not under production data or live-market conditions.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26101",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "QuantHarness achieves 90.72% Task Success on FinRelBench, compared with 74.23%-84.54% for comparison agent systems.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26101",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26802",
+  "title": "Scaling Parameter-Efficient Fine-Tuning for Brain Encoding",
+  "summary": "The method replaces fitting fixed readouts on frozen pretrained backbones (or costly full fine-tuning) with LoRA adapters plus a lightweight readout on large multimodal backbones, exploiting causal structure to predict multiple timepoints in one pass instead of sliding windows. Costs include access to large backbones (up to 104B parameters, requiring API access or multi-GPU inference beyond a single 24 GB card for the largest models), training complexity of joint multi-LoRA training, and the need for expensive fMRI/MEG-style neural recording data. It can fail if the reader lacks aligned neural-stimulus datasets, if the backbone's causal structure does not match the temporal sampling of the neural data, or if LoRA rank and readout capacity are insufficient for a given brain region or modality.",
+  "rationale": "The technique is specific to brain encoding with costly, scarce neural recording data and the largest demonstrated backbones exceed constrained infrastructure, so it falls outside a general AI/ML production practice unless the reader works in computational neuroscience.",
+  "technique": "LoRA fine-tuning of multimodal backbones for brain encoding",
+  "family": "treino_eficiente",
+  "recommendation": "nao_aplica",
+  "published": "2026-10-19",
+  "as_of": "2026-10-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26802",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 2,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces fitting fixed readouts on frozen pretrained backbones (or costly full fine-tuning) with LoRA adapters plus a lightweight readout on large multimodal backbones, exploiting causal structure to predict multiple timepoints in one pass instead of sliding windows. Costs include access to large backbones (up to 104B parameters, requiring API access or multi-GPU inference beyond a single 24 GB card for the largest models), training complexity of joint multi-LoRA training, and the need for expensive fMRI/MEG-style neural recording data. It can fail if the reader lacks aligned neural-stimulus datasets, if the backbone's causal structure does not match the temporal sampling of the neural data, or if LoRA rank and readout capacity are insufficient for a given brain region or modality.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26802",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Achieves the best published performance on the Algonauts 2025 Challenge on the same Qwen3-Omni backbone as the prior SoTA; a 200+ model ensemble ranks first on the public post-challenge leaderboard. No multiplicative improvement factor is reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26802",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
