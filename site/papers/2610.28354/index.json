@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.28354",
+  "title": "S-Agent 2.0: Spatial Reasoning with a General Coding Agent",
+  "summary": "It replaces single-pass VLM spatial answering and specialized spatial-reasoning systems with an off-the-shelf general coding agent (e.g., Codex, Claude Code) wired to a command-line 3D perception toolkit, a persistent scene memory, and plain-language interpretation of tool readings. The cost is multi-turn agent-loop latency, increased token and API spend from iterative tool calls, and engineering effort to build and maintain the perception toolkit and memory layer, with no model training required. After adoption, gains can shrink as backbone models improve (the paper itself reports diminishing tool benefits), agent loops can misinterpret correct tool outputs or compound errors across steps, and results depend on the coverage and geometric accuracy of the perception tools in the target environment.",
+  "rationale": "The method runs on API models or a quantized open backbone within constrained infrastructure and shows large measured gains, but the improvement is validated only on spatial-reasoning benchmarks, so the reader must confirm it transfers to their own workload before production adoption.",
+  "technique": "Coding agent with CLI perception toolkit for spatial reasoning",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-20",
+  "as_of": "2026-10-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.28354",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 144,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces single-pass VLM spatial answering and specialized spatial-reasoning systems with an off-the-shelf general coding agent (e.g., Codex, Claude Code) wired to a command-line 3D perception toolkit, a persistent scene memory, and plain-language interpretation of tool readings. The cost is multi-turn agent-loop latency, increased token and API spend from iterative tool calls, and engineering effort to build and maintain the perception toolkit and memory layer, with no model training required. After adoption, gains can shrink as backbone models improve (the paper itself reports diminishing tool benefits), agent loops can misinterpret correct tool outputs or compound errors across steps, and results depend on the coverage and geometric accuracy of the perception tools in the target environment.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28354",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Toolkit adds +13.9 MMSI-Bench and +20.5 ReVSI points for Qwen3.8-27B and +11.2/+9.6 for Gemini-3.8-Flash over the same agent without tools; open-backbone scores of 66.5/82.3 exceed specialized SpatialClaw at 62.6/74.5.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28354",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.27812",
+  "title": "SliMOO: Interpretable Multi-Objective Evolutionary Search for LLM Depth Pruning",
+  "summary": "SliMOO replaces single-score layer-importance ranking and greedy or scalarized depth pruning with a two-stage procedure: single-layer removal probing to build a task-layer importance map, followed by NSGA-II Pareto-aware evolutionary search over pruning masks scored by per-task deviation from the dense model. The cost is substantial offline search compute, since each candidate mask requires multi-task evaluation of the full model, plus added pipeline complexity relative to one-shot importance ranking; the pruned model itself reduces serving memory and latency proportionally to removed layers. It can fail when the evaluation tasks used during search do not represent production traffic, since the method optimizes deviation only on chosen benchmarks, and the evolutionary search may not transfer across model families or sparsity targets without re-running.",
+  "rationale": "Depth pruning is directly usable on a single 24 GB GPU or via APIs-adjacent serving and improves preserved quality at fixed sparsity, but the per-candidate multi-task evaluation cost and benchmark-dependence require validation on the reader's own workload before adoption.",
+  "technique": "Multi-objective evolutionary depth pruning for LLMs",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-10-20",
+  "as_of": "2026-10-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.27812",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SliMOO replaces single-score layer-importance ranking and greedy or scalarized depth pruning with a two-stage procedure: single-layer removal probing to build a task-layer importance map, followed by NSGA-II Pareto-aware evolutionary search over pruning masks scored by per-task deviation from the dense model. The cost is substantial offline search compute, since each candidate mask requires multi-task evaluation of the full model, plus added pipeline complexity relative to one-shot importance ranking; the pruned model itself reduces serving memory and latency proportionally to removed layers. It can fail when the evaluation tasks used during search do not represent production traffic, since the method optimizes deviation only on chosen benchmarks, and the evolutionary search may not transfer across model families or sparsity targets without re-running.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.27812",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Llama-3.1-70B at 25% depth sparsity, math-domain average rises from 24.33% to 34.40% and code-domain average from 35.03% to 39.14% versus pruning baselines; claims of stronger multi-task trade-offs across Llama-3.1 and Qwen3 families, with no latency or memory factor stated beyond the inherent benefits of removing layers.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.27812",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
