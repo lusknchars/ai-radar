@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.29812",
+  "title": "Real PMIDs, Wrong Papers: Harness Design for Biomedical Claim-Verification Agents",
+  "summary": "This replaces closed-book answering and naive claim-as-query single-shot retrieval with a ReAct-style agent that writes its own search queries against a live retrieval API, and it replaces existence-only citation checks with relevance auditing. The cost is multi-turn tool interaction (more latency and API calls than single-shot, though agents used under half their search budget) plus harness complexity; the backbone and output format need not change. It can fail silently through plausible but irrelevant citations: closed-book models produced real PubMed IDs that were relevant in only 3 of 327 cases, so PMID existence checks give false assurance, and the accuracy gains are not statistically significant, so benefits must be validated on your workload.",
+  "rationale": "With a single-GPU or API budget, swapping a single-shot retrieval prompt for a model-written-query loop is cheap to implement and the paper shows retrieval quality, not model scale, dominates accuracy, but the non-significant gains warrant workload-specific validation before full adoption.",
+  "technique": "Agent-formulated queries for retrieval (ReAct harness)",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-21",
+  "as_of": "2026-10-22",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.29812",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces closed-book answering and naive claim-as-query single-shot retrieval with a ReAct-style agent that writes its own search queries against a live retrieval API, and it replaces existence-only citation checks with relevance auditing. The cost is multi-turn tool interaction (more latency and API calls than single-shot, though agents used under half their search budget) plus harness complexity; the backbone and output format need not change. It can fail silently through plausible but irrelevant citations: closed-book models produced real PubMed IDs that were relevant in only 3 of 327 cases, so PMID existence checks give false assurance, and the accuracy gains are not statistically significant, so benefits must be validated on your workload.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.29812",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Agent-written PubMed queries triple gold-paper recall versus single-shot retrieval (6% to roughly 18-20%) and yield the best verdict accuracy (62% vs 49-59% for other realistic harnesses), though accuracy differences are not statistically significant at the paper's sample size; oracle retrieval reaches 79-86%, showing retrieval, not reasoning, is the bottleneck.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.29812",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

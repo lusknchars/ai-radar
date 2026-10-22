@@ -10680,5 +10680,222 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-28620-evidence.zip",
     "source": "https://arxiv.org/abs/2610.28620"
+  },
+  {
+    "arxiv_id": "2610.29013",
+    "title": "Target Regeneration Shrinks the Gains of Draft-Training Objectives in Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29013-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29013"
+  },
+  {
+    "arxiv_id": "2610.29110",
+    "title": "GRAM: Group-wise Rank-Aware Model Merging via Subspace Alignment",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29110-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29110"
+  },
+  {
+    "arxiv_id": "2610.29183",
+    "title": "Resuming Vision-Language Inference across Onboard Interruptions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29183-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29183"
+  },
+  {
+    "arxiv_id": "2610.29210",
+    "title": "Understanding Target Probability Reuse in Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29210-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29210"
+  },
+  {
+    "arxiv_id": "2610.29229",
+    "title": "Cache Locally, Recompute Selectively for Streaming Video Understanding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29229-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29229"
+  },
+  {
+    "arxiv_id": "2610.29292",
+    "title": "Credit Where Credit Is Due: Contrastive Attribution Topology Search for Multi-Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29292-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29292"
+  },
+  {
+    "arxiv_id": "2610.29302",
+    "title": "Compressing Onboard Language Models for Space Robots under a Behavioral-Fidelity Requirement",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29302-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29302"
+  },
+  {
+    "arxiv_id": "2610.29320",
+    "title": "BrainCodes: A Lightweight EEG Foundation Model over Discrete Neural Codes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29320-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29320"
+  },
+  {
+    "arxiv_id": "2610.29357",
+    "title": "Memory-Centric Continual Learning for AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29357-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29357"
+  },
+  {
+    "arxiv_id": "2610.29378",
+    "title": "Right On Q: Recovering Reasoning under Quantization via Self-Generated Trajectories",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29378-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29378"
+  },
+  {
+    "arxiv_id": "2610.29424",
+    "title": "A KAN-based Non-linear Factorization for Embedding Layer Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29424-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29424"
+  },
+  {
+    "arxiv_id": "2610.29458",
+    "title": "Harness Scaling for Generalizable Agentic Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29458-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29458"
+  },
+  {
+    "arxiv_id": "2610.29527",
+    "title": "RCSD: Reinforcement and Continual Learning for Domain-Specific Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29527-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29527"
+  },
+  {
+    "arxiv_id": "2610.29538",
+    "title": "Stochastic Pruning of the DPO Computation Graph: 1.4x Faster Training and Lower Peak Memory",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29538-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29538"
+  },
+  {
+    "arxiv_id": "2610.29544",
+    "title": "RISK-KV: Quality-Aware Selective KV Cache Reconstruction for Distributed LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29544-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29544"
+  },
+  {
+    "arxiv_id": "2610.29545",
+    "title": "PACE: Periodic and Channel-Aligned Encoding of Four-Bit Recurrent States",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29545-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29545"
+  },
+  {
+    "arxiv_id": "2610.29617",
+    "title": "TernScope: Model-Hardware Co-Design for Efficient Ternary Endoscopic Segmentation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29617-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29617"
+  },
+  {
+    "arxiv_id": "2610.29657",
+    "title": "Effects of Model Scale and Quantization on Social Bias and Abstention in Question Answering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29657-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29657"
+  },
+  {
+    "arxiv_id": "2610.29662",
+    "title": "SPARE: Sparsity Allocation via Routing Entropy for Efficient MoEs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29662-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29662"
+  },
+  {
+    "arxiv_id": "2610.29671",
+    "title": "Uni-Mem: Learning a Long-Horizon Agentic Memory Manager with Unified Online Policy Optimization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29671-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29671"
+  },
+  {
+    "arxiv_id": "2610.29695",
+    "title": "Benchmarking Coding Agents for System-Level Performance Optimization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29695-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29695"
+  },
+  {
+    "arxiv_id": "2610.29812",
+    "title": "Real PMIDs, Wrong Papers: Harness Design for Biomedical Claim-Verification Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29812-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29812"
+  },
+  {
+    "arxiv_id": "2610.29820",
+    "title": "UlaCache: Unified Logical Addressing for Sparse LLM Serving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29820-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29820"
+  },
+  {
+    "arxiv_id": "2610.29823",
+    "title": "MemoryTax: The Bitter Lesson of Agent Memory",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29823-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29823"
+  },
+  {
+    "arxiv_id": "2610.29873",
+    "title": "HAWK: Heterogeneity-Aware KV Cache Transfer for Efficient GPU-NPU Phase-Disaggregated LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29873-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29873"
+  },
+  {
+    "arxiv_id": "2610.30041",
+    "title": "Robust Soft Skill Adaptation via Behavioral Localization in Tool-Using Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30041-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30041"
+  },
+  {
+    "arxiv_id": "2610.30051",
+    "title": "From Reasoning to Action: Benchmarking Frontier AI Models on LIBERO-10 Robot Manipulation Tasks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30051-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30051"
+  },
+  {
+    "arxiv_id": "2610.30075",
+    "title": "From Classifier Heads to Encoder Prototypes: Personalized Federated Learning with Head-Derived Clustering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30075-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30075"
+  },
+  {
+    "arxiv_id": "2610.30108",
+    "title": "Multimodal Embodied Agents: A Unified Capability-centric Perspective from Computer-Use to Robot-Use",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30108-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30108"
+  },
+  {
+    "arxiv_id": "2610.30114",
+    "title": "The End of Consensus Research?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30114-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30114"
+  },
+  {
+    "arxiv_id": "2610.30116",
+    "title": "Environment Duels: A Microcosm of LLM Co-Evolution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30116-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30116"
   }
 ]
