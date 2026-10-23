@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.31433",
+  "title": "Drift Says When, Budget Says How Much: Rate-Controlled KV Re-selection for Long-Form Multimodal Generation",
+  "summary": "It replaces one-shot prefill-time visual token selection (and per-step retrieval methods such as InfiniGen) with drift-triggered, rate-controlled re-selection of which visual KV tokens to keep during long-form generation. Costs include a per-sample rate controller, a low-rank drift detector kept GPU-resident (4x smaller than InfiniGen's, relevant at 24 GB), candidate-restricted re-selection, and estimated per-step data movement comparable to per-step retrieval, plus the engineering cost of modifying the decoding loop rather than using stock KV compression. It can fail when drift magnitudes are heterogeneous across samples (the paper's own finding that fixed thresholds fail systematically) and offers no advantage over a fixed threshold on tasks with homogeneous drift, as shown on pre-registered video description.",
+  "rationale": "The method targets exactly the reader's setting (single-GPU inference of existing multimodal LLMs, no training), but the gains are task-dependent ROUGE-L improvements that require a custom generation loop and workload-specific validation before production adoption.",
+  "technique": "Rate-Controlled Refresh for KV re-selection",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-10-22",
+  "as_of": "2026-10-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.31433",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces one-shot prefill-time visual token selection (and per-step retrieval methods such as InfiniGen) with drift-triggered, rate-controlled re-selection of which visual KV tokens to keep during long-form generation. Costs include a per-sample rate controller, a low-rank drift detector kept GPU-resident (4x smaller than InfiniGen's, relevant at 24 GB), candidate-restricted re-selection, and estimated per-step data movement comparable to per-step retrieval, plus the engineering cost of modifying the decoding loop rather than using stock KV compression. It can fail when drift magnitudes are heterogeneous across samples (the paper's own finding that fixed thresholds fail systematically) and offers no advantage over a fixed threshold on tasks with homogeneous drift, as shown on pre-registered video description.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31433",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "RCR outperforms InfiniGen by 1.6-3.8 ROUGE-L points on five of six model-task settings (no significant difference on the sixth), stays within 1.7 ROUGE-L points of exact per-step re-selection, and drift-chosen timing beats random timing at the same refresh rate and periodic timing at a higher rate by 2.0-5.0 ROUGE-L points on DetailCaps, with comparable estimated per-step data movement and a 4x smaller GPU-resident detector than InfiniGen.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31433",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

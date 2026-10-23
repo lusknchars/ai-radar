@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.31479",
+  "title": "Evaluating the Applicability of LLM Inference Optimizations on Apple Silicon",
+  "summary": "This is not a new technique but an evaluation of whether standard inference optimizations (KV-cache pruning, speculative decoding, ported CUDA kernels, quantization) transfer from server NVIDIA GPUs to Apple Silicon under single-request decode. It costs only benchmarking effort, but the findings impose a constraint: each optimization must be re-validated on the target runtime, hardware, and workload before adoption. What can fail is assuming reported server-side speedups port: speculative decoding reduced throughput on Apple, KV-cache pruning reduced throughput on a desktop RTX 4090, and Metal's missing asynchronous copy plus batch-one decode make several serving-oriented kernels inapplicable.",
+  "rationale": "The reader runs constrained local or API-based inference and must validate each optimization on their own hardware and workload rather than adopting published speedups, since the paper shows gains are a joint function of technique, runtime, hardware, and workload regime.",
+  "technique": "Portability evaluation of inference optimizations on Apple Silicon",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-10-22",
+  "as_of": "2026-10-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.31479",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is not a new technique but an evaluation of whether standard inference optimizations (KV-cache pruning, speculative decoding, ported CUDA kernels, quantization) transfer from server NVIDIA GPUs to Apple Silicon under single-request decode. It costs only benchmarking effort, but the findings impose a constraint: each optimization must be re-validated on the target runtime, hardware, and workload before adoption. What can fail is assuming reported server-side speedups port: speculative decoding reduced throughput on Apple, KV-cache pruning reduced throughput on a desktop RTX 4090, and Metal's missing asynchronous copy plus batch-one decode make several serving-oriented kernels inapplicable.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31479",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "KV-cache pruning reaches up to 1.75x end-to-end throughput on Apple Silicon under single-request decode; ported kernel components yield up to 1.20x decode throughput; all evaluated speculative decoding methods reduce throughput on Apple despite 2-6x reported gains on server GPUs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31479",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

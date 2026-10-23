@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.31309",
+  "title": "Extreme Compression of Per-Layer Embeddings via Cross-Layer Latent Vector Quantization",
+  "summary": "OPTIC replaces the conventional approach of storing an individual short code per token-layer vector (as in product quantization of per-layer embeddings) with a single quantized code tuple per token decoded at every layer through a layer-specific affine decoder fitted to the PLE output path. The cost is a fitting procedure against the PLE output path plus per-layer affine decoders, with negligible latency overhead (at most 0.40%) but a quality degradation that grows sharply beyond roughly 100x compression (90.5% at 594x, 84.1% at 1,002x). It can fail if the model in use does not have large per-layer embeddings comparable to Gemma 4 E4B's 35.2% parameter share, if the fitted codes transfer poorly across fine-tuned variants, or if the quality loss at higher compression rates is unacceptable for the target task.",
+  "rationale": "The method targets a specific architectural feature (large per-layer embeddings in Gemma 4 E4B) and requires fitting codes and decoders against that model's output path, so it is worth tracking but not directly adoptable until tooling and validated recipes exist for the reader's deployed models.",
+  "technique": "Cross-layer latent vector quantization of per-layer embeddings",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-10-22",
+  "as_of": "2026-10-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.31309",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 2,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "OPTIC replaces the conventional approach of storing an individual short code per token-layer vector (as in product quantization of per-layer embeddings) with a single quantized code tuple per token decoded at every layer through a layer-specific affine decoder fitted to the PLE output path. The cost is a fitting procedure against the PLE output path plus per-layer affine decoders, with negligible latency overhead (at most 0.40%) but a quality degradation that grows sharply beyond roughly 100x compression (90.5% at 594x, 84.1% at 1,002x). It can fail if the model in use does not have large per-layer embeddings comparable to Gemma 4 E4B's 35.2% parameter share, if the fitted codes transfer poorly across fine-tuned variants, or if the quality loss at higher compression rates is unacceptable for the target task.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31309",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At about 100x PLE compression, OPTIC retains 97.8% of uncompressed BF16 E4B benchmark performance (versus 66.3% for product quantization) and reduces GPU memory by 29.7% at equal KV-cache size, with at most 0.40% inference slowdown; at 594x and 1,002x compression it retains 90.5% and 84.1%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.31309",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
