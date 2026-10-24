@@ -10402,6 +10402,27 @@
     "source": "https://arxiv.org/abs/2610.26861"
   },
   {
+    "arxiv_id": "2610.27366",
+    "title": "Trail-Weighted Influence Scores for Approximate Outcome Prediction in Bayesian Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-27366-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.27366"
+  },
+  {
+    "arxiv_id": "2610.27379",
+    "title": "DStill: Trajectory Consistency Distillation for Accelerated One-Step Drafting in Block Diffusion Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-27379-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.27379"
+  },
+  {
+    "arxiv_id": "2610.27403",
+    "title": "Steering intonational tunes in text-to-speech synthesis",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-27403-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.27403"
+  },
+  {
     "arxiv_id": "2610.27444",
     "title": "LoRASpace: A Pool-Wide Shared Substrate for Static and Dynamic Multi-LoRA Composition",
     "status": "indexed",
@@ -10682,6 +10703,62 @@
     "source": "https://arxiv.org/abs/2610.28620"
   },
   {
+    "arxiv_id": "2610.28773",
+    "title": "Building a Nested LADDER for LLM Unstructured Post-Training Pruning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28773-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28773"
+  },
+  {
+    "arxiv_id": "2610.28784",
+    "title": "Extreme Low-State Quantized Transformer for Electricity-Load Forecasting",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28784-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28784"
+  },
+  {
+    "arxiv_id": "2610.28867",
+    "title": "Engineering Low-Latency, High-Throughput Quantum Decoders on NVIDIA GPUs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28867-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28867"
+  },
+  {
+    "arxiv_id": "2610.28930",
+    "title": "Amplified Pruning and Path Selectors for Deterministic Radio Gossiping",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28930-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28930"
+  },
+  {
+    "arxiv_id": "2610.28937",
+    "title": "Auditing Conformal Prediction for Language Models Under Inference-Time Model Shift",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28937-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28937"
+  },
+  {
+    "arxiv_id": "2610.28947",
+    "title": "Is 2:4 Sparsity Still Worth It? Semi-Structured Sparsity versus Quantization in LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28947-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28947"
+  },
+  {
+    "arxiv_id": "2610.28958",
+    "title": "Transformers as Generic Deep Neural Networks: Exact Compilation, the Cost of Removing Activation-Activation Products, and Multi-Agent Attention Clustering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-28958-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.28958"
+  },
+  {
+    "arxiv_id": "2610.29009",
+    "title": "Local and Sparse Kernel Operator Learning for Incompressible Flows: An Operator Lagrange Formulation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-29009-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.29009"
+  },
+  {
     "arxiv_id": "2610.29013",
     "title": "Target Regeneration Shrinks the Gains of Draft-Training Objectives in Speculative Decoding",
     "status": "indexed",
@@ -10899,11 +10976,151 @@
     "source": "https://arxiv.org/abs/2610.30116"
   },
   {
+    "arxiv_id": "2610.30206",
+    "title": "MoEZip: Routing-Aware KV Cache Compression for Sparse Mixture-of-Experts LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30206-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30206"
+  },
+  {
+    "arxiv_id": "2610.30280",
+    "title": "A Quadratic Lens on Muon's Polar Update: Benefits, Pitfalls, and the Role of Newton-Schulz",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30280-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30280"
+  },
+  {
+    "arxiv_id": "2610.30292",
+    "title": "GAV: A scientific experimentation environment for PDE agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30292-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30292"
+  },
+  {
+    "arxiv_id": "2610.30293",
+    "title": "EgoHand: Monocular 3D Hand Reconstruction from Egocentric Video",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30293-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30293"
+  },
+  {
+    "arxiv_id": "2610.30307",
+    "title": "The Customer Is the Builder: How AI Coding Agents Are Rewriting the Economics of Software",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30307-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30307"
+  },
+  {
+    "arxiv_id": "2610.30319",
+    "title": "TerraTransfer++: Demonstration-Free End-to-End Planner",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30319-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30319"
+  },
+  {
+    "arxiv_id": "2610.30339",
+    "title": "Spike-Aware Gradient-Based Mixed-Precision Quantization of Spiking Neural Networks for Vision Applications",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30339-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30339"
+  },
+  {
+    "arxiv_id": "2610.30374",
+    "title": "Climbing the Ladder: Automating Data Pipelines and Reproducing Baselines in Low-Resource Settings",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30374-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30374"
+  },
+  {
+    "arxiv_id": "2610.30379",
+    "title": "MemPlan: Memory-Conditioned PDDL Planning for Partially Observable Text Environments",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30379-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30379"
+  },
+  {
+    "arxiv_id": "2610.30418",
+    "title": "Agent Mosaic: Recognizing Confidentiality Leaks in Agentic LLM Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30418-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30418"
+  },
+  {
+    "arxiv_id": "2610.30436",
+    "title": "Secure Agentic AI and Multimodal Intelligence in 6G Communication Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30436-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30436"
+  },
+  {
+    "arxiv_id": "2610.30465",
+    "title": "Flow-based Spectral Kernel Learning for Nonstationary Attention",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30465-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30465"
+  },
+  {
+    "arxiv_id": "2610.30474",
+    "title": "Rethinking SAE Evaluation: An Atomic Interpretable Unit Framework Reveals Hidden Polysemanticity and Redundancy",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30474-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30474"
+  },
+  {
+    "arxiv_id": "2610.30480",
+    "title": "FIGFLEX: A Mixed-Precision FP-INT GEMM Accelerator Co-Designed with Low-Bit LLM Quantization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30480-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30480"
+  },
+  {
+    "arxiv_id": "2610.30491",
+    "title": "What the Trace Shows and What the Label Says: Auditing Behavioral Detectors in Agent Evaluation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30491-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30491"
+  },
+  {
+    "arxiv_id": "2610.30499",
+    "title": "Can LLMs Improve Their Own Harness? A Controlled Study on ARC-AGI-3",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30499-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30499"
+  },
+  {
+    "arxiv_id": "2610.30537",
+    "title": "PLE: Physical-Engineering's Last Exam",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30537-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30537"
+  },
+  {
     "arxiv_id": "2610.30552",
     "title": "Repair Changes Which Layers to Remove: Exact Optima for Depth Pruning of Language Models",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-30552-evidence.zip",
     "source": "https://arxiv.org/abs/2610.30552"
+  },
+  {
+    "arxiv_id": "2610.30557",
+    "title": "Governed Self-Evolution for Autonomous Investing: A Multi-Agent LLM System with an Invariant Core",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30557-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30557"
+  },
+  {
+    "arxiv_id": "2610.30571",
+    "title": "Stale Instruction Files Override the Code in Coding Agents: A One-Sentence Fix",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30571-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30571"
+  },
+  {
+    "arxiv_id": "2610.30635",
+    "title": "What the Specification Did Not Say: Specification-Oracle Gaps in Test-Graded Coding-Agent Benchmarks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30635-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30635"
   },
   {
     "arxiv_id": "2610.30690",
@@ -10913,11 +11130,60 @@
     "source": "https://arxiv.org/abs/2610.30690"
   },
   {
+    "arxiv_id": "2610.30698",
+    "title": "Governance-State Corruption in Long-Term Memory for LLM Agents: A Cross-Model Stress Test",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30698-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30698"
+  },
+  {
+    "arxiv_id": "2610.30738",
+    "title": "AgentTriage: Replayable Security Diagnosis Across Heterogeneous Agent Runtimes",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30738-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30738"
+  },
+  {
+    "arxiv_id": "2610.30742",
+    "title": "UniGuard: Multi-View Guardrail Learning for Cross-Interface Safety Generalization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30742-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30742"
+  },
+  {
+    "arxiv_id": "2610.30755",
+    "title": "Is Complex Agentic Memory Always Needed? Naive RAG Is Stronger Than We Thought",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30755-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30755"
+  },
+  {
     "arxiv_id": "2610.30756",
     "title": "Primal-Dual Representation Learning for Low-Rank Constrained MDPs",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-30756-evidence.zip",
     "source": "https://arxiv.org/abs/2610.30756"
+  },
+  {
+    "arxiv_id": "2610.30760",
+    "title": "AgentDP: Towards Automated Model Deployment for Heterogeneous Embedded AI Applications",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30760-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30760"
+  },
+  {
+    "arxiv_id": "2610.30769",
+    "title": "LLM Multi-Agent Systems Are Vulnerable to Herding and Runaway Cascades",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30769-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30769"
+  },
+  {
+    "arxiv_id": "2610.30790",
+    "title": "Agentic Knowledge-Model Co-Evolution via Consistency Regularization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30790-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30790"
   },
   {
     "arxiv_id": "2610.30791",
@@ -10946,6 +11212,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-30923-evidence.zip",
     "source": "https://arxiv.org/abs/2610.30923"
+  },
+  {
+    "arxiv_id": "2610.30924",
+    "title": "REGATTA: A Cross-Domain Measurement Framework and Fault-Injection Harness for Enterprise AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30924-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30924"
+  },
+  {
+    "arxiv_id": "2610.30933",
+    "title": "ReflectPO: Reflection-Guided Policy Optimization for Long-Horizon LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-30933-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.30933"
   },
   {
     "arxiv_id": "2610.30951",

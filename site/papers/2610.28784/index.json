@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.28784",
+  "title": "Extreme Low-State Quantized Transformer for Electricity-Load Forecasting",
+  "summary": "The method replaces full-precision weights in a Transformer forecaster with 3-, 5-, 7-, or 16-state quantized weights, trained via quantization-aware fine-tuning or scratch QAT, plus an accumulated-update thresholding scheme that suppresses weight-state activity. The cost is a residual forecasting-accuracy penalty (direct PTQ adds 6.25–7.04 NRMSE points, of which QAT-FT recovers roughly 90–95%), additional training complexity, and a custom quantization pipeline rather than off-the-shelf INT8 deployment. It can fail because results are demonstrated only on two electricity-load datasets with small sequence models, the targets are multilevel synaptic edge devices that are not commercially available, and no standard GPU latency or memory benchmarks are reported, so gains may not transfer to the reader's 24 GB GPU inference workloads.",
+  "rationale": "The technique targets prospective multilevel-device edge hardware and reports accuracy relative changes rather than deployable GPU speedups, so it is relevant to track but not validated for the reader's production inference constraints.",
+  "technique": "Low-state weight quantization with QAT for load forecasting",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-10-20",
+  "as_of": "2026-10-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.28784",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces full-precision weights in a Transformer forecaster with 3-, 5-, 7-, or 16-state quantized weights, trained via quantization-aware fine-tuning or scratch QAT, plus an accumulated-update thresholding scheme that suppresses weight-state activity. The cost is a residual forecasting-accuracy penalty (direct PTQ adds 6.25–7.04 NRMSE points, of which QAT-FT recovers roughly 90–95%), additional training complexity, and a custom quantization pipeline rather than off-the-shelf INT8 deployment. It can fail because results are demonstrated only on two electricity-load datasets with small sequence models, the targets are multilevel synaptic edge devices that are not commercially available, and no standard GPU latency or memory benchmarks are reported, so gains may not transfer to the reader's 24 GB GPU inference workloads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28784",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "QAT fine-tuning recovers approximately 90.2% and 94.5% of the NRMSE penalty introduced by direct PTQ at 3–16 weight states; accumulated-update thresholding reduces committed weight updates by ~99.7% and state transitions by ~77–80% with NRMSE degradation of only +0.042 to +0.197 percentage points.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28784",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

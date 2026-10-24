@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A workflow needs specialist review, but extra agents may add more cost than useful work.",
+    "change": "Test the proposed division of work against a single-agent implementation.",
+    "baseline": "One agent with the same tools and an equal total token and time budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.30557",
+  "title": "Governed Self-Evolution for Autonomous Investing: A Multi-Agent LLM System with an Invariant Core",
+  "summary": "The method replaces a single general-purpose LLM making trading decisions with nine role-specialised agents (four analysts, a portfolio manager, a protected risk manager), a seven-layer shared memory assembled from the system's own record, and a nightly grading plus quarterly reflection loop gated by deterministic, reversible prompt edits around an untouchable core of order arithmetic and risk rules. The cost is substantial architectural complexity: nine agent roles, seven memory layers, a nightly grading pipeline, a quarterly reflector with replay verification, and roughly 1,632 LLM calls over 102 trading days (about 16 calls per day, feasible on third-party APIs but with ongoing per-call spend). Failure modes include prompt injections embedded in untrusted Web content (tested but only within one deployment), graded self-improvement loops that reinforce their own scoring biases, replay verification that cannot cover live-market distribution shift, and single-system live results that may not generalise across market regimes.",
+  "rationale": "The architecture is directly relevant to production LLM agents acting on untrusted data, and its invariant-core plus gated self-edit pattern is a transferable safeguard design, but the evidence comes from one five-month single-strategy deployment in a high-stakes domain, so the reader should study the governance pattern rather than adopt the full system.",
+  "technique": "Governed multi-agent LLM system with invariant core",
+  "family": "orquestracao_multiagente",
+  "recommendation": "observar",
+  "published": "2026-10-22",
+  "as_of": "2026-10-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.30557",
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 1809,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces a single general-purpose LLM making trading decisions with nine role-specialised agents (four analysts, a portfolio manager, a protected risk manager), a seven-layer shared memory assembled from the system's own record, and a nightly grading plus quarterly reflection loop gated by deterministic, reversible prompt edits around an untouchable core of order arithmetic and risk rules. The cost is substantial architectural complexity: nine agent roles, seven memory layers, a nightly grading pipeline, a quarterly reflector with replay verification, and roughly 1,632 LLM calls over 102 trading days (about 16 calls per day, feasible on third-party APIs but with ongoing per-call spend). Failure modes include prompt injections embedded in untrusted Web content (tested but only within one deployment), graded self-improvement loops that reinforce their own scoring biases, replay verification that cannot cover live-market distribution shift, and single-system live results that may not generalise across market regimes.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30557",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "In a 102-day live deployment the system contained a 24.6% sector drawdown to a 0.3% loss; in replay, a single-model baseline lost 1.35 points against the market over five days while the joint design showed no significant loss; a 2015-2026 backtest shows the invariant core lowering maximum drawdown under all 50 random entry policies.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30557",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

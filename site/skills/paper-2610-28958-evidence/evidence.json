@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.28958",
+  "title": "Transformers as Generic Deep Neural Networks: Exact Compilation, the Cost of Removing Activation-Activation Products, and Multi-Agent Attention Clustering",
+  "summary": "The method replaces Transformer-specific NPU operators and Transformer-specific quantization pipelines with an exact compilation of attention, LayerNorm, and GELU MLP into generic affine, routing, square, sigmoid, and inverse-square-root primitives, plus an optional top-k attention scheme where centroid clustering reduces computed scores from N^2 to Nk per head. The cost is implementation complexity: exact compilation requires an elementwise activation-activation product to avoid an N^2 blowup in scalar nonlinear evaluations, and the top-k gains depend on centroid-based key preselection and tail-mass estimation rather than standard dense attention. It can fail when the target hardware lacks the required elementwise product or sigmoid and inverse-square-root operators, when query or agent clustering is weak so centroid key selection misses relevant keys, or when tail scores are not exchangeable, which breaks the unbiasedness guarantee and reintroduces the conditional bias of tail dropping.",
+  "rationale": "The compilation results are validated only on small models (DeiT-Tiny, MambaIRv2-Light, Pythia-70M), so the approach is testable on a single GPU but its production value for the reader's workloads requires hardware-operator and clustering-quality validation.",
+  "technique": "Exact compilation of transformers to generic DNNs",
+  "family": "kernels_e_atencao",
+  "recommendation": "testar",
+  "published": "2026-10-20",
+  "as_of": "2026-10-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.28958",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces Transformer-specific NPU operators and Transformer-specific quantization pipelines with an exact compilation of attention, LayerNorm, and GELU MLP into generic affine, routing, square, sigmoid, and inverse-square-root primitives, plus an optional top-k attention scheme where centroid clustering reduces computed scores from N^2 to Nk per head. The cost is implementation complexity: exact compilation requires an elementwise activation-activation product to avoid an N^2 blowup in scalar nonlinear evaluations, and the top-k gains depend on centroid-based key preselection and tail-mass estimation rather than standard dense attention. It can fail when the target hardware lacks the required elementwise product or sigmoid and inverse-square-root operators, when query or agent clustering is weak so centroid key selection misses relevant keys, or when tail scores are not exchangeable, which breaks the unbiasedness guarantee and reintroduces the conditional bias of tail dropping.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28958",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The exact tail-mass estimate matches or beats tail dropping with half as many keys (2x fewer keys) on DeiT-Tiny and, for k<=8, on Pythia-70M; dense-score compilation without activation-activation products adds at least N^2 scalar nonlinear evaluations per head.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.28958",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
