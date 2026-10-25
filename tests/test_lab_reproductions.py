@@ -13,7 +13,8 @@ EDITION = ROOT / "content/reproductions/2608.27428.json"
 
 
 def page(arxiv_id="2608.27428"):
-    return ResearchPage.model_validate_json((ROOT / f"site/papers/{arxiv_id}/index.json").read_text())
+    raw = json.loads((ROOT / f"site/papers/{arxiv_id}/index.json").read_text())
+    return ResearchPage.model_validate({**raw, "lab_reproductions": []})
 
 
 def test_reproduction_adds_a_scoped_section_without_promoting_the_brief():
