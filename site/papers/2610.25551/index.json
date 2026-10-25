@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.25551",
+  "title": "StreamAhead: Real-Time Streaming Video Question Answering via Adaptive Precomputation",
+  "summary": "StreamAhead replaces the standard practice of building full KV caches for every incoming video segment with a tiered scheme that keeps segments at cheap representation levels (visual features) and materializes KV caches only for query-retrieved segments. The cost is an offline profiling step per segment and model, a runtime scheduler that pipelines segment computation across CPU and GPU concurrently with queries, and the query-time compute of completing KV caches for retrieved segments. It can fail when the retrieval stage selects the wrong segments, when query arrival bursts exceed the scheduler's ability to complete KV caches within latency targets, or when the offline cost profiles do not transfer to the deployment hardware or model.",
+  "rationale": "The method targets serving infrastructure rather than model training, but its gains are demonstrated on specific streaming workloads and require a profiling and scheduling layer whose benefit must be validated against the reader's actual query patterns and hardware before adoption.",
+  "technique": "Adaptive precomputation for streaming video QA",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-10-18",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.25551",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "StreamAhead replaces the standard practice of building full KV caches for every incoming video segment with a tiered scheme that keeps segments at cheap representation levels (visual features) and materializes KV caches only for query-retrieved segments. The cost is an offline profiling step per segment and model, a runtime scheduler that pipelines segment computation across CPU and GPU concurrently with queries, and the query-time compute of completing KV caches for retrieved segments. It can fail when the retrieval stage selects the wrong segments, when query arrival bursts exceed the scheduler's ability to complete KV caches within latency targets, or when the offline cost profiles do not transfer to the deployment hardware or model.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.25551",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 10.4x lower TTFT than state-of-the-art methods and 5.9x lower than state-of-the-art streaming systems; sustains 30 FPS with P95 TTFT under 0.5 s and up to 57 FPS with P95 TTFT under 2 s.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.25551",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

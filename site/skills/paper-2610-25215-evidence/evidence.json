@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.25215",
+  "title": "Hidden Cartographer: Hidden State Guided Data Selection for Dual Budgeted Instruction Tuning",
+  "summary": "It replaces pseudo-label-based selection and conventional active learning with a two-stage process: progressive candidate expansion using a hidden-state proxy, then exact training-dynamics pruning to a compact fine-tuning subset. It costs repeated proxy updates and training-dynamics recomputation during the expansion loop, adding pipeline complexity and compute beyond a single-pass selection, though it reduces annotation and fine-tuning volume substantially. It can fail if the proxy's hidden-state signals mischaracterize which examples are valuable, or if domain-specific dynamics do not transfer, making validation on the reader's own data distribution necessary before relying on the reported accuracy advantage.",
+  "rationale": "The method fits a constrained fine-tuning budget and is runnable on a single GPU, but its accuracy advantage is reported only on specific domains and requires workload-specific validation before production adoption.",
+  "technique": "Hidden-state guided two-stage data selection for instruction tuning",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-18",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.25215",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces pseudo-label-based selection and conventional active learning with a two-stage process: progressive candidate expansion using a hidden-state proxy, then exact training-dynamics pruning to a compact fine-tuning subset. It costs repeated proxy updates and training-dynamics recomputation during the expansion loop, adding pipeline complexity and compute beyond a single-pass selection, though it reduces annotation and fine-tuning volume substantially. It can fail if the proxy's hidden-state signals mischaracterize which examples are valuable, or if domain-specific dynamics do not transfer, making validation on the reader's own data distribution necessary before relying on the reported accuracy advantage.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.25215",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "HC achieves the highest average accuracy among budgeted baselines while annotating only 20--30% of the pool and fine-tuning on 10--15% across medical, legal, and financial domains.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.25215",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

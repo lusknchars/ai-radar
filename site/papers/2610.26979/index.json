@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A multi-step product task fails because the agent loses track of dependencies.",
+    "change": "Try the proposed planning step on tasks with checkable intermediate outcomes.",
+    "baseline": "The same agent solving the same tasks without the new planning step.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task completion, unnecessary steps, planning tokens, response time, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.26979",
+  "title": "Latent Projection for Latent Planning",
+  "summary": "The method replaces the raw l2 distance between predicted and goal latents with an l2 distance restricted to the k-dimensional subspace that the learned state dynamics propagate with least uncertainty, derived from a normal-matrix transition model fit under SIGReg regularization. The cost is fitting a single constrained matrix A post hoc; the encoder, predictor, rollout, and planner remain unchanged, adding negligible compute. The approach can fail if the SIGReg and Gauss-Markov assumptions do not hold for the reader's environment, if the latent dynamics are not well-approximated by a normal linear map, and the reported gains are demonstrated only on 2D navigation tasks, so transfer to other domains is unvalidated.",
+  "rationale": "This is a low-cost, post hoc modification applicable to latent world model planning, but its benefit depends on assumptions about the latent space structure and has only been validated on specific navigation benchmarks, so it requires workload-specific validation before production adoption.",
+  "technique": "Uncertainty-aware latent subspace projection for planning cost",
+  "family": "planejamento_e_decomposicao",
+  "recommendation": "testar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.26979",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 1,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces the raw l2 distance between predicted and goal latents with an l2 distance restricted to the k-dimensional subspace that the learned state dynamics propagate with least uncertainty, derived from a normal-matrix transition model fit under SIGReg regularization. The cost is fitting a single constrained matrix A post hoc; the encoder, predictor, rollout, and planner remain unchanged, adding negligible compute. The approach can fail if the SIGReg and Gauss-Markov assumptions do not hold for the reader's environment, if the latent dynamics are not well-approximated by a normal linear map, and the reported gains are demonstrated only on 2D navigation tasks, so transfer to other domains is unvalidated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26979",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Raises success rate over the plain l2 cost by up to +54.7 points on 2D navigation tasks (TwoRoom and PointMaze) under a harder planning setting.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.26979",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

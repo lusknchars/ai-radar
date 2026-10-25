@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.30205",
+  "title": "Feedback That Backfires in Games: Do LLM Players Repeat the Move They Just Watched Fail?",
+  "summary": "Replaces the common harness pattern of appending the failed action and error message verbatim into the transcript before retrying; use a failure description that omits the move string, or at minimum decoder-level bans on exact repeats. Costs nothing in memory, latency, or infrastructure, though it requires careful prompt/harness design and omits information the model might in principle use. What can fail: the effect is model-dependent (present in base models, largely removed at the DPO stage), a 'do not repeat' instruction does nothing, and decoder bans stop exact repeats but not other illegal moves, so illegal play can persist.",
+  "rationale": "The fix is a zero-cost prompt-engineering change validated on exactly the small instruction-tuned models (135M-1.7B) and free-Colab hardware this reader operates, and leaving verbatim failed moves in transcripts is shown to actively degrade retry behavior.",
+  "technique": "Avoiding failed-move strings in retry transcripts",
+  "family": "recuperacao_de_falha",
+  "recommendation": "adotar",
+  "published": "2026-10-21",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.30205",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 126,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces the common harness pattern of appending the failed action and error message verbatim into the transcript before retrying; use a failure description that omits the move string, or at minimum decoder-level bans on exact repeats. Costs nothing in memory, latency, or infrastructure, though it requires careful prompt/harness design and omits information the model might in principle use. What can fail: the effect is model-dependent (present in base models, largely removed at the DPO stage), a 'do not repeat' instruction does nothing, and decoder bans stop exact repeats but not other illegal moves, so illegal play can persist.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30205",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Recording a failed move in the transcript increases the probability of repeating it (corrective gain G = -1.38 nats per token pooled over 8 models); a failure description that omits the move string preserves the model's preference instead, and greedy decoding repeats 38% of would-be moves even when their probability decreases.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30205",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

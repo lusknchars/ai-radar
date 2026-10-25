@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.27010",
+  "title": "Robust Latent Variable Graphical Models: Exact Recovery and Fundamental Limits",
+  "summary": "The method replaces the sample covariance in sparse-plus-low-rank precision matrix estimation with a centered Gaussian measure-transformed covariance, penalizing the low-rank component via a nuclear norm of a congruence transform. It costs a convex optimization solved by a linearized ADMM with closed-form updates, with statistical guarantees requiring N greater than roughly p/nu_min^2 samples for inertia recovery and restricted invertibility plus irrepresentability conditions on the Fisher information. Signed-graph and inertia recovery can fail when these structural conditions are violated, when the low-rank eigenvalues are too small relative to sample size, or under Huber contamination beyond the quantified bias bound, though the bound vanishes for remote outliers.",
+  "rationale": "This is a statistical estimation theory paper on Gaussian graphical models with latent variables, unrelated to deploying or serving ML models under the reader's GPU and API constraints, so it does not bear on their production adoption decisions.",
+  "technique": "Robust latent-variable Gaussian graphical model estimation",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-10-19",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.27010",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces the sample covariance in sparse-plus-low-rank precision matrix estimation with a centered Gaussian measure-transformed covariance, penalizing the low-rank component via a nuclear norm of a congruence transform. It costs a convex optimization solved by a linearized ADMM with closed-form updates, with statistical guarantees requiring N greater than roughly p/nu_min^2 samples for inertia recovery and restricted invertibility plus irrepresentability conditions on the Fisher information. Signed-graph and inertia recovery can fail when these structural conditions are violated, when the low-rank eigenvalues are too small relative to sample size, or under Huber contamination beyond the quantified bias bound, though the bound vanishes for remote outliers.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.27010",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

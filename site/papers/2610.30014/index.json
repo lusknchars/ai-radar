@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.30014",
+  "title": "Agent Behavior Maps: Locating Agents by What They Would Do, Without Running Them",
+  "summary": "The method replaces direct environment rollouts for comparing and predicting LLM agent behavior: instead of running each agent-harness combination in the environment, it cross-scores centered action log-likelihoods on shared reference trajectories to build a behavioral coordinate map. The cost is maintaining a set of reference trajectories, running one inference pass per candidate model over them, and accepting that trajectory-KL correspondence holds only under the paper's explicit assumptions, with the harness-composition extension showing accuracy varying across components and environments. It can fail when reference trajectories are unrepresentative of the deployment task distribution, when scoring diverges from actual rollout behavior for out-of-family models or novel harnesses, or when rank-order agreement with KL does not translate into accurate absolute performance prediction.",
+  "rationale": "Behavioral comparison without rollouts fits constrained infrastructure, but the accuracy of the embedding as a proxy for deployed performance is workload-dependent and only partially validated, so the reader should validate it on their own agents and environments before relying on it for production decisions.",
+  "technique": "Agent Behavior Maps via cross-scored log-likelihoods",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-21",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.30014",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces direct environment rollouts for comparing and predicting LLM agent behavior: instead of running each agent-harness combination in the environment, it cross-scores centered action log-likelihoods on shared reference trajectories to build a behavioral coordinate map. The cost is maintaining a set of reference trajectories, running one inference pass per candidate model over them, and accepting that trajectory-KL correspondence holds only under the paper's explicit assumptions, with the harness-composition extension showing accuracy varying across components and environments. It can fail when reference trajectories are unrepresentative of the deployment task distribution, when scoring diverges from actual rollout behavior for out-of-family models or novel harnesses, or when rank-order agreement with KL does not translate into accurate absolute performance prediction.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30014",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Coordinates derived without new environment rollouts track directly measured trajectory KL in rank order across eight cross-scored models, and support performance prediction across 100 LLMs and four environments; no multiplicative cost or speed factor is stated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.30014",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.27013",
+  "title": "Decomposed Relation Extraction from Aviation Accident Narratives: Evaluating Transformer-Based Safety Knowledge Discovery under Relational Sparsity",
+  "summary": "The method replaces end-to-end relation extraction with a decomposed pipeline: candidate concept pairs are enumerated first, then a TF-IDF Linear SVM or weighted RoBERTa classifier labels them as RESULTS_IN or CONTRIBUTES_TO. Cost is dominated by the candidate space (21,038 pairs from 300 narratives) and by quality: exhaustive evaluation collapsed Macro-F1 from ~0.47-0.48 in development to 0.24-0.27, with MCC near zero (0.013-0.020) and 7,018-9,824 false positives against 96-125 recovered true relations. What fails after adoption is precision at deployment scale: hard-negative sampled development scores did not transfer to exhaustive candidate evaluation, RoBERTa confidence distributions overlapped between classes, and false positives persisted even within valid relation directions, so known concept endpoints do not yield reliable extraction.",
+  "rationale": "The paper reports a negative result showing this decomposed classifier approach fails under realistic relational sparsity, so the reader should treat it as a cautionary evaluation finding rather than adopt it, while noting its lesson that sampled-negative validation badly overestimates exhaustive performance.",
+  "technique": "Decomposed relation extraction with hard-negative sampled classifiers",
+  "family": "recuperacao_e_rag",
+  "recommendation": "observar",
+  "published": "2026-10-19",
+  "as_of": "2026-10-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.27013",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces end-to-end relation extraction with a decomposed pipeline: candidate concept pairs are enumerated first, then a TF-IDF Linear SVM or weighted RoBERTa classifier labels them as RESULTS_IN or CONTRIBUTES_TO. Cost is dominated by the candidate space (21,038 pairs from 300 narratives) and by quality: exhaustive evaluation collapsed Macro-F1 from ~0.47-0.48 in development to 0.24-0.27, with MCC near zero (0.013-0.020) and 7,018-9,824 false positives against 96-125 recovered true relations. What fails after adoption is precision at deployment scale: hard-negative sampled development scores did not transfer to exhaustive candidate evaluation, RoBERTa confidence distributions overlapped between classes, and false positives persisted even within valid relation directions, so known concept endpoints do not yield reliable extraction.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.27013",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
