@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.32412",
+  "title": "LeafSkill: Efficient Leaf-Level Action Grounding for Recursive LLM Agents",
+  "summary": "It replaces repeated invocation of the large host LLM for leaf-level action grounding with a retrieval layer that binds reusable action templates, selected by a frozen 1.7B model that can defer to the original agent when uncertain. The cost is maintaining a semantic skill store and running an additional small selector (feasible on one 24 GB GPU or via API alongside the host model), plus integration work against an environment with explicitly admissible actions. It can fail when the environment does not expose a checkable action space, when retrieved templates are semantically close but wrong for the current objects, and the reported gains are validated only in the Robotouille robotics domain, so transfer to other agent workloads is unproven.",
+  "rationale": "The mechanism directly reduces host-model inference cost using only a 1.7B selector and an external store, which fits constrained infrastructure, but the single-domain evaluation and modest effect size require workload-specific validation before production adoption.",
+  "technique": "Retrieval-based leaf action grounding with small selector",
+  "family": "uso_de_ferramenta",
+  "recommendation": "testar",
+  "published": "2026-10-23",
+  "as_of": "2026-10-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.32412",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 136,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces repeated invocation of the large host LLM for leaf-level action grounding with a retrieval layer that binds reusable action templates, selected by a frozen 1.7B model that can defer to the original agent when uncertain. The cost is maintaining a semantic skill store and running an additional small selector (feasible on one 24 GB GPU or via API alongside the host model), plus integration work against an environment with explicitly admissible actions. It can fail when the environment does not expose a checkable action space, when retrieved templates are semantically close but wrong for the current objects, and the reported gains are validated only in the Robotouille robotics domain, so transfer to other agent workloads is unproven.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.32412",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On tasks completed by both systems, LeafSkill reduces host-model tokens by 14.42% and calls by 14.08% (a separate held-out repeat reports 18.98% token reduction), while raising task success from 60.5% to 68.5% on 200 Robotouille tasks (McNemar p=.0259).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.32412",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
