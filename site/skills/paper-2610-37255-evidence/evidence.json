@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.37255",
+  "title": "Your Policy Is Secretly a Harness: The Decision Geometry of Agent Interfaces",
+  "summary": "Replaces fixed-model harness comparison with a decomposition of deployed return into harness ceiling minus policy mismatch, so harnesses are judged by the best return they offer rather than by how a coincidentally trained model performs under them. Costs an extra estimation step—computing ceiling and mismatch per harness, requiring either a stronger stand-in model or enough evaluation rollouts—and adds analysis complexity to each harness revision. Fails when the stand-in for the optimal policy is weak, when the harness is changed without retraining (preferences learned under the old harness transfer poorly, e.g. the 85.0% to 19.2% drop), or when evaluation budget is too small to estimate the two terms reliably.",
+  "rationale": "With one GPU or API access the reader cannot retrain under every candidate harness, but the ceiling-mismatch measurement is cheap to run and directly warns against both brittle prompt/layout changes and misleading fixed-model harness A/B comparisons.",
+  "technique": "Harness-aware agent evaluation via ceiling-mismatch decomposition",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-10-27",
+  "as_of": "2026-10-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.37255",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 12,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces fixed-model harness comparison with a decomposition of deployed return into harness ceiling minus policy mismatch, so harnesses are judged by the best return they offer rather than by how a coincidentally trained model performs under them. Costs an extra estimation step—computing ceiling and mismatch per harness, requiring either a stronger stand-in model or enough evaluation rollouts—and adds analysis complexity to each harness revision. Fails when the stand-in for the optimal policy is weak, when the harness is changed without retraining (preferences learned under the old harness transfer poorly, e.g. the 85.0% to 19.2% drop), or when evaluation budget is too small to estimate the two terms reliably.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.37255",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reversing observation field order leaves optimal decisions unchanged yet drops trained-model success from 85.0% to 19.2%; ceiling-minus-mismatch estimates predict post-training gains and reproduce accuracy rankings on Terminal-Bench Lite.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.37255",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

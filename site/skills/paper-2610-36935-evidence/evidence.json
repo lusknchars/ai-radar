@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.36935",
+  "title": "Gaussian Process Bandits for Constraint Black Box Lever Optimization",
+  "summary": "The method replaces per-arm epsilon-greedy exploration for discrete budget-weight allocation with a Gaussian-Process surrogate (composite Matérn + Linear kernel) whose UCB acquisition shares information across neighboring weight configurations, shortening exploration under delayed, noisy, aggregate feedback. Cost is modest computationally (GP inference scales cubically with the number of observations, requiring sparse or inducing-point approximations in long deployments) but real in complexity: kernel design, hyperparameter maintenance, and simulator or RCT validation are prerequisites rather than plug-in components. It can fail when the reward surface violates the GP smoothness prior, when nonstationarity outpaces kernel drift handling, when the combinatorial action space makes acquisition optimization itself expensive, or when the production system differs enough from the tuned simulator that the validated kernel choice does not transfer.",
+  "rationale": "This is a classical Bayesian optimization method unrelated to LLM efficiency, but it is cheap to run on constrained infrastructure and plausibly useful for production tuning problems, so a workload-specific pilot is warranted while the unquantified RCT claim and dependence on simulator tuning argue against direct adoption.",
+  "technique": "GP-UCB Bayesian bandits for budget lever allocation",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-10-27",
+  "as_of": "2026-10-28",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.36935",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces per-arm epsilon-greedy exploration for discrete budget-weight allocation with a Gaussian-Process surrogate (composite Matérn + Linear kernel) whose UCB acquisition shares information across neighboring weight configurations, shortening exploration under delayed, noisy, aggregate feedback. Cost is modest computationally (GP inference scales cubically with the number of observations, requiring sparse or inducing-point approximations in long deployments) but real in complexity: kernel design, hyperparameter maintenance, and simulator or RCT validation are prerequisites rather than plug-in components. It can fail when the reward surface violates the GP smoothness prior, when nonstationarity outpaces kernel drift handling, when the combinatorial action space makes acquisition optimization itself expensive, or when the production system differs enough from the tuned simulator that the validated kernel choice does not transfer.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.36935",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "A statistically significant efficiency lift over an epsilon-greedy baseline in a live production RCT; the abstract does not quantify the magnitude, so no multiplicative factor is reported.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.36935",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
