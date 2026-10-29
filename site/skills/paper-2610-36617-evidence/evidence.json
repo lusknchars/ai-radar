@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.36617",
+  "title": "Balanced State Subspaces for Mamba-2 State Compression",
+  "summary": "Replaces coordinate-wise state quantization/pruning (e.g., GHOST) with a post-training balanced-truncation rotation of the Mamba-2 recurrent state into its write-read subspace, plus Hankel-spectrum per-layer rank allocation (HARP). Costs one calibration forward pass and a one-time transform; no retraining, but requires access to model weights and implementation of the rotation via the scalar-identity transition. Can fail on workloads stressing retrieval-sensitive layers if rank allocation is mis-set, and results are validated only on WikiText-2 perplexity and retrieval for pretrained Mamba-2 checkpoints, so gains on other tasks or architectures are unverified.",
+  "rationale": "It applies only if the reader serves Mamba-2/SSM models and needs lower decoding memory; the modest perplexity cost and cheap calibration justify a small-scale trial rather than immediate adoption.",
+  "technique": "Balanced-truncation rotation of Mamba-2 state with per-layer rank allocation",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-10-27",
+  "as_of": "2026-10-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.36617",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces coordinate-wise state quantization/pruning (e.g., GHOST) with a post-training balanced-truncation rotation of the Mamba-2 recurrent state into its write-read subspace, plus Hankel-spectrum per-layer rank allocation (HARP). Costs one calibration forward pass and a one-time transform; no retraining, but requires access to model weights and implementation of the rotation via the scalar-identity transition. Can fail on workloads stressing retrieval-sensitive layers if rank allocation is mis-set, and results are validated only on WikiText-2 perplexity and retrieval for pretrained Mamba-2 checkpoints, so gains on other tasks or architectures are unverified.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.36617",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Halves the Mamba-2 state dimension at an average WikiText-2 perplexity increase of 0.3 points (1.8%) across 130M-2.7B models, versus 1.6 points (9.3%) for GHOST, with a larger gap at 25% retention; calibration costs a single forward pass.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.36617",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

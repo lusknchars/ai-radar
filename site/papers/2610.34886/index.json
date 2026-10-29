@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.34886",
+  "title": "ThinkBit: Search Codewords, Recalibrate Scales, Select by Reasoning",
+  "summary": "The method replaces standard post-training quantization pipelines (e.g., EfficientQAT, 2-bit GGUF) with a tiered scalar quantization scheme: sensitivity-based bitwidth assignment, Gumbel-softmax codeword search, distillation-based scale recalibration, short QAT, and a paired reasoning test for checkpoint selection. The cost is a multi-stage quantization pipeline requiring calibration and reasoning training data, plus an engineering dependency on runtime kernels that actually exploit the 2-bit format to realize the claimed inference savings. It can fail if reasoning accuracy degrades on problem types outside the training distribution, if the selection test does not generalize, or if available inference software lacks efficient 2-bit kernels, making the theoretical 8x bandwidth gain unrealized.",
+  "rationale": "The technique targets exactly the reader's constraint (fitting reasoning models into limited GPU memory with preserved accuracy) but its multi-stage pipeline and dependence on specific kernels and reasoning data require workload-specific validation before production adoption.",
+  "technique": "Two-bit scalar weight quantization with distillation recalibration and QAT",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-10-26",
+  "as_of": "2026-10-29",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.34886",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces standard post-training quantization pipelines (e.g., EfficientQAT, 2-bit GGUF) with a tiered scalar quantization scheme: sensitivity-based bitwidth assignment, Gumbel-softmax codeword search, distillation-based scale recalibration, short QAT, and a paired reasoning test for checkpoint selection. The cost is a multi-stage quantization pipeline requiring calibration and reasoning training data, plus an engineering dependency on runtime kernels that actually exploit the 2-bit format to realize the claimed inference savings. It can fail if reasoning accuracy degrades on problem types outside the training distribution, if the selection test does not generalize, or if available inference software lacks efficient 2-bit kernels, making the theoretical 8x bandwidth gain unrealized.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.34886",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Storing weights in two bits instead of bfloat16 can make inference 8x cheaper; the 2-bit Qwen3-1.7B checkpoint at 0.52 GB scores 73.0 on MATH-500 versus 30.0 for EfficientQAT at matched size, and a 3.74 GB 14B model reaches 94.8 versus 97.5 for the 29.5 GB bfloat16 model.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.34886",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
