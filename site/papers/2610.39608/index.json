@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.39608",
+  "title": "From Intent to Improvement: Agentic Dataset Search for Better Model Training",
+  "summary": "The method replaces text-similarity retrieval over dataset cards and free-form tool-calling agents with a contract-governed agent that compiles queries into typed search plans executed by deterministic operators over hybrid retrieval and bounded graph expansion, with provenance verification before accepting results. The cost is substantial engineering complexity (typed contracts, deterministic operator layer, verification pipeline) plus added latency from multi-step plan execution, likely requiring third-party LLM API spend rather than GPU memory, and the framework is released as code and data on GitHub. Failure modes include dependence on metadata that is acknowledged as often missing, graph expansion that cannot reach truly sparsely described datasets, local-repair diagnoses that may not recover from fundamentally unsatisfiable constraint sets, and downstream-training gains demonstrated only on three domains (math, code, medicine) that may not transfer to other workloads.",
+  "rationale": "The method addresses a real production problem (dataset discovery under hard constraints) with public code and constrained-infrastructure-compatible deployment, but its domain-specific training gains and heavy engineering overhead require validation on the reader's own workload before adoption.",
+  "technique": "Contract-governed agentic dataset search",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-10-29",
+  "as_of": "2026-10-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.39608",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces text-similarity retrieval over dataset cards and free-form tool-calling agents with a contract-governed agent that compiles queries into typed search plans executed by deterministic operators over hybrid retrieval and bounded graph expansion, with provenance verification before accepting results. The cost is substantial engineering complexity (typed contracts, deterministic operator layer, verification pipeline) plus added latency from multi-step plan execution, likely requiring third-party LLM API spend rather than GPU memory, and the framework is released as code and data on GitHub. Failure modes include dependence on metadata that is acknowledged as often missing, graph expansion that cannot reach truly sparsely described datasets, local-repair diagnoses that may not recover from fundamentally unsatisfiable constraint sets, and downstream-training gains demonstrated only on three domains (math, code, medicine) that may not transfer to other workloads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.39608",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On HuDS-Bench (200 queries, 24,908 graded judgments over 15 systems), AgenticDS improves NDCG@10 by 25.7% over the strongest dense-sparse hybrid and by 18.9% over a commercial LLM agent; a search-to-train study reports the best downstream accuracy in mathematics, code, and medicine.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.39608",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.40055",
+  "title": "One Vector or Many? Clustered Optimal-Transport Steering under Quantization",
+  "summary": "This replaces single-vector difference-of-means (DiM) activation steering, or per-layer Mean-AcT, with a clustered optimal-transport map that routes each token's hidden state along a mixture of cluster displacements for inference-time toxicity control. It costs additional fitting of clusters and an entropic OT plan per model, somewhat higher perplexity at equal steering strength, and extra inference-time routing computation, though it transfers to NF4-quantized models without refitting. It can fail because the standard CHaRS protocol is statistically equivalent to plain DiM-at-every-layer, the token-differentiated gain is confirmed by only one of three classifiers on Gemma, and a nearly constant map from the same clusters achieves about 30% less toxicity, so the mechanism behind the improvement is not established.",
+  "rationale": "The method runs on a single small open model with inference-time-only changes, so it is feasible on constrained infrastructure, but the inconsistent cross-classifier evidence and the unresolved ablation against a constant clustered map mean it should be validated on the reader's own moderation workload before adoption.",
+  "technique": "Clustered optimal-transport activation steering for toxicity mitigation",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-29",
+  "as_of": "2026-10-30",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.40055",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces single-vector difference-of-means (DiM) activation steering, or per-layer Mean-AcT, with a clustered optimal-transport map that routes each token's hidden state along a mixture of cluster displacements for inference-time toxicity control. It costs additional fitting of clusters and an entropic OT plan per model, somewhat higher perplexity at equal steering strength, and extra inference-time routing computation, though it transfers to NF4-quantized models without refitting. It can fail because the standard CHaRS protocol is statistically equivalent to plain DiM-at-every-layer, the token-differentiated gain is confirmed by only one of three classifiers on Gemma, and a nearly constant map from the same clusters achieves about 30% less toxicity, so the mechanism behind the improvement is not established.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.40055",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "A token-routed clustered OT steering variant leaves 37-39% less residual toxicity than DiM on Gemma-2-2B and 51-61% less on Granite-3.1-2B at steering strength 3, where DiM already removes 76-85%; two of three classifiers confirm the gain on Granite and only one on Gemma, and the advantage persists under INT8/NF4 quantization.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.40055",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
