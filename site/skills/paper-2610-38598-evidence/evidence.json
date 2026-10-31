@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.38598",
+  "title": "Two-Stage Clipping: Linear-Time Approximate and Exact Mixed-Norm Projections for Transformers",
+  "summary": "TSC replaces exact proximal solvers for ℓ1,∞ mixed-norm projection—used to induce column-wise structured sparsity in Transformer weight matrices—with a two-stage approximate operator: a group-level budget projection followed by per-group coefficient clipping, computable in O(nm) time (O(n²) for square attention matrices). The cost is that the operator is an approximation, not the exact projection: the paper bounds the Euclidean discrepancy to the true proximal solution and reports it is small on synthetic data, but it is nonzero by construction, and it targets the projection operator itself rather than delivering an end-to-end pruned model. What can fail: the sparsity levels at which the approximation error stays acceptable for downstream accuracy are not established on production-scale LLMs in the abstract, integration requires a sparsification-aware training or pruning pipeline the reader may not have, and the runtime benchmarks are synthetic, so realized gains on real model compression workloads need validation on the reader's own matrices and tolerance for approximation error.",
+  "rationale": "The method is a drop-in cheaper projection operator relevant to structured pruning workflows, but its validation is synthetic and its downstream effect on LLM accuracy is unproven, so the reader should pilot it within an existing pruning pipeline rather than adopt it unconditionally.",
+  "technique": "Two-Stage Clipping for mixed-norm projection",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-10-28",
+  "as_of": "2026-10-31",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.38598",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TSC replaces exact proximal solvers for ℓ1,∞ mixed-norm projection—used to induce column-wise structured sparsity in Transformer weight matrices—with a two-stage approximate operator: a group-level budget projection followed by per-group coefficient clipping, computable in O(nm) time (O(n²) for square attention matrices). The cost is that the operator is an approximation, not the exact projection: the paper bounds the Euclidean discrepancy to the true proximal solution and reports it is small on synthetic data, but it is nonzero by construction, and it targets the projection operator itself rather than delivering an end-to-end pruned model. What can fail: the sparsity levels at which the approximation error stays acceptable for downstream accuracy are not established on production-scale LLMs in the abstract, integration requires a sparsification-aware training or pruning pipeline the reader may not have, and the runtime benchmarks are synthetic, so realized gains on real model compression workloads need validation on the reader's own matrices and tolerance for approximation error.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.38598",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The paper reports substantial runtime improvements over proximal baselines for ℓ1,∞ projection, reducing complexity from O(nm log(nm)) to O(nm) for an n×m matrix; no single consolidated speedup factor is stated in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.38598",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

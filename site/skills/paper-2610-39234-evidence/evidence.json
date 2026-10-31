@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.39234",
+  "title": "AgentHeal: Evaluating Goal-Preserving Resource Recovery of Web Agents under Access Barriers",
+  "summary": "AgentHeal replaces standard web-agent evaluations that assume freely accessible resources or only transient perturbations with a benchmark of non-transient access barriers (dead links, authentication walls, rate limits, anti-scraping defenses) across nine barrier families in a counterfactual sandbox and real-website replay. Adoption costs engineering effort to set up the sandbox or replay harness, the API or compute cost of running agents against nine barrier families, and the ongoing work of diagnosing failures the benchmark surfaces; it is an evaluation harness, not a model improvement. What can fail after adoption is misinterpreting results if the sandbox diverges from the reader's target web domains, optimizing agents to the benchmark's specific barriers rather than general recovery, or deprioritizing it because it adds no new capability to the deployed agent itself.",
+  "rationale": "The reader runs LLM agents in production, and this benchmark directly measures a dominant production failure mode, agents aborting, looping, or silently violating constraints when access barriers block the primary path, at a cost compatible with a small team and a single GPU or API budget.",
+  "technique": "Benchmark for Goal-Preserving Recovery from Web Access Barriers",
+  "family": "avaliacao_de_agente",
+  "recommendation": "adotar",
+  "published": "2026-10-29",
+  "as_of": "2026-10-31",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.39234",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 10,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "AgentHeal replaces standard web-agent evaluations that assume freely accessible resources or only transient perturbations with a benchmark of non-transient access barriers (dead links, authentication walls, rate limits, anti-scraping defenses) across nine barrier families in a counterfactual sandbox and real-website replay. Adoption costs engineering effort to set up the sandbox or replay harness, the API or compute cost of running agents against nine barrier families, and the ongoing work of diagnosing failures the benchmark surfaces; it is an evaluation harness, not a model improvement. What can fail after adoption is misinterpreting results if the sandbox diverges from the reader's target web domains, optimizing agents to the benchmark's specific barriers rather than general recovery, or deprioritizing it because it adds no new capability to the deployed agent itself.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.39234",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Average task success of leading LLM web agents drops from 89.4% without barriers to 43.7% under access barriers, a 45.7 percentage-point gap that quantifies the reliability deficit this benchmark exposes.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.39234",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
