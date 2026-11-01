@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.38391",
+  "title": "SCOPE: Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning",
+  "summary": "SCOPE replaces trajectory-level outcome RL and full-trajectory distillation with selective self-distillation at policy-identified critical error steps, using hindsight-generated step-specific skills, a bounded teacher-student coefficient, and a length-efficiency reward. It costs an RL training pipeline with supervised warm-up, trajectory self-analysis, and environment interaction, which requires on-policy RL infrastructure (e.g., GRPO-style rollouts) that is compute-heavy even for a 3B model on a single 24 GB GPU, and the largest gains are shown with a 32B backbone that exceeds the reader's hardware. It can fail because the results are confined to two benchmarks (ALFWorld, WebShop) whose near-ceiling success rates (97-99%) may not transfer to noisier real agent tasks, the critical-step selection mechanism may misidentify error steps and inject harmful distillation signals, and the method presumes the policy can generate useful hindsight skills for its own failures.",
+  "rationale": "The technique requires an on-policy RL training stack and environment interaction budget that the reader's constrained infrastructure supports only marginally at 3B scale and not at all at the 32B scale where the strongest claims appear, so adoption should wait for independent replication and evidence beyond the two reported benchmarks.",
+  "technique": "Selective on-policy self-distillation for agentic RL",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-10-28",
+  "as_of": "2026-11-01",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.38391",
+  "independent_implementations": 5,
+  "total_implementations": 5,
+  "stars": 164,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SCOPE replaces trajectory-level outcome RL and full-trajectory distillation with selective self-distillation at policy-identified critical error steps, using hindsight-generated step-specific skills, a bounded teacher-student coefficient, and a length-efficiency reward. It costs an RL training pipeline with supervised warm-up, trajectory self-analysis, and environment interaction, which requires on-policy RL infrastructure (e.g., GRPO-style rollouts) that is compute-heavy even for a 3B model on a single 24 GB GPU, and the largest gains are shown with a 32B backbone that exceeds the reader's hardware. It can fail because the results are confined to two benchmarks (ALFWorld, WebShop) whose near-ceiling success rates (97-99%) may not transfer to noisier real agent tasks, the critical-step selection mechanism may misidentify error steps and inject harmful distillation signals, and the method presumes the policy can generate useful hindsight skills for its own failures.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.38391",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "With Qwen2.5-3B, SCOPE reaches 97.7% success on ALFWorld and 85.2% on WebShop, outperforming SEED by 5.9 and 6.3 percentage points; on unseen ALFWorld tasks it improves over GRPO by 23.2 percentage points with 46.7% fewer environment interactions; with Qwen3-32B it achieves 99.2% (seen) and 94.0% (unseen) on ALFWorld.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.38391",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

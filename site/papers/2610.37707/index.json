@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.37707",
+  "title": "Relevance-Guided Residual Calibration for Spectral Compression of Dense Retrieval Embeddings",
+  "summary": "RRC replaces the corpus-derived spectral weighting rules used by PCA, Whitening, and SpecTemp with a closed-form, relevance-guided calibration that adjusts per-direction log weights via a fitted power-law trend plus a residual, without retraining the encoder or adding an inference stage. Its costs are the need for relevance judgments to estimate positive--negative margin weights per retained direction and an offline calibration step applied to the shared query--document transformation; runtime cost remains that of the underlying spectral compressor. It can fail if relevance judgments are scarce or biased, if the assumed margin-based weighting does not match the retrieval objective, or if the estimated residuals overfit dataset-specific relevance signals and do not transfer across encoders, domains, or quantization settings.",
+  "rationale": "It is computationally feasible for a single-GPU or API-based team because it is a closed-form post-processing calibration for dense retrieval compression, but the claimed gains depend on labeled relevance data and workload-specific validation.",
+  "technique": "Relevance-Guided Residual Calibration (RRC)",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-10-26",
+  "as_of": "2026-11-01",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.37707",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RRC replaces the corpus-derived spectral weighting rules used by PCA, Whitening, and SpecTemp with a closed-form, relevance-guided calibration that adjusts per-direction log weights via a fitted power-law trend plus a residual, without retraining the encoder or adding an inference stage. Its costs are the need for relevance judgments to estimate positive--negative margin weights per retained direction and an offline calibration step applied to the shared query--document transformation; runtime cost remains that of the underlying spectral compressor. It can fail if relevance judgments are scarce or biased, if the assumed margin-based weighting does not match the retrieval objective, or if the estimated residuals overfit dataset-specific relevance signals and do not transfer across encoders, domains, or quantization settings.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.37707",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "SpecTemp + RRC achieves the highest mean effectiveness among tested compressors on the BEIR group and BRIGHT at every target dimension, and on the five evaluated BRIGHT datasets it improves over SpecTemp by an average of 2.34 nDCG@10 points at 768 dimensions; gains persist under scalar and product quantization.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.37707",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

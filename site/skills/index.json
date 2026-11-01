@@ -12019,6 +12019,48 @@
     "source": "https://arxiv.org/abs/2610.32969"
   },
   {
+    "arxiv_id": "2610.34703",
+    "title": "Intrinsic Information Rates of Summaries in Simulation-Based Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34703-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34703"
+  },
+  {
+    "arxiv_id": "2610.34731",
+    "title": "MCF: A Memory- and Communication-Aware Co-Designed Framework for Long-Context LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34731-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34731"
+  },
+  {
+    "arxiv_id": "2610.34756",
+    "title": "Mechanistic Insights into LoRA: Layer Sparsity for Adaptive Fine-Tuning via Path Patching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34756-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34756"
+  },
+  {
+    "arxiv_id": "2610.34824",
+    "title": "SPARTA: A Sparse Ternary LLM Accelerator with Adaptive Attention and Unified Datapath for Long-Context Edge Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34824-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34824"
+  },
+  {
+    "arxiv_id": "2610.34828",
+    "title": "Transporting Quantiles to Codebook: Scalable Vector Quantization without Codebook Collapse",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34828-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34828"
+  },
+  {
+    "arxiv_id": "2610.34871",
+    "title": "DocTalk: Enhancing Medical Knowledge Retrieval via Fine-tuned Large Language Models with Chain-of-Thought Reasoning for Robust Clinical Decision Support",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-34871-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.34871"
+  },
+  {
     "arxiv_id": "2610.34886",
     "title": "ThinkBit: Search Codewords, Recalibrate Scales, Select by Reasoning",
     "status": "indexed",
@@ -12311,6 +12353,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-35835-evidence.zip",
     "source": "https://arxiv.org/abs/2610.35835"
+  },
+  {
+    "arxiv_id": "2610.35957",
+    "title": "Distributed LLM Inference via Communication-Efficient Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-35957-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.35957"
   },
   {
     "arxiv_id": "2610.35985",
@@ -12831,6 +12880,125 @@
     "source": "https://arxiv.org/abs/2610.37657"
   },
   {
+    "arxiv_id": "2610.37701",
+    "title": "DuQUAD: A Dual-View Framework with Quality-Aware Evidence Pruning for Multi-Document Question Answering",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37701-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37701"
+  },
+  {
+    "arxiv_id": "2610.37707",
+    "title": "Relevance-Guided Residual Calibration for Spectral Compression of Dense Retrieval Embeddings",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37707-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37707"
+  },
+  {
+    "arxiv_id": "2610.37727",
+    "title": "Predicate Neuron: Differentiable Quantization of Predicate Relations in Gradient-based Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37727-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37727"
+  },
+  {
+    "arxiv_id": "2610.37778",
+    "title": "Multi-Draft On-Policy Distillation for Diffusion Drafters",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37778-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37778"
+  },
+  {
+    "arxiv_id": "2610.37779",
+    "title": "Selective and Hybrid-State Communication for Latent Multi-Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37779-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37779"
+  },
+  {
+    "arxiv_id": "2610.37868",
+    "title": "Human-Residual Steering: Aligning Frozen LLM Judges with Human Judgment Distributions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37868-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37868"
+  },
+  {
+    "arxiv_id": "2610.37871",
+    "title": "ICALL-BENCH: Benchmarking LLM Interprocedural Reasoning in Binary Programs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37871-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37871"
+  },
+  {
+    "arxiv_id": "2610.37880",
+    "title": "Interpretable neural equation learning for high-dimensional materials data",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37880-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37880"
+  },
+  {
+    "arxiv_id": "2610.37909",
+    "title": "TERRA: Task-Oriented Edge AI for Regional Fire Detection with Identity-Free Reporting",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37909-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37909"
+  },
+  {
+    "arxiv_id": "2610.37921",
+    "title": "FAD-KV: Adaptive Dictionary KV Caching for Efficient Reasoning Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37921-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37921"
+  },
+  {
+    "arxiv_id": "2610.37923",
+    "title": "VerifiedLab: Harnessing Knowns for Unknowns",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37923-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37923"
+  },
+  {
+    "arxiv_id": "2610.37934",
+    "title": "Bi-Phase Training: Learning Efficiently From Scratch",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37934-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37934"
+  },
+  {
+    "arxiv_id": "2610.37935",
+    "title": "SkillMem: Compact External Skill Memory for Latent Multi-Agent Reasoning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37935-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37935"
+  },
+  {
+    "arxiv_id": "2610.37995",
+    "title": "QMUL_AK at AISA-ArabicFC: Schema-Constrained Function Calling with ALLaM",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-37995-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.37995"
+  },
+  {
+    "arxiv_id": "2610.38003",
+    "title": "Are Seismic Foundation Models More Than Glorified Feature Extractors?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38003-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38003"
+  },
+  {
+    "arxiv_id": "2610.38009",
+    "title": "Large Language Models for Accurate Medical Chart Abstraction: Enabling Scalable and Secure Artificial Intelligence Deployment in Stroke",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38009-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38009"
+  },
+  {
+    "arxiv_id": "2610.38027",
+    "title": "METATRON: A Promptable Whole-Body Execution Layer for Humanoids",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38027-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38027"
+  },
+  {
     "arxiv_id": "2610.38095",
     "title": "Nemotron 3.5 Super and Lightning: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Models for Agentic AI",
     "status": "indexed",
@@ -12852,6 +13020,55 @@
     "source": "https://arxiv.org/abs/2610.38118"
   },
   {
+    "arxiv_id": "2610.38120",
+    "title": "Post-Training Large Language Models with LLMON",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38120-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38120"
+  },
+  {
+    "arxiv_id": "2610.38145",
+    "title": "El Agente Quntur: Agentic Active-Space Selection for CASSCF",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38145-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38145"
+  },
+  {
+    "arxiv_id": "2610.38175",
+    "title": "DecompGym: Benchmarking LLM Agents on Designing Decomposition Algorithms",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38175-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38175"
+  },
+  {
+    "arxiv_id": "2610.38209",
+    "title": "Is it my preference? Role Grounding Attack against Agent's Memory via Social Interaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38209-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38209"
+  },
+  {
+    "arxiv_id": "2610.38214",
+    "title": "Skeleton Coding: Program Structure as a Specification for Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38214-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38214"
+  },
+  {
+    "arxiv_id": "2610.38231",
+    "title": "3DCodeEdit: Benchmarking Instruction-Guided 3D Program Editing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38231-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38231"
+  },
+  {
+    "arxiv_id": "2610.38244",
+    "title": "Precedent or Intent? What Coding Agents Follow When Evolving Existing Code",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38244-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38244"
+  },
+  {
     "arxiv_id": "2610.38277",
     "title": "The Role of Quantization in Loss Spikes",
     "status": "indexed",
@@ -12859,11 +13076,39 @@
     "source": "https://arxiv.org/abs/2610.38277"
   },
   {
+    "arxiv_id": "2610.38292",
+    "title": "Vendster: An Evaluation Arena to Investigate How Forecasting Tool Quality Affects LLM Agent Behaviors in Buyer-Vendor Negotiation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38292-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38292"
+  },
+  {
+    "arxiv_id": "2610.38329",
+    "title": "A Case Study of a Multi-Agent Kernel-Optimization Loop That Learns a New AI Accelerator",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38329-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38329"
+  },
+  {
     "arxiv_id": "2610.38331",
     "title": "Multi-Token Prediction Done Right",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-38331-evidence.zip",
     "source": "https://arxiv.org/abs/2610.38331"
+  },
+  {
+    "arxiv_id": "2610.38332",
+    "title": "MUSE: Multi-Level Memory with Selective Runtime Injection for Scientific Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38332-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38332"
+  },
+  {
+    "arxiv_id": "2610.38352",
+    "title": "WeVisCut: The Whole Editing Room in One Agent From Narration to Long-Form Video",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38352-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38352"
   },
   {
     "arxiv_id": "2610.38355",
@@ -12880,11 +13125,46 @@
     "source": "https://arxiv.org/abs/2610.38357"
   },
   {
+    "arxiv_id": "2610.38361",
+    "title": "Manifest-Assisted Retrieval in Artificial Intelligence Search: Evidence Gaps and a Security Evaluation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38361-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38361"
+  },
+  {
     "arxiv_id": "2610.38378",
     "title": "Towards Reliable, Scalable, and Value-Aligned Generative Recommendation for Large-Scale Advertising",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2610-38378-evidence.zip",
     "source": "https://arxiv.org/abs/2610.38378"
+  },
+  {
+    "arxiv_id": "2610.38391",
+    "title": "SCOPE: Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38391-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38391"
+  },
+  {
+    "arxiv_id": "2610.38392",
+    "title": "Masked Erosion: How Acceptance Gates Lose Redundant Safeguards in Self-Improving Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38392-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38392"
+  },
+  {
+    "arxiv_id": "2610.38398",
+    "title": "Agent Transfer Protocol: Server-Mediated Agent-to-Agent Communication Architecture for the Agentic Web",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38398-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38398"
+  },
+  {
+    "arxiv_id": "2610.38405",
+    "title": "SpaceAct: Benchmarking 3D Spatial and Temporal Reasoning via Closed-Loop Action and Active Perception",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2610-38405-evidence.zip",
+    "source": "https://arxiv.org/abs/2610.38405"
   },
   {
     "arxiv_id": "2610.38450",

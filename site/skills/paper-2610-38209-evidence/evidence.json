@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.38209",
+  "title": "Is it my preference? Role Grounding Attack against Agent's Memory via Social Interaction",
+  "summary": "This is an attack, not a technique to adopt: it exploits role-to-principal misattribution in LLM-agent memory systems, where a nested quoted conversation causes a victim agent to record an attacker's preference as its own user's preference, enabling tool-selection manipulation and privacy leakage. For the reader, the actionable cost is auditing any deployed memory pipeline that ingests shared or multi-party content, and adding provenance binding (explicit role and source attribution) to stored memories, which adds engineering complexity and storage overhead. What can fail: memory systems that drop conversational context at write time remain vulnerable, attribution fixes may degrade recall quality or increase latency, and defenses are unvalidated since the paper demonstrates the attack across five memory systems and six models but proposes no evaluated mitigation.",
+  "rationale": "Any team deploying agents with persistent memory over user or shared content must test whether their memory write path preserves role attribution, because the paper shows high attack success rates across mainstream systems and models with no demonstrated defense.",
+  "technique": "Role Grounding Attack on agent memory",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-10-28",
+  "as_of": "2026-11-01",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.38209",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 18,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is an attack, not a technique to adopt: it exploits role-to-principal misattribution in LLM-agent memory systems, where a nested quoted conversation causes a victim agent to record an attacker's preference as its own user's preference, enabling tool-selection manipulation and privacy leakage. For the reader, the actionable cost is auditing any deployed memory pipeline that ingests shared or multi-party content, and adding provenance binding (explicit role and source attribution) to stored memories, which adds engineering complexity and storage overhead. What can fail: memory systems that drop conversational context at write time remain vulnerable, attribution fixes may degrade recall quality or increase latency, and defenses are unvalidated since the paper demonstrates the attack across five memory systems and six models but proposes no evaluated mitigation.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.38209",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
