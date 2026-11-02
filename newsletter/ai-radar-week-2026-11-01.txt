@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-11-01
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-10-26 to 2026-11-01
+
+When Disclosure Is Compulsory: Evaluating Ride-Hailing Rebalancing Policies with Self-Interested LLM Driver Agents
+The method replaces analytical or fully-compliant-driver simulation of ride-hailing rebalancing policies with a simulation of self-interested LLM driver agents reacting to disclosed platform rules. It costs the engineering effort of building a multi-agent simulation environment plus per-run API inference for each driver agent, and it introduces dependence on the chosen LLM's interpretation fidelity. What can fail is ecological validity: LLM agents may not reproduce real driver behavior, the two tested models may not generalize to other LLMs, and the simulation results are specific to the modeled zones and policies.
+The technique is a research framework for evaluating regulatory and marketplace policy questions, not a production component an ML engineer with constrained infrastructure would deploy to serve users.
+Builder's cut (area guidance)
+It may fit when: An agent looks good in demos, but you cannot tell which product tasks it fails.
+First move: Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.
+Measure: Agreement with human review, missed failures, false alarms, and evaluation cost per task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.41132/
+https://arxiv.org/abs/2610.41132
+
+In-Model Context Compression with Agentic Soft Tokens for Long-Horizon LLM Agents
+ASTC replaces external trained context compressors and hard-token rewriting by using the model's own GDN recurrent state to carry absorbed context as soft tokens alongside exact hard tokens, reducing later-layer attention computation and yielding reusable KV caches. It is training-free, but it requires a hybrid Gated Delta Network-attention architecture and direct control of the forward pass, so it cannot be applied to standard transformer checkpoints or third-party inference APIs. It can fail if the soft-token state omits decision-relevant evidence in tasks where the recurrent summary drifts from the details later needed, and gains depend on the agent trajectory producing compressible context.
+The method is promising but is locked to GDN-attention models and full model access, which the reader's 24 GB GPU and API-based stack generally does not provide, so it should be tracked rather than adopted or tested now.
+Builder's cut (area guidance)
+It may fit when: A support or data assistant repeats work across related customer requests.
+First move: Try the paper's memory change in a replay of past tasks, with separate memory per customer.
+Measure: Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.41291/
+https://arxiv.org/abs/2610.41291
+
+TraceSpec: Understanding and Improving Speculative Decoding for LLM Agents
+Replaces aggregate speculative-decoding metrics and fixed full-turn draft supervision with trajectory-conditioned training that allocates prediction budget based on prefix-aware acceptance gaps. Costs include training on intermediate assistant turns, maintaining state-conditioned estimators, and instrumenting fixed-prefix replay evaluation. Can fail if workload phases or trajectory conditions differ from the browsing and software-engineering traces used for validation, making the adaptive allocation miscalibrated.
+The method targets draft-model supervision rather than requiring new infrastructure, but its gains depend on matching the reader's specific agent workload phases and require validation on their own trajectories before production adoption.
+Builder's cut (area guidance)
+It may fit when: Your self-hosted model spends too long generating answers token by token.
+First move: Check whether a compatible draft model and serving integration exist before renting compute.
+Measure: Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+2 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.41177/
+https://arxiv.org/abs/2610.41177
+
+Hybrid Computer Use: A Unified Programmatic, Semantic, and Visual Interface for General Agents
+It replaces screenshot-only mouse-and-keyboard computer use with a unified interface combining code/CLI tools, accessibility-tree actions, and GUI control, supported by compact AX observations, batched actions, AX diffs, and stale-state guards. The cost is added interface and orchestration complexity: the agent must maintain channel-specific tooling, synchronize state across programmatic, semantic, and visual views, and follow a skill policy for choosing channels safely. It can fail when AX state is incomplete or stale, when channel switching produces inconsistent observations, or when a model selects the wrong channel for an app and accumulates execution errors despite stronger benchmark results.
+The approach is relevant to production computer-use agents and may reduce interaction round trips, but its benefit depends on workload fit, AX coverage, and careful validation on the reader's applications and API budget.
+Builder's cut (area guidance)
+It may fit when: An assistant chooses the wrong API or sends arguments your product cannot use.
+First move: Apply the proposed tool-selection or argument-generation change in a sandbox.
+Measure: Correct completed actions, invalid calls, retries, latency, and cost per completed task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.41432/
+https://arxiv.org/abs/2610.41432
+
+Flide: Accelerating Decision Inference with Exact State Forking
+Flide replaces generation-oriented serving stacks (vLLM/SGLang) that recompute shared prefixes or distort probabilities when executing branching decision-model queries, instead flattening the logical request tree into one token stream with GPU-resident fork metadata and checkpointed agent histories. It requires adopting a custom inference engine with ForkAttention over both standard attention and Gated DeltaNet layers, plus pre-recorded execution graphs, which adds integration and maintenance cost beyond commodity serving frameworks. It can fail if the workload is not dominated by branching categorical decision queries, if the specific decision/hybrid models (e.g., Jev-style or Gated DeltaNet architectures) are not the ones deployed, or if the unreleased/immature implementation cannot be operated on a single 24 GB GPU within a small team's budget.
+The 9.5x claim targets a specialized decision-inference pattern with custom kernels and engine adoption, so it is worth tracking but premature to adopt before the software, model compatibility, and workload fit are independently verified.
+Builder's cut (area guidance)
+It may fit when: Your inference service slows down when several customers send requests together.
+First move: Replay a recorded request trace with only the proposed serving policy changed.
+Measure: Requests meeting your latency target, throughput, failures, and cost per successful request.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2610.42148/
+https://arxiv.org/abs/2610.42148
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
