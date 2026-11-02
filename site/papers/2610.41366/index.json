@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.41366",
+  "title": "What We Keep of What We Forget: Replacement Operators and Routing Semantics in Training-Free MoE Expert Pruning",
+  "summary": "Replaces the implicit fallback behavior in training-free MoE expert pruning: what the layer computes when a router selects a pruned expert, comparing rerouting, constant mean-output replacement (MoNE), partial expert copies, and a proposed closed-form low-rank map ('tilted novice'). Cost is low: the tilted novice adds only 1.2-1.8% parameters at 50% pruning, is training-free, and is stable under 3- and 4-bit quantization; no operator dominates, so per-model validation is required. Failure modes are significant: results flip depending on whether the router was trained with top-k renormalization, the calibration domain shifts the pruning mask 4-9x more than resampling, and 25% pruning can retain 92-97% of multiple-choice accuracy while collapsing to 0-17% of code and 5-65% of GSM8K scores.",
+  "rationale": "The method is cheap and training-free, fitting constrained infrastructure, but because no replacement operator dominates and evaluation-task choice can reverse conclusions, the reader must validate on their specific model and workload before adopting.",
+  "technique": "Replacement operators for training-free MoE expert pruning",
+  "family": "esparsidade_e_poda",
+  "recommendation": "testar",
+  "published": "2026-10-30",
+  "as_of": "2026-11-02",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.41366",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces the implicit fallback behavior in training-free MoE expert pruning: what the layer computes when a router selects a pruned expert, comparing rerouting, constant mean-output replacement (MoNE), partial expert copies, and a proposed closed-form low-rank map ('tilted novice'). Cost is low: the tilted novice adds only 1.2-1.8% parameters at 50% pruning, is training-free, and is stable under 3- and 4-bit quantization; no operator dominates, so per-model validation is required. Failure modes are significant: results flip depending on whether the router was trained with top-k renormalization, the calibration domain shifts the pruning mask 4-9x more than resampling, and 25% pruning can retain 92-97% of multiple-choice accuracy while collapsing to 0-17% of code and 5-65% of GSM8K scores.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.41366",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At 50% pruning the tilted novice gains 3.45 and 1.37 accuracy points over MoNE's constant replacement on OLMoE and Moonlight, and gate renormalization choices cost or save 0.8-8.5 points depending on router training.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.41366",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

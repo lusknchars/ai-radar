@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2610.42054",
+  "title": "CRoS: Causality Reward on Scrambled CoTs Improves Accuracy and Reasoning Faithfulness",
+  "summary": "CRoS replaces outcome-only RLVR rewards and perturbation-based causality rewards with a causality metric that scrambles the order of reasoning steps without altering step content, rewarding CoTs that causally drive the final answer. The cost is substantial: it requires running reinforcement learning with verifiable rewards on a reasoning model, including generating multiple CoT rollouts, scrambling steps, and re-querying the model to measure answer changes, all of which multiply compute per training step well beyond standard fine-tuning. Failure modes include reward hacking where the model learns to produce CoTs that merely appear order-sensitive, degraded performance on tasks where step order is naturally flexible, and the confound that some valid reasoning is genuinely order-invariant, in which case the metric penalizes correct behavior.",
+  "rationale": "While the method targets a real and acknowledged problem in reasoning training, it requires full RLVR infrastructure with multi-rollout reward computation that exceeds a single 24 GB GPU budget for any model large enough to benefit, and the validation is limited to a 4B model on Reasoning Gym, making production readiness uncertain for constrained teams.",
+  "technique": "CRoS: Causality Reward on Scrambled CoTs",
+  "family": "treino_eficiente",
+  "recommendation": "observar",
+  "published": "2026-10-30",
+  "as_of": "2026-11-02",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2610.42054",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 124,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "CRoS replaces outcome-only RLVR rewards and perturbation-based causality rewards with a causality metric that scrambles the order of reasoning steps without altering step content, rewarding CoTs that causally drive the final answer. The cost is substantial: it requires running reinforcement learning with verifiable rewards on a reasoning model, including generating multiple CoT rollouts, scrambling steps, and re-querying the model to measure answer changes, all of which multiply compute per training step well beyond standard fine-tuning. Failure modes include reward hacking where the model learns to produce CoTs that merely appear order-sensitive, degraded performance on tasks where step order is naturally flexible, and the confound that some valid reasoning is genuinely order-invariant, in which case the metric penalizes correct behavior.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.42054",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Achieves 46.8% accuracy on five unseen logic and games datasets vs. 43.8% for the strongest baseline; CoT-Pass@K averages 43.4% vs. 41.4%; hint acknowledgment score 34.0% vs. 20.2% for faithfulness.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2610.42054",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
