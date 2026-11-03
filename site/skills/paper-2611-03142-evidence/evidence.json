@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.03142",
+  "title": "DepthGraft: Structural Regularization through Hierarchical Cross-Layer KV Reconstruction",
+  "summary": "DepthGraft replaces standard per-layer KV computation (and prior adjacent/global-anchor KV sharing) with a pretraining-time architecture where deep-layer KV is reconstructed from stride-aligned shallow-middle source pairs. It costs a full pretraining run under a modified architecture, adds cross-layer reconstruction logic to the model definition, and yields only about one-third KV cache reduction at inference. It can fail because all results are pretraining-based on 0.5B-16B models, so the method cannot be retrofitted to existing checkpoints, the reported gains may not transfer to other data mixes or scales, and third-party implementations of an unverified arXiv architecture may diverge.",
+  "rationale": "The technique requires training models from scratch under a custom architecture, which exceeds the reader's infrastructure and rules out adoption on existing models, so it is only worth monitoring until pretrained checkpoints or independent validation appear.",
+  "technique": "Hierarchical cross-layer KV sharing (DepthGraft)",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-11-02",
+  "as_of": "2026-11-03",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.03142",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 124,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DepthGraft replaces standard per-layer KV computation (and prior adjacent/global-anchor KV sharing) with a pretraining-time architecture where deep-layer KV is reconstructed from stride-aligned shallow-middle source pairs. It costs a full pretraining run under a modified architecture, adds cross-layer reconstruction logic to the model definition, and yields only about one-third KV cache reduction at inference. It can fail because all results are pretraining-based on 0.5B-16B models, so the method cannot be retrofitted to existing checkpoints, the reported gains may not transfer to other data mixes or scales, and third-party implementations of an unverified arXiv architecture may diverge.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.03142",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On a 16B MoE model, DepthGraft reports +7.0 absolute points on MMLU-Pro, +6.6 on CMMLU, and +6.4 on C3, with roughly one-third KV cache reduction; gains are accuracy points, not a multiplicative factor.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.03142",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
