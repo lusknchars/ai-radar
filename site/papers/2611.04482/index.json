@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.04482",
+  "title": "TEMPO: Time Series Understanding via Discrete Tokenization",
+  "summary": "The method replaces ad-hoc signal-to-text serialization or raw feature injection by mapping four-step signal patches to a 625-code discrete vocabulary via a frozen finite-scalar-quantization tokenizer, letting a pretrained LLM process signal tokens, scale statistics, and text jointly with standard self-attention. It costs training a context-aware Transformer tokenizer, extending the embedding matrix, and task-specific fine-tuning with DoRA adapters on a 4B-parameter backbone, which fits within a single 24 GB GPU for inference but adds tokenizer training and fine-tuning complexity. It can fail when the frozen tokenizer's quantization loses signal fidelity on out-of-distribution series, when the 625-code vocabulary under-represents high-frequency dynamics, and when task-specific fine-tuning does not transfer across domains or sensor configurations.",
+  "rationale": "The approach is reproducible on a single 24 GB GPU with a 4B model and DoRA adapters, but its quantized representation and per-task fine-tuning require validation on the reader's specific time-series workloads before production adoption.",
+  "technique": "Discrete tokenization of time series for LLMs",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-03",
+  "as_of": "2026-11-04",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.04482",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 124,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces ad-hoc signal-to-text serialization or raw feature injection by mapping four-step signal patches to a 625-code discrete vocabulary via a frozen finite-scalar-quantization tokenizer, letting a pretrained LLM process signal tokens, scale statistics, and text jointly with standard self-attention. It costs training a context-aware Transformer tokenizer, extending the embedding matrix, and task-specific fine-tuning with DoRA adapters on a 4B-parameter backbone, which fits within a single 24 GB GPU for inference but adds tokenizer training and fine-tuning complexity. It can fail when the frozen tokenizer's quantization loses signal fidelity on out-of-distribution series, when the 625-code vocabulary under-represents high-frequency dynamics, and when task-specific fine-tuning does not transfer across domains or sensor configurations.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.04482",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Macro-F1 scores of 89.0% on activity recognition, 85.0% on sleep staging, and 86.0% on bearing-fault diagnosis with a Qwen3-4B backbone.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.04482",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
