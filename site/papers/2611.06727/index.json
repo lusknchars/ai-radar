@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Tool errors or unavailable services cause your agent to abandon recoverable tasks.",
+    "change": "Inject repeatable tool failures and change only the recovery policy.",
+    "baseline": "Your current retry and fallback behavior under the same injected failures.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.06727",
+  "title": "Airlock: Bounding the Multi-Agent Blast Radius via Selective Online Containment",
+  "summary": "Airlock replaces binary multi-agent fault handling (cancel-source-only or full halt-and-rollback) with selective post-alert containment using a tree-structured permission runtime (EdgeCitadel) and an append-only provenance DAG to trace and isolate tainted executions. It costs the engineering complexity of deploying a custom runtime with hierarchical permission narrowing and continuous provenance tracking across all agent interactions, plus potential latency from the fence-then-prune minimum-cut computation under deadline constraints. It can fail if the initial alert itself is delayed or missed (containment is post-alert, not preventive), if the provenance DAG has gaps in tracking cross-agent data flows, or if the permission boundaries are misconfigured and either over-isolate healthy work or under-isolate tainted branches.",
+  "rationale": "The technique addresses a real production risk in multi-agent systems, but it requires adopting a specialized runtime and provenance infrastructure that is early-stage research code; the reader should monitor its maturation and community validation before committing production workloads to it.",
+  "technique": "Selective online fault containment for multi-agent systems",
+  "family": "recuperacao_de_falha",
+  "recommendation": "observar",
+  "published": "2026-11-04",
+  "as_of": "2026-11-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.06727",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 2124,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Airlock replaces binary multi-agent fault handling (cancel-source-only or full halt-and-rollback) with selective post-alert containment using a tree-structured permission runtime (EdgeCitadel) and an append-only provenance DAG to trace and isolate tainted executions. It costs the engineering complexity of deploying a custom runtime with hierarchical permission narrowing and continuous provenance tracking across all agent interactions, plus potential latency from the fence-then-prune minimum-cut computation under deadline constraints. It can fail if the initial alert itself is delayed or missed (containment is post-alert, not preventive), if the provenance DAG has gaps in tracking cross-agent data flows, or if the permission boundaries are misconfigured and either over-isolate healthy work or under-isolate tainted branches.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.06727",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Airlock blocks all post-alert faulty actuations on the main testbed and smart-home grids with zero post-convergence leaks; retains +68 pp to +96 pp more healthy work than native A2A/LangGraph controls; optimized cut retains +46 pp more than full quarantine under dense spread.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.06727",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

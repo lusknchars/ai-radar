@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.06238",
+  "title": "Zuse: A Decision Model for European Languages",
+  "summary": "Replaces generative classification (prompting an LLM to output a label) with a fixed-set classifier that returns calibrated probabilities over options, trained via a low-rank adapter plus pointer head on frozen open-weight bases (4B, 9B, 27B). The 4B and 9B variants fit a 24 GB GPU for both adapter training and inference; costs are the adapter training pipeline, per-task calibration checks, and base-model dependence. Miscalibration varies by task (knowledge overconfident, acceptability underconfident) so no single temperature fixes all tasks; performance collapses 23-28 points in languages outside the base model's documented list, training data is vulnerable to label-word collisions and augmentation shortcuts, and English results lag competing models (Jev, Kev).",
+  "rationale": "The approach is cheap to reproduce and directly useful for multilingual classification with calibrated confidences and automation-at-error-budget selection, but single-seed results, task-dependent calibration, and base-model language limits require validation on the reader's own workload before production adoption.",
+  "technique": "Frozen-base decision models with low-rank adapter and pointer head",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-04",
+  "as_of": "2026-11-05",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.06238",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 129,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces generative classification (prompting an LLM to output a label) with a fixed-set classifier that returns calibrated probabilities over options, trained via a low-rank adapter plus pointer head on frozen open-weight bases (4B, 9B, 27B). The 4B and 9B variants fit a 24 GB GPU for both adapter training and inference; costs are the adapter training pipeline, per-task calibration checks, and base-model dependence. Miscalibration varies by task (knowledge overconfident, acceptability underconfident) so no single temperature fixes all tasks; performance collapses 23-28 points in languages outside the base model's documented list, training data is vulnerable to label-word collisions and augmentation shortcuts, and English results lag competing models (Jev, Kev).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.06238",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "27B model reaches 87.5% accuracy on a broad European suite of 11 sources with pooled expected calibration error of 0.016; findings are single-seed and post-hoc.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.06238",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
