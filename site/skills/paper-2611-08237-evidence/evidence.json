@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.08237",
+  "title": "Terminal-style Mathematical Modeling Bench: The First Agentic and Verifiable Benchmark for Mathematical Modeling",
+  "summary": "TB-MathModel replaces LLM-judged report grading and solver-fragment scoring with containerized, terminal-based tasks whose JSON answers are checked against reproductions of Outstanding-award papers, using one-sided direction-aware scoring, a programmatic feasibility gate over six invariant forms, and 624 Lean 4 obligations that zero infeasible answers. Adoption costs building or pulling the provided containers and Lean toolchain, plus per-run agent API or GPU inference expense; the benchmark itself is evaluation infrastructure, not a deployable model improvement. It can fail as a production signal because it covers only 18 contest problems, anchors correctness to specific reference solutions that may not generalize to the reader's domain, and the hard feasibility gate depends on the completeness of hand-written invariants and Lean obligations.",
+  "rationale": "This is a benchmark for measuring long-horizon modeling agents, useful for evaluating agent scaffolding on constrained infrastructure but not a method that improves any production system directly.",
+  "technique": "Agentic verifiable mathematical modeling benchmark",
+  "family": "avaliacao_de_agente",
+  "recommendation": "observar",
+  "published": "2026-11-05",
+  "as_of": "2026-11-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.08237",
+  "independent_implementations": 1,
+  "total_implementations": 3,
+  "stars": 140,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TB-MathModel replaces LLM-judged report grading and solver-fragment scoring with containerized, terminal-based tasks whose JSON answers are checked against reproductions of Outstanding-award papers, using one-sided direction-aware scoring, a programmatic feasibility gate over six invariant forms, and 624 Lean 4 obligations that zero infeasible answers. Adoption costs building or pulling the provided containers and Lean toolchain, plus per-run agent API or GPU inference expense; the benchmark itself is evaluation infrastructure, not a deployable model improvement. It can fail as a production signal because it covers only 18 contest problems, anchors correctness to specific reference solutions that may not generalize to the reader's domain, and the hard feasibility gate depends on the completeness of hand-written invariants and Lean obligations.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.08237",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Strongest multimodal entries reach a multi-reference O-Eval of 64.58%; a $2.54 open model holds 59.81% at roughly 1/100 the cost.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.08237",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

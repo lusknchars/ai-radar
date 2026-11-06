@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.07605",
+  "title": "The Gating Mechanism of KV Cache Eviction",
+  "summary": "It replaces heuristic or score-based KV cache eviction policies (and naive learnable gates trained on LM loss) with a gate placed inside the attention softmax, trained against the frozen dense model's predictions rather than the language-modeling objective, plus parameter-free centroids that return evicted mass within the same normalizer. The cost is a training pass for the gate on a frozen 8B-scale backbone (feasible on one 24 GB GPU with offloading or parameter-efficient setups), added inference complexity from centroid handling, and roughly 1.4-3.7 benchmark points of quality loss at 4x cache compression. It can fail on workloads where the gate's training distribution diverges from deployment traffic, and the paper's negative result implies that minor deviations from its two stated conditions (dense attention unreachable by the gate, dense predictions as target) collapse the gate back to a no-op.",
+  "rationale": "The method is training-light and directly reduces serving memory, but its benefit and failure modes depend on matching the paper's training setup and validating on the reader's own long-context workload before production adoption.",
+  "technique": "Learnable in-softmax gating for KV cache eviction",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-11-05",
+  "as_of": "2026-11-06",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.07605",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces heuristic or score-based KV cache eviction policies (and naive learnable gates trained on LM loss) with a gate placed inside the attention softmax, trained against the frozen dense model's predictions rather than the language-modeling objective, plus parameter-free centroids that return evicted mass within the same normalizer. The cost is a training pass for the gate on a frozen 8B-scale backbone (feasible on one 24 GB GPU with offloading or parameter-efficient setups), added inference complexity from centroid handling, and roughly 1.4-3.7 benchmark points of quality loss at 4x cache compression. It can fail on workloads where the gate's training distribution diverges from deployment traffic, and the paper's negative result implies that minor deviations from its two stated conditions (dense attention unreachable by the gate, dense predictions as target) collapse the gate back to a no-op.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.07605",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At 75% KV cache compression, the gate reaches 90.14 on RULER at 8K (3.72 below full cache) and 46.03 on LongBench with Qwen3-8B (1.36 below full cache).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.07605",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
