@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.07263",
+  "title": "HyFlash: A Prefix-Memory Prior for On-Device Speculative Decoding",
+  "summary": "HyFlash replaces full-context attention in parallel block drafters for speculative decoding with a hybrid design: local attention over recent context plus a fixed-size recurrent memory that compresses historical target features, bounding draft-side KV storage. The cost is added drafter architecture complexity and the need to implement or adopt a nonstandard drafter rather than reuse an off-the-shelf small model; the abstract reports higher acceptance and lower KV storage but gives no quantified speedup. It can fail if acceptance gains do not transfer to the reader's target model and workload, if no maintained implementation exists, or if integration overhead with an existing serving stack exceeds the drafting benefit.",
+  "rationale": "The approach targets exactly the constrained-memory inference setting the reader operates in, but the abstract provides no quantitative factor and no evidence of available code or compatibility with common serving frameworks, so it warrants a small-scale acceptance-rate benchmark before adoption.",
+  "technique": "Prefix-memory parallel drafter for speculative decoding",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-11-05",
+  "as_of": "2026-11-07",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.07263",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 129,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "HyFlash replaces full-context attention in parallel block drafters for speculative decoding with a hybrid design: local attention over recent context plus a fixed-size recurrent memory that compresses historical target features, bounding draft-side KV storage. The cost is added drafter architecture complexity and the need to implement or adopt a nonstandard drafter rather than reuse an off-the-shelf small model; the abstract reports higher acceptance and lower KV storage but gives no quantified speedup. It can fail if acceptance gains do not transfer to the reader's target model and workload, if no maintained implementation exists, or if integration overhead with an existing serving stack exceeds the drafting benefit.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.07263",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
