@@ -22,13 +22,13 @@
   "family": "decodificacao_especulativa",
   "recommendation": "observar",
   "published": "2026-10-06",
-  "as_of": "2026-11-07",
+  "as_of": "2026-11-08",
   "editorial_status": "indexed",
   "source_url": "https://arxiv.org/abs/2610.08678",
-  "independent_implementations": 0,
-  "total_implementations": 1,
+  "independent_implementations": 1,
+  "total_implementations": 2,
   "stars": 1,
-  "citations": null,
+  "citations": 0,
   "claims": [
     {
       "claim_id": "claim-01",

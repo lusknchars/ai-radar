@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.04146",
+  "title": "RGDM: Robust Graph Diffusion Model",
+  "summary": "RGDM replaces conventional graph adversarial defenses (adversarial retraining, edge pruning, graph purification) with a generative approach: a robust graph autoencoder with edge selection and low-rank latent regularization, plus a latent diffusion model, synthesizes clean labeled nodes and edges that are merged into the corrupted graph before GNN training. The cost is training and tuning two models (autoencoder plus latent diffusion) per graph domain, which is feasible on a single 24 GB GPU for citation-scale graphs but adds a full generative pipeline, hyperparameter burden, and inference-time generation step relative to simpler defenses. It can fail when the adversarial corruption shifts the latent distribution beyond what the low-rank regularization captures, when generated structures inject label noise that degrades clean accuracy, or when the evaluation setting (semi-supervised node classification on benchmark graphs) does not transfer to larger or differently attacked production graphs.",
+  "rationale": "The technique is trainable on a single 24 GB GPU and publicly implemented, but its benefit is specific to teams running GNN-based node classification under adversarial attack, so it warrants small-scale validation on the reader's actual graph workload rather than direct adoption.",
+  "technique": "Robust graph diffusion for adversarial data augmentation",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-11-03",
+  "as_of": "2026-11-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.04146",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RGDM replaces conventional graph adversarial defenses (adversarial retraining, edge pruning, graph purification) with a generative approach: a robust graph autoencoder with edge selection and low-rank latent regularization, plus a latent diffusion model, synthesizes clean labeled nodes and edges that are merged into the corrupted graph before GNN training. The cost is training and tuning two models (autoencoder plus latent diffusion) per graph domain, which is feasible on a single 24 GB GPU for citation-scale graphs but adds a full generative pipeline, hyperparameter burden, and inference-time generation step relative to simpler defenses. It can fail when the adversarial corruption shifts the latent distribution beyond what the low-rank regularization captures, when generated structures inject label noise that degrades clean accuracy, or when the evaluation setting (semi-supervised node classification on benchmark graphs) does not transfer to larger or differently attacked production graphs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.04146",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "GNNs trained on the attacked graph merged with RGDM-generated synthetic structures show significantly improved robustness against various graph adversarial attacks in semi-supervised node classification; no multiplicative factor is reported in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.04146",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

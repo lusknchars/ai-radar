@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.05791",
+  "title": "FlyHash for LLM Agent Memory: An Empirical Validation and a New Application",
+  "summary": "FlyHash replaces dense-vector embedding stores searched with ANN indexes such as HNSW (and conventional SimHash binary codes) with sparse random-projection plus winner-take-all binary codes for agent memory retrieval. Its cost is practical rather than accuracy-related: at equal bits its codes are larger and slower to compare than SimHash's, and HNSW dominates both hash methods at ordinary scale, with a sparse-set comparison recovering only part of the latency gap. It can fail to deliver any deployment benefit unless the workload is genuinely bit-budget-constrained, since the quality-per-bit advantage does not translate into memory or latency savings against the current default.",
+  "rationale": "The paper itself shows HNSW remains superior in memory and latency at ordinary scale, so FlyHash is worth tracking but not adopting or even benchmarking for a small team whose existing dense-vector indexing already works.",
+  "technique": "FlyHash locality-sensitive hashing for agent memory retrieval",
+  "family": "memoria_e_contexto",
+  "recommendation": "observar",
+  "published": "2026-11-04",
+  "as_of": "2026-11-08",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.05791",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 1,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "FlyHash replaces dense-vector embedding stores searched with ANN indexes such as HNSW (and conventional SimHash binary codes) with sparse random-projection plus winner-take-all binary codes for agent memory retrieval. Its cost is practical rather than accuracy-related: at equal bits its codes are larger and slower to compare than SimHash's, and HNSW dominates both hash methods at ordinary scale, with a sparse-set comparison recovering only part of the latency gap. It can fail to deliver any deployment benefit unless the workload is genuinely bit-budget-constrained, since the quality-per-bit advantage does not translate into memory or latency savings against the current default.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.05791",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "FlyHash preserves neighbor structure better per bit than SimHash under a matched-bit protocol, robustly across 10 seeds and four datasets, and this holds under genuine agent-memory relevance labels; no multiplicative factor is stated in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.05791",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
