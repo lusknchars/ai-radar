@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.09598",
+  "title": "Transformer-FSQ: Discrete Latents for Extreme KV-Cache Compression",
+  "summary": "The method replaces standard key and value projections with a finite scalar quantisation (FSQ) bottleneck, storing packed discrete integer codes per token instead of full-precision KV entries, with no per-token quantisation metadata. Converting a pretrained transformer requires training only the new projections on roughly 0.25 tokens per original parameter, plus adoption of a custom fused Triton decoding kernel. Accuracy can degrade outside the evaluated retrieval setting: the paper shows existing baselines fail beyond moderate ratios, and the method's gains are demonstrated on RULER long-context retrieval for Qwen-family base models 0.6B-8B, not on general generation quality or instruction-tuned chat workloads.",
+  "rationale": "Although the compression ratios directly address the reader's single-24GB-GPU constraint and conversion cost is low, the technique requires modifying a model's projection layers, running a short training conversion, and depending on a custom kernel with accuracy validated only on retrieval benchmarks, so it merits tracking and small-scale experimentation rather than immediate production adoption.",
+  "technique": "FSQ-quantized discrete KV-cache storage",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-11-06",
+  "as_of": "2026-11-09",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.09598",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces standard key and value projections with a finite scalar quantisation (FSQ) bottleneck, storing packed discrete integer codes per token instead of full-precision KV entries, with no per-token quantisation metadata. Converting a pretrained transformer requires training only the new projections on roughly 0.25 tokens per original parameter, plus adoption of a custom fused Triton decoding kernel. Accuracy can degrade outside the evaluated retrieval setting: the paper shows existing baselines fail beyond moderate ratios, and the method's gains are demonstrated on RULER long-context retrieval for Qwen-family base models 0.6B-8B, not on general generation quality or instruction-tuned chat workloads.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09598",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The method stores the KV cache as packed integer codes achieving 12x to 97.5x compression; it is the most accurate method evaluated on RULER across that range, and its fused Triton kernel decodes at 1.01x native SDPA throughput at 32x compression and 1.54x at 97.5x on Qwen3-8B-Base.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09598",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

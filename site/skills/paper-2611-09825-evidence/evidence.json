@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.09825",
+  "title": "BitDecoding-FP4: Native FP4 KV Cache Decoding via Algorithm-System Co-Design",
+  "summary": "Replaces BF16/FP16 KV cache attention with end-to-end NVFP4/MXFP4 decoding, combining dual-residual query quantization, underflow-aware probability scaling, and outlier-aware key quantization with fused transposed-softmax kernels on paged caches. The cost is substantial implementation complexity: accuracy depends on Hadamard rotation, scale search, and static smoothing, while throughput depends on custom FP4 Tensor Core kernels. It can fail on hardware without native FP4 support (the 2.4-3.0x result is B300-specific), on workloads where its quantization assumptions (e.g., RL rollouts, MoE/MLA variants) are untested, or if the fixed-scale error budget exceeds tolerance on domains not in its evaluation.",
+  "rationale": "The accuracy-preserving FP4 recipe is relevant to long-context serving, but the demonstrated speedups require B300-class FP4 hardware and custom kernels that are unavailable on a single 24 GB GPU, making this worth tracking rather than adopting now.",
+  "technique": "Native FP4 KV cache decoding via algorithm-system co-design",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-11-06",
+  "as_of": "2026-11-09",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.09825",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 12,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces BF16/FP16 KV cache attention with end-to-end NVFP4/MXFP4 decoding, combining dual-residual query quantization, underflow-aware probability scaling, and outlier-aware key quantization with fused transposed-softmax kernels on paged caches. The cost is substantial implementation complexity: accuracy depends on Hadamard rotation, scale search, and static smoothing, while throughput depends on custom FP4 Tensor Core kernels. It can fail on hardware without native FP4 support (the 2.4-3.0x result is B300-specific), on workloads where its quantization assumptions (e.g., RL rollouts, MoE/MLA variants) are untested, or if the fixed-scale error budget exceeds tolerance on domains not in its evaluation.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09825",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "2.4-3.0x higher peak serving throughput than BF16 KV on NVIDIA B300 (Qwen3-4B, Qwen3-30B-A3B), with accuracy within 0.5 points of BF16 KV using NVFP4",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09825",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.09474",
+  "title": "Nebula: Distributed Position-Independent Caching for LLM Serving",
+  "summary": "Nebula replaces prefix-caching-centric distributed KV reuse with a cluster serving framework that treats position-independent cache segments as first-class objects, adding remote PIC reuse, parallel prefill, and cluster-wide cache management. Its cost is substantial serving-system complexity: optimistic accounting plus event-driven state tracking, adaptive PC/PIC capacity splitting via ghost-hit feedback, and a unified prefill completion-time model for parallelism and placement. It can fail when the assumed multi-segment reuse pattern is weak, when optimistic cluster accounting becomes inaccurate under fast-changing cache state, or when KV transfer and scheduling overheads outweigh prefill savings on a single-GPU deployment.",
+  "rationale": "The paper targets cluster-wide distributed serving and cache coordination, which exceeds the reader's single 24 GB GPU/API-constrained production environment, so it is relevant to track but not adopt now.",
+  "technique": "Distributed position-independent KV cache for LLM serving",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-11-06",
+  "as_of": "2026-11-09",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.09474",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Nebula replaces prefix-caching-centric distributed KV reuse with a cluster serving framework that treats position-independent cache segments as first-class objects, adding remote PIC reuse, parallel prefill, and cluster-wide cache management. Its cost is substantial serving-system complexity: optimistic accounting plus event-driven state tracking, adaptive PC/PIC capacity splitting via ghost-hit feedback, and a unified prefill completion-time model for parallelism and placement. It can fail when the assumed multi-segment reuse pattern is weak, when optimistic cluster accounting becomes inaccurate under fast-changing cache state, or when KV transfer and scheduling overheads outweigh prefill savings on a single-GPU deployment.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09474",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Nebula reduces median TTFT by an average of 61.4% versus the strongest existing baseline across four models and four RAG/agentic workloads (factor 1/(1-0.614)=2.59), and recovers an average of 76.1% of the tokens missed by prefix caching.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.09474",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
