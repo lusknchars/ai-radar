@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-11-08
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-11-02 to 2026-11-08
+
+Towards an Autonomous AI Steward for Large-Scale Physics Experiments: Integrating Causal Diagnostics, RAG, and Conformal Prediction
+The method replaces manual alarm triage and ad hoc expert handoffs with an asynchronous causal diagnostics engine feeding a DAG of ReAct agents grounded by RAG and bounded by conformal prediction. It costs a hybrid C++ and Python service stack, continuous access to live slow-control and DAQ streams, curated institutional memory for retrieval, and nontrivial integration work with experiment-specific run control and HitL guardrails. It can fail if causal discovery misidentifies root causes under non-stationary machine states, retrieval is incomplete or stale, conformal guarantees are misread as action correctness, or the shadow-tested workflow does not transfer to smaller production systems.
+This is a domain-specific autonomous steward for large physics experiments with no quantified gain and prerequisites that exceed a constrained production setup.
+Builder's cut (area guidance)
+It may fit when: A workflow needs specialist review, but extra agents may add more cost than useful work.
+First move: Test the proposed division of work against a single-agent implementation.
+Measure: Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.09298/
+https://arxiv.org/abs/2611.09298
+
+Nudging Decision Models: Do Digital Nudges Steer Fast, Generation-Free AI Agents?
+Replaces text-generating LLM agents for option-selection steps with non-generative decision models that output a choice directly, cutting inference latency and API cost. Costs include adopting a distinct model class (Jev, Decision-1, d1) that may not be accessible via standard APIs, plus added behavioral fragility. Can fail by being steered unintentionally: defaults and social-influence signals dominate choices in a System 1 pattern, risking compliance, fairness, and robustness problems in production.
+The speed and cost benefit is plausible for constrained infrastructure, but the demonstrated extreme susceptibility to nudges and the unavailability of the evaluated models make production adoption premature without workload-specific validation.
+Builder's cut (area guidance)
+It may fit when: A workflow needs specialist review, but extra agents may add more cost than useful work.
+First move: Test the proposed division of work against a single-agent implementation.
+Measure: Accepted outputs, coordination failures, wall-clock time, and total cost across all agents.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.09264/
+https://arxiv.org/abs/2611.09264
+
+StockASkill: A Local-First AgentSkill for Intelligent Stock Selection
+Replaces remote API-dependent quantitative data retrieval and screening with a local DuckDB OLAP layer exposing a JSON tool-calling interface for LLM agents. Costs include maintaining a multi-market historical dataset locally, implementing the factor, optimization, and lot-quantization pipeline, and accepting that the reported Sharpe and Calmar figures come from the authors' own backtests rather than live trading. Can fail through survivorship or data-quality issues in the local store, backtest overfitting that does not survive live execution, and market-specific assumptions such as 100-share board lots that limit transferability.
+The local DuckDB tool interface is cheap to replicate on a single machine, but the claimed investment performance requires independent validation before production adoption.
+Builder's cut (area guidance)
+It may fit when: An assistant chooses the wrong API or sends arguments your product cannot use.
+First move: Apply the proposed tool-selection or argument-generation change in a sandbox.
+Measure: Correct completed actions, invalid calls, retries, latency, and cost per completed task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.09528/
+https://arxiv.org/abs/2611.09528
+
+CodeQuant2: Enhanced Outlier Mitigation and Adaptive Clustering for Low-Precision LRMs
+Replaces standard low-bit weight quantization (e.g., GPTQ/AWQ-style calibration) with rotation-and-scaling outlier mitigation, clustering-based codebooks with per-layer adaptive bit allocation, and calibration samples matched to early reasoning decoding statistics. Costs implementation complexity: it depends on a custom LUT CUDA kernel, per-layer codebook tuning, and a calibration pipeline that must capture early-token activation states, plus lookup overhead that may not reach the reported speedup on all hardware. Can fail when reasoning activation distributions differ from the calibration data, when small model sizes make the LUT kernel overhead dominate, or when the custom kernel is unmaintained for the reader's deployment stack.
+A 24 GB GPU strongly motivates low-precision reasoning inference, but the custom kernel and calibration dependence require validation on the reader's specific models and hardware before production adoption.
+Builder's cut (area guidance)
+It may fit when: A self-hosted assistant is too expensive because its model uses most of the GPU memory.
+First move: Try the paper's supported lower-precision weights on a copy of your serving setup.
+Measure: Peak memory, task pass rate, latency, and total serving cost at the same context and load.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+0 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.09868/
+https://arxiv.org/abs/2611.09868
+
+BitDecoding-FP4: Native FP4 KV Cache Decoding via Algorithm-System Co-Design
+Replaces BF16/FP16 KV cache attention with end-to-end NVFP4/MXFP4 decoding, combining dual-residual query quantization, underflow-aware probability scaling, and outlier-aware key quantization with fused transposed-softmax kernels on paged caches. The cost is substantial implementation complexity: accuracy depends on Hadamard rotation, scale search, and static smoothing, while throughput depends on custom FP4 Tensor Core kernels. It can fail on hardware without native FP4 support (the 2.4-3.0x result is B300-specific), on workloads where its quantization assumptions (e.g., RL rollouts, MoE/MLA variants) are untested, or if the fixed-scale error budget exceeds tolerance on domains not in its evaluation.
+The accuracy-preserving FP4 recipe is relevant to long-context serving, but the demonstrated speedups require B300-class FP4 hardware and custom kernels that are unavailable on a single 24 GB GPU, making this worth tracking rather than adopting now.
+Builder's cut (area guidance)
+It may fit when: Long customer conversations exhaust memory or limit concurrent requests.
+First move: Change only the attention cache policy, after checking model and runtime support.
+Measure: Peak cache memory, long-context answer quality, first-token latency, and requests completed.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+0 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.09825/
+https://arxiv.org/abs/2611.09825
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
