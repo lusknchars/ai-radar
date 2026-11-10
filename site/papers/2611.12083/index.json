@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.12083",
+  "title": "SWE-Time: Benchmarking Temporal Repository Understanding",
+  "summary": "SWE-Time replaces static single-snapshot coding benchmarks with tasks that evaluate reasoning over repository evolution, covering both retrospective regression analysis and prospective change prediction, constructed via a RealWorld-to-Verifiable framework over 1,661 cases from 65 GitHub repositories. It costs only evaluation time and API or GPU inference budget, since it is a benchmark rather than a deployable component, but adapting it to private codebases requires constructing verifiable temporal tasks, which is nontrivial. It can fail as a selection signal if production workloads are predominantly snapshot-based, since temporal reasoning ability may not correlate with the reader's actual use cases, and best-agent scores near 61.9 indicate no current agent reliably handles this dimension.",
+  "rationale": "The paper is an evaluation benchmark, not a technique to deploy, so its only practical value to a constrained-infrastructure team is as a workload-specific validation tool when selecting or comparing coding agents for repository-level work.",
+  "technique": "Temporal repository-understanding benchmark (SWE-Time)",
+  "family": "avaliacao_de_agente",
+  "recommendation": "testar",
+  "published": "2026-11-09",
+  "as_of": "2026-11-10",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.12083",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "SWE-Time replaces static single-snapshot coding benchmarks with tasks that evaluate reasoning over repository evolution, covering both retrospective regression analysis and prospective change prediction, constructed via a RealWorld-to-Verifiable framework over 1,661 cases from 65 GitHub repositories. It costs only evaluation time and API or GPU inference budget, since it is a benchmark rather than a deployable component, but adapting it to private codebases requires constructing verifiable temporal tasks, which is nontrivial. It can fail as a selection signal if production workloads are predominantly snapshot-based, since temporal reasoning ability may not correlate with the reader's actual use cases, and best-agent scores near 61.9 indicate no current agent reliably handles this dimension.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.12083",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

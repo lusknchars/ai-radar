@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.12464",
+  "title": "Phrase-Level Speculative Decoding on a Frozen Target",
+  "summary": "Replaces token-level drafting in the target's vocabulary (as in Medusa/EAGLE-3) with a small MLP head on the frozen target's hidden state that predicts one-to-three-word phrases from a separate draft vocabulary, mapped back to target tokens by greedy longest-match and verified under a prefix-tree mask, so served output stays identical to greedy decoding. Cost is training the phrase head and maintaining a separate phrase vocabulary; parameters are tiny (3.4M-21.9M, far below EAGLE-3's drafter) and it runs on a single 24 GB GPU, but it adds a draft-vocabulary construction and matching pipeline. It can fail on workloads with poor phrase repetitiveness (MT-Bench only reached 1.544x), it loses to larger EAGLE-3 tree-60 configurations, acceptance depends on exact argmax match so gains shrink when the target is uncertain, and adoption requires a compatible verification implementation rather than stock HuggingFace generate.",
+  "rationale": "The method fits a single 24 GB GPU with minimal parameters and exact-output guarantees, but its advantage is workload-dependent and it does not dominate the strongest existing tree-based baseline, so validation on the reader's own traffic is required before production adoption.",
+  "technique": "Phrase-level speculative decoding on frozen target",
+  "family": "decodificacao_especulativa",
+  "recommendation": "testar",
+  "published": "2026-11-09",
+  "as_of": "2026-11-10",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.12464",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces token-level drafting in the target's vocabulary (as in Medusa/EAGLE-3) with a small MLP head on the frozen target's hidden state that predicts one-to-three-word phrases from a separate draft vocabulary, mapped back to target tokens by greedy longest-match and verified under a prefix-tree mask, so served output stays identical to greedy decoding. Cost is training the phrase head and maintaining a separate phrase vocabulary; parameters are tiny (3.4M-21.9M, far below EAGLE-3's drafter) and it runs on a single 24 GB GPU, but it adds a draft-vocabulary construction and matching pipeline. It can fail on workloads with poor phrase repetitiveness (MT-Bench only reached 1.544x), it loses to larger EAGLE-3 tree-60 configurations, acceptance depends on exact argmax match so gains shrink when the target is uncertain, and adoption requires a compatible verification implementation rather than stock HuggingFace generate.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.12464",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On one A5000 at batch 1 against HuggingFace generate(), a 21.94M head (0.545% of Qwen3-4B) reaches 2.391x on GSM8K, 2.444x on MATH-500 and 1.544x on MT-Bench; ahead of EAGLE-3 tree-16 on both maths sets but behind tree-60 on every set.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.12464",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
