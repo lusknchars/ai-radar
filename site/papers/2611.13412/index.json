@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.13412",
+  "title": "Bursts That Outlast Themselves: Persistent Degradation in Prefix-Cached Agent Serving",
+  "summary": "It replaces unbounded admission and simple throttling in prefix-cached agent serving (vLLM/SGLang) with a budgeter that caps the resident KV demand of active sessions to the KV pool, suspending admitted sessions when over capacity. The cost is queued or suspended sessions (added tail latency for held work) plus modest scheduler complexity; no extra hardware is required, and a CPU offload tier alone is shown to be insufficient. What can fail is mis-estimation of per-session KV demand or pool capacity, and under genuine overload the system still refuses work—without the budgeter, a brief arrival burst can tip the server into a persistent degraded regime with roughly halved throughput.",
+  "rationale": "Any engineer serving multi-turn agents on a single GPU with vLLM or SGLang prefix caching can implement a KV-demand budget with thresholds that need no per-workload tuning, and it prevents a demonstrated, otherwise hard-to-reverse production failure mode.",
+  "technique": "KV-budgeted admission control for prefix-cached agent serving",
+  "family": "serving_e_batching",
+  "recommendation": "adotar",
+  "published": "2026-11-10",
+  "as_of": "2026-11-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.13412",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 10,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces unbounded admission and simple throttling in prefix-cached agent serving (vLLM/SGLang) with a budgeter that caps the resident KV demand of active sessions to the KV pool, suspending admitted sessions when over capacity. The cost is queued or suspended sessions (added tail latency for held work) plus modest scheduler complexity; no extra hardware is required, and a CPU offload tier alone is shown to be insufficient. What can fail is mis-estimation of per-session KV demand or pool capacity, and under genuine overload the system still refuses work—without the budgeter, a brief arrival burst can tip the server into a persistent degraded regime with roughly halved throughput.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13412",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "A capacity-based budgeter bounding resident KV demand of active sessions prevented the metastable collapsed regime (~10% hit ratio, about half throughput, growing backlog) in every run tested, and suspension against a capacity limit recovered all 7 collapsed runs within minutes versus 1 of 7 for admission throttling.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13412",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

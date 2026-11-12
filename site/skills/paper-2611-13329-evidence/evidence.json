@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.13329",
+  "title": "Agent-Guided Discovery of Exchange-Correlation Functionals with Physics-based Validation",
+  "summary": "Replaces manual, evolutionary, or expert-driven search for exchange-correlation functional forms in density functional theory with frontier LLM agents connected via the Model Context Protocol to a GPU-based fitting and validation pipeline. Cost: access to frontier API-based LLMs, a domain-specific DFT evaluator with self-consistent and external benchmarks (GSCDB137, MGCDB84), and the engineering to couple these via MCP; compute is modest per fit but requires roughly 400 fits per search and physics-aware infrastructure. Failure modes: gains may not survive self-consistency or external evaluation, symbolic forms may lack physical content or transferability, agent search may not outperform evolutionary baselines reliably, and results depend heavily on backbone choice and evaluation protocol.",
+  "rationale": "The technique targets scientific discovery of physics functionals rather than ML model inference or agent systems engineering, so it is outside the reader's production AI/ML infrastructure scope despite demonstrating a credible agentic workflow.",
+  "technique": "LLM-Agent Symbolic Discovery of DFT Functionals",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-11-09",
+  "as_of": "2026-11-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.13329",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 139,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces manual, evolutionary, or expert-driven search for exchange-correlation functional forms in density functional theory with frontier LLM agents connected via the Model Context Protocol to a GPU-based fitting and validation pipeline. Cost: access to frontier API-based LLMs, a domain-specific DFT evaluator with self-consistent and external benchmarks (GSCDB137, MGCDB84), and the engineering to couple these via MCP; compute is modest per fit but requires roughly 400 fits per search and physics-aware infrastructure. Failure modes: gains may not survive self-consistency or external evaluation, symbolic forms may lack physical content or transferability, agent search may not outperform evolutionary baselines reliably, and results depend heavily on backbone choice and evaluation protocol.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13329",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Opus-5.5 agents passed screening with ~40-fold fewer tokens than Codex (GPT-6-Astra) agents; the discovered 13-parameter functional O159 lowers the held-out MGCDB84 test error of ωB97M-V by 11.7% and reduces heavy-atom total-energy errors on GSCDB137 by 29% against a refitted no-window control, with a mean normalized error ratio of 1.139 versus 1.144 for ωB97M-V and 1.190 for GAS22 across 36 GSCDB137 datasets.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13329",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

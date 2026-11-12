@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.13730",
+  "title": "Deterministic, Reproducible Inference in Exact Integer Arithmetic, and Verifiable Distributed Inference as Its Consequence",
+  "summary": "The method replaces floating-point runtime kernels with an end-to-end exact integer arithmetic path (floating point confined to offline quantization), yielding bit-identical outputs across hardware, instruction sets, and distributed machines, verified via SHA-256 of outputs. It costs substantial storage (e.g., 427 GB of integer codes for a 106B MoE), offers no per-device speed-up (explicitly disclaimed), and confines fidelity to matching the float reference's decisions rather than bit-equal floating intermediates. Adoption risks include decision mismatches versus the float reference on untested inputs (numeric exceptions were measured, not eliminated), storage and memory footprints exceeding single-host RAM, and no guarantee against a dishonest server, which the authors defer to future work.",
+  "rationale": "For a team with one 24 GB GPU and limited budget, the technique's value is auditability and verifiable distributed inference rather than speed, memory, or cost gains, and its multi-hundred-GB integer code footprint and unquantified performance make production adoption premature without a demonstrated reproducibility requirement.",
+  "technique": "Exact integer-arithmetic inference for bit-reproducible execution",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-11-10",
+  "as_of": "2026-11-12",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.13730",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces floating-point runtime kernels with an end-to-end exact integer arithmetic path (floating point confined to offline quantization), yielding bit-identical outputs across hardware, instruction sets, and distributed machines, verified via SHA-256 of outputs. It costs substantial storage (e.g., 427 GB of integer codes for a 106B MoE), offers no per-device speed-up (explicitly disclaimed), and confines fidelity to matching the float reference's decisions rather than bit-equal floating intermediates. Adoption risks include decision mismatches versus the float reference on untested inputs (numeric exceptions were measured, not eliminated), storage and memory footprints exceeding single-host RAM, and no guarantee against a dishonest server, which the authors defer to future work.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13730",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
