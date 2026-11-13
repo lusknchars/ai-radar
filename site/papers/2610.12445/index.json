@@ -22,13 +22,13 @@
   "family": "seguranca_e_guardrails",
   "recommendation": "testar",
   "published": "2026-10-08",
-  "as_of": "2026-11-12",
+  "as_of": "2026-11-13",
   "editorial_status": "indexed",
   "source_url": "https://arxiv.org/abs/2610.12445",
-  "independent_implementations": 2,
-  "total_implementations": 2,
-  "stars": 1,
-  "citations": null,
+  "independent_implementations": 3,
+  "total_implementations": 4,
+  "stars": 2,
+  "citations": 1,
   "claims": [
     {
       "claim_id": "claim-01",

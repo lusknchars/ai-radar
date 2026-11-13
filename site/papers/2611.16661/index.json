@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.16661",
+  "title": "Reducing Batch Makespan for LLM Agent Workloads through Inference-Environment Coordination",
+  "summary": "The method replaces naive batch admission and static GPU-memory partitioning in agent rollout systems with workload-based KV-cache/recurrent-state allocation, trajectory-aware routing for cache reuse, and Chain-Advancing Action Scheduling that prioritizes long trajectories to shorten the batch tail. The cost is engineering complexity: it requires a resource model for hybrid LLM memory, routing and scheduling logic, and a controlled-replay harness for validation, all tightly coupled to the serving stack. It can fail when the workload does not exhibit long-chain skew or reusable prefixes (the gains vanish), when environment capacity rather than GPU compute is the bottleneck, or when the scheduling heuristics mispredict progress and starve short tasks.",
+  "rationale": "The gains are real but tied to Ling-series models, in-house serving infrastructure, and agent-batch workloads; a small team must first confirm their evaluation or rollout workloads show the tail-latency pattern this scheduling exploits before investing in implementation.",
+  "technique": "Inference-environment co-scheduling for agent batches",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-11-12",
+  "as_of": "2026-11-13",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.16661",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces naive batch admission and static GPU-memory partitioning in agent rollout systems with workload-based KV-cache/recurrent-state allocation, trajectory-aware routing for cache reuse, and Chain-Advancing Action Scheduling that prioritizes long trajectories to shorten the batch tail. The cost is engineering complexity: it requires a resource model for hybrid LLM memory, routing and scheduling logic, and a controlled-replay harness for validation, all tightly coupled to the serving stack. It can fail when the workload does not exhibit long-chain skew or reusable prefixes (the gains vanish), when environment capacity rather than GPU compute is the bottleneck, or when the scheduling heuristics mispredict progress and starve short tasks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.16661",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Batch makespan reductions of 10.4% to 65.0% across BFCL, SWE-bench Multilingual, WideSearch, and MCP-Atlas with Ling-3.0/3.1-Flash, with evaluation scores unchanged.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.16661",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
