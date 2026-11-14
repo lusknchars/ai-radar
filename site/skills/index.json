@@ -16618,6 +16618,286 @@
     "source": "https://arxiv.org/abs/2611.14514"
   },
   {
+    "arxiv_id": "2611.15126",
+    "title": "Recompute or Restore? Host-Tier KV for Multi-Model Agent Workflows on a Static-Graph NPU Serving Stack",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15126-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15126"
+  },
+  {
+    "arxiv_id": "2611.15130",
+    "title": "Read Once, Answer Many: Parallel Prompting for Shared-Context LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15130-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15130"
+  },
+  {
+    "arxiv_id": "2611.15136",
+    "title": "Bit-Sparsity Aware Acceleration with Compact CSD Code on Generic Matrix Multiplication",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15136-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15136"
+  },
+  {
+    "arxiv_id": "2611.15168",
+    "title": "MAST: Medoid-Anchored Subspace Steering for Visual Grounding in Multimodal LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15168-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15168"
+  },
+  {
+    "arxiv_id": "2611.15201",
+    "title": "Sparse Matrix Multiplication Exponent 1.5 in the Low-bandwidth Model",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15201-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15201"
+  },
+  {
+    "arxiv_id": "2611.15231",
+    "title": "TQIR: Trellis Quantization with Integer Reconstruction for Bandwidth-Efficient Edge LLM Acceleration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15231-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15231"
+  },
+  {
+    "arxiv_id": "2611.15236",
+    "title": "Sub-100KB On-Device CNN Training via Dynamic Sparse Updates and Hardware--Software Co-Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15236-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15236"
+  },
+  {
+    "arxiv_id": "2611.15270",
+    "title": "Communication-Efficient Federated Multi-View Clustering via View-Aware Quantization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15270-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15270"
+  },
+  {
+    "arxiv_id": "2611.15372",
+    "title": "LLMRunner: Closed Workload Model Performance Testing Framework for LLM Servings",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15372-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15372"
+  },
+  {
+    "arxiv_id": "2611.15460",
+    "title": "Read and Ignore: What Self-Directed LLM Agents Do in Public Service Scenarios",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15460-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15460"
+  },
+  {
+    "arxiv_id": "2611.15481",
+    "title": "SkillEarth: Teaching General-Purpose Agents to Act on Earth via Skill Evolution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15481-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15481"
+  },
+  {
+    "arxiv_id": "2611.15521",
+    "title": "DecArena: Evaluating Large-Scale Decentralized Multi-Agent Collaboration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15521-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15521"
+  },
+  {
+    "arxiv_id": "2611.15522",
+    "title": "GHAgentCI: A Dataset of Coding-Agent Invocations in CI Workflow Histories",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15522-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15522"
+  },
+  {
+    "arxiv_id": "2611.15538",
+    "title": "Faithful in Steps: Improving Generalization and Citation in RAG via Query Decomposition",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15538-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15538"
+  },
+  {
+    "arxiv_id": "2611.15568",
+    "title": "Can We Make an LLM Dumber, or Is It Just Playing Dumb? An Empirical Study of Believable Performance Throttling",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15568-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15568"
+  },
+  {
+    "arxiv_id": "2611.15569",
+    "title": "TraceKV: Policy-Preserving Low-Rank KV Cache Compression for Reasoning Vision-Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15569-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15569"
+  },
+  {
+    "arxiv_id": "2611.15596",
+    "title": "Bug Finding With Agentic Symbolic Execution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15596-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15596"
+  },
+  {
+    "arxiv_id": "2611.15600",
+    "title": "MemCredit: From Relevance to Utility for Decision-Time Memory in Long-Horizon Web Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15600-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15600"
+  },
+  {
+    "arxiv_id": "2611.15671",
+    "title": "The Noise Floor of a Quantization Comparison: Engine, restart, batch and kernel drift, measured against 8-bit and 4-bit effects in two decision models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15671-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15671"
+  },
+  {
+    "arxiv_id": "2611.15729",
+    "title": "DISCERN: Preserve at Write, Resolve at Read for Persistent LLM-Agent Memory",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15729-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15729"
+  },
+  {
+    "arxiv_id": "2611.15754",
+    "title": "MULTILOOP: Evolving Multi-Agent Harnesses for Complex Information-Seeking Tasks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15754-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15754"
+  },
+  {
+    "arxiv_id": "2611.15789",
+    "title": "VibePrevisBench: Evaluating Agentic Coding for 4D Scene Generation in Blender",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15789-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15789"
+  },
+  {
+    "arxiv_id": "2611.15810",
+    "title": "Sparse PCA with Overlapping Supports: NP-Hardness and an FPTAS",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15810-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15810"
+  },
+  {
+    "arxiv_id": "2611.15835",
+    "title": "Controlling the Probability of Unknown Unknowns in Pre-Deployment Testing of AI Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15835-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15835"
+  },
+  {
+    "arxiv_id": "2611.15920",
+    "title": "Spec-Driven PBT: Deriving Semantic Invariants from Code Specifications for Agentic Property-based Testing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15920-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15920"
+  },
+  {
+    "arxiv_id": "2611.15926",
+    "title": "NVIDIA Vera: A Microarchitecture-Level Comparison with Grace, Turin, and Granite Rapids",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15926-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15926"
+  },
+  {
+    "arxiv_id": "2611.15965",
+    "title": "PhysICL: In-Context Learning of Physical Fields on Unstructured Meshes from Procedural Priors",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15965-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15965"
+  },
+  {
+    "arxiv_id": "2611.16003",
+    "title": "Fit-LRP: Fitting Linear Relaxations to Polytopes for Neural Network Verification over Non-Convex Regions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16003-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16003"
+  },
+  {
+    "arxiv_id": "2611.16072",
+    "title": "KVPath: Connecting Key-Value Representations Across Transformer Layers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16072-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16072"
+  },
+  {
+    "arxiv_id": "2611.16107",
+    "title": "Trained on What Screen Readers Cannot Read: Accessibility Debt in the GUI Corpora Behind Computer-Use Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16107-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16107"
+  },
+  {
+    "arxiv_id": "2611.16114",
+    "title": "ADAPT: Agentic Diff-Aware Patch Testing for Pull Requests",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16114-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16114"
+  },
+  {
+    "arxiv_id": "2611.16116",
+    "title": "Robo-SWE: An Executable Issue-Resolution Dataset Mined from Robot Software Repositories",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16116-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16116"
+  },
+  {
+    "arxiv_id": "2611.16123",
+    "title": "SwarmSafe-Delta: Isolating Message Effects on LLM Agent Safety",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16123-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16123"
+  },
+  {
+    "arxiv_id": "2611.16174",
+    "title": "JudgeMix: Judge-Guided Mixed-Rollout Data Synthesis for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16174-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16174"
+  },
+  {
+    "arxiv_id": "2611.16189",
+    "title": "SBA: A Practical Memory Performance Denial-of-Service Attack",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16189-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16189"
+  },
+  {
+    "arxiv_id": "2611.16215",
+    "title": "Guided Generation of Linux Kernel Semantic Patches with Small Local Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16215-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16215"
+  },
+  {
+    "arxiv_id": "2611.16246",
+    "title": "What Can a VLA Learn from the Agent That Calls It? Task-Level Experience Distillation for Embodied Navigation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16246-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16246"
+  },
+  {
+    "arxiv_id": "2611.16260",
+    "title": "Low Language Transfer Speech-to-Text",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16260-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16260"
+  },
+  {
+    "arxiv_id": "2611.16289",
+    "title": "Eliciting and Mitigating Specification Satisficing in Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16289-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16289"
+  },
+  {
+    "arxiv_id": "2611.16293",
+    "title": "Rasoi: Visual Diffs for Evaluating Structural Changes Made by Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-16293-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.16293"
+  },
+  {
     "arxiv_id": "2611.16317",
     "title": "Wanda-Guided Sparse Perturbations for Efficient Zeroth-Order Optimization",
     "status": "indexed",

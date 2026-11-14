@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.15538",
+  "title": "Faithful in Steps: Improving Generalization and Citation in RAG via Query Decomposition",
+  "summary": "The technique replaces single-pass attributed RAG (RAGQ), where the model retrieves and cites contexts directly for the full question, with a pipeline that decomposes the question into atomic subquestions to resolve implicit entities, then uses a reranker to prune distractor contexts and reduce over-citation. It costs an additional decomposition step (either zero-shot prompting of an MLLM or a fine-tuned decomposer), extra retrieval and reranking passes per query, and added pipeline latency and orchestration complexity relative to a single retrieve-and-generate call. Failure modes include decomposition errors propagating into wrong subquestion retrieval, residual over-citation if the reranker thresholds are miscalibrated, and dependence on a capable multimodal LLM that may exceed the reader's local GPU budget and require paid API access.",
+  "rationale": "Query decomposition plus reranker pruning is implementable at small scale with API-based models and plausibly improves citation faithfulness on multi-hop questions, but the unquantified gains and multi-modal focus require validation on the reader's own workload before production adoption.",
+  "technique": "Query decomposition with reranker pruning for attributed RAG",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-11-11",
+  "as_of": "2026-11-14",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.15538",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The technique replaces single-pass attributed RAG (RAGQ), where the model retrieves and cites contexts directly for the full question, with a pipeline that decomposes the question into atomic subquestions to resolve implicit entities, then uses a reranker to prune distractor contexts and reduce over-citation. It costs an additional decomposition step (either zero-shot prompting of an MLLM or a fine-tuned decomposer), extra retrieval and reranking passes per query, and added pipeline latency and orchestration complexity relative to a single retrieve-and-generate call. Failure modes include decomposition errors propagating into wrong subquestion retrieval, residual over-citation if the reranker thresholds are miscalibrated, and dependence on a capable multimodal LLM that may exceed the reader's local GPU budget and require paid API access.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15538",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The abstract claims QDRAG significantly outperforms all baselines on in-domain and out-of-domain tests across four multi-modal QA benchmarks, surpassing Gemini-Pro, but provides no quantified numbers in the abstract.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15538",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.15130",
+  "title": "Read Once, Answer Many: Parallel Prompting for Shared-Context LLM Inference",
+  "summary": "The method replaces prefix caching plus per-question decoding, in which every decode step re-reads the shared document's KV cache once per question, by decoding P questions as P independent streams of a single request with a stream-id attention mask inside the kernel, so the document is read once per step for all streams. The cost is a forked SGLang (about 80 lines across three files plus a small engine package), fixed-shape decode steps required for CUDA-graph capture, and applicability only to workloads with many independent questions over one long document. It can fail if the workload does not share a long context across queries, if stream counts are too small to amortize the fused step, if the mask is misapplied and answers leak across streams, or if the patch diverges from upstream SGLang releases and becomes a maintenance burden.",
+  "rationale": "The gain is large and demonstrated on a single 48 GB-class GPU, but it applies only to many-questions-per-document workloads and requires maintaining a modified SGLang, so the reader should validate it on their own query patterns before production adoption.",
+  "technique": "Parallel Prompting for shared-context decoding",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-11-11",
+  "as_of": "2026-11-14",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.15130",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces prefix caching plus per-question decoding, in which every decode step re-reads the shared document's KV cache once per question, by decoding P questions as P independent streams of a single request with a stream-id attention mask inside the kernel, so the document is read once per step for all streams. The cost is a forked SGLang (about 80 lines across three files plus a small engine package), fixed-shape decode steps required for CUDA-graph capture, and applicability only to workloads with many independent questions over one long document. It can fail if the workload does not share a long context across queries, if stream counts are too small to amortize the fused step, if the mask is misapplied and answers leak across streams, or if the patch diverges from upstream SGLang releases and becomes a maintenance burden.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15130",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "3.7x faster than stock SGLang with FlashInfer on A100 and 5.9-6.0x faster on RTX A6000 with CodeLlama-7B, 8k-16k-token documents and 64-256 questions per document; faster in all 144 timed runs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15130",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

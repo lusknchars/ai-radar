@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.16260",
+  "title": "Low Language Transfer Speech-to-Text",
+  "summary": "Replaces training a speech recognizer from scratch (or collecting large in-language corpora) for a low-resource language with light fine-tuning, ideally LoRA adapters on a frozen encoder, of an existing open multilingual ASR model on as few as 25-1,000 clips. Costs: a dev set selecting every epoch, roughly 5.7 CER points of degradation on the model's original high-resource languages in the median model, and a word language model for a further 1.2-1.4 CER points on CTC heads. Failure modes: WER remains high (34.4 at best) despite good CER; CTC heads need 20-30 epochs versus 3-5 for seq2seq decoders; and language identification errors can trigger unwanted translation of code-switched speech, as Whisper large-v3's Malay WER rose from 8.9 to 14.9 when told the language.",
+  "rationale": "With one 24 GB GPU and small in-language datasets, LoRA fine-tuning of an open multilingual ASR model delivers near-full fine-tuning accuracy at a fraction of trainable parameters and is immediately actionable in production.",
+  "technique": "Low-rank fine-tuning of multilingual ASR for unseen languages",
+  "family": "treino_eficiente",
+  "recommendation": "adotar",
+  "published": "2026-11-12",
+  "as_of": "2026-11-14",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.16260",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 125,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces training a speech recognizer from scratch (or collecting large in-language corpora) for a low-resource language with light fine-tuning, ideally LoRA adapters on a frozen encoder, of an existing open multilingual ASR model on as few as 25-1,000 clips. Costs: a dev set selecting every epoch, roughly 5.7 CER points of degradation on the model's original high-resource languages in the median model, and a word language model for a further 1.2-1.4 CER points on CTC heads. Failure modes: WER remains high (34.4 at best) despite good CER; CTC heads need 20-30 epochs versus 3-5 for seq2seq decoders; and language identification errors can trigger unwanted translation of code-switched speech, as Whisper large-v3's Malay WER rose from 8.9 to 14.9 when told the language.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.16260",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Low-rank adapters on 4% of weights come within 1.1 CER points of full fine-tuning; fine-tuning lowers macro CER by 16.6 to 53.1 points on unseen low-resource languages with at most 1,000 clips (82 hours) per language",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.16260",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

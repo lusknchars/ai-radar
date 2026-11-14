@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.15729",
+  "title": "DISCERN: Preserve at Write, Resolve at Read for Persistent LLM-Agent Memory",
+  "summary": "DISCERN replaces conventional RAG-style memory retrieval (embedding search over merged or overwritten memory entries) with a strictly additive bi-temporal provenance graph written without merging entities or dropping superseded values, plus a zero-LLM tool surface that an agentic loop navigates to commit one of four gated terminal actions, including abstention. The cost is implementation complexity: a custom graph schema, write-time provenance instrumentation, and a read-time navigation loop with more orchestration steps and thus higher per-query latency than a single vector lookup, though it runs within a single-GPU or API-only budget since the tool surface itself uses no LLM calls. It can fail if the write-time extraction of entities and time-states is noisy, since errors accumulate in an append-only graph that is never corrected, and the headline gains are demonstrated on a 310-query synthetic benchmark, so real-world entity-resolution and abstention benefits remain unvalidated.",
+  "rationale": "The method targets a real production failure mode (entity collision and stale facts in long-lived agent memory) and is infrastructure-feasible, but its advantage is proven only on a small synthetic benchmark, so it warrants a scoped pilot against the reader's own memory workload rather than direct adoption.",
+  "technique": "Bi-temporal memory graph with gated abstention",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-11-11",
+  "as_of": "2026-11-14",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.15729",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 125,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DISCERN replaces conventional RAG-style memory retrieval (embedding search over merged or overwritten memory entries) with a strictly additive bi-temporal provenance graph written without merging entities or dropping superseded values, plus a zero-LLM tool surface that an agentic loop navigates to commit one of four gated terminal actions, including abstention. The cost is implementation complexity: a custom graph schema, write-time provenance instrumentation, and a read-time navigation loop with more orchestration steps and thus higher per-query latency than a single vector lookup, though it runs within a single-GPU or API-only budget since the tool surface itself uses no LLM calls. It can fail if the write-time extraction of entities and time-states is noisy, since errors accumulate in an append-only graph that is never corrected, and the headline gains are demonstrated on a 310-query synthetic benchmark, so real-world entity-resolution and abstention benefits remain unvalidated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15729",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On ENT-310, DISCERN achieves abstention F1 0.924 versus at most 0.802 across eight baselines, macro answer correctness 0.861 versus 0.806 for the strongest baseline, and entity-resolution accuracy 0.800 where no baseline exceeds 0.40; on LoCoMo, macro correctness 0.663 versus 0.638.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.15729",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
