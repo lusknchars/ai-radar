@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Profiling shows attention computation is a bottleneck in your self-hosted service.",
+    "change": "Check the supported GPU, tensor shapes, and precision, then replace only the relevant kernel.",
+    "baseline": "The existing kernel inside the same complete serving pipeline.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Numerical differences, end-to-end latency, throughput, and memory at realistic shapes.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.13188",
+  "title": "One-Sided Expert-Parallel All-to-All for Mixture-of-Experts Inference over NVLink",
+  "summary": "Replaces the two-sided EP all-to-all dispatch/combine stack (e.g., DeepEP) with a one-sided push into rank-major NVLink buffers, letting grouped GEMMs read tokens in place without metadata exchange or per-expert copies. Costs are confined to single-NVLink-domain deployments, a custom synchronization protocol (Fence or Sentinel) that must be integrated into the inference framework, and buffer management across ranks. It fails if the reader lacks multi-GPU NVLink nodes, runs MoE models at large per-GPU batches where the fixed-cost advantage shrinks, or needs portability to non-NVLink interconnects or heterogeneous clusters.",
+  "rationale": "The reader has at most one 24 GB GPU and no cluster, so a multi-GPU NVLink-domain expert-parallelism kernel is outside deployable infrastructure despite a quantified speedup.",
+  "technique": "One-sided NVLink all-to-all for MoE expert parallelism",
+  "family": "kernels_e_atencao",
+  "recommendation": "observar",
+  "published": "2026-11-09",
+  "as_of": "2026-11-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.13188",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces the two-sided EP all-to-all dispatch/combine stack (e.g., DeepEP) with a one-sided push into rank-major NVLink buffers, letting grouped GEMMs read tokens in place without metadata exchange or per-expert copies. Costs are confined to single-NVLink-domain deployments, a custom synchronization protocol (Fence or Sentinel) that must be integrated into the inference framework, and buffer management across ranks. It fails if the reader lacks multi-GPU NVLink nodes, runs MoE models at large per-GPU batches where the fixed-cost advantage shrinks, or needs portability to non-NVLink interconnects or heterogeneous clusters.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13188",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Blackwell GPUs, dispatch and combine complete 1.2-3.0x faster than DeepEP, with the resulting MoE layer up to 2.4x faster than DeepEP with DeepGEMM, and better than fused DeepGEMM MegaMoE at up to 128 tokens per GPU.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.13188",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

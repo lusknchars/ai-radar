@@ -15918,6 +15918,55 @@
     "source": "https://arxiv.org/abs/2611.09868"
   },
   {
+    "arxiv_id": "2611.11549",
+    "title": "Not All Branches Are Equal: Adaptive Semantic ID Construction for Generative Recommendation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11549-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11549"
+  },
+  {
+    "arxiv_id": "2611.11562",
+    "title": "UTOPI: Efficient Egocentric Long-Video Understanding in AR via User-Guided Token Pre-Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11562-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11562"
+  },
+  {
+    "arxiv_id": "2611.11598",
+    "title": "Perturbing Inputs Improves Pretraining Distillation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11598-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11598"
+  },
+  {
+    "arxiv_id": "2611.11695",
+    "title": "Language model capabilities fail in a shared, predictable order under compression and perturbation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11695-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11695"
+  },
+  {
+    "arxiv_id": "2611.11739",
+    "title": "Why Kubernetes Cannot Contain a Full Lazy-Pulling Cache: Two Impossibility Results and a Bounded, Honest Design for Model Serving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11739-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11739"
+  },
+  {
+    "arxiv_id": "2611.11761",
+    "title": "BridgeKV: Large-Model Prefill and Small-Model Decoding for LLM Inference via KV Cache Translation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11761-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11761"
+  },
+  {
+    "arxiv_id": "2611.11780",
+    "title": "Planners Exploit Deterministic Error: Dithered Low-Bit World Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-11780-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.11780"
+  },
+  {
     "arxiv_id": "2611.11892",
     "title": "When Answer Decodability Is Not a Decision: Separating Final-Answer and Imminent-Emission Signals in Chain-of-Thought",
     "status": "indexed",
@@ -16198,6 +16247,13 @@
     "source": "https://arxiv.org/abs/2611.12878"
   },
   {
+    "arxiv_id": "2611.12995",
+    "title": "Capacity Allocation at the Source: Sparse Target Optimization for LLM Knowledge Editing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-12995-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.12995"
+  },
+  {
     "arxiv_id": "2611.13008",
     "title": "An Open Implementation Flow for the Xilinx Spartan-3E and Spartan-6 that Runs in the Browser, Checked Byte for Byte Against ISE",
     "status": "indexed",
@@ -16240,11 +16296,25 @@
     "source": "https://arxiv.org/abs/2611.13144"
   },
   {
+    "arxiv_id": "2611.13176",
+    "title": "SHADOWPREFILL: Keeping Your Next Model Warm for Per-Step Model Routing in Agentic LLM Serving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-13176-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.13176"
+  },
+  {
     "arxiv_id": "2611.13183",
     "title": "AgentScript-Eval: Benchmarking LLMs and Agents for Code Generation in an Enterprise DSL",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-13183-evidence.zip",
     "source": "https://arxiv.org/abs/2611.13183"
+  },
+  {
+    "arxiv_id": "2611.13188",
+    "title": "One-Sided Expert-Parallel All-to-All for Mixture-of-Experts Inference over NVLink",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-13188-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.13188"
   },
   {
     "arxiv_id": "2611.13196",
@@ -16259,6 +16329,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-13223-evidence.zip",
     "source": "https://arxiv.org/abs/2611.13223"
+  },
+  {
+    "arxiv_id": "2611.13231",
+    "title": "Block-Sparse Gauss-Newton Optimization of Finite Basis Physics-Informed Neural Networks: Sparse Automatic Differentiation Approach",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-13231-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.13231"
   },
   {
     "arxiv_id": "2611.13241",
@@ -16296,6 +16373,13 @@
     "source": "https://arxiv.org/abs/2611.13289"
   },
   {
+    "arxiv_id": "2611.13293",
+    "title": "Decode Token Parallelism: Memory-Efficient Distributed Attention Parallelism for Scalable LLM Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-13293-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.13293"
+  },
+  {
     "arxiv_id": "2611.13309",
     "title": "PegasusAI Studio: Legible Cyberinfrastructure and Accountable AI Agents for Scientific Workflows",
     "status": "indexed",
@@ -16308,6 +16392,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-13329-evidence.zip",
     "source": "https://arxiv.org/abs/2611.13329"
+  },
+  {
+    "arxiv_id": "2611.13331",
+    "title": "Stochastic Projections and Rank-Aware Learning Rates for Federated LoRA",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-13331-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.13331"
   },
   {
     "arxiv_id": "2611.13336",
@@ -16618,6 +16709,146 @@
     "source": "https://arxiv.org/abs/2611.14514"
   },
   {
+    "arxiv_id": "2611.14590",
+    "title": "An Asynchronous Federated Learning Platform for Lung Adenocarcinoma Grading via Foundation Models and Structural Pruning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14590-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14590"
+  },
+  {
+    "arxiv_id": "2611.14654",
+    "title": "Cleaning an Agent's History Hurts When the World Still Holds the Error",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14654-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14654"
+  },
+  {
+    "arxiv_id": "2611.14671",
+    "title": "Where Should the Code Go? Locating Foundation-Model Errors in Bitemporal Inventory Simulation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14671-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14671"
+  },
+  {
+    "arxiv_id": "2611.14681",
+    "title": "Together Compiler: Continual Compilation for AI Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14681-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14681"
+  },
+  {
+    "arxiv_id": "2611.14748",
+    "title": "UniPipe: Unified Inference Serving and Fine-Tuning for Deadline-Constrained DNN Surrogate Workflows",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14748-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14748"
+  },
+  {
+    "arxiv_id": "2611.14766",
+    "title": "Rational Use of Time for Social Coordination in Humans and AI",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14766-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14766"
+  },
+  {
+    "arxiv_id": "2611.14801",
+    "title": "Distributionally Robust BEST-RQ For Speech Representation Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14801-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14801"
+  },
+  {
+    "arxiv_id": "2611.14808",
+    "title": "OverServe: Resource Amplification Attacks on SaaS Agents via Tool--Prompt Co-Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14808-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14808"
+  },
+  {
+    "arxiv_id": "2611.14838",
+    "title": "Sophon: A Procedural Diagnostic for Spatial Reasoning in Vision-Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14838-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14838"
+  },
+  {
+    "arxiv_id": "2611.14844",
+    "title": "AutoAssumption: Searching over Assumptions Discovers ML-Systems Algorithms",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14844-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14844"
+  },
+  {
+    "arxiv_id": "2611.14889",
+    "title": "Can an AI Agent Be Epistemically Akratic? Higher-Order Evidence & the Limits of Self-Correction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14889-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14889"
+  },
+  {
+    "arxiv_id": "2611.14904",
+    "title": "SubGPU Pipelining: Intra-GPU Fine-Grained Spatial Parallelism for LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14904-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14904"
+  },
+  {
+    "arxiv_id": "2611.14910",
+    "title": "MuEdit: An efficient multi-task editing method towards inter-domain knowledge conflicts",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14910-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14910"
+  },
+  {
+    "arxiv_id": "2611.14925",
+    "title": "ToolTurns: Benchmarking LLM Agents in Multi-Turn Dialogue",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14925-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14925"
+  },
+  {
+    "arxiv_id": "2611.14949",
+    "title": "RSI-PDEbench: A Benchmark for Self-Improving Agents in PDE Solving",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14949-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14949"
+  },
+  {
+    "arxiv_id": "2611.14952",
+    "title": "JoyFrontBench: Evaluating Front-End Coding Agents through Goal-Oriented Acceptance Contracts",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14952-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14952"
+  },
+  {
+    "arxiv_id": "2611.14960",
+    "title": "Termination Lag: Coding Agents Solve Early but Stop Late",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14960-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14960"
+  },
+  {
+    "arxiv_id": "2611.14962",
+    "title": "FIRE: Failure Isolation and Reliability for Production-Connected Experiments at Scale",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-14962-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.14962"
+  },
+  {
+    "arxiv_id": "2611.15006",
+    "title": "EvoX: Rethinking the Agent Harness as a Runtime Policy",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15006-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15006"
+  },
+  {
+    "arxiv_id": "2611.15049",
+    "title": "Science Prediction Universe",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15049-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15049"
+  },
+  {
     "arxiv_id": "2611.15126",
     "title": "Recompute or Restore? Host-Tier KV for Multi-Model Agent Workflows on a Static-Graph NPU Serving Stack",
     "status": "indexed",
@@ -16646,11 +16877,32 @@
     "source": "https://arxiv.org/abs/2611.15168"
   },
   {
+    "arxiv_id": "2611.15189",
+    "title": "WordInferBench: Can Agents Infer How to Edit from Word Document Context?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15189-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15189"
+  },
+  {
     "arxiv_id": "2611.15201",
     "title": "Sparse Matrix Multiplication Exponent 1.5 in the Low-bandwidth Model",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-15201-evidence.zip",
     "source": "https://arxiv.org/abs/2611.15201"
+  },
+  {
+    "arxiv_id": "2611.15207",
+    "title": "Pre-QED: Environment Specifications for Agentic Verification",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15207-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15207"
+  },
+  {
+    "arxiv_id": "2611.15223",
+    "title": "guardscope: Measuring Which Actions Runtime Controls Check in LLM Agent Systems",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15223-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15223"
   },
   {
     "arxiv_id": "2611.15231",
@@ -16667,6 +16919,20 @@
     "source": "https://arxiv.org/abs/2611.15236"
   },
   {
+    "arxiv_id": "2611.15262",
+    "title": "CastWorld: Benchmarking Context-Aware Agentic Time Series Forecasting Beyond Predictive Accuracy",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15262-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15262"
+  },
+  {
+    "arxiv_id": "2611.15268",
+    "title": "Knowledge in the Harness, Reliability in the Weights: Teacher-Free Co-Evolution of an LLM Agent",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15268-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15268"
+  },
+  {
     "arxiv_id": "2611.15270",
     "title": "Communication-Efficient Federated Multi-View Clustering via View-Aware Quantization",
     "status": "indexed",
@@ -16674,11 +16940,25 @@
     "source": "https://arxiv.org/abs/2611.15270"
   },
   {
+    "arxiv_id": "2611.15309",
+    "title": "Where Autonomy Belongs: A Separation of Powers for Agentic Program Evolution",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15309-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15309"
+  },
+  {
     "arxiv_id": "2611.15372",
     "title": "LLMRunner: Closed Workload Model Performance Testing Framework for LLM Servings",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-15372-evidence.zip",
     "source": "https://arxiv.org/abs/2611.15372"
+  },
+  {
+    "arxiv_id": "2611.15426",
+    "title": "SimRec: Learning to Search, Ask, and Recommend from Simulated Interaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-15426-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.15426"
   },
   {
     "arxiv_id": "2611.15460",

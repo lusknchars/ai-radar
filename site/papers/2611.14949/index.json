@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.14949",
+  "title": "RSI-PDEbench: A Benchmark for Self-Improving Agents in PDE Solving",
+  "summary": "The RSI-PDE harness replaces manual expert workflows for PDE equation discovery, coefficient estimation, and solver configuration, and improves on single-run LLM prompting and unmodified native agent harnesses. It costs the engineering effort of implementing the residual-loss shortlisting, relative-L2 feedback loop, and validation gate on top of frontier API models, with the benchmarked gains specific to the PDE-solving domain. It can fail on noisy or out-of-distribution equation templates where pass rates remain lower, and the validation gate may not transfer to domains without a computable residual or verification signal.",
+  "rationale": "The results are confined to a specialized scientific-computing benchmark, so the method is directly relevant only if the reader's production work involves PDE identification or solver configuration, though the validated self-improvement pattern is worth monitoring as a general agent design.",
+  "technique": "Self-improving LLM agent harness for PDE discovery and solving",
+  "family": "agentes_de_codigo",
+  "recommendation": "observar",
+  "published": "2026-11-11",
+  "as_of": "2026-11-15",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.14949",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 126,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The RSI-PDE harness replaces manual expert workflows for PDE equation discovery, coefficient estimation, and solver configuration, and improves on single-run LLM prompting and unmodified native agent harnesses. It costs the engineering effort of implementing the residual-loss shortlisting, relative-L2 feedback loop, and validation gate on top of frontier API models, with the benchmarked gains specific to the PDE-solving domain. It can fail on noisy or out-of-distribution equation templates where pass rates remain lower, and the validation gate may not transfer to domains without a computable residual or verification signal.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.14949",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "RSI-PDE improves pass rate averaged across four frontier models by 106.5-181.9% relative to single-run baselines and by 3.0-19.6% relative to native agent harnesses (Claude Code or Codex), while reducing total recorded model calls by 46.9% across the 12 model-setting pairs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.14949",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
