@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.17780",
+  "title": "LuthorSQL: A One-Pass Text-to-SQL Model as System 1 for a Slower LLM Agent",
+  "summary": "Replaces per-query calls to a hosted frontier LLM agent with a single-pass 7B text-to-SQL model that handles confident queries locally and escalates only uncertain ones. Costs a 9 GB GPU footprint for the 8-bit quantized model plus the engineering complexity of deploying the bounded-grammar candidate-plan pipeline and trained validator. Can fail on the roughly 32% of queries where the local model's 68% standalone accuracy is wrong but not flagged as uncertain, and on schemas or dialects where the bounded grammar or validator transfers poorly.",
+  "rationale": "The cost reduction is real and the 9 GB footprint fits a 24 GB GPU, but the 33.3% saving is measured on a single 227-question post-cutoff set with a specific frontier model, so the escalation threshold and accuracy parity must be validated on the reader's own schema and query distribution before production adoption.",
+  "technique": "Confidence-gated local text-to-SQL cascade",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-13",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.17780",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces per-query calls to a hosted frontier LLM agent with a single-pass 7B text-to-SQL model that handles confident queries locally and escalates only uncertain ones. Costs a 9 GB GPU footprint for the 8-bit quantized model plus the engineering complexity of deploying the bounded-grammar candidate-plan pipeline and trained validator. Can fail on the roughly 32% of queries where the local model's 68% standalone accuracy is wrong but not flagged as uncertain, and on schemas or dialects where the bounded grammar or validator transfers poorly.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17780",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Cuts API cost by 33.3% at the same accuracy in a cascade with Claude Opus 5.5 over 227 questions, answering nearly half locally; standalone 68.03% execution accuracy on BIRD hidden test at 0.84 s per question on one GPU, running in 9 GB with 8-bit weights.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17780",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

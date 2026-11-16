@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.18113",
+  "title": "Folding Language Models into Themselves",
+  "summary": "This replaces training a compact student from scratch by folding every group of N adjacent teacher layers into a single shared block executed N times, with per-step low-rank corrections and per-token gating initialized from the original layer weights. It costs the compute and data pipeline for distillation on 22B tokens with a curated multi-domain recipe, and adds inference complexity from iterative block execution and gating. It can fail when the low-rank corrections and gates cannot recover layer-specific behaviors for out-of-distribution tasks, or when the 22B-token data mix does not match the target deployment distribution, leaving capabilities unrecovered despite the shared block.",
+  "rationale": "The method directly addresses constrained infrastructure by reusing teacher weights to avoid full retraining, but it requires validation on whether the 22B-token distillation recipe and folding approach preserve performance for your specific workloads before production adoption.",
+  "technique": "Teacher-Weight Folding with Low-Rank Corrections",
+  "family": "destilacao",
+  "recommendation": "testar",
+  "published": "2026-11-13",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.18113",
+  "independent_implementations": 1,
+  "total_implementations": 3,
+  "stars": 129,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This replaces training a compact student from scratch by folding every group of N adjacent teacher layers into a single shared block executed N times, with per-step low-rank corrections and per-token gating initialized from the original layer weights. It costs the compute and data pipeline for distillation on 22B tokens with a curated multi-domain recipe, and adds inference complexity from iterative block execution and gating. It can fail when the low-rank corrections and gates cannot recover layer-specific behaviors for out-of-distribution tasks, or when the 22B-token data mix does not match the target deployment distribution, leaving capabilities unrecovered despite the shared block.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18113",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Qwen3-4B, a 2.27B Concertina model distilled on 22B tokens retains about 90% of the teacher on commonsense and mathematical reasoning and 84% on average across eight benchmarks, outperforming Qwen3-1.7B trained on over 1000x more data.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18113",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

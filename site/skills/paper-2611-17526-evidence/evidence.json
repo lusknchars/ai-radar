@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.17526",
+  "title": "User-Schedulable Approximations for Quantized Tensor Programs",
+  "summary": "The method replaces hand-written quantized matmul kernels in GGML/llama.cpp with Halide programs where encoders and decoders are ordinary schedulable stages fused into register tiles via the approximate_by directive, generating hundreds of kernels from one algorithm and schedule library. Adoption costs building on a research fork of Halide, maintaining codec compositions and property-test contracts (e.g. round-trip laws), and accepting per-format performance that only matches handwritten kernels in most (not all) cases. It can fail if the compiler backend does not support your target (x86 AMX port required 793 extra lines), if numerical contracts expose bugs in existing formats (as it did for GGML's q8_1 block sums), or if your production inference stack depends on llama.cpp mainline, which does not use this system.",
+  "rationale": "The work targets maintainers of tensor libraries generating kernels across formats and ISAs, so a small team running third-party APIs or a single 24 GB GPU gains nothing directly, since llama.cpp's existing quantized kernels already serve their deployment needs.",
+  "technique": "Codec-based scheduled quantized tensor programs",
+  "family": "quantizacao",
+  "recommendation": "observar",
+  "published": "2026-11-12",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.17526",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces hand-written quantized matmul kernels in GGML/llama.cpp with Halide programs where encoders and decoders are ordinary schedulable stages fused into register tiles via the approximate_by directive, generating hundreds of kernels from one algorithm and schedule library. Adoption costs building on a research fork of Halide, maintaining codec compositions and property-test contracts (e.g. round-trip laws), and accepting per-format performance that only matches handwritten kernels in most (not all) cases. It can fail if the compiler backend does not support your target (x86 AMX port required 793 extra lines), if numerical contracts expose bugs in existing formats (as it did for GGML's q8_1 block sums), or if your production inference stack depends on llama.cpp mainline, which does not use this system.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17526",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On Apple M3 Max, generated kernels reach at least 95% of GGML's format-specific kernels in 91.0% of cases with a median speedup of 1.13x; 3.7x less code than GGML/KleidiAI for 347 kernels covering 38 weight-activation pairs GGML lacks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17526",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

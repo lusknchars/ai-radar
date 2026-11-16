@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.18315",
+  "title": "Experts Across Schemas: Agent-Guided Mixture-of-Relational-Experts for Cross-Database Generalization",
+  "summary": "It replaces large-scale cross-database pretraining for relational prediction with a mixture-of-relational-experts graph transformer plus an LLM agent that generates label-blind derived columns from schema statistics. It costs implementing a specialized architecture, training it on available relational corpora, and LLM API calls for column engineering, all with limited tooling outside the RelBench ecosystem. It can fail because gains are demonstrated only on RelBench-style benchmarks, the agent may produce invalid or harmful derived columns on atypical schemas, and production deployment requires bespoke data pipelines rather than off-the-shelf models.",
+  "rationale": "The results suggest strong cross-database generalization without massive pretraining, but the architecture requires custom implementation and validation on the reader's own relational workloads, and pretrained checkpoints or mature tooling are not evidently available.",
+  "technique": "Mixture-of-relational-experts transformer with schema-reading agent",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-11-13",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.18315",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "It replaces large-scale cross-database pretraining for relational prediction with a mixture-of-relational-experts graph transformer plus an LLM agent that generates label-blind derived columns from schema statistics. It costs implementing a specialized architecture, training it on available relational corpora, and LLM API calls for column engineering, all with limited tooling outside the RelBench ecosystem. It can fail because gains are demonstrated only on RelBench-style benchmarks, the agent may produce invalid or harmful derived columns on atypical schemas, and production deployment requires bespoke data pipelines rather than off-the-shelf models.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18315",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "On 21 RelBench tasks, MoREGT pretrained on 6 databases achieves the highest mean AUROC (79.63) and nMAE (26.98) among compared methods, surpassing RT-J which pretrains on roughly 400 times as many databases; the backbone alone adds 2.25 AUROC and 5.83 nMAE points over the Relational Transformer pretrained on the same data.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18315",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

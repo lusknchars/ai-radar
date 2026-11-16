@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.17412",
+  "title": "WETW: Learning Pair-Specific Weighted Euclidean Distances for Efficient DTW Search",
+  "summary": "WETW-FV replaces exact quadratic-cost DTW computation over full collections (and weak lower-bound pruning) with a learned filter-and-verify pipeline: a trained encoder (WESEE) embeds series, a small symmetric network predicts pair-specific per-dimension weights for a weighted Euclidean shortlist, and exact DTW verifies only shortlisted candidates. The cost is an offline training stage requiring DTW distance supervision plus ranking regularization (regression alone misorders neighbors, recall@1 of 0.79 versus 0.95), added pipeline complexity, and approximate recall rather than exact search guarantees. It can fail on data distributions that drift from the training set, on workloads where embedding training data is scarce, and where the 0.91-0.93 recall@10 loss is unacceptable for the application.",
+  "rationale": "For a constrained-infrastructure team doing time-series similarity search, the method runs on modest hardware and delivers a large speedup, but it requires training a task-specific encoder and validating recall on the reader's own data before production adoption.",
+  "technique": "Learned pair-adaptive weighted Euclidean distance for DTW search",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-11-12",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.17412",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 125,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "WETW-FV replaces exact quadratic-cost DTW computation over full collections (and weak lower-bound pruning) with a learned filter-and-verify pipeline: a trained encoder (WESEE) embeds series, a small symmetric network predicts pair-specific per-dimension weights for a weighted Euclidean shortlist, and exact DTW verifies only shortlisted candidates. The cost is an offline training stage requiring DTW distance supervision plus ranking regularization (regression alone misorders neighbors, recall@1 of 0.79 versus 0.95), added pipeline complexity, and approximate recall rather than exact search guarantees. It can fail on data distributions that drift from the training set, on workloads where embedding training data is scarce, and where the 0.91-0.93 recall@10 loss is unacceptable for the application.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17412",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "WETW-FV is 11.4x faster than the fastest exact baseline (UCR Suite, lower bounds, MESSI-DTW) at mean recall@10 of 0.93 across eight datasets, and 40x faster than the UCR Suite on 48K-point series at recall@10 of 0.91.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.17412",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

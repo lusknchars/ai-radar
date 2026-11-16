@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.18078",
+  "title": "TelePhysica: Agentic Reconstruction of Physically Interactive Scenes",
+  "summary": "The method replaces single-pass programmatic 3D reconstruction and direct image-to-video diffusion with a closed-loop framework in which a vision-language coding agent iteratively verifies physical equilibrium and compiles a unified rigid/articulated/cloth/FEM solver whose rollouts condition pretrained video diffusion. It costs substantial engineering complexity, requires a full multiphysics simulation stack and a vision-language agent loop, and adds per-scene iterative verification latency well beyond a single forward pass. It can fail on scenes where monocular depth and support ambiguity remain unresolved after verification, where constitutive parameter estimates are wrong, or where the 81% recovery rate does not transfer to in-the-wild photographs outside the benchmark.",
+  "rationale": "The technique targets physically interactive scene reconstruction rather than inference or training efficiency, requires bespoke multiphysics infrastructure beyond a small team's production scope, and its 81% success rate is reported only on a curated 100-scene benchmark.",
+  "technique": "Closed-loop physically grounded scene reconstruction",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-11-13",
+  "as_of": "2026-11-16",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.18078",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 129,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces single-pass programmatic 3D reconstruction and direct image-to-video diffusion with a closed-loop framework in which a vision-language coding agent iteratively verifies physical equilibrium and compiles a unified rigid/articulated/cloth/FEM solver whose rollouts condition pretrained video diffusion. It costs substantial engineering complexity, requires a full multiphysics simulation stack and a vision-language agent loop, and adds per-scene iterative verification latency well beyond a single forward pass. It can fail on scenes where monocular depth and support ambiguity remain unresolved after verification, where constitutive parameter estimates are wrong, or where the 81% recovery rate does not transfer to in-the-wild photographs outside the benchmark.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18078",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Closed-loop execution raises equilibrium-verified world recovery from 0% in single-pass synthesis to 81% on a 100-scene benchmark; simulated-trajectory conditioning increases dynamic motion-mask overlap by 2x-5x over direct image-to-video diffusion.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.18078",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
