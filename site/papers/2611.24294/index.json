@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A product assistant retrieves plausible documents but gives unsupported answers.",
+    "change": "Change one retrieval or ranking step while keeping the document snapshot fixed.",
+    "baseline": "Your current retrieval pipeline with identical questions and answer model.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Supported answers, retrieval misses, correct abstentions, index cost, and response latency.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.24294",
+  "title": "KnowledgeClaw: Towards Agentic Knowledge Engineering via Omnimodal Hypergraphs",
+  "summary": "KnowledgeClaw replaces conventional chunk-based or graph RAG pipelines with an agent-built omnimodal typed hypergraph that is maintained by a closed-loop lifecycle agent and queried at multiple granularities across five modalities. The cost is substantial engineering complexity: hypergraph construction and maintenance, continuous lifecycle agents, and per-query routing all depend on repeated LLM calls, implying nontrivial API spend and operational surface for a small team. It can fail through agent-induced errors compounding in the knowledge base during closed-loop updates, high latency and cost on query routing, and benchmark gains (OKE 55.9, +14.6 over the best baseline) that may not transfer to domains unlike the released benchmark.",
+  "rationale": "It addresses real production pain (multimodal, evolving knowledge bases with multi-granular retrieval), but the agentic lifecycle and hypergraph pipeline is heavy infrastructure whose +14.6-point benchmark gain must be validated against a simpler RAG baseline on the reader's own data and API budget.",
+  "technique": "Agentic omnimodal hypergraph knowledge base construction",
+  "family": "recuperacao_e_rag",
+  "recommendation": "testar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.24294",
+  "independent_implementations": 1,
+  "total_implementations": 3,
+  "stars": 130,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "KnowledgeClaw replaces conventional chunk-based or graph RAG pipelines with an agent-built omnimodal typed hypergraph that is maintained by a closed-loop lifecycle agent and queried at multiple granularities across five modalities. The cost is substantial engineering complexity: hypergraph construction and maintenance, continuous lifecycle agents, and per-query routing all depend on repeated LLM calls, implying nontrivial API spend and operational surface for a small team. It can fail through agent-induced errors compounding in the knowledge base during closed-loop updates, high latency and cost on query routing, and benchmark gains (OKE 55.9, +14.6 over the best baseline) that may not transfer to domains unlike the released benchmark.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24294",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Ranks first on all six OmniKE-Bench tasks with overall OKE of 55.9, +14.6 points over the strongest of 30 baselines.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24294",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

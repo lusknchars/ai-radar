@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.24043",
+  "title": "Compression Effects on Low-Resource Multilingual Translation",
+  "summary": "Post-training quantisation (bitsandbytes INT8 and NF4 INT4) replaces FP16 serving of a dedicated multilingual MT model (NLLB-200-distilled-1.3B), which itself replaces much larger instruction-tuned LLMs for low-resource translation while scoring 12.9-43.3 chrF higher. The cost is a 1.3x to 5.3x latency increase on consumer-grade GPUs in exchange for 49-61% memory savings at INT4, plus reliance on quantisation tooling that is not latency-optimised for this hardware class. Aggregate quality degrades by at most ~2.2 chrF in the worst case, but aggregate chrF may conceal error-type regressions, and the latency overhead can make quantised serving slower than FP16 when memory is not the binding constraint.",
+  "rationale": "The paper shows post-training quantisation of a dedicated MT model preserves quality while fitting constrained GPU memory, but the measured latency penalty on consumer hardware requires workload-specific validation before production adoption.",
+  "technique": "Post-training quantisation of low-resource MT models",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.24043",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Post-training quantisation (bitsandbytes INT8 and NF4 INT4) replaces FP16 serving of a dedicated multilingual MT model (NLLB-200-distilled-1.3B), which itself replaces much larger instruction-tuned LLMs for low-resource translation while scoring 12.9-43.3 chrF higher. The cost is a 1.3x to 5.3x latency increase on consumer-grade GPUs in exchange for 49-61% memory savings at INT4, plus reliance on quantisation tooling that is not latency-optimised for this hardware class. Aggregate quality degrades by at most ~2.2 chrF in the worst case, but aggregate chrF may conceal error-type regressions, and the latency overhead can make quantised serving slower than FP16 when memory is not the binding constraint.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24043",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "INT4 (NF4) quantisation reduces GPU memory footprint by 49-61% relative to FP16 while preserving translation quality within approximately 1 chrF (worst case 2.19 chrF); inference latency increases by 1.3x to 5.3x on consumer GPUs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24043",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.24039",
+  "title": "A Capability Framework for Evaluating Agentic AI Platforms in Regulated Enterprises",
+  "summary": "Replaces vendor-demo-driven procurement and unstructured panel scoring of agentic AI platforms with a gate-then-score protocol spanning four layers (capability, execution reliability, governance gates, business value), plus trace-level reliability metrics over repeated runs, an autonomy-readiness scale, and a reproducibility protocol. Costs: repeated task executions per platform to estimate reliability, trace instrumentation and logging, cross-functional reviewer time, and the overhead of defining governance gates per workload; it is an evaluation methodology, so no GPU or model-training cost is incurred. What can fail: scores still depend on workload selection and gate definitions, small numbers of runs give weak reliability estimates, governance gates encode organisational judgement rather than measurement, and the halo-effect finding implies any residual human scoring component can again conflate presentation with capability.",
+  "rationale": "The paper's core contribution is an evaluation protocol and a reliability-measurement methodology that an engineer can apply directly to choose and govern agent platforms without any additional compute.",
+  "technique": "Gate-then-score enterprise agent platform evaluation",
+  "family": "avaliacao_de_agente",
+  "recommendation": "adotar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.24039",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces vendor-demo-driven procurement and unstructured panel scoring of agentic AI platforms with a gate-then-score protocol spanning four layers (capability, execution reliability, governance gates, business value), plus trace-level reliability metrics over repeated runs, an autonomy-readiness scale, and a reproducibility protocol. Costs: repeated task executions per platform to estimate reliability, trace instrumentation and logging, cross-functional reviewer time, and the overhead of defining governance gates per workload; it is an evaluation methodology, so no GPU or model-training cost is incurred. What can fail: scores still depend on workload selection and gate definitions, small numbers of runs give weak reliability estimates, governance gates encode organisational judgement rather than measurement, and the halo-effect finding implies any residual human scoring component can again conflate presentation with capability.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24039",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Diagnostic finding, not a performance gain: demonstration-based scoring showed Cronbach's alpha = 0.98 across nine nominally distinct capability dimensions and rank correlations >= 0.93 with the total for eight of nine, indicating a halo effect in which the scores measured presentation quality as much as platform capability.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24039",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.24469",
+  "title": "ICICLE: In-Context Inference for Curve-Learning Extrapolation",
+  "summary": "ICICLE replaces larger prior-fitted-network surrogates such as FT-PFN for learning-curve extrapolation in freeze-thaw Bayesian optimization, using a shared set encoder that accepts a variable number of typed hyperparameters and synthetic-prior training sampled on the fly. Its cost is a 1.28M-parameter model (8.7% of FT-PFN's size) plus the engineering to integrate the provided Ray Tune scheduler and ONNX runtime, with possible quality loss on some tasks (no clear gain over Quick-Tune on Meta-Album mini or micro splits). It can fail when real learning curves deviate from the synthetic prior (unmodeled noise regimes, divergence patterns, or hyperparameter types) or when the workload lacks enough partially observed curves to make freeze-thaw allocation worthwhile.",
+  "rationale": "A small, dependency-light surrogate for freeze-thaw hyperparameter optimization with a Ray Tune scheduler and ONNX inference is usable on constrained infrastructure, but its benefit depends on whether the reader actually runs multi-task HPO workloads with partially observed learning curves.",
+  "technique": "In-context PFN surrogate for learning-curve extrapolation",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.24469",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "ICICLE replaces larger prior-fitted-network surrogates such as FT-PFN for learning-curve extrapolation in freeze-thaw Bayesian optimization, using a shared set encoder that accepts a variable number of typed hyperparameters and synthetic-prior training sampled on the fly. Its cost is a 1.28M-parameter model (8.7% of FT-PFN's size) plus the engineering to integrate the provided Ray Tune scheduler and ONNX runtime, with possible quality loss on some tasks (no clear gain over Quick-Tune on Meta-Album mini or micro splits). It can fail when real learning curves deviate from the synthetic prior (unmodeled noise regimes, divergence patterns, or hyperparameter types) or when the workload lacks enough partially observed curves to make freeze-thaw allocation worthwhile.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24469",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "ICICLE has 1.28M parameters (8.7% of FT-PFN's count) while producing similar mean-regret trajectories on LCBench, PD1, and TaskSet, and reaches lower mean normalized regret than meta-trained Quick-Tune on Meta-Album without any task-specific pre-training.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24469",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

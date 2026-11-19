@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.24496",
+  "title": "Harvesting Expert-Parallel Bubbles for Fine-Tuning",
+  "summary": "BubbleTea replaces per-forward-pass, all-GPU colocation scheduling (as in LLMStation) with per-layer, per-GPU prediction of expert-parallel load-imbalance bubbles, filling them with fine-tuning chunks that reuse serving weights, plus compiler passes that derive these chunks without porting models to a separate training engine. The cost is systems complexity: integration with the serving stack's expert-parallel layout, bubble prediction at every layer, and custom compiler infrastructure, evaluated only on a four-A100 MoE serving setup. It can fail when router load balancing already eliminates most bubbles, when inference latency SLOs tighten beyond the reported 10% p90 headroom (13 of 63 workloads exceeded it), or when the workload does not involve colocated fine-tuning of the served model itself.",
+  "rationale": "BubbleTea presupposes multi-GPU expert-parallel serving of MoE models, a deployment the reader cannot run on a single 24 GB GPU or replicate through third-party APIs.",
+  "technique": "Expert-parallel bubble harvesting for colocated fine-tuning",
+  "family": "serving_e_batching",
+  "recommendation": "observar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-19",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.24496",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "BubbleTea replaces per-forward-pass, all-GPU colocation scheduling (as in LLMStation) with per-layer, per-GPU prediction of expert-parallel load-imbalance bubbles, filling them with fine-tuning chunks that reuse serving weights, plus compiler passes that derive these chunks without porting models to a separate training engine. The cost is systems complexity: integration with the serving stack's expert-parallel layout, bubble prediction at every layer, and custom compiler infrastructure, evaluated only on a four-A100 MoE serving setup. It can fail when router load balancing already eliminates most bubbles, when inference latency SLOs tighten beyond the reported 10% p90 headroom (13 of 63 workloads exceeded it), or when the workload does not involve colocated fine-tuning of the served model itself.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24496",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Fine-tuning throughput is 1.9-6.2x faster than the LLMStation colocation baseline (3.3x on bursty production traces, 14x versus a stock trainer under CUDA MPS), with p90 inference latency within 10% of serving alone in 50 of 63 workloads, measured on three MoE models across four A100 GPUs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.24496",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
