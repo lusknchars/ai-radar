@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.26553",
+  "title": "Replication of Agentic Security Events: Audit and Investigation (ROGUE-AI)",
+  "summary": "The method replaces passive incident catalogs and pass/fail benchmarks with offline multi-agent replications of reported incidents paired with matched controls lacking only the blamed cause, enabling root-cause validation. It costs the engineering effort to rebuild each incident environment and control, plus repeated agent runs across models, and the warning-based mitigation adds per-tool-output tokens without eliminating residual harm. It can fail because replication fidelity depends on incomplete media reports, results cover only five models and 108 incidents, hazard-naming warnings require knowing the hazard in advance, and defenses may not transfer to novel hazards or attacker-driven scenarios.",
+  "rationale": "The finding that ordinary hazards (not prompt injection) cause most real-world harm, and that hazard-specific tool-output warnings reduce it, is directly actionable with API-based agents, but adopting the full replication framework requires workload-specific validation of its audit cost and coverage.",
+  "technique": "Incident replication audit for agentic security",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-11-19",
+  "as_of": "2026-11-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.26553",
+  "independent_implementations": 2,
+  "total_implementations": 2,
+  "stars": 2084,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces passive incident catalogs and pass/fail benchmarks with offline multi-agent replications of reported incidents paired with matched controls lacking only the blamed cause, enabling root-cause validation. It costs the engineering effort to rebuild each incident environment and control, plus repeated agent runs across models, and the warning-based mitigation adds per-tool-output tokens without eliminating residual harm. It can fail because replication fidelity depends on incomplete media reports, results cover only five models and 108 incidents, hazard-naming warnings require knowing the hazard in advance, and defenses may not transfer to novel hazards or attacker-driven scenarios.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26553",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "ROGUE-AI reproduces the reported harm in 89% of 108 attempted replications; agents commit the reported mistake in 18-33% of runs with the blamed cause versus at most 1% without it, and a warning after each tool output that names the hazard and its consequence lowers harm for all five tested models, while a same-length generic note does not.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26553",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

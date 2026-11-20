@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.26383",
+  "title": "Evidence from a Multi-Regime Causal Discovery Benchmark: UCMT Algorithms, Comparative Performance, and Controlled Ablation Studies",
+  "summary": "UCMT is a causal discovery algorithm family intended to replace or augment standard structure-learning methods (NOTEARS, DAGMA, BOSS, RESIT, DirectLiNGAM) when inferring directed causal graphs from observational data. Costs include higher runtime than some baselines, added pipeline complexity from sparsity/BIC refinement stages, and compute for permutation-search comparisons; it does not require cluster-scale infrastructure and can run on modest hardware. Failures to expect: gains vanish under dataset-level multiple-testing correction in several regimes, orientation accuracy is modest (0.563 in the favorable ablation), arbitration and regime-selection components show no confirmed benefit, and there is no demonstrated broad advantage over RESIT, ANM, or DirectLiNGAM.",
+  "rationale": "The paper reports only narrow, regime-specific directed-F1 gains with several non-significant adjusted results and no advantage over established baselines such as DirectLiNGAM, so adoption in production is premature but small-scale evaluation is feasible if causal discovery is part of the workload.",
+  "technique": "UCMT causal discovery algorithm family benchmark",
+  "family": "outro",
+  "recommendation": "observar",
+  "published": "2026-11-19",
+  "as_of": "2026-11-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.26383",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "UCMT is a causal discovery algorithm family intended to replace or augment standard structure-learning methods (NOTEARS, DAGMA, BOSS, RESIT, DirectLiNGAM) when inferring directed causal graphs from observational data. Costs include higher runtime than some baselines, added pipeline complexity from sparsity/BIC refinement stages, and compute for permutation-search comparisons; it does not require cluster-scale infrastructure and can run on modest hardware. Failures to expect: gains vanish under dataset-level multiple-testing correction in several regimes, orientation accuracy is modest (0.563 in the favorable ablation), arbitration and regime-selection components show no confirmed benefit, and there is no demonstrated broad advantage over RESIT, ANM, or DirectLiNGAM.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26383",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Directed F1 0.537 vs 0.468 for UCMT v2 Global over an adapted R^2-SortnRegress orientation baseline on fixed-skeleton standardized iSCM data (dataset-level Holm p=0.031); the paper explicitly disclaims overall superiority, with dataset-level results non-significant in other comparisons (e.g., UCMT v4 vs BOSS, p=0.188).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26383",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

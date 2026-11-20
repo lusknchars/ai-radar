@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.26358",
+  "title": "Beam Model Technical Report",
+  "summary": "Beam replaces dense frontier-scale models with a sparse MoE architecture that activates only 23.4B of 501.3B parameters per token, combined with FP8/NVFP4 quantization and speculative decoding for serving. Even fully quantized, the total parameter footprint far exceeds a single 24 GB GPU, so adoption requires third-party API access or substantial serving infrastructure, and the underlying training pipeline (10.5K GPUs, 23.8T tokens, 100M RL rollouts) is entirely out of reach. Failures can arise from MoE routing instability, quality degradation under aggressive NVFP4 quantization, dependence on a proprietary drafter model for throughput, and safety behavior (88.9% harmful-request refusal) that may not transfer to a given deployment's policy requirements.",
+  "rationale": "The model's 501.3B total parameters cannot be trained or self-hosted on a 24 GB GPU, but its open weights and efficiency claims make it worth tracking for API-based or future adoption.",
+  "technique": "Sparse MoE with hardware co-design and speculative decoding",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-11-19",
+  "as_of": "2026-11-20",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.26358",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 130,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Beam replaces dense frontier-scale models with a sparse MoE architecture that activates only 23.4B of 501.3B parameters per token, combined with FP8/NVFP4 quantization and speculative decoding for serving. Even fully quantized, the total parameter footprint far exceeds a single 24 GB GPU, so adoption requires third-party API access or substantial serving infrastructure, and the underlying training pipeline (10.5K GPUs, 23.8T tokens, 100M RL rollouts) is entirely out of reach. Failures can arise from MoE routing instability, quality degradation under aggressive NVFP4 quantization, dependence on a proprietary drafter model for throughput, and safety behavior (88.9% harmful-request refusal) that may not transfer to a given deployment's policy requirements.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26358",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The authors claim Beam delivers frontier-level coding and reasoning while requiring 3-4x less inference compute than comparable models of its class, owing to 23.4B active parameters out of 501.3B total.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.26358",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
