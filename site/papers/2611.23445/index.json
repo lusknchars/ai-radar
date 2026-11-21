@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.23445",
+  "title": "Why Sub-4-Bit Vision CNNs Collapse and Where Mixed-Precision Recovery Stops",
+  "summary": "Replaces uniform sub-4-bit weight quantization (and trial-and-error mixed-precision search) with a structured recovery waterfall that selectively restores INT8/FP precision to the roughly 5% of layers—late-stage pointwise projections and depthwise layers—where collapse concentrates. Costs added per-layer sensitivity analysis and a mixed-precision runtime; accuracy is recovered but storage savings shrink slightly and, critically, standard CPU runtimes incur a 1.48x–21.5x slowdown from software bit-unpacking, so memory footprint improves while edge throughput can worsen. Can fail if the deployment stack lacks native sub-4-bit kernels (the slowdown dominates), if the reader's backbone differs enough that the identified critical layers do not transfer, or if batch-size assumptions mismatch the reported latency figures.",
+  "rationale": "The mixed-precision recovery waterfall is directly usable on a single GPU to salvage sub-4-bit quantized vision CNNs, but the documented CPU unpacking slowdown means the latency benefit must be validated on the reader's actual deployment runtime before adoption.",
+  "technique": "Selective INT8 recovery for sub-4-bit quantized CNNs",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-11-17",
+  "as_of": "2026-11-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.23445",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 126,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces uniform sub-4-bit weight quantization (and trial-and-error mixed-precision search) with a structured recovery waterfall that selectively restores INT8/FP precision to the roughly 5% of layers—late-stage pointwise projections and depthwise layers—where collapse concentrates. Costs added per-layer sensitivity analysis and a mixed-precision runtime; accuracy is recovered but storage savings shrink slightly and, critically, standard CPU runtimes incur a 1.48x–21.5x slowdown from software bit-unpacking, so memory footprint improves while edge throughput can worsen. Can fail if the deployment stack lacks native sub-4-bit kernels (the slowdown dominates), if the reader's backbone differs enough that the identified critical layers do not transfer, or if batch-size assumptions mismatch the reported latency figures.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23445",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Keeping under 5% of critical layer activations in 8-bit precision recovers up to 92% of the accuracy lost during sub-4-bit compression; however, software bit-unpacking on standard ARM/x86 CPUs causes 1.48x to 21.5x execution slowdown depending on batch size.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23445",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

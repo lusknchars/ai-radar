@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.25112",
+  "title": "TripleKV: Predict, Prefetch, Protect -- KV Cache Management for AI Agents",
+  "summary": "TripleKV replaces reactive KV-cache eviction and on-demand SSD retrieval in multi-tier serving stacks (e.g., vLLM extended with DRAM/SSD tiers) with tool-aware latency prediction that prefetches KV blocks into host DRAM before the agent returns from a tool call, plus deduplication of GPU-resident blocks and a victim cache that refills evicted blocks from SSD. The cost is systems complexity: it requires a custom three-tier cache manager, a per-tool latency predictor that must be trained or calibrated per workload, and additional host DRAM capacity, none of which is available when inference runs on a single GPU or behind third-party APIs. It can fail when tool-completion predictions are wrong (prefetches arrive too late or waste DRAM bandwidth), when workloads are not agentic or lack predictable tool boundaries, and at low concurrency where the KV working set already fits in GPU memory and the mechanism adds overhead without benefit.",
+  "rationale": "TripleKV targets high-concurrency agentic serving with hundreds of GiB of KV cache across GPU, DRAM, and SSD tiers, a regime that a single 24 GB GPU or API-based workflow never reaches, so it is worth tracking but not adoptable now.",
+  "technique": "Tool-aware predictive KV cache prefetching across GPU-DRAM-SSD tiers",
+  "family": "cache_kv",
+  "recommendation": "observar",
+  "published": "2026-11-18",
+  "as_of": "2026-11-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.25112",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "TripleKV replaces reactive KV-cache eviction and on-demand SSD retrieval in multi-tier serving stacks (e.g., vLLM extended with DRAM/SSD tiers) with tool-aware latency prediction that prefetches KV blocks into host DRAM before the agent returns from a tool call, plus deduplication of GPU-resident blocks and a victim cache that refills evicted blocks from SSD. The cost is systems complexity: it requires a custom three-tier cache manager, a per-tool latency predictor that must be trained or calibrated per workload, and additional host DRAM capacity, none of which is available when inference runs on a single GPU or behind third-party APIs. It can fail when tool-completion predictions are wrong (prefetches arrive too late or waste DRAM bandwidth), when workloads are not agentic or lack predictable tool boundaries, and at low concurrency where the KV working set already fits in GPU memory and the mechanism adds overhead without benefit.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.25112",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reduces P95 time to first token by up to 49% versus vLLM extended with DRAM and SSD KV tiers (i.e., roughly 2x lower at the tail), and reports 1.5-7x lower P95 TTFT than recent agent-aware systems; critical-path SSD reads drop from 45-76% of requests to under 10%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.25112",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

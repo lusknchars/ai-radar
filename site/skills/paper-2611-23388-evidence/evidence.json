@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.23388",
+  "title": "QDA: Closed-Loop LLM Quantization Design with Agents",
+  "summary": "QDA replaces manual, expert-driven selection of post-training quantization recipes with an LLM agent that iteratively builds candidates from a library of interoperable public PTQ methods and scores them in minutes via output KL divergence from the original model on held-out reasoning traces, with long-generation checks for failures such as repetition loops. The cost is roughly 64 GPU-hours of search per model-precision pair plus the engineering dependency on the released library, evaluator, and harness; checkpoints themselves run on existing serving kernels with no inference overhead. Failure modes include overfitting the recipe to the KL-based proxy rather than true downstream accuracy, silent failures on long generations that the checker misses, and infeasibility of quantizing very large models on a single 24 GB GPU without offloading or rented memory-rich hardware.",
+  "rationale": "Model-specific PTQ recipe search with a fast KL-divergence evaluator is directly relevant to a small team serving quantized models cheaply, but the 64 GPU-hour search cost and the need to run large models during quantization mean the reader should validate it on their own target model and hardware before adopting it as default practice.",
+  "technique": "Agent-driven closed-loop PTQ recipe search",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-11-17",
+  "as_of": "2026-11-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.23388",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 15,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "QDA replaces manual, expert-driven selection of post-training quantization recipes with an LLM agent that iteratively builds candidates from a library of interoperable public PTQ methods and scores them in minutes via output KL divergence from the original model on held-out reasoning traces, with long-generation checks for failures such as repetition loops. The cost is roughly 64 GPU-hours of search per model-precision pair plus the engineering dependency on the released library, evaluator, and harness; checkpoints themselves run on existing serving kernels with no inference overhead. Failure modes include overfitting the recipe to the KL-based proxy rather than true downstream accuracy, silent failures on long generations that the checker misses, and infeasibility of quantizing very large models on a single 24 GB GPU without offloading or rented memory-rich hardware.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23388",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "QDA improves accuracy over the strongest public PTQ recipe by 0.9, 1.4 and 2.2 percentage points on average at W4A16, W4A8 and W3A16 using 64 GPU-hours per search; on a 320B MoE at NVFP4 W4A4 it recovers 98.3% of FP8 accuracy versus 96.9% for the best vendor checkpoint.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23388",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

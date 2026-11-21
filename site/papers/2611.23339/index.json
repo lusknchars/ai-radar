@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your inference service slows down when several customers send requests together.",
+    "change": "Replay a recorded request trace with only the proposed serving policy changed.",
+    "baseline": "Your current scheduler on the same model and hardware.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Requests meeting your latency target, throughput, failures, and cost per successful request.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.23339",
+  "title": "Optimize the Cob, Then the Kernel: Optimizing Beam Search for Generative Recommendation Inference",
+  "summary": "The method replaces vLLM's per-beam batched decoding and per-step engine invocations with Tree Attention that concatenates beams along the sequence dimension to share the prompt prefix KV, plus pre-generated partial-attention masks, static KV cache allocation, loop-unrolled dispatch, TorchAir graph compilation, operator fusion, and vocabulary-constrained decoding, all without custom kernels. The cost is substantial serving-stack reengineering tied to specific compilation tooling (TorchAir, Ascend NPUs) and reduced flexibility: static KV allocation and fixed short outputs assume the GR pattern of long prompts and few generated tokens. It can fail when the workload is general LLM serving with variable-length outputs or narrow beams, when porting to GPU/vLLM stacks where TorchAir compilation does not apply, or when memory headroom cannot accommodate the concatenated-beam sequence.",
+  "rationale": "The gains are real but demonstrated only for generative-recommendation inference with wide beam search on Ascend NPUs, so adoption is warranted only if the reader's production workload matches that profile and tooling stack.",
+  "technique": "Beam-concatenated Tree Attention serving for generative recommendation",
+  "family": "serving_e_batching",
+  "recommendation": "testar",
+  "published": "2026-11-17",
+  "as_of": "2026-11-21",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.23339",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 33,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces vLLM's per-beam batched decoding and per-step engine invocations with Tree Attention that concatenates beams along the sequence dimension to share the prompt prefix KV, plus pre-generated partial-attention masks, static KV cache allocation, loop-unrolled dispatch, TorchAir graph compilation, operator fusion, and vocabulary-constrained decoding, all without custom kernels. The cost is substantial serving-stack reengineering tied to specific compilation tooling (TorchAir, Ascend NPUs) and reduced flexibility: static KV allocation and fixed short outputs assume the GR pattern of long prompts and few generated tokens. It can fail when the workload is general LLM serving with variable-length outputs or narrow beams, when porting to GPU/vLLM stacks where TorchAir compilation does not apply, or when memory headroom cannot accommodate the concatenated-beam sequence.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23339",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Up to 25x end-to-end latency reduction over vLLM on Ascend NPUs, with generation latency comparable to a custom-kernel state-of-the-art solution.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.23339",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

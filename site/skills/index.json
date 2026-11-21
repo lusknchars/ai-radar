@@ -18172,6 +18172,132 @@
     "source": "https://arxiv.org/abs/2611.23225"
   },
   {
+    "arxiv_id": "2611.23229",
+    "title": "Ambient LLMs: Data-Efficient Supervised Fine-tuning via Temperature Matching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23229-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23229"
+  },
+  {
+    "arxiv_id": "2611.23339",
+    "title": "Optimize the Cob, Then the Kernel: Optimizing Beam Search for Generative Recommendation Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23339-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23339"
+  },
+  {
+    "arxiv_id": "2611.23358",
+    "title": "Implementing Binary Transformers with Approximate Memories with Permutation Invariance Enabled Selective (PIES) Protection",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23358-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23358"
+  },
+  {
+    "arxiv_id": "2611.23388",
+    "title": "QDA: Closed-Loop LLM Quantization Design with Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23388-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23388"
+  },
+  {
+    "arxiv_id": "2611.23445",
+    "title": "Why Sub-4-Bit Vision CNNs Collapse and Where Mixed-Precision Recovery Stops",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23445-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23445"
+  },
+  {
+    "arxiv_id": "2611.23463",
+    "title": "FACT: Fixed-Budget Allocation and Cross-Step Training for Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23463-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23463"
+  },
+  {
+    "arxiv_id": "2611.23570",
+    "title": "Safe to Omit, Worth Omitting? Keeping the Answer and Cutting Latency When an LLM Agent Skips Another's Message",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23570-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23570"
+  },
+  {
+    "arxiv_id": "2611.23676",
+    "title": "Finetuning VLAs for Dexterous Manipulation: The Right Checkpoint Is All You Need",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23676-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23676"
+  },
+  {
+    "arxiv_id": "2611.23695",
+    "title": "MoMoVL: Modality-Aware Adaptive Compression for On-Device Sparsely-Activated Vision-Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23695-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23695"
+  },
+  {
+    "arxiv_id": "2611.23742",
+    "title": "Same Rank, Different Needs: Rethinking LoRA Redistribution in Federated Learning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23742-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23742"
+  },
+  {
+    "arxiv_id": "2611.23807",
+    "title": "Sightline: Long-Window Speculative Decoding for Fast SVG Generation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23807-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23807"
+  },
+  {
+    "arxiv_id": "2611.23810",
+    "title": "Continual Tool-Space Extension Learning for Multimodal Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23810-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23810"
+  },
+  {
+    "arxiv_id": "2611.23817",
+    "title": "Metrics-in-the-Loop: Complexity Feedback Reshapes Agent-Written Code",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23817-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23817"
+  },
+  {
+    "arxiv_id": "2611.23835",
+    "title": "NarrowSpec: Draft Hidden Width Need Not Match the Target in Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23835-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23835"
+  },
+  {
+    "arxiv_id": "2611.23855",
+    "title": "RoboBuilder: Agentic Robot Co-Design with Real-world Video Feedback in the Loop",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23855-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23855"
+  },
+  {
+    "arxiv_id": "2611.23857",
+    "title": "Neural Memory Orchestration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23857-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23857"
+  },
+  {
+    "arxiv_id": "2611.23875",
+    "title": "In Situ Training of Optical Neural Networks by Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23875-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23875"
+  },
+  {
+    "arxiv_id": "2611.23890",
+    "title": "EVA-RSI: Recursive Self-Improvement of Video Evaluators for Judging Temporal Quality",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23890-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23890"
+  },
+  {
     "arxiv_id": "2611.23910",
     "title": "MLE Agents: Autonomous ML Engineering in Large-scale Recommendation Systems",
     "status": "indexed",
@@ -18452,11 +18578,137 @@
     "source": "https://arxiv.org/abs/2611.24924"
   },
   {
+    "arxiv_id": "2611.24999",
+    "title": "PsyWorld: Profile-Conditioned World Modeling for Human Behavior Prediction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-24999-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.24999"
+  },
+  {
+    "arxiv_id": "2611.25001",
+    "title": "Density Feedback Control for Transferability of Generative Sparse Adversarial Attacks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25001-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25001"
+  },
+  {
+    "arxiv_id": "2611.25111",
+    "title": "DSFlow: A Neuro-Symbolic Data Workflow Agent with Statistical Diagnostic Guardrails",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25111-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25111"
+  },
+  {
+    "arxiv_id": "2611.25112",
+    "title": "TripleKV: Predict, Prefetch, Protect -- KV Cache Management for AI Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25112-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25112"
+  },
+  {
+    "arxiv_id": "2611.25123",
+    "title": "Forget Freely, Grep Later: Lossless, Index-Free Memory for Long-Horizon LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25123-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25123"
+  },
+  {
+    "arxiv_id": "2611.25170",
+    "title": "Before the Choice: An Evidential Framework for Studying Prospective Representations in Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25170-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25170"
+  },
+  {
+    "arxiv_id": "2611.25198",
+    "title": "When AI Analysts Disagree: Agentic Multiverse Analysis and the Robustness of Empirical Research",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25198-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25198"
+  },
+  {
+    "arxiv_id": "2611.25264",
+    "title": "Process-Knowledge-Guided Latent Diffusion for Generative Design of Porous Architectures: A Case Study in Aerosol Jet Printing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25264-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25264"
+  },
+  {
+    "arxiv_id": "2611.25288",
+    "title": "Intelligent Embedding Pruning for Large-Scale Recommendation Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25288-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25288"
+  },
+  {
+    "arxiv_id": "2611.25325",
+    "title": "Pandora's Toolbox Or Why Agent Safety Cannot Be Verified",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25325-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25325"
+  },
+  {
+    "arxiv_id": "2611.25328",
+    "title": "ReLay: Bidirectional Layout-Code Translation and Library Evolution for Reusable and Process-Portable Analog Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25328-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25328"
+  },
+  {
+    "arxiv_id": "2611.25339",
+    "title": "From FIPS to FPGA with LLM Agents: Measuring What Tests and Reviews Miss in Post-Quantum Cryptographic Hardware",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25339-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25339"
+  },
+  {
+    "arxiv_id": "2611.25357",
+    "title": "Pro$^2$ Agent: Scientific Problem Probing for Autonomous AI R&D",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25357-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25357"
+  },
+  {
+    "arxiv_id": "2611.25380",
+    "title": "Beyond Weight Updates: Evolving Agent Harnesses for Domain Specialization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25380-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25380"
+  },
+  {
+    "arxiv_id": "2611.25412",
+    "title": "ChainAgent: Automated Chainable Vulnerability Discovery in PHP Web Applications",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25412-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25412"
+  },
+  {
+    "arxiv_id": "2611.25424",
+    "title": "Coordinate Basis Linear Bandits with Sublinear Regret over Low-Rank Clusters",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25424-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25424"
+  },
+  {
     "arxiv_id": "2611.25433",
     "title": "RoCoKV: Accelerating LLM Inference Serving through Uncertainty and Redundancy Aware KV Cache Compression",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-25433-evidence.zip",
     "source": "https://arxiv.org/abs/2611.25433"
+  },
+  {
+    "arxiv_id": "2611.25521",
+    "title": "DRVEXO-4B-Unified: Design and Evaluation of a Modular Speech-Vision System",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25521-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25521"
+  },
+  {
+    "arxiv_id": "2611.25526",
+    "title": "MATE: Mobile Agent Trustworthy Execution for Safe and Efficient Mobile Control",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25526-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25526"
   },
   {
     "arxiv_id": "2611.25538",
@@ -18471,6 +18723,27 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-25570-evidence.zip",
     "source": "https://arxiv.org/abs/2611.25570"
+  },
+  {
+    "arxiv_id": "2611.25582",
+    "title": "AutoRAGBench: A Benchmark for LLM Agents Automating RAG System Development",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25582-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25582"
+  },
+  {
+    "arxiv_id": "2611.25583",
+    "title": "DriftGuard: Online Memory-Drift Detection via Causal Attribution for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25583-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25583"
+  },
+  {
+    "arxiv_id": "2611.25599",
+    "title": "Tether: Verified Stateful Policy Engine for System-Level Monitoring of Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-25599-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.25599"
   },
   {
     "arxiv_id": "2611.25656",
@@ -18716,6 +18989,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-26510-evidence.zip",
     "source": "https://arxiv.org/abs/2611.26510"
+  },
+  {
+    "arxiv_id": "2611.26525",
+    "title": "Backtracking Agent Applications Security Incidents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-26525-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.26525"
   },
   {
     "arxiv_id": "2611.26531",
