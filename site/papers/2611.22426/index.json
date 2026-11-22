@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.22426",
+  "title": "InfuseLoop: Cross-Trajectory Latent Injection for Scalable Parallel Looped Transformers",
+  "summary": "InfuseLoop replaces the standard PLT loop recurrence, in which only the preceding in-trajectory hidden state crosses loop boundaries, with a cross-trajectory latent injection that aggregates causally available hidden states from later prediction trajectories via lightweight attention residuals. Costs are O(Rd) additional hidden-state storage, 0.3% decoding time over vanilla PLTs, and 23.3% over a non-looped baseline, while preserving token-parallel training and the vanilla PLT KV-cache footprint. It can fail if the reported stability and perplexity gains do not transfer beyond the paper's training scale, if looped-model decoding underutilizes the reader's single-GPU serving stack, or if integrating trajectory cross-dependencies complicates existing inference kernels.",
+  "rationale": "The technique is a training-time architecture change to Parallel Looped Transformers, which the reader cannot train or adopt without foundation-model training infrastructure, though its efficiency profile merits monitoring.",
+  "technique": "Cross-trajectory latent injection for looped transformers",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-11-17",
+  "as_of": "2026-11-22",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.22426",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "InfuseLoop replaces the standard PLT loop recurrence, in which only the preceding in-trajectory hidden state crosses loop boundaries, with a cross-trajectory latent injection that aggregates causally available hidden states from later prediction trajectories via lightweight attention residuals. Costs are O(Rd) additional hidden-state storage, 0.3% decoding time over vanilla PLTs, and 23.3% over a non-looped baseline, while preserving token-parallel training and the vanilla PLT KV-cache footprint. It can fail if the reported stability and perplexity gains do not transfer beyond the paper's training scale, if looped-model decoding underutilizes the reader's single-GPU serving stack, or if integrating trajectory cross-dependencies complicates existing inference kernels.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.22426",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At eight loops, reduces perplexity by 3.4–17.1% versus vanilla PLTs and 10.5–37.3% versus a non-looped baseline, with 0.84–1.99 points higher average downstream accuracy and only 0.3% decoding overhead versus vanilla PLTs.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.22426",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

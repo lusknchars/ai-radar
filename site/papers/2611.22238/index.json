@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.22238",
+  "title": "Context Has a Price: Adding and Removing Context for LLM Coding Agents under Prefix Caching",
+  "summary": "This is a measurement framework for context-management policies (adding retrieved code, removing stale tool observations) in coding agents, replacing ad hoc prompt engineering decisions and naive token counting with cost accounting that separates uncached input, cached input, and output tokens. It costs engineering effort to instrument per-category token usage and to control for shared cached prefixes across concurrent runs, and it adds no new model or infrastructure dependency. It can fail if applied as a blanket conclusion: the negative results depend on a specific cache price ratio (one tenth of uncached) and on specific benchmarks, so a policy that loses money in this study may still pay off under different provider pricing, cache behavior, or task distributions, and shorter prompts can backfire by inducing more agent steps.",
+  "rationale": "The paper's actionable contribution is a measurement methodology, not a beneficial technique, and its results show that naive context addition or removal can raise cost under prefix caching without improving resolution, so the reader should adopt the evaluation practice and validate any context-management policy on their own workload before deployment.",
+  "technique": "Cost-aware context management evaluation for coding agents",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-11-17",
+  "as_of": "2026-11-22",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.22238",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": 0,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is a measurement framework for context-management policies (adding retrieved code, removing stale tool observations) in coding agents, replacing ad hoc prompt engineering decisions and naive token counting with cost accounting that separates uncached input, cached input, and output tokens. It costs engineering effort to instrument per-category token usage and to control for shared cached prefixes across concurrent runs, and it adds no new model or infrastructure dependency. It can fail if applied as a blanket conclusion: the negative results depend on a specific cache price ratio (one tenth of uncached) and on specific benchmarks, so a policy that loses money in this study may still pay off under different provider pricing, cache behavior, or task distributions, and shorter prompts can backfire by inducing more agent steps.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.22238",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "No net improvement: retrieved code reduced read/search commands by 18-34% but raised cost by 33-42% under a tenth-price cache; observation removal saved 19-36% without a cache discount but increased cost by 38-116% with one; no measurable gain in task resolution.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.22238",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

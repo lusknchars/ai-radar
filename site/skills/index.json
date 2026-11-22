@@ -18025,11 +18025,95 @@
     "source": "https://arxiv.org/abs/2611.21608"
   },
   {
+    "arxiv_id": "2611.22203",
+    "title": "EGS: A Complementary Safety Framework for Educational LLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22203-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22203"
+  },
+  {
+    "arxiv_id": "2611.22215",
+    "title": "Communicate the Change: Efficient Expert Parallelism via Activation Compression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22215-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22215"
+  },
+  {
+    "arxiv_id": "2611.22218",
+    "title": "Learning Optimal Transport Plans Via Autoregressive Token Regression",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22218-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22218"
+  },
+  {
+    "arxiv_id": "2611.22236",
+    "title": "Spatially local mini-batching for implicit neural representations",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22236-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22236"
+  },
+  {
+    "arxiv_id": "2611.22238",
+    "title": "Context Has a Price: Adding and Removing Context for LLM Coding Agents under Prefix Caching",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22238-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22238"
+  },
+  {
+    "arxiv_id": "2611.22245",
+    "title": "Multi-Agent Memory Inconsistency: Where Factual Conflicts Disappear in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22245-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22245"
+  },
+  {
+    "arxiv_id": "2611.22280",
+    "title": "XM-Sparse: High-Throughput Sparse-Attention LLM Serving over Scale-up Memory Pools",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22280-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22280"
+  },
+  {
+    "arxiv_id": "2611.22291",
+    "title": "When the World Is the Test Suite: Agentic Intelligence for the Physical World",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22291-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22291"
+  },
+  {
     "arxiv_id": "2611.22296",
     "title": "SpecSearch: Towards Hardware-Aware Efficient Speculative Decoding",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-22296-evidence.zip",
     "source": "https://arxiv.org/abs/2611.22296"
+  },
+  {
+    "arxiv_id": "2611.22299",
+    "title": "Harnesses That Improve Themselves: A Unifying Framework for Self-Improving Agent Harnesses",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22299-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22299"
+  },
+  {
+    "arxiv_id": "2611.22323",
+    "title": "Agent Trajectories as Evidence for Software Quality Assurance",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22323-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22323"
+  },
+  {
+    "arxiv_id": "2611.22334",
+    "title": "BQ-LoRA: Binary-Quantized Low-Rank Adapters as Implicit Regularizers for Parameter-Efficient Fine-Tuning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22334-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22334"
+  },
+  {
+    "arxiv_id": "2611.22426",
+    "title": "InfuseLoop: Cross-Trajectory Latent Injection for Scalable Parallel Looped Transformers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22426-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22426"
   },
   {
     "arxiv_id": "2611.22432",
@@ -18044,6 +18128,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-22461-evidence.zip",
     "source": "https://arxiv.org/abs/2611.22461"
+  },
+  {
+    "arxiv_id": "2611.22483",
+    "title": "Manufacturing Differential Sparsity: Planner-Hardware Co-Design for Efficient World Model Planning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22483-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22483"
   },
   {
     "arxiv_id": "2611.22490",
@@ -18067,11 +18158,46 @@
     "source": "https://arxiv.org/abs/2611.22583"
   },
   {
+    "arxiv_id": "2611.22611",
+    "title": "DAQ: Decision-Aligned Post-Training Quantization for Spiking Transformers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22611-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22611"
+  },
+  {
     "arxiv_id": "2611.22661",
     "title": "The Between-Round Decision in Autonomous Research: An LLM Controller That Reads the Whole Trajectory",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-22661-evidence.zip",
     "source": "https://arxiv.org/abs/2611.22661"
+  },
+  {
+    "arxiv_id": "2611.22721",
+    "title": "HADVQ: Hessian Aware Directional Vector Quantization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22721-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22721"
+  },
+  {
+    "arxiv_id": "2611.22728",
+    "title": "LoopZip: Visual Token Compression for Efficient Looped Vision-Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22728-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22728"
+  },
+  {
+    "arxiv_id": "2611.22746",
+    "title": "LaFlash: Capacity-Driven Acceleration for Coding Agent Workflows via QLC-HBF",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22746-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22746"
+  },
+  {
+    "arxiv_id": "2611.22757",
+    "title": "LoopPrune: Recurrent Pruning for Looped Diffusion Transformers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22757-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22757"
   },
   {
     "arxiv_id": "2611.22777",
@@ -18086,6 +18212,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-22835-evidence.zip",
     "source": "https://arxiv.org/abs/2611.22835"
+  },
+  {
+    "arxiv_id": "2611.22842",
+    "title": "SilverSpoon-KD: A General-Purpose Toolkit for Knowledge Distillation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22842-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22842"
+  },
+  {
+    "arxiv_id": "2611.22854",
+    "title": "WATERFALL: Workflow for Adaptive Training with Evolutionary Reward Formulation and Automated Learning Loops",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22854-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22854"
   },
   {
     "arxiv_id": "2611.22888",
@@ -18109,6 +18249,13 @@
     "source": "https://arxiv.org/abs/2611.22901"
   },
   {
+    "arxiv_id": "2611.22926",
+    "title": "When Do Typed Decision Models Work in Transportation? Evidence from Travel Choice and Traffic Signal Control",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-22926-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.22926"
+  },
+  {
     "arxiv_id": "2611.22967",
     "title": "CodeReel: Accelerating Code-to-Video Agents with Exact Frame Reuse and Blocking-Aware Scheduling",
     "status": "indexed",
@@ -18130,6 +18277,13 @@
     "source": "https://arxiv.org/abs/2611.23010"
   },
   {
+    "arxiv_id": "2611.23035",
+    "title": "Storing the Gemma 4 K=V Cache Once: Exact Global-KV Memory Savings in a Paged Serving Engine with Unchanged Attention Kernels",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23035-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23035"
+  },
+  {
     "arxiv_id": "2611.23067",
     "title": "Values Shape What Self-Improving Coding Agents Build",
     "status": "indexed",
@@ -18137,11 +18291,32 @@
     "source": "https://arxiv.org/abs/2611.23067"
   },
   {
+    "arxiv_id": "2611.23093",
+    "title": "What's in a Tree ? Hierarchical $n$-gram models as controlled approximators of language",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23093-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23093"
+  },
+  {
+    "arxiv_id": "2611.23118",
+    "title": "Auditing a Learned Simulator for Legged Robots: The Robotic World Model on ANYmal D",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23118-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23118"
+  },
+  {
     "arxiv_id": "2611.23119",
     "title": "Dynamic Task Allocation with Dialogue",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23119-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23119"
+  },
+  {
+    "arxiv_id": "2611.23158",
+    "title": "MoE--LoRA Methods for Multilingual Adaptation: A Systematic Empirical Study",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23158-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23158"
   },
   {
     "arxiv_id": "2611.23174",
@@ -18156,6 +18331,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23203-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23203"
+  },
+  {
+    "arxiv_id": "2611.23205",
+    "title": "Fine-Tuning Gemma 4 Edge Models for MATLAB Signal-Processing Code with SFT and QLoRA on a Laptop iGPU",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23205-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23205"
   },
   {
     "arxiv_id": "2611.23219",
@@ -18179,11 +18361,32 @@
     "source": "https://arxiv.org/abs/2611.23229"
   },
   {
+    "arxiv_id": "2611.23334",
+    "title": "Integrating AI Coding Agents Into Scientific Research",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23334-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23334"
+  },
+  {
+    "arxiv_id": "2611.23335",
+    "title": "Truthgate: Checking Coding Agents Against a Record They Cannot Edit - Cheating, Deterrence and Disclosure on Impossible Tasks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23335-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23335"
+  },
+  {
     "arxiv_id": "2611.23339",
     "title": "Optimize the Cob, Then the Kernel: Optimizing Beam Search for Generative Recommendation Inference",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23339-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23339"
+  },
+  {
+    "arxiv_id": "2611.23353",
+    "title": "Idempotency Is Not Recovery: A Fault-Injection Study of Language-Model Agent Tool Actions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23353-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23353"
   },
   {
     "arxiv_id": "2611.23358",
@@ -18193,11 +18396,25 @@
     "source": "https://arxiv.org/abs/2611.23358"
   },
   {
+    "arxiv_id": "2611.23375",
+    "title": "Where the Tokens Go: Heat, Entropy and Error in Agentic Coding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23375-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23375"
+  },
+  {
     "arxiv_id": "2611.23388",
     "title": "QDA: Closed-Loop LLM Quantization Design with Agents",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23388-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23388"
+  },
+  {
+    "arxiv_id": "2611.23403",
+    "title": "Tracking Representations in LLM Reasoning Traces for Iterated Games",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23403-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23403"
   },
   {
     "arxiv_id": "2611.23445",
@@ -18214,11 +18431,53 @@
     "source": "https://arxiv.org/abs/2611.23463"
   },
   {
+    "arxiv_id": "2611.23473",
+    "title": "Reliability by Architecture: Agentic Workflows for Validated Multi-Physics Simulation from Natural Language",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23473-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23473"
+  },
+  {
+    "arxiv_id": "2611.23483",
+    "title": "SpecLook: Speculating Where to Look for Fast and Reliable Agentic MLLMs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23483-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23483"
+  },
+  {
+    "arxiv_id": "2611.23564",
+    "title": "LProp: Propagating Latent Uncertainty through Evidence-Conditioned Belief Revision in LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23564-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23564"
+  },
+  {
     "arxiv_id": "2611.23570",
     "title": "Safe to Omit, Worth Omitting? Keeping the Answer and Cutting Latency When an LLM Agent Skips Another's Message",
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23570-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23570"
+  },
+  {
+    "arxiv_id": "2611.23588",
+    "title": "ARISE: Practical Self-Evolving Memory for Accurate and Cost-Efficient Enterprise Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23588-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23588"
+  },
+  {
+    "arxiv_id": "2611.23613",
+    "title": "MANGO Arena: Same Seeds, Different Chains Evaluating LLM Agents in a Disrupted Supply Chain",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23613-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23613"
+  },
+  {
+    "arxiv_id": "2611.23615",
+    "title": "Weight Space Programming for Vision Language Model Repair",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23615-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23615"
   },
   {
     "arxiv_id": "2611.23676",
@@ -18240,6 +18499,20 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-23742-evidence.zip",
     "source": "https://arxiv.org/abs/2611.23742"
+  },
+  {
+    "arxiv_id": "2611.23750",
+    "title": "Beyond Replacement: Levenshtein Editing for Diffusion Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23750-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23750"
+  },
+  {
+    "arxiv_id": "2611.23751",
+    "title": "Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-23751-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.23751"
   },
   {
     "arxiv_id": "2611.23807",
@@ -18576,6 +18849,13 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-24924-evidence.zip",
     "source": "https://arxiv.org/abs/2611.24924"
+  },
+  {
+    "arxiv_id": "2611.24977",
+    "title": "CANDID: Candidate-Driven Intervention for Disciplined Execution in Local Computer-Use Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-24977-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.24977"
   },
   {
     "arxiv_id": "2611.24999",
