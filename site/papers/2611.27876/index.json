@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An assistant chooses the wrong API or sends arguments your product cannot use.",
+    "change": "Apply the proposed tool-selection or argument-generation change in a sandbox.",
+    "baseline": "Your current agent with the same tool schemas and task budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct completed actions, invalid calls, retries, latency, and cost per completed task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.27876",
+  "title": "LesionAgent: Training-Free Agentic Tumor Tracking and Response Assessment in Longitudinal CT",
+  "summary": "LesionAgent replaces fixed-rule pipelines that chain frozen 3D segmentation, registration, and tracking models for longitudinal oncology CT reads: an LLM agent operates the models as tools, maintains a lesion registry across visits, verifies model outputs, and delegates response assessment to a deterministic guideline engine. It costs LLM inference per case (API or a locally hosted open-weight model), a non-trivial agentic harness with coordinate-labelled 3D views and verification logic, and no task-specific training or model weights. It can fail through residual LLM reasoning errors that the verification layer does not catch, dependence on the accuracy of the underlying frozen 3D tools, and distribution shift when moved from the four public datasets to a given hospital's scanners, protocols, and populations, and it remains a research system without regulatory clearance.",
+  "rationale": "The technique is directly usable with one GPU plus APIs and requires no training, but it targets longitudinal oncology CT reads, so adoption depends on the reader actually operating in medical imaging and on clinical validation that a constrained team likely cannot perform.",
+  "technique": "Training-free agentic longitudinal CT lesion tracking",
+  "family": "uso_de_ferramenta",
+  "recommendation": "observar",
+  "published": "2026-11-20",
+  "as_of": "2026-11-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.27876",
+  "independent_implementations": 0,
+  "total_implementations": 2,
+  "stars": 139,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "LesionAgent replaces fixed-rule pipelines that chain frozen 3D segmentation, registration, and tracking models for longitudinal oncology CT reads: an LLM agent operates the models as tools, maintains a lesion registry across visits, verifies model outputs, and delegates response assessment to a deterministic guideline engine. It costs LLM inference per case (API or a locally hosted open-weight model), a non-trivial agentic harness with coordinate-labelled 3D views and verification logic, and no task-specific training or model weights. It can fail through residual LLM reasoning errors that the verification layer does not catch, dependence on the accuracy of the underlying frozen 3D tools, and distribution shift when moved from the four public datasets to a given hospital's scanners, protocols, and populations, and it remains a research system without regulatory clearance.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27876",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Detection F1 of 78% versus 41% for Claude Code with the same LLM and 3D models but without the harness; an open-weight LLM rises from 6% to 73% with the harness.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27876",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

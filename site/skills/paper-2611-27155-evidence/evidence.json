@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.27155",
+  "title": "The Vulnerability Window: Decision Instability in Quantized Reward Models",
+  "summary": "This is a diagnostic finding rather than a deployable technique: it replaces the standard practice of validating 4-bit-quantized reward models and judges by aggregate benchmark accuracy with direct measurement of pairwise-decision churn, concentrated in a margin-defined vulnerability window where full-precision margins are small relative to quantization noise. The cost is an additional audit pass over a held-out preference set and margin computation; no extra serving infrastructure is required, and margin-based flip predictors (AUC 0.927) and directly measured churn rate rank downstream impact better than accuracy deltas (churn ranks downstream change at rho=0.89). What can fail: the Gaussian flip model Phi(-|m|/sigma) over-predicts in all 30 scalar settings and fails entirely for generative judges, effects are quantizer- and family-dependent (harmful:helpful flip ratios reverse sign across families), the margin signal is matched by plain top-k as a routing signal, and small judges are disproportionately fragile (vulnerability-window occupancy falls from 25% to 7% with model size), so conclusions do not transfer across model families without re-auditing.",
+  "rationale": "The reader who quantizes reward models or LLM judges for affordable scoring should validate per-workload with margin-based churn measurement rather than trusting aggregate accuracy, since the paper shows benchmark accuracy is blind to decision flips that alter what ships.",
+  "technique": "Churn-based auditing of quantized reward models",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-11-20",
+  "as_of": "2026-11-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.27155",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 4,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "This is a diagnostic finding rather than a deployable technique: it replaces the standard practice of validating 4-bit-quantized reward models and judges by aggregate benchmark accuracy with direct measurement of pairwise-decision churn, concentrated in a margin-defined vulnerability window where full-precision margins are small relative to quantization noise. The cost is an additional audit pass over a held-out preference set and margin computation; no extra serving infrastructure is required, and margin-based flip predictors (AUC 0.927) and directly measured churn rate rank downstream impact better than accuracy deltas (churn ranks downstream change at rho=0.89). What can fail: the Gaussian flip model Phi(-|m|/sigma) over-predicts in all 30 scalar settings and fails entirely for generative judges, effects are quantizer- and family-dependent (harmful:helpful flip ratios reverse sign across families), the margin signal is matched by plain top-k as a routing signal, and small judges are disproportionately fragile (vulnerability-window occupancy falls from 25% to 7% with model size), so conclusions do not transfer across model families without re-auditing.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27155",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "4-bit quantization rewrites 1.1-12.3% of pairwise reward-model decisions while aggregate benchmark accuracy moves as little as 0.03 points (p=1.00); 14.6-65.7% of best-of-64 selections change downstream, with selections changing 5-8x more often than final answers.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27155",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

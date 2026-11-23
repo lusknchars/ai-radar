@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A support or data assistant repeats work across related customer requests.",
+    "change": "Try the paper's memory change in a replay of past tasks, with separate memory per customer.",
+    "baseline": "Your current memory pipeline plus a no-memory control using the same agent.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.27381",
+  "title": "VMSA: Video Memory Skill Agent for Long Video Understanding",
+  "summary": "Replaces naive long-context stuffing or single-index video RAG for long-video QA with three complementary text memories (segment captions, entity events, entity-aware episodes) plus a skill library distilled from successful agent trajectories to guide iterative retrieval, reasoning, and verification. Costs a heavy offline indexing pass over the video (captioning, entity/event extraction, episode construction), multiple LLM calls per query across retrieval and verification rounds, and ongoing maintenance of the memory stores and skill library. Can fail when captioning or entity extraction is inaccurate (errors propagate into all downstream retrieval), when skill induction overfits to training trajectories and misguides retrieval on new query types, or when multi-round verification inflates latency and API spend without proportional accuracy gains on the reader's specific video domain.",
+  "rationale": "The architecture (offline video captioning into structured text memories, API-LLM agentic retrieval, and an induced skill library) fits a 24 GB or API-only budget, but the three-tier memory design and trajectory-based skill induction add enough engineering complexity that the accuracy gain must be validated on the reader's own video workloads before adoption.",
+  "technique": "Structured video memory with induced retrieval skills",
+  "family": "memoria_e_contexto",
+  "recommendation": "testar",
+  "published": "2026-11-20",
+  "as_of": "2026-11-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.27381",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 130,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Replaces naive long-context stuffing or single-index video RAG for long-video QA with three complementary text memories (segment captions, entity events, entity-aware episodes) plus a skill library distilled from successful agent trajectories to guide iterative retrieval, reasoning, and verification. Costs a heavy offline indexing pass over the video (captioning, entity/event extraction, episode construction), multiple LLM calls per query across retrieval and verification rounds, and ongoing maintenance of the memory stores and skill library. Can fail when captioning or entity extraction is inaccurate (errors propagate into all downstream retrieval), when skill induction overfits to training trajectories and misguides retrieval on new query types, or when multi-round verification inflates latency and API spend without proportional accuracy gains on the reader's specific video domain.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27381",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Achieves the highest accuracy on all three week-long egocentric benchmarks, outperforming the strongest baseline by up to 9.4% on Ego-R1 Bench, with best or competitive results on four additional long-video QA benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27381",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

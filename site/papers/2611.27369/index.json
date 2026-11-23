@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "You already need task-specific training and want to reduce its memory or compute cost.",
+    "change": "Change only the training technique on a small controlled run after checking prerequisites.",
+    "baseline": "Your current training recipe with the same model, data split, and evaluation.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Held-out quality, peak memory, training time, and full compute cost to the target quality.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.27369",
+  "title": "AMARIS: Merging Generalist and Specialist LLMs via Adaptive Subspace Inheritance",
+  "summary": "AMARIS replaces naive parameter-space merging methods (weight interpolation, sparsified averaging) and, in some workflows, the need to serve or train separate specialist checkpoints, by projecting specialist weight updates onto ranked generalized eigendirections selected under an output-perturbation budget. It costs covariance estimation over activation statistics plus a generalized eigendecomposition per merged layer, producing one static checkpoint with no inference-time overhead, though 32B-scale merging may exceed a single 24 GB GPU without CPU offloading. It can fail when activation covariances are estimated on unrepresentative calibration data, when the chosen rank budget drops useful specialist directions, and because the reported retention figures cover only three Qwen3-based settings and may not transfer to other model families or domains.",
+  "rationale": "Model merging runs offline on a single 24 GB GPU for 8B-scale models and requires no training, but the retention trade-offs are benchmark-specific and must be validated on the reader's own specialist tasks before replacing a fine-tuned checkpoint in production.",
+  "technique": "Covariance-driven subspace-constrained model merging",
+  "family": "treino_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-20",
+  "as_of": "2026-11-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.27369",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 130,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "AMARIS replaces naive parameter-space merging methods (weight interpolation, sparsified averaging) and, in some workflows, the need to serve or train separate specialist checkpoints, by projecting specialist weight updates onto ranked generalized eigendirections selected under an output-perturbation budget. It costs covariance estimation over activation statistics plus a generalized eigendecomposition per merged layer, producing one static checkpoint with no inference-time overhead, though 32B-scale merging may exceed a single 24 GB GPU without CPU offloading. It can fail when activation covariances are estimated on unrepresentative calibration data, when the chosen rank budget drops useful specialist directions, and because the reported retention figures cover only three Qwen3-based settings and may not transfer to other model families or domains.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27369",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "AMARIS reports 98.37% specialist retention with 95.16% core retention (8B finance), 103.55% core retention with 90.28% specialist retention (8B instruction-following), and 99.20% core retention with 94.80% specialist retention (32B SEA), competitive with training-free merging baselines.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27369",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

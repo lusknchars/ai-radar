@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.27973",
+  "title": "MemOnce: A Scalable Memory Architecture for Large Language Models",
+  "summary": "MemOnce replaces the standard Transformer layer-wise KV cache with a small set of final-layer hidden states that are decoded back into per-layer KV caches on demand, combined with sparse memory attention whose indices are computed once across layers. The cost is architectural: it is a foundation-model design that requires pretraining or a post-training adaptation procedure to modify the model weights, so it cannot be bolted onto an existing deployed checkpoint or API-served model, and the decoded-KV quality depends on the learned encoder-decoder. It can fail for this reader because adoption is blocked without training capacity; additionally, compressed memory may lose fine-grained detail in exactly the long-context retrieval tasks it targets, and reported gains come from the authors' own adaptation of Qwen3.5-4B, so off-the-shelf availability is not established.",
+  "rationale": "MemOnce is a foundation architecture requiring pretraining or weight-level adaptation, which the reader's infrastructure and budget cannot support; it should be tracked until pretrained checkpoints or API access exist.",
+  "technique": "Learned compressed memory states with decoded KV cache",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-11-20",
+  "as_of": "2026-11-23",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.27973",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MemOnce replaces the standard Transformer layer-wise KV cache with a small set of final-layer hidden states that are decoded back into per-layer KV caches on demand, combined with sparse memory attention whose indices are computed once across layers. The cost is architectural: it is a foundation-model design that requires pretraining or a post-training adaptation procedure to modify the model weights, so it cannot be bolted onto an existing deployed checkpoint or API-served model, and the decoded-KV quality depends on the learned encoder-decoder. It can fail for this reader because adoption is blocked without training capacity; additionally, compressed memory may lose fine-grained detail in exactly the long-context retrieval tasks it targets, and reported gains come from the authors' own adaptation of Qwen3.5-4B, so off-the-shelf availability is not established.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27973",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Adapting Qwen3.5-4B with MemOnce reduces memory state cache by 1313x and prefill latency by 6.9x at 1M context, and improves throughput by 3.5x and overall memory performance by +5.77% versus baselines.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.27973",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
