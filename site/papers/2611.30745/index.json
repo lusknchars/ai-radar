@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.30745",
+  "title": "Intent-Conditioned Argument Mediation for Tool-Using LLM Agents: Blocking Trusted-but-Unauthorized Arguments",
+  "summary": "IntentFlow replaces argument-level provenance-only mediation (or CaMeL-style capability checks) with a mediation layer that validates each authority-bearing tool argument against an explicit intent contract plus a provenance policy, without modifying the planner. It costs the engineering of per-tool intent contracts and provenance policies, an added check in the tool-call path, and dependency on intent/injection oracles whose real-world equivalents must be built and maintained. It can fail by residual attacks on content or payload fields (all 24 remaining successes were of this type), by over-blocking hard benign tasks (4 of 50), and wherever intent cannot be specified precisely enough to distinguish authorized from trusted-but-unrequested arguments.",
+  "rationale": "The mediation layer wraps an unmodified planner and tools, fitting a single-GPU or API-based stack, but the evidence is a 200-task synthetic benchmark with oracle intent labels and one live planner, so production value depends on the reader's ability to specify intent contracts and provenance policies for their own tool surface.",
+  "technique": "Intent-contract mediation for tool-call arguments",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "testar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.30745",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "IntentFlow replaces argument-level provenance-only mediation (or CaMeL-style capability checks) with a mediation layer that validates each authority-bearing tool argument against an explicit intent contract plus a provenance policy, without modifying the planner. It costs the engineering of per-tool intent contracts and provenance policies, an added check in the tool-call path, and dependency on intent/injection oracles whose real-world equivalents must be built and maintained. It can fail by residual attacks on content or payload fields (all 24 remaining successes were of this type), by over-blocking hard benign tasks (4 of 50), and wherever intent cannot be specified precisely enough to distinguish authorized from trusted-but-unrequested arguments.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30745",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Attack success falls from 50.5% with provenance-only mediation to 12.0% (95% CI 8.2-17.2%) on 200 synthetic attacks; all 50 trusted-but-unauthorized attacks blocked versus 50/50 executed by provenance alone; 0/200 benign tasks wrongly blocked.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30745",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

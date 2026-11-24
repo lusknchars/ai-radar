@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A narrow, repeated product task may not need your largest model.",
+    "change": "Check whether a released student model fits the task before generating training data.",
+    "baseline": "Your current model and an off-the-shelf small model on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Student quality, serving cost, teacher calls, training cost, and failures on unusual inputs.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.30534",
+  "title": "DelayOPSD: On-Policy Self-Distillation from a Synchronous Teacher for Real-time Asynchronous Policies",
+  "summary": "DelayOPSD replaces naive asynchronous execution of flow-based VLA policies (or training on expert demonstrations alone) by distilling a synchronous teacher, derived from the same policy with current observations, into a delayed student on the student's own rollouts, matching the teacher throughout the denoising process. It costs an additional rollout-generation and fine-tuning phase with a teacher forward pass per delayed step, but adds no modules or latency at deployment. It can fail if on-policy rollouts are expensive or unsafe to collect, if the teacher's own synchronous behavior is already weak, or if the delay regime in production exceeds the delay trained for.",
+  "rationale": "The method addresses a robotics-specific problem (inference latency in flow-based vision-language-action policies) that falls outside typical LLM/ML production work unless the reader deploys real-time robot policies.",
+  "technique": "On-policy self-distillation for asynchronous VLA policies",
+  "family": "destilacao",
+  "recommendation": "nao_aplica",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.30534",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "DelayOPSD replaces naive asynchronous execution of flow-based VLA policies (or training on expert demonstrations alone) by distilling a synchronous teacher, derived from the same policy with current observations, into a delayed student on the student's own rollouts, matching the teacher throughout the denoising process. It costs an additional rollout-generation and fine-tuning phase with a teacher forward pass per delayed step, but adds no modules or latency at deployment. It can fail if on-policy rollouts are expensive or unsafe to collect, if the teacher's own synchronous behavior is already weak, or if the delay regime in production exceeds the delay trained for.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30534",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Under a 10-step observation delay, training SmolVLA on the policy's own rollouts raises success from 70.2% (demonstration training) to 78.7%; on a real robot, success improves from 46% to 62%, with the highest average success among compared methods on LIBERO and Kinetix.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30534",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

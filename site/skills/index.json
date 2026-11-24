@@ -19570,5 +19570,285 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-27983-evidence.zip",
     "source": "https://arxiv.org/abs/2611.27983"
+  },
+  {
+    "arxiv_id": "2611.30081",
+    "title": "The Growth Path Is the Missing Half of Neural Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30081-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30081"
+  },
+  {
+    "arxiv_id": "2611.30083",
+    "title": "MotionServe: Efficient Multi-Robot Serving by Exploiting Robot Execution Slack",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30083-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30083"
+  },
+  {
+    "arxiv_id": "2611.30183",
+    "title": "PCC: Pivotal Channel Compensation for Layer Pruning of Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30183-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30183"
+  },
+  {
+    "arxiv_id": "2611.30205",
+    "title": "PackLoop: Row-Packed Self-Speculative Decoding for Looped Language Models under Concurrency",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30205-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30205"
+  },
+  {
+    "arxiv_id": "2611.30216",
+    "title": "EdgeALM: An Efficient and Unified Edge Accelerator for Large Audio Language Models via Full-Stack Hardware-Software Co-Design and Agent-Driven Recursive Optimization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30216-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30216"
+  },
+  {
+    "arxiv_id": "2611.30376",
+    "title": "Low-Rank Tensor Representations for Efficient Multimarginal Optimal Transport",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30376-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30376"
+  },
+  {
+    "arxiv_id": "2611.30385",
+    "title": "Toward a Scalable and Adaptive Evaluation Measure for Time Series Anomaly Detection",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30385-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30385"
+  },
+  {
+    "arxiv_id": "2611.30404",
+    "title": "Time Series Foundation Models on the Edge",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30404-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30404"
+  },
+  {
+    "arxiv_id": "2611.30417",
+    "title": "ANOR: Scaling Sparse Attention with a GPU-PNM Computing Hierarchy",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30417-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30417"
+  },
+  {
+    "arxiv_id": "2611.30455",
+    "title": "CGSpec: Consistency-Guided Speculative Decoding with Overlap-Aware Verification Scheduling for Edge-Cloud Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30455-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30455"
+  },
+  {
+    "arxiv_id": "2611.30483",
+    "title": "When an AI agent makes a mistake in a database, what decides the damage?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30483-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30483"
+  },
+  {
+    "arxiv_id": "2611.30494",
+    "title": "Revisiting LLMs as Context Engineers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30494-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30494"
+  },
+  {
+    "arxiv_id": "2611.30517",
+    "title": "sudo L7: Can Coding Agents Act Like Staff Engineers?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30517-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30517"
+  },
+  {
+    "arxiv_id": "2611.30534",
+    "title": "DelayOPSD: On-Policy Self-Distillation from a Synchronous Teacher for Real-time Asynchronous Policies",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30534-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30534"
+  },
+  {
+    "arxiv_id": "2611.30559",
+    "title": "Learning What to Change: State-Verified Reinforcement Learning for Educational Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30559-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30559"
+  },
+  {
+    "arxiv_id": "2611.30587",
+    "title": "Quantizing Diffusion LLMs under Parallel Decoding: Commitment Risk and the Parallelism Tax",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30587-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30587"
+  },
+  {
+    "arxiv_id": "2611.30621",
+    "title": "AgentBouncer: Defending Software Engineering Agents via Dynamic System-Call Mediation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30621-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30621"
+  },
+  {
+    "arxiv_id": "2611.30624",
+    "title": "Oops!... I Parsed It Again: Tool-Call Smuggling Against LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30624-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30624"
+  },
+  {
+    "arxiv_id": "2611.30639",
+    "title": "Uncovering the Tells: Efficient Black-Box Audits for LLM Data Contamination",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30639-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30639"
+  },
+  {
+    "arxiv_id": "2611.30648",
+    "title": "MTL-MHOL: Predicting Online Conversions under Delayed Feedback and Data Sparsity",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30648-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30648"
+  },
+  {
+    "arxiv_id": "2611.30742",
+    "title": "Transport-Safe Evaluation of LLM Agents: Trajectory-Dependent Judge Error and Anytime-Valid Auditing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30742-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30742"
+  },
+  {
+    "arxiv_id": "2611.30745",
+    "title": "Intent-Conditioned Argument Mediation for Tool-Using LLM Agents: Blocking Trusted-but-Unauthorized Arguments",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30745-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30745"
+  },
+  {
+    "arxiv_id": "2611.30771",
+    "title": "GameDojo: Benchmarking Real-Time Interactive Agents in Video Games",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30771-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30771"
+  },
+  {
+    "arxiv_id": "2611.30825",
+    "title": "Doc-to-LoRA Analysis: Query Conditioning, Wrong Facts, and Distractor Interference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30825-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30825"
+  },
+  {
+    "arxiv_id": "2611.30835",
+    "title": "The KL Divergence Is Never Negative, Except in PyTorch",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30835-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30835"
+  },
+  {
+    "arxiv_id": "2611.30854",
+    "title": "How Do Deep Networks Encode and Selectively Use Information? Shared Encoding and Conditional Signed Readout in Vision and Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30854-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30854"
+  },
+  {
+    "arxiv_id": "2611.30894",
+    "title": "Useful but Unwieldy: How Software Engineers Perceive the Design of Chain-of-Thought Explanations in Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30894-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30894"
+  },
+  {
+    "arxiv_id": "2611.30932",
+    "title": "Carried-Over and Agent-Native Threats in the Supply Chain of LLM Agent Skills",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30932-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30932"
+  },
+  {
+    "arxiv_id": "2611.30962",
+    "title": "Self-Evolving Evaluation Environments for Computer-Use Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30962-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30962"
+  },
+  {
+    "arxiv_id": "2611.30983",
+    "title": "MedUIGym: Evaluating and Training GUI Agents for Clinical Workflows",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-30983-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.30983"
+  },
+  {
+    "arxiv_id": "2611.31002",
+    "title": "RoboUniverse-10K: Toward the Scaling Era of Agentic Robotics via Real-to-Sim Environments",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31002-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31002"
+  },
+  {
+    "arxiv_id": "2611.31033",
+    "title": "AI-Assisted Auto-formalization for Trustworthy Scientific Computing: Case Studies and Lessons Learned",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31033-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31033"
+  },
+  {
+    "arxiv_id": "2611.31082",
+    "title": "ChiProgramBench: Can LLM Agents Rebuild Efficient Circuits from Pin-Level Experiments?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31082-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31082"
+  },
+  {
+    "arxiv_id": "2611.31099",
+    "title": "NoveltyGate: Novelty, Not Error, Decides Which VLA Prefix Tokens to Compute Exactly",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31099-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31099"
+  },
+  {
+    "arxiv_id": "2611.31105",
+    "title": "LiveLoRA: Exact KV Cache Migration Across LoRA Updates for LLM Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31105-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31105"
+  },
+  {
+    "arxiv_id": "2611.31112",
+    "title": "Look Back, Draft Ahead: Corrective Prefix Attention for Parallel Speculative Decoding",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31112-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31112"
+  },
+  {
+    "arxiv_id": "2611.31205",
+    "title": "ACAP: Asynchronous Coding Agents for Efficient Robot Control",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31205-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31205"
+  },
+  {
+    "arxiv_id": "2611.31217",
+    "title": "A Mixed-Methods Study of Personal Software Creation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31217-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31217"
+  },
+  {
+    "arxiv_id": "2611.31228",
+    "title": "Language Models Steer on Injected Uncertainty Tokens, but Fail to Self-Monitor In Situ",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31228-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31228"
+  },
+  {
+    "arxiv_id": "2611.31240",
+    "title": "Pruning Autonomous Driving VLAs: What to Preserve for Reasoning and Action",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-31240-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.31240"
   }
 ]

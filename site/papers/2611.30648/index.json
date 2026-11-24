@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.30648",
+  "title": "MTL-MHOL: Predicting Online Conversions under Delayed Feedback and Data Sparsity",
+  "summary": "MTL-MHOL replaces single-task CVR models that handle delayed conversions or data sparsity separately (e.g., plain ESMM or importance-weighting baselines) with a unified time-bucketing plus multi-task auxiliary-learning framework that wraps an existing backbone such as MLP or DeepFM. It costs additional pipeline complexity: maintaining time buckets, training an auxiliary task, and online-learning updates, though compute per se is modest and fits a single small GPU or even CPU-class training. It can fail if conversion-delay distributions drift, if the auxiliary task is poorly correlated with the conversion target, or if the proprietary-dataset gains do not transfer to the reader's traffic, since evidence is limited to one private dataset and Criteo.",
+  "rationale": "The framework is model-agnostic and runs on lightweight MLP or DeepFM backbones, so a small team can trial it within constrained infrastructure, but the gains are demonstrated only on two ad-conversion datasets and require workload-specific validation of the time-bucketing and auxiliary-task design.",
+  "technique": "Multi-task time-bucketed online CVR learning",
+  "family": "outro",
+  "recommendation": "testar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.30648",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 33,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MTL-MHOL replaces single-task CVR models that handle delayed conversions or data sparsity separately (e.g., plain ESMM or importance-weighting baselines) with a unified time-bucketing plus multi-task auxiliary-learning framework that wraps an existing backbone such as MLP or DeepFM. It costs additional pipeline complexity: maintaining time buckets, training an auxiliary task, and online-learning updates, though compute per se is modest and fits a single small GPU or even CPU-class training. It can fail if conversion-delay distributions drift, if the auxiliary task is poorly correlated with the conversion target, or if the proprietary-dataset gains do not transfer to the reader's traffic, since evidence is limited to one private dataset and Criteo.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30648",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Matches the delayed-feedback method FSIW, outperforms ESMM by 21.5% in RCE, and achieves up to 81% RCE lift over the best classical benchmark on proprietary and Criteo CVR datasets (NLL and RCE metrics).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30648",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

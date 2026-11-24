@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted model uses more compute or memory than your workload can justify.",
+    "change": "Check for a usable pruned checkpoint and runtime support before attempting model surgery.",
+    "baseline": "The original unpruned model at the same precision, context, and load.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task quality, actual GPU memory, serving throughput, and preparation cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.31240",
+  "title": "Pruning Autonomous Driving VLAs: What to Preserve for Reasoning and Action",
+  "summary": "MoOP replaces uniform or single-objective structured pruning of reasoning VLA models with rank-fused importance from both reasoning and trajectory objectives for the VLM, plus stepwise-aggregated selection of a fixed subset of action-expert MLP channels. It requires access to and pruning of the Alpamayo-1.5-10B base model and incurs a quality cost: about 6% LingoQA loss at 24% parameter reduction, with reasoning collapse risk deferred but not eliminated at 30% reduction. The approach can fail if applied to models or tasks where the two objectives' importance rankings do not transfer, and closed-loop driving metrics still degrade relative to the dense model despite preserved open-loop accuracy.",
+  "rationale": "Dual-objective structured pruning without fine-tuning is a credible efficiency lever, but the method is validated only on a specific 10B autonomous-driving VLA, so the reader should track it rather than adopt it for general workloads.",
+  "technique": "Dual-objective structured pruning for driving VLAs",
+  "family": "esparsidade_e_poda",
+  "recommendation": "observar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.31240",
+  "independent_implementations": 2,
+  "total_implementations": 3,
+  "stars": 69,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MoOP replaces uniform or single-objective structured pruning of reasoning VLA models with rank-fused importance from both reasoning and trajectory objectives for the VLM, plus stepwise-aggregated selection of a fixed subset of action-expert MLP channels. It requires access to and pruning of the Alpamayo-1.5-10B base model and incurs a quality cost: about 6% LingoQA loss at 24% parameter reduction, with reasoning collapse risk deferred but not eliminated at 30% reduction. The approach can fail if applied to models or tasks where the two objectives' importance rankings do not transfer, and closed-loop driving metrics still degrade relative to the dense model despite preserved open-loop accuracy.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31240",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At 39.4% total parameter reduction (VLM pruning plus 93.75% expert MLP channel removal), the pruned model achieves a 1.37x end-to-end inference speedup and 36.6% lower peak memory than the dense model, without post-pruning fine-tuning, while retaining 94.0% of the dense LingoQA score at 24% reduction.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31240",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

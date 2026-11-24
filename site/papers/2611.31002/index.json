@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent looks good in demos, but you cannot tell which product tasks it fails.",
+    "change": "Use the study's evaluation idea to inspect a small set of tasks with human-checked answers.",
+    "baseline": "Your current evaluator and a manually reviewed reference set.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Agreement with human review, missed failures, false alarms, and evaluation cost per task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.31002",
+  "title": "RoboUniverse-10K: Toward the Scaling Era of Agentic Robotics via Real-to-Sim Environments",
+  "summary": "RoboUniverse-10K replaces small, manually built robotics benchmarks with 10,807 automatically generated Real2Sim verifiable environments, plus a 35B-A3B model fine-tuned on 17K GPT-6 Astra trajectories, supplanting in-distribution evaluation and imitation from small demos. The cost is substantial: an automated video-to-simulation pipeline, privileged-state harness infrastructure, full-parameter SFT of a 35B-A3B MoE model, and access to a frontier teacher model for trajectory generation. Sim-to-real transfer can fail since environments derive from real videos with imperfect physics reconstruction, and the remaining 78.8% failure rate is concentrated in grasping, deformable objects, and post-contact control, so the fine-tuned model is not deployment-ready for physical robots.",
+  "rationale": "The open-sourced Harbor-compatible environments may eventually matter for agent evaluation, but reproducing the training recipe and running physics simulators exceeds a single 24 GB GPU and a small team's budget.",
+  "technique": "Real2Sim verifiable environments for agentic robotics SFT",
+  "family": "avaliacao_de_agente",
+  "recommendation": "observar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.31002",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 253,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "RoboUniverse-10K replaces small, manually built robotics benchmarks with 10,807 automatically generated Real2Sim verifiable environments, plus a 35B-A3B model fine-tuned on 17K GPT-6 Astra trajectories, supplanting in-distribution evaluation and imitation from small demos. The cost is substantial: an automated video-to-simulation pipeline, privileged-state harness infrastructure, full-parameter SFT of a 35B-A3B MoE model, and access to a frontier teacher model for trajectory generation. Sim-to-real transfer can fail since environments derive from real videos with imperfect physics reconstruction, and the remaining 78.8% failure rate is concentrated in grasping, deformable objects, and post-contact control, so the fine-tuned model is not deployment-ready for physical robots.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31002",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Full-parameter SFT of Qwen3.6-35B-A3B on 17K trajectories (0.79B tokens) lifts zero-shot success on RoboUniverse-Verified from 0.8% to 21.2%, roughly a 26.5x relative gain; frontier closed models reach 85.8% while open-source baselines score 2.6-10.0%.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31002",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Long customer conversations exhaust memory or limit concurrent requests.",
+    "change": "Change only the attention cache policy, after checking model and runtime support.",
+    "baseline": "The same model with its ordinary attention cache.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak cache memory, long-context answer quality, first-token latency, and requests completed.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.31105",
+  "title": "LiveLoRA: Exact KV Cache Migration Across LoRA Updates for LLM Agents",
+  "summary": "LiveLoRA replaces full-history re-prefill when updating a LoRA adapter for active sessions by migrating the final-block KV cache exactly, exploiting frozen lower decoder blocks and fixed K/V down-projections so that adapter, cache, and logits are committed together. It costs approximately 4.8% decoding overhead, imposes structural constraints on the model (frozen lower blocks and fixed K/V adapter projections across versions), and adds runtime complexity for candidate K/V reconstruction and reevaluation of the latest token. It can fail if the model or adapter setup violates these assumptions, if exact-arithmetic equivalence is broken by numerical or implementation divergence, or if the validated regime (a 3B model, 32 sessions, 8K-token histories) does not match the reader's production scale or model family.",
+  "rationale": "The method directly addresses adapter-version rollover for long-lived agent sessions on a single GPU, but its architectural constraints and limited validation mean the gain must be verified on the reader's own model and serving stack before adoption.",
+  "technique": "Exact KV cache migration across LoRA updates",
+  "family": "cache_kv",
+  "recommendation": "testar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.31105",
+  "independent_implementations": 1,
+  "total_implementations": 2,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "LiveLoRA replaces full-history re-prefill when updating a LoRA adapter for active sessions by migrating the final-block KV cache exactly, exploiting frozen lower decoder blocks and fixed K/V down-projections so that adapter, cache, and logits are committed together. It costs approximately 4.8% decoding overhead, imposes structural constraints on the model (frozen lower blocks and fixed K/V adapter projections across versions), and adds runtime complexity for candidate K/V reconstruction and reevaluation of the latest token. It can fail if the model or adapter setup violates these assumptions, if exact-arithmetic equivalence is broken by numerical or implementation divergence, or if the validated regime (a 3B model, 32 sessions, 8K-token histories) does not match the reader's production scale or model family.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31105",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Median paired publication speedups over full-history re-prefill average 68.98x across five runs for 32 active sessions with 8K tokens each on Qwen2.5-3B-Instruct, with approximately 4.8% decoding overhead relative to native cached decoding and a 3.42x reduction in additional session storage versus retained-boundary replay.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.31105",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

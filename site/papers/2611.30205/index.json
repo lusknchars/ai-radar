@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your self-hosted model spends too long generating answers token by token.",
+    "change": "Check whether a compatible draft model and serving integration exist before renting compute.",
+    "baseline": "The same target with speculation off, then your existing drafter if you have one.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Accepted draft length, tokens per second, tail latency, output quality, and total GPU cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.30205",
+  "title": "PackLoop: Row-Packed Self-Speculative Decoding for Looped Language Models under Concurrency",
+  "summary": "PackLoop replaces wavefront-style pipelined self-speculative scheduling for looped language models with row-packed scheduling, in which speculative positions are accumulated and advanced together within a single KV-cache row read, plus an EOQ-based admission rule that decides accumulation length. It costs a new scheduling engine calibrated once per deployment, continued dependence on a self-speculative proposer (context-copy proposals), and FP32 execution to guarantee token-for-token exactness with autoregressive decoding, all tied to the Ouro family of looped models. It can fail if the reader's models are standard transformers rather than looped models, if GPU or engine details invalidate the calibrated cost model, or if exactness is relaxed, in which case output divergence under sampling and early exit is no longer guaranteed.",
+  "rationale": "The method is an inference-scheduling improvement specific to looped (weight-shared, recurrent-depth) language models, an architecture the reader does not currently run and that has no established off-the-shelf serving ecosystem, so adoption is premature but the row-packing insight is worth tracking.",
+  "technique": "Row-packed self-speculative decoding for looped models",
+  "family": "decodificacao_especulativa",
+  "recommendation": "observar",
+  "published": "2026-11-23",
+  "as_of": "2026-11-24",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.30205",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "PackLoop replaces wavefront-style pipelined self-speculative scheduling for looped language models with row-packed scheduling, in which speculative positions are accumulated and advanced together within a single KV-cache row read, plus an EOQ-based admission rule that decides accumulation length. It costs a new scheduling engine calibrated once per deployment, continued dependence on a self-speculative proposer (context-copy proposals), and FP32 execution to guarantee token-for-token exactness with autoregressive decoding, all tied to the Ouro family of looped models. It can fail if the reader's models are standard transformers rather than looped models, if GPU or engine details invalidate the calibrated cost model, or if exactness is relaxed, in which case output divergence under sampling and early exit is no longer guaranteed.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30205",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Across 164 load points, one PackLoop configuration beats the best per-point existing schedule at 161 points, with median 1.25x and up to 1.76x speedup, with the lead growing at higher concurrency and longer context.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.30205",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
