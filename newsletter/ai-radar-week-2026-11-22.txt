@@ -1,0 +1,66 @@
+Paperraft: 5 papers worth reading · 2026-11-22
+
+A short list for people building alone. Each paper comes with the fastest useful question to test before you spend a week or rent a GPU. Claims below come from paper abstracts and have not been independently reproduced.
+2026-11-16 to 2026-11-22
+
+Epistemic Guard: Out-of-Process MCP Receipt Proxying, Post-Turn Prose Supervision, and Provenance-Gated Memory for Tool-Using Autonomous Agents
+The method replaces LLM-judge guardrails and pre-execution MCP firewalls with an out-of-process stdio receipt proxy that Ed25519-signs and Merkle-logs tool calls, verifies post-turn prose against receipts on CPU via INT8 encoders, and gates durable-memory writes by provenance. It costs no GPU VRAM (279.48 MB of CPU models, 82.67 MB on the supervision path), adds roughly 9-18 ms median CPU latency per turn plus a 921.8 ms cold start, and introduces proxy-side operational complexity including key isolation and SQLite gating. After adoption, the main failure risk is the 38.24% false positive rate on live traffic, which can block legitimate actions and degrade agent usability, and the 76.67% live accuracy indicates residual missed or misjudged hazards outside frozen benchmarks.
+It provides cryptographically grounded runtime verification for MCP tool use with zero GPU cost, but its live-trace false positive rate requires workload-specific validation before production adoption.
+Builder's cut (area guidance)
+It may fit when: An agent reads external documents or tool responses that may contain malicious instructions.
+First move: Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.
+Measure: Successful attacks missed, legitimate actions blocked, detection delay, and review cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.27095/
+https://arxiv.org/abs/2611.27095
+
+HookEvo: A Framework for Coordinated Plugin Evolution on Hook-Enabled Agent Runtimes
+HookEvo replaces manual, one-off prompt and tool-glue fixes with an iterative loop in which an external improver model diagnoses execution traces and edits harness plugins (receipt interpretation, context assembly, action checks) through runtime lifecycle hooks. It costs repeated evaluation rounds on matched task suites plus API calls to a strong improver model, and it depends on a hook-enabled runtime such as DeepSeek Harness, adding harness code that must be maintained. It can fail when the evolved harness overfits to the evaluation tasks, when the improver introduces regressions that the retained-version check misses, or when the executor model or task distribution changes and the evolved plugins no longer transfer.
+The method improves a frozen small model's agent performance without retraining, but it requires an existing hook-enabled runtime, matched evaluation tasks, and repeated improver API calls, so its benefit must be validated on the reader's own workload before adoption.
+Builder's cut (area guidance)
+It may fit when: Tool errors or unavailable services cause your agent to abandon recoverable tasks.
+First move: Inject repeatable tool failures and change only the recovery policy.
+Measure: Recovered tasks, duplicate side effects, retries, time to recovery, and total cost.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.27294/
+https://arxiv.org/abs/2611.27294
+
+Structurally Different, Functionally Persistent: Capability Regions Under Model Optimization
+The paper does not propose a method; it replaces the assumption that capability-localized parameter regions must be re-identified after model optimization, showing that regions extracted before quantization, pruning, or LoRA adaptation remain effective ablation targets despite substantial parameter reorganization. It costs nothing to exploit beyond an ablation-based verification step on one's own model, but it provides no speed, memory, or quality improvement by itself. It can fail as a basis for practice because results cover only coding capability in three instruction-tuned models, rely on ablation as the causal probe, and may not transfer to other capabilities, model families, or editing methods such as weight patching rather than zeroing.
+The finding is an empirical property of capability regions rather than a deployable technique, but it is directly relevant to engineers who quantize, prune, or LoRA-adapt models and later apply region-based editing or ablation, since it indicates pre-optimization intervention targets remain causally effective without re-localization.
+Builder's cut (area guidance)
+It may fit when: Start with one repeated product task that has a measurable failure or cost.
+First move: Read the methods and identify one change you can isolate in that workflow.
+Measure: Successful outcomes, response time, human rework, and total cost per successful task.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.27445/
+https://arxiv.org/abs/2611.27445
+
+VMSA: Video Memory Skill Agent for Long Video Understanding
+Replaces naive long-context stuffing or single-index video RAG for long-video QA with three complementary text memories (segment captions, entity events, entity-aware episodes) plus a skill library distilled from successful agent trajectories to guide iterative retrieval, reasoning, and verification. Costs a heavy offline indexing pass over the video (captioning, entity/event extraction, episode construction), multiple LLM calls per query across retrieval and verification rounds, and ongoing maintenance of the memory stores and skill library. Can fail when captioning or entity extraction is inaccurate (errors propagate into all downstream retrieval), when skill induction overfits to training trajectories and misguides retrieval on new query types, or when multi-round verification inflates latency and API spend without proportional accuracy gains on the reader's specific video domain.
+The architecture (offline video captioning into structured text memories, API-LLM agentic retrieval, and an induced skill library) fits a 24 GB or API-only budget, but the three-tier memory design and trajectory-based skill induction add enough engineering complexity that the accuracy gain must be validated on the reader's own video workloads before adoption.
+Builder's cut (area guidance)
+It may fit when: A support or data assistant repeats work across related customer requests.
+First move: Try the paper's memory change in a replay of past tasks, with separate memory per customer.
+Measure: Task success, stale memories, retrieval misses, response latency, and all memory maintenance costs.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.27381/
+https://arxiv.org/abs/2611.27381
+
+AMARIS: Merging Generalist and Specialist LLMs via Adaptive Subspace Inheritance
+AMARIS replaces naive parameter-space merging methods (weight interpolation, sparsified averaging) and, in some workflows, the need to serve or train separate specialist checkpoints, by projecting specialist weight updates onto ranked generalized eigendirections selected under an output-perturbation budget. It costs covariance estimation over activation statistics plus a generalized eigendecomposition per merged layer, producing one static checkpoint with no inference-time overhead, though 32B-scale merging may exceed a single 24 GB GPU without CPU offloading. It can fail when activation covariances are estimated on unrepresentative calibration data, when the chosen rank budget drops useful specialist directions, and because the reported retention figures cover only three Qwen3-based settings and may not transfer to other model families or domains.
+Model merging runs offline on a single 24 GB GPU for 8B-scale models and requires no training, but the retention trade-offs are benchmark-specific and must be validated on the reader's own specialist tasks before replacing a fine-tuned checkpoint in production.
+Builder's cut (area guidance)
+It may fit when: You already need task-specific training and want to reduce its memory or compute cost.
+First move: Change only the training technique on a small controlled run after checking prerequisites.
+Measure: Held-out quality, peak memory, training time, and full compute cost to the target quality.
+Decision rule: Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation.
+1 independent implementations. Counts do not establish quality.
+https://lusknchars.github.io/ai-radar/papers/2611.27369/
+https://arxiv.org/abs/2611.27369
+
+Unsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}
