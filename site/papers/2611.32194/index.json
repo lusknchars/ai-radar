@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "An agent reads external documents or tool responses that may contain malicious instructions.",
+    "change": "Replay attacks and legitimate lookalikes in an isolated copy of your agent workflow.",
+    "baseline": "Your existing checks with the same tasks, permissions, and tool responses.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful attacks missed, legitimate actions blocked, detection delay, and review cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.32194",
+  "title": "LLM Agent Authorization Across Context Compaction",
+  "summary": "The technique replaces letting the authorizer derive its policy from the compactor's model-written summary (which conflates user text with injected content) with deriving policy only from user messages authenticated on arrival and carried verbatim across the compaction boundary, while the agent still reads the summary for context. It costs engineering effort to thread authenticated user text through the agent framework and gives the attacker a denial-of-policy option: they can block policy derivation but cannot shape it, and compaction quality for the agent itself is unchanged. It can fail where the agent framework does not expose a trust boundary between user turns and summaries, where legitimate user intent spans content that arrived as tool output rather than user text, or where authorization of requests beyond the frozen/derived per-request policy is needed.",
+  "rationale": "Any deployment combining request-derived authorization with automatic context compaction has the demonstrated attribution flaw, and the fix (authenticated, verbatim user-message provenance for the authorizer) is implementable without extra hardware or training, so it should be adopted by teams building or deploying tool-using agents.",
+  "technique": "Authenticated user-message provenance for authorizers across compaction",
+  "family": "seguranca_e_guardrails",
+  "recommendation": "adotar",
+  "published": "2026-11-24",
+  "as_of": "2026-11-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.32194",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 1,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The technique replaces letting the authorizer derive its policy from the compactor's model-written summary (which conflates user text with injected content) with deriving policy only from user messages authenticated on arrival and carried verbatim across the compaction boundary, while the agent still reads the summary for context. It costs engineering effort to thread authenticated user text through the agent framework and gives the attacker a denial-of-policy option: they can block policy derivation but cannot shape it, and compaction quality for the agent itself is unchanged. It can fail where the agent framework does not expose a trust boundary between user turns and summaries, where legitimate user intent spans content that arrived as tool output rather than user text, or where authorization of requests beyond the frozen/derived per-request policy is needed.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32194",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Without the fix, a policy derived from the compactor's summary admits an attacker-stated payee account in 91% of cases versus 0% when derived from the user's own words; in 40 attacked AgentDojo episodes re-run with the fix, no attacker action completes. These are attack-success reductions, not a multiplicative factor.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32194",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.32384",
+  "title": "Can AI Design a Better nnU-Net? A Hypothesis-Driven Architecture Discovery Loop from Failures to Design Rules",
+  "summary": "The method replaces manual nnU-Net architecture tuning and scalar-fitness neural architecture search with an LLM-driven loop that diagnoses structured failures, tests falsifiable hypotheses under a frozen pipeline, and distills validated mechanisms into executable trigger-to-action rules; the distilled result is a leaner architecture (LeanNeXt/LeanNeXt+) that reallocates computation to the mid-encoder and applies support-confined region contrast. It costs the engineering effort of running an eight-wave agent search with counterfactual controls plus 3D segmentation training runs, which on a single 24 GB GPU means significant wall-clock time, and it adds trigger-routing complexity at inference. It can fail when the reader's anatomy, modality, or dataset differs from the CT/MRI settings where the triggers were validated, when the discovered rules do not transfer outside the frozen nnU-Net pipeline assumptions, or when the single-source benchmark improvements do not replicate on the reader's data.",
+  "rationale": "If the reader works on 3D medical image segmentation, the published design rules are directly applicable and cost-reducing, but the claims come from a single group's CT/MRI benchmarks and require validation on the reader's own data before production adoption.",
+  "technique": "Hypothesis-driven LLM architecture discovery for nnU-Net",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-24",
+  "as_of": "2026-11-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.32384",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The method replaces manual nnU-Net architecture tuning and scalar-fitness neural architecture search with an LLM-driven loop that diagnoses structured failures, tests falsifiable hypotheses under a frozen pipeline, and distills validated mechanisms into executable trigger-to-action rules; the distilled result is a leaner architecture (LeanNeXt/LeanNeXt+) that reallocates computation to the mid-encoder and applies support-confined region contrast. It costs the engineering effort of running an eight-wave agent search with counterfactual controls plus 3D segmentation training runs, which on a single 24 GB GPU means significant wall-clock time, and it adds trigger-routing complexity at inference. It can fail when the reader's anatomy, modality, or dataset differs from the CT/MRI settings where the triggers were validated, when the discovered rules do not transfer outside the frozen nnU-Net pipeline assumptions, or when the single-source benchmark improvements do not replicate on the reader's data.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32384",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "LeanNeXt achieves +1.63 Dice points over nnU-Net on four-fold KiTS23 cross-validation at 0.78x MACs and 0.92x training-step time; LeanNeXt+ improves all 15 evaluated CT/MRI settings over nnU-Net and exceeds the 3.3x larger ResEnc-M on 12 of 15 benchmarks at 0.30x its parameter count.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32384",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

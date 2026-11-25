@@ -19850,5 +19850,285 @@
     "status": "indexed",
     "download": "/ai-radar/skills/paper-2611-31240-evidence.zip",
     "source": "https://arxiv.org/abs/2611.31240"
+  },
+  {
+    "arxiv_id": "2611.32037",
+    "title": "Online Environment Repair for Coding Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32037-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32037"
+  },
+  {
+    "arxiv_id": "2611.32085",
+    "title": "ExpGuard: Guarding Long-Horizon LLM Agents against Corrupted Experience",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32085-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32085"
+  },
+  {
+    "arxiv_id": "2611.32194",
+    "title": "LLM Agent Authorization Across Context Compaction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32194-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32194"
+  },
+  {
+    "arxiv_id": "2611.32195",
+    "title": "When Answering Is Administering: Permission Replies That Rewrite Coding-Agent Policy",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32195-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32195"
+  },
+  {
+    "arxiv_id": "2611.32238",
+    "title": "Boundary-Aware Policy Learning for Agent-Orchestrated Robot Manipulation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32238-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32238"
+  },
+  {
+    "arxiv_id": "2611.32246",
+    "title": "SkillCore: Internalizing Generalizable Skills via Scaffolding-Removed Fine-Tuning",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32246-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32246"
+  },
+  {
+    "arxiv_id": "2611.32255",
+    "title": "TimeTravelContainer: A Live Forking Sandbox for Stateful Agent Exploration",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32255-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32255"
+  },
+  {
+    "arxiv_id": "2611.32295",
+    "title": "Norn: Context-Length-Aware Optimization of Weight and KV Cache Placement for Offloaded LLM Inference",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32295-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32295"
+  },
+  {
+    "arxiv_id": "2611.32317",
+    "title": "SPRUNN: Structural Proximity for Pruning in Deep Neural Networks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32317-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32317"
+  },
+  {
+    "arxiv_id": "2611.32347",
+    "title": "Beyond Hard Tokens: Predictive Memory for Multimodal Protein Generation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32347-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32347"
+  },
+  {
+    "arxiv_id": "2611.32384",
+    "title": "Can AI Design a Better nnU-Net? A Hypothesis-Driven Architecture Discovery Loop from Failures to Design Rules",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32384-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32384"
+  },
+  {
+    "arxiv_id": "2611.32423",
+    "title": "Factorized Context Attention: From Emulated to Native Grid Probing",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32423-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32423"
+  },
+  {
+    "arxiv_id": "2611.32439",
+    "title": "See the Answer, Learn to Embed: Learning Universal Multimodal Embeddings from Hindsight",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32439-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32439"
+  },
+  {
+    "arxiv_id": "2611.32462",
+    "title": "MAGPIE: Agentic Multi-Reference Image Generation via Executable Scene Construction",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32462-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32462"
+  },
+  {
+    "arxiv_id": "2611.32480",
+    "title": "VISE: Verifier-Independent Skill Self-Evolution with Feedback from Tool Implementations",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32480-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32480"
+  },
+  {
+    "arxiv_id": "2611.32624",
+    "title": "HiCal: Offline Calibration for Hierarchical Scale Encoding in Accurate HiF4 Quantization",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32624-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32624"
+  },
+  {
+    "arxiv_id": "2611.32634",
+    "title": "ModelLess: A Serverless System for Multi-Tier LLM Inference on Shared GPUs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32634-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32634"
+  },
+  {
+    "arxiv_id": "2611.32645",
+    "title": "TeamFlowRL: Online Policy Optimization of Decentralized Flow Policies for Multi-Agent Coordination",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32645-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32645"
+  },
+  {
+    "arxiv_id": "2611.32649",
+    "title": "ICLWorld: Benchmarking In-Context Learning of Agents from Digital to Physical Worlds",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32649-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32649"
+  },
+  {
+    "arxiv_id": "2611.32660",
+    "title": "Bathys: Advancing Deep Search Agents",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32660-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32660"
+  },
+  {
+    "arxiv_id": "2611.32663",
+    "title": "Economic World Model",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32663-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32663"
+  },
+  {
+    "arxiv_id": "2611.32755",
+    "title": "ReQOR: Operator-Discrepancy Subspace Repair for Quantization-Conditioned Backdoors in Large Language Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32755-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32755"
+  },
+  {
+    "arxiv_id": "2611.32782",
+    "title": "Measuring Layer-wise Intrinsic Dimensionality of FFNs in LLMs via PCA",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32782-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32782"
+  },
+  {
+    "arxiv_id": "2611.32858",
+    "title": "What Does a Skill Vocabulary Cost? A Closed-Loop Decomposition over Demonstrated Motions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32858-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32858"
+  },
+  {
+    "arxiv_id": "2611.32873",
+    "title": "MXFP4 for LLM Inference: Complementary Post-Training Quantization Techniques and Their Interactions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32873-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32873"
+  },
+  {
+    "arxiv_id": "2611.32881",
+    "title": "Scalable Placement for Disaggregated LLM Serving on Heterogeneous Edge Fleets",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32881-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32881"
+  },
+  {
+    "arxiv_id": "2611.32931",
+    "title": "Reading Decisions Before Spans: Efficient Generative Verification",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32931-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32931"
+  },
+  {
+    "arxiv_id": "2611.32946",
+    "title": "ShellBench: What Matters More for AI Agents, Models, or Harness for Everyday Tasks",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32946-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32946"
+  },
+  {
+    "arxiv_id": "2611.32973",
+    "title": "SpecEngineeringBench: Evaluating Coding Agents as Autonomous Specification Engineers",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32973-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32973"
+  },
+  {
+    "arxiv_id": "2611.32989",
+    "title": "AVQ-Attention-2: Adaptive Vector-Quantized Attention with Exact Local Blocks and Linear-Cost Training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-32989-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.32989"
+  },
+  {
+    "arxiv_id": "2611.33004",
+    "title": "LEGOSpec: A Composable and Efficient Framework for Speculative Draft Design and Training",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33004-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33004"
+  },
+  {
+    "arxiv_id": "2611.33005",
+    "title": "Leto: Utility-Centric Agent Memory",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33005-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33005"
+  },
+  {
+    "arxiv_id": "2611.33009",
+    "title": "Train What You Run: Probabilistic Convolutions for Learning Token Compaction in State Space Models",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33009-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33009"
+  },
+  {
+    "arxiv_id": "2611.33012",
+    "title": "Can LLM Judges Catch Unsafe Clinical Actions? A Fault-Injection Study",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33012-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33012"
+  },
+  {
+    "arxiv_id": "2611.33031",
+    "title": "Can a Frontier LLM Repair a Quantized Network by Tool-Free Weight-Space Programming?",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33031-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33031"
+  },
+  {
+    "arxiv_id": "2611.33048",
+    "title": "Latent Merger: Latent-Space Composition of Hypernetwork-Generated LoRAs",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33048-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33048"
+  },
+  {
+    "arxiv_id": "2611.33080",
+    "title": "Shifter Quantization: Compact Representations for Native Integer Computation",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33080-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33080"
+  },
+  {
+    "arxiv_id": "2611.33093",
+    "title": "AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33093-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33093"
+  },
+  {
+    "arxiv_id": "2611.33098",
+    "title": "Delegent: A Multi-Agent Harness That Reduces Cost without Sacrificing Performance",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33098-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33098"
+  },
+  {
+    "arxiv_id": "2611.33111",
+    "title": "Draft Calibration for Speculative Decoding: Accelerating LLM Serving by Matching Draft and Target Distributions",
+    "status": "indexed",
+    "download": "/ai-radar/skills/paper-2611-33111-evidence.zip",
+    "source": "https://arxiv.org/abs/2611.33111"
   }
 ]

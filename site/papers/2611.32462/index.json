@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your coding assistant makes changes that still need substantial repair before merging.",
+    "change": "Try the technique on held-out issues from a repository with reliable tests.",
+    "baseline": "The same coding agent, repository snapshot, tools, and token budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Correct patches, regression failures, human repair time, and total cost per accepted change.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.32462",
+  "title": "MAGPIE: Agentic Multi-Reference Image Generation via Executable Scene Construction",
+  "summary": "MAGPIE replaces implicit compositional guidance (prompts, layouts, reference conditioning alone) in multi-reference image generation with an executable Blender scene that a coding agent builds, verifies against the instruction, and iteratively revises; the verified proxy render then guides a generator fine-tuned on MAGPIE-Instruct-3K. Costs include a Blender runtime plus a coding-agent loop adding latency and API spend per image, extra infrastructure to maintain, and generator fine-tuning on a custom 3K dataset. It can fail when the coding agent produces geometrically wrong scenes that its own checking misses, when subjects not covered by the dataset drift in appearance, and when the Blender dependency or agent-iteration latency is unacceptable in a production path.",
+  "rationale": "The pipeline (a coding agent emitting Blender programs, rendered proxy plans, and a fine-tuned generator) is feasible on a single 24 GB GPU or via APIs, but the generator training on MAGPIE-Instruct-3K and the Blender/agent infrastructure require workload-specific validation before production adoption.",
+  "technique": "Agent-built 3D scene plans for multi-reference generation",
+  "family": "agentes_de_codigo",
+  "recommendation": "testar",
+  "published": "2026-11-24",
+  "as_of": "2026-11-25",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.32462",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 19,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "MAGPIE replaces implicit compositional guidance (prompts, layouts, reference conditioning alone) in multi-reference image generation with an executable Blender scene that a coding agent builds, verifies against the instruction, and iteratively revises; the verified proxy render then guides a generator fine-tuned on MAGPIE-Instruct-3K. Costs include a Blender runtime plus a coding-agent loop adding latency and API spend per image, extra infrastructure to maintain, and generator fine-tuning on a custom 3K dataset. It can fail when the coding agent produces geometrically wrong scenes that its own checking misses, when subjects not covered by the dataset drift in appearance, and when the Blender dependency or agent-iteration latency is unacceptable in a production path.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32462",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "With FLUX, MAGPIE improves overall success on DreamOmni2 by 28.21 percentage points over the original backbone and achieves the highest overall score on SconeEval; it also improves Qwen on both benchmarks (percentage-point gains, not multiplicative factors).",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.32462",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
