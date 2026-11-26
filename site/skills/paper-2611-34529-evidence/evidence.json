@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.34529",
+  "title": "AliceAI-Foundation-80B-A3B-Base",
+  "summary": "The paper presents a full 80B-total / 3B-active mixture-of-experts base model (hybrid Kimi Delta Attention plus full attention, Attention Residuals, Muon optimizer, MoE auxiliary loss), replacing nothing in the reader's stack directly but offering an Apache-2.0 open-weight alternative to proprietary or larger open base models. The cost is substantial: from-scratch training on 17.5T tokens is entirely out of reach, weights in BF16 require roughly 160 GB of memory (about 40-45 GB at 4-bit quantization, still beyond one 24 GB GPU), so local use is limited to offloading with severe latency penalties or third-party API inference. Adoption risks include benchmark claims that are self-reported and possibly non-reproducible, the paper's own finding that held-out training loss is a poor proxy for downstream performance, and the MoE routing and auxiliary-loss machinery adding fine-tuning complexity for small teams.",
+  "rationale": "The contribution is a from-scratch 80B MoE pretraining recipe that the reader cannot replicate, and the 80B-total weights exceed a 24 GB GPU even at 4-bit quantization, so the only realistic interaction is observing benchmark results or consuming the released weights via hosted inference.",
+  "technique": "80B MoE base model with hybrid linear attention",
+  "family": "arquitetura_eficiente",
+  "recommendation": "observar",
+  "published": "2026-11-25",
+  "as_of": "2026-11-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.34529",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 126,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The paper presents a full 80B-total / 3B-active mixture-of-experts base model (hybrid Kimi Delta Attention plus full attention, Attention Residuals, Muon optimizer, MoE auxiliary loss), replacing nothing in the reader's stack directly but offering an Apache-2.0 open-weight alternative to proprietary or larger open base models. The cost is substantial: from-scratch training on 17.5T tokens is entirely out of reach, weights in BF16 require roughly 160 GB of memory (about 40-45 GB at 4-bit quantization, still beyond one 24 GB GPU), so local use is limited to offloading with severe latency penalties or third-party API inference. Adoption risks include benchmark claims that are self-reported and possibly non-reproducible, the paper's own finding that held-out training loss is a poor proxy for downstream performance, and the MoE routing and auxiliary-loss machinery adding fine-tuning complexity for small teams.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34529",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "Reports 88.7% pass@8 on IMO-AnswerBench and 82.9% pass@8 on LiveCodeBench v5-v6 (zero-shot, leading among open base models of comparable size); on Russian factual benchmarks it scores 86.5% WikiWebFacts and 67.9% HardMultiQA versus 83.2%/65.4% for DeepSeek-V4-Flash-Base (284B total) and 72.8%/54.5% for Nemotron-3-Super-120B-A12B-Base, i.e., it outperforms larger-total-parameter models on those specific benchmarks.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34529",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

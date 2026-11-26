@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "A self-hosted assistant is too expensive because its model uses most of the GPU memory.",
+    "change": "Try the paper's supported lower-precision weights on a copy of your serving setup.",
+    "baseline": "The same model at its original precision, on the same GPU.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Peak memory, task pass rate, latency, and total serving cost at the same context and load.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.34402",
+  "title": "Any-Rate: Half-Bit Multi-Precision LLM Quantization with Coded Bit-Planes",
+  "summary": "Any-Rate replaces storing separate quantized checkpoints per precision (or accepting integer-only bit widths in nested quantization) with one checkpoint from which 2-8 bits are read, using Hamming-coded bit-planes in 8-weight blocks to enable half-bit steps between 2 and 4 bits. It costs a custom encoding/decoding pipeline and kernel integration, shares one LUT per row across precisions, and still loses roughly 31% of FP16 accuracy at 2 bits, so the lowest precisions remain quality-limited. Adoption can fail if the released kernels do not support the reader's hardware or models, if the energy model does not transfer to their deployment target, or if 2-bit degradation is unacceptable for their workload, forcing them back to 4 bits where the advantage over existing methods is marginal.",
+  "rationale": "A single checkpoint serving 2-8 bits in half-bit steps directly matches a constrained-infrastructure setting where one deployment must cover varying memory and energy budgets, but the accuracy and energy claims need validation on the reader's specific models and hardware before production use.",
+  "technique": "Nested multi-precision quantization with coded bit-planes",
+  "family": "quantizacao",
+  "recommendation": "testar",
+  "published": "2026-11-25",
+  "as_of": "2026-11-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.34402",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 2,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "Any-Rate replaces storing separate quantized checkpoints per precision (or accepting integer-only bit widths in nested quantization) with one checkpoint from which 2-8 bits are read, using Hamming-coded bit-planes in 8-weight blocks to enable half-bit steps between 2 and 4 bits. It costs a custom encoding/decoding pipeline and kernel integration, shares one LUT per row across precisions, and still loses roughly 31% of FP16 accuracy at 2 bits, so the lowest precisions remain quality-limited. Adoption can fail if the released kernels do not support the reader's hardware or models, if the energy model does not transfer to their deployment target, or if 2-bit degradation is unacceptable for their workload, forcing them back to 4 bits where the advantage over existing methods is marginal.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34402",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "State-of-the-art accuracy among multi-precision methods at 2 and 3 bits, retaining 69% of FP16 accuracy at 2 bits, within one point of the best at 4 bits, and an estimated 27% lower LPDDR energy at equal accuracy.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34402",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

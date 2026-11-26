@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Start with one repeated product task that has a measurable failure or cost.",
+    "change": "Read the methods and identify one change you can isolate in that workflow.",
+    "baseline": "Your current implementation on the same held-out tasks.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Successful outcomes, response time, human rework, and total cost per successful task.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.34726",
+  "title": "Hierarchical Graph Metanetworks",
+  "summary": "H-GMNs replace flat message-passing graph metanetworks that process every neuron and weight individually with hierarchy-aware pooling/un-pooling graphs that exploit the layer-block-module structure of the input network, including a symmetry-preserving construction for Transformers. The cost is a specialized graph-construction and equivariant pooling pipeline, plus the need for curated model zoos (ResNet-18, ViT variants up to 86M parameters) to train on; the payoff claimed is near-constant cost with depth and better sample efficiency. Adoption can fail because tasks such as Lipschitz-bound proxies, generalization prediction, backdoor detection, and pruning-as-editing require training a metanetwork on a representative zoo of checkpoints, which teams without such zoos or without a model-analysis use case cannot justify.",
+  "rationale": "H-GMNs address weight-space learning over model zoos, a research capability rather than a production inference, training, or agent-engineering need for a constrained-infrastructure practitioner.",
+  "technique": "Hierarchical graph metanetworks for weight-space learning",
+  "family": "outro",
+  "recommendation": "nao_aplica",
+  "published": "2026-11-25",
+  "as_of": "2026-11-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.34726",
+  "independent_implementations": 0,
+  "total_implementations": 0,
+  "stars": 0,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "H-GMNs replace flat message-passing graph metanetworks that process every neuron and weight individually with hierarchy-aware pooling/un-pooling graphs that exploit the layer-block-module structure of the input network, including a symmetry-preserving construction for Transformers. The cost is a specialized graph-construction and equivariant pooling pipeline, plus the need for curated model zoos (ResNet-18, ViT variants up to 86M parameters) to train on; the payoff claimed is near-constant cost with depth and better sample efficiency. Adoption can fail because tasks such as Lipschitz-bound proxies, generalization prediction, backdoor detection, and pruning-as-editing require training a metanetwork on a representative zoo of checkpoints, which teams without such zoos or without a model-analysis use case cannot justify.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34726",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "The authors report that H-GMN compute/memory cost remains nearly constant as metanetwork depth grows, enabling deeper processing where flat GMNs run out of memory, with markedly better sample efficiency and in some cases considerably improved accuracy; no single multiplicative factor is stated.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34726",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}

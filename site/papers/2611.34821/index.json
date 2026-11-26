@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "builder_plan": {
+    "scenario": "Your workload might fit a smaller or differently structured model.",
+    "change": "Check for available weights and a compatible runtime before planning a product trial.",
+    "baseline": "Your current model on identical held-out tasks and the same resource budget.",
+    "steps": [
+      "Locate the paper's implementation and check its license, model support, data needs, and hardware requirements. Stop here if you cannot obtain the required artifacts.",
+      "Save a small set of representative product tasks and expected outcomes. Keep evaluation tasks out of any training or tuning, and choose quality and cost limits before running.",
+      "Run the baseline and the proposed change on identical inputs. Keep other settings fixed and repeat paired runs to expose variation.",
+      "Save per-task outputs, failures, timings, and all usage costs. Review regressions before expanding the test."
+    ],
+    "measure": "Task success, latency, memory, context limits, and migration cost.",
+    "decision": "Keep the change only if it meets your preselected quality and latency limits and improves the metric you care about after setup and operating costs. Otherwise retain the baseline. This is an exploration plan, not a validated recommendation."
+  },
+  "builder_review": null,
+  "arxiv_id": "2611.34821",
+  "title": "LoopTitan: What Does Parameter Revisit Buy a Mixture-of-Experts?",
+  "summary": "The technique replaces a standard MoE with a looped variant that revisits the same layer parameters across depths to add effective depth at fixed parameter count; the paper's matched controls show the revisit mechanism itself contributes essentially nothing, and it proposes a standard-MoE baseline (LoopTitan-Base) that uses better network shape and the Muon optimizer instead. For the reader, adopting a looped MoE costs implementation complexity in the training/serving stack (custom recurrence, residual-scale logic) with no measured quality benefit over the non-revisit control at matched budgets, though the released pretrained LoopTitan-Base checkpoints and the Muon-plus-depth recipe are directly reusable. What can fail: the residual-scale trick only helps under AdamW's uneven per-layer step sizes and disappears under Muon, the 90.2% recovery figure leaves a residual gap that may matter at larger scales than tested, and results come from the authors' own pretraining setup so they may not transfer to downstream fine-tuning workloads on constrained hardware.",
+  "rationale": "The paper's own ablations show parameter revisit adds no independent benefit, and all real gains (network shape, Muon optimizer, added compute) are transferable to a standard MoE without the looped implementation complexity.",
+  "technique": "Looped Mixture-of-Experts (parameter revisit)",
+  "family": "arquitetura_eficiente",
+  "recommendation": "testar",
+  "published": "2026-11-25",
+  "as_of": "2026-11-26",
+  "editorial_status": "indexed",
+  "source_url": "https://arxiv.org/abs/2611.34821",
+  "independent_implementations": 0,
+  "total_implementations": 1,
+  "stars": 35,
+  "citations": null,
+  "claims": [
+    {
+      "claim_id": "claim-01",
+      "statement": "The technique replaces a standard MoE with a looped variant that revisits the same layer parameters across depths to add effective depth at fixed parameter count; the paper's matched controls show the revisit mechanism itself contributes essentially nothing, and it proposes a standard-MoE baseline (LoopTitan-Base) that uses better network shape and the Muon optimizer instead. For the reader, adopting a looped MoE costs implementation complexity in the training/serving stack (custom recurrence, residual-scale logic) with no measured quality benefit over the non-revisit control at matched budgets, though the released pretrained LoopTitan-Base checkpoints and the Muon-plus-depth recipe are directly reusable. What can fail: the residual-scale trick only helps under AdamW's uneven per-layer step sizes and disappears under Muon, the 90.2% recovery figure leaves a residual gap that may matter at larger scales than tested, and results come from the authors' own pretraining setup so they may not transfer to downstream fine-tuning workloads on constrained hardware.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34821",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "claim_id": "claim-02",
+      "statement": "At equal parameters and compute, a deeper standard (non-looped) MoE under Muon recovers 90.2% of the quality gain that one extra parameter-revisit pass provides; the proposed LoopTitan-Base baseline matches the strongest looped recipe without revisit or residual scaling.",
+      "basis": "inferred",
+      "result": "",
+      "baseline": "",
+      "conditions": "",
+      "source_url": "https://arxiv.org/abs/2611.34821",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "exposure_map": [
+    {
+      "dimension": "quality",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compute",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "latency",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "operations",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "compatibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "security",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "data_and_training",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    },
+    {
+      "dimension": "reproducibility",
+      "basis": "not_evaluated",
+      "finding": "",
+      "interpretation": "",
+      "limitation": "",
+      "next_check": "",
+      "source_url": "",
+      "source_page": null,
+      "source_excerpt": ""
+    }
+  ],
+  "risks": [],
+  "minimum_test": [],
+  "open_questions": [],
+  "independent_tests": [],
+  "lab_reproductions": [],
+  "report_available": false,
+  "validation_tier": "unknown",
+  "evidence_tier": "unknown",
+  "infrastructure_basis": "unknown",
+  "equations": [],
+  "equations_status": "not_fetched",
+  "core_kind": "",
+  "equations_fetched_at": "",
+  "equations_source_url": "",
+  "equations_source_sha256": "",
+  "exposures_reviewed_at": "",
+  "exposures_source_sha256": ""
+}
